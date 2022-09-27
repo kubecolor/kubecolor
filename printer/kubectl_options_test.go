@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hidetatz/kubecolor/testutil"
+	"github.com/kubecolor/kubecolor/testutil"
 )
 
 func Test_OptionsPrinter_Print(t *testing.T) {

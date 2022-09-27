@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/hidetatz/kubecolor/color"
+	"github.com/kubecolor/kubecolor/color"
 )
 
 // toSpaces returns repeated spaces whose length is n.

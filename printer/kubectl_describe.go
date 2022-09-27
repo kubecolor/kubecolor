@@ -6,7 +6,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/hidetatz/kubecolor/color"
+	"github.com/kubecolor/kubecolor/color"
 )
 
 // DescribePrinter is a specific printer to print kubectl describe format.
@@ -61,7 +61,7 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 			// `kubectl describe ns` output has only 1 space at the head.
 			// Because of it, indentCnt is still 1, but the indent space is not in `spacesIndices` (see regex definition of `spaces`)
 			// So it must be checked here
-			// https://github.com/hidetatz/kubecolor/issues/36
+			// https://github.com/kubecolor/kubecolor/issues/36
 			// When https://github.com/kubernetes/kubectl/issues/1005#issuecomment-758385759 is fixed
 			// this is not needed anymore.
 			if indentCnt > 1 {
@@ -86,7 +86,7 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 		// `kubectl describe ns` output has only 1 space at the head.
 		// Because of it, `spaces.Split` doesn't trim the head space (see the regex definition of `spaces`)
 		// So it must be trimmed here
-		// https://github.com/hidetatz/kubecolor/issues/36
+		// https://github.com/kubecolor/kubecolor/issues/36
 		// When https://github.com/kubernetes/kubectl/issues/1005#issuecomment-758385759 is fixed
 		// this is not needed anymore.
 		if strings.HasPrefix(columns[0], " ") {

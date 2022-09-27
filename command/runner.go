@@ -10,9 +10,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/hidetatz/kubecolor/color"
-	"github.com/hidetatz/kubecolor/kubectl"
-	"github.com/hidetatz/kubecolor/printer"
+	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/kubectl"
+	"github.com/kubecolor/kubecolor/printer"
 	"github.com/mattn/go-colorable"
 )
 

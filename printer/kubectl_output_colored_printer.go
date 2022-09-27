@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hidetatz/kubecolor/color"
-	"github.com/hidetatz/kubecolor/kubectl"
+	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/kubectl"
 )
 
 // KubectlOutputColoredPrinter is a printer to print data depending on

@@ -6,7 +6,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/hidetatz/kubecolor/color"
+	"github.com/kubecolor/kubecolor/color"
 )
 
 // ExplainPrinter is a specific printer to print kubectl explain format.

@@ -4,7 +4,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/hidetatz/kubecolor/kubectl"
+	"github.com/kubecolor/kubecolor/kubectl"
 	"github.com/mattn/go-isatty"
 )
 
