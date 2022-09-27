@@ -6,19 +6,12 @@ var (
 	// Preset of colors for background
 	// Please use them when you just need random colors
 	colorsForDarkBackground = []color.Color{
-		color.Cyan,
-		color.Green,
-		color.Magenta,
 		color.White,
-		color.Yellow,
+		color.Cyan,
 	}
 
 	colorsForLightBackground = []color.Color{
-		color.Cyan,
-		color.Green,
-		color.Magenta,
 		color.Black,
-		color.Yellow,
 		color.Blue,
 	}
 
@@ -26,16 +19,16 @@ var (
 	// e.g. Json, Yaml, kubectl-describe format etc.
 
 	// colors which look good in dark-backgrounded environment
-	KeyColorForDark    = color.White
-	StringColorForDark = color.Cyan
+	KeyColorForDark    = color.Cyan
+	StringColorForDark = color.White
 	BoolColorForDark   = color.Green
 	NumberColorForDark = color.Magenta
 	NullColorForDark   = color.Yellow
 	HeaderColorForDark = color.White // for plain table
 
 	// colors which look good in light-backgrounded environment
-	KeyColorForLight    = color.Black
-	StringColorForLight = color.Blue
+	KeyColorForLight    = color.Blue
+	StringColorForLight = color.Black
 	BoolColorForLight   = color.Green
 	NumberColorForLight = color.Magenta
 	NullColorForLight   = color.Yellow

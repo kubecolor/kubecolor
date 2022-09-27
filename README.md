@@ -183,6 +183,16 @@ KUBECTL_COMMAND="kubectl.1.19" kubecolor get po
 
 When you don't set `KUBECTL_COMMAND`, then `kubectl` is used by default.
 
+### Specify object fresh age threshold
+
+When you want to figure out which object are recently created the fresh ones are colored green. It only works with `get` subcommand.
+You can customize threshold level by using environment variable `KUBECOLOR_OBJ_FRESH` with value format [time.Duration](https://golang.org/pkg/time/#ParseDuration).
+
+```shell
+KUBECOLOR_OBJ_FRESH="1m" kubecolor get po
+```
+
+Default value is `0s`, it means is disabled.
 ## Supported kubectl version
 
 Because kubecolor internally calls `kubectl` command, if you are using unsupported kubectl version, it's also not supported by kubecolor.

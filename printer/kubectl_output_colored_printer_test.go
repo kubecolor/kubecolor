@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/hidetatz/kubecolor/kubectl"
 	"github.com/hidetatz/kubecolor/testutil"
@@ -11,11 +12,12 @@ import (
 
 func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 	tests := []struct {
-		name           string
-		darkBackground bool
-		subcommandInfo *kubectl.SubcommandInfo
-		input          string
-		expected       string
+		name              string
+		darkBackground    bool
+		objFreshThreshold time.Duration
+		subcommandInfo    *kubectl.SubcommandInfo
+		input             string
+		expected          string
 	}{
 		{
 			name:           "kubectl top pod",
@@ -171,6 +173,25 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				[36mnginx-dnmv5[0m   [32m1/1[0m     [31mCrashLoopBackOff[0m   [37m0[0m          [33m6d6h[0m
 				[36mnginx-m8pbc[0m   [32m1/1[0m     [35mRunning[0m            [37m0[0m          [33m6d6h[0m
 				[36mnginx-qdf9b[0m   [33m0/1[0m     [35mRunning[0m            [37m0[0m          [33m6d6h[0m
+			`),
+		},
+		{
+			name:              "kubectl get pod",
+			darkBackground:    true,
+			objFreshThreshold: time.Duration(300 * 1000000000),
+			subcommandInfo: &kubectl.SubcommandInfo{
+				Subcommand: kubectl.Get,
+			},
+			input: testutil.NewHereDoc(`
+				NAME          READY   STATUS    RESTARTS   AGE
+				nginx-dnmv5   1/1     Running   0          6d6h
+				nginx-m8pbc   1/1     Running   0          5m
+				nginx-qdf9b   1/1     Running   0          4m59s`),
+			expected: testutil.NewHereDoc(`
+				[37mNAME          READY   STATUS    RESTARTS   AGE[0m
+				[36mnginx-dnmv5[0m   [32m1/1[0m     [35mRunning[0m   [37m0[0m          [33m6d6h[0m
+				[36mnginx-m8pbc[0m   [32m1/1[0m     [35mRunning[0m   [37m0[0m          [33m5m[0m
+				[36mnginx-qdf9b[0m   [32m1/1[0m     [35mRunning[0m   [37m0[0m          [32m4m59s[0m
 			`),
 		},
 		{
@@ -564,8 +585,9 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
 			printer := KubectlOutputColoredPrinter{
-				SubcommandInfo: tt.subcommandInfo,
-				DarkBackground: tt.darkBackground,
+				SubcommandInfo:    tt.subcommandInfo,
+				DarkBackground:    tt.darkBackground,
+				ObjFreshThreshold: tt.objFreshThreshold,
 			}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())

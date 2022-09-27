@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/hidetatz/kubecolor/color"
 	"github.com/hidetatz/kubecolor/kubectl"
@@ -26,12 +27,13 @@ type Printers struct {
 }
 
 // This is defined here to be replaced in test
-var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, darkBackground bool) *Printers {
+var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, darkBackground bool, objFreshThreshold time.Duration) *Printers {
 	return &Printers{
 		FullColoredPrinter: &printer.KubectlOutputColoredPrinter{
-			SubcommandInfo: subcommandInfo,
-			DarkBackground: darkBackground,
-			Recursive:      subcommandInfo.Recursive,
+			SubcommandInfo:    subcommandInfo,
+			DarkBackground:    darkBackground,
+			Recursive:         subcommandInfo.Recursive,
+			ObjFreshThreshold: objFreshThreshold,
 		},
 		ErrorPrinter: &printer.WithFuncPrinter{
 			Fn: func(line string) color.Color {
@@ -93,7 +95,7 @@ func Run(args []string, version string) error {
 		return err
 	}
 
-	printers := getPrinters(subcommandInfo, config.DarkBackground)
+	printers := getPrinters(subcommandInfo, config.DarkBackground, config.ObjFreshThreshold)
 
 	wg := &sync.WaitGroup{}
 
