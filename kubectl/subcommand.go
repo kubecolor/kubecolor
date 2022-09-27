@@ -70,6 +70,8 @@ const (
 	Plugin
 	Version
 	Options
+	Ctx
+	Ns
 )
 
 var strToSubcommand = map[string]Subcommand{
@@ -115,6 +117,8 @@ var strToSubcommand = map[string]Subcommand{
 	"plugin":        Plugin,
 	"version":       Version,
 	"options":       Options,
+	"ctx":           Ctx,
+	"ns":            Ns,
 }
 
 func InspectSubcommand(command string) (Subcommand, bool) {
@@ -187,7 +191,7 @@ func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 			info.NoHeader = true
 		} else if args[i] == "-w" || args[i] == "--watch" {
 			info.Watch = true
-		} else if args[i] == "--recursive=true" {
+		} else if args[i] == "--recursive=true" || args[i] == "--recursive" {
 			info.Recursive = true
 		} else if args[i] == "-h" || args[i] == "--help" {
 			info.Help = true

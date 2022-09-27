@@ -1,6 +1,10 @@
 package command
 
-import "os"
+import (
+	"fmt"
+	"os"
+	"time"
+)
 
 type KubecolorConfig struct {
 	Plain                bool
@@ -8,6 +12,7 @@ type KubecolorConfig struct {
 	ForceColor           bool
 	ShowKubecolorVersion bool
 	KubectlCmd           string
+	ObjFreshThreshold    time.Duration
 }
 
 func ResolveConfig(args []string) ([]string, *KubecolorConfig) {
@@ -23,12 +28,23 @@ func ResolveConfig(args []string) ([]string, *KubecolorConfig) {
 		kubectlCmd = kc
 	}
 
+	objFreshAgeThresholdDuration, _ := time.ParseDuration("0s")
+	objFreshAgeThresholdEnv := "KUBECOLOR_OBJ_FRESH"
+	if objFreshAgeThreshold := os.Getenv(objFreshAgeThresholdEnv); objFreshAgeThreshold != "" {
+		var err error
+		objFreshAgeThresholdDuration, err = time.ParseDuration(objFreshAgeThreshold)
+		if err != nil {
+			fmt.Printf("[WARN] [kubecolor] cannot parse duration taken from env %s. See kubecolor document. %v\n", objFreshAgeThresholdEnv, err)
+		}
+	}
+
 	return args, &KubecolorConfig{
 		Plain:                plainFlagFound,
 		DarkBackground:       darkBackground,
 		ForceColor:           forceColorFlagFound,
 		ShowKubecolorVersion: kubecolorVersionFlagFound,
 		KubectlCmd:           kubectlCmd,
+		ObjFreshThreshold:    objFreshAgeThresholdDuration,
 	}
 }
 

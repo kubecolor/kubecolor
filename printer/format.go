@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/hidetatz/kubecolor/color"
+	"github.com/kubecolor/kubecolor/color"
 )
 
 // toSpaces returns repeated spaces whose length is n.
@@ -18,7 +18,7 @@ func getColorByKeyIndent(indent int, basicIndentWidth int, dark bool) color.Colo
 	switch indent / basicIndentWidth % 2 {
 	case 1:
 		if dark {
-			return color.White
+			return color.Cyan
 		}
 		return color.Black
 	default:

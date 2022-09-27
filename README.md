@@ -1,8 +1,8 @@
 # kubecolor
 
-![test](https://github.com/hidetatz/kubecolor/workflows/test/badge.svg?branch=main)
-[![Go Report Card](https://goreportcard.com/badge/github.com/hidetatz/kubecolor)](https://goreportcard.com/report/github.com/hidetatz/kubecolor)
-[![codecov](https://codecov.io/gh/hidetatz/kubecolor/branch/main/graph/badge.svg?token=k6ysAa5ghD)](https://codecov.io/gh/hidetatz/kubecolor/)
+![test](https://github.com/kubecolor/kubecolor/workflows/test/badge.svg?branch=main)
+[![Go Report Card](https://goreportcard.com/badge/github.com/kubecolor/kubecolor)](https://goreportcard.com/report/github.com/kubecolor/kubecolor)
+[![codecov](https://codecov.io/gh/kubecolor/kubecolor/branch/main/graph/badge.svg?token=k6ysAa5ghD)](https://codecov.io/gh/kubecolor/kubecolor/)
 
 Colorize your kubectl output
 
@@ -50,12 +50,12 @@ Additionally, if `kubectl` resulted an error, kubecolor just shows the error mes
 
 ### Download binary via GitHub release
 
-Go to [Release page](https://github.com/hidetatz/kubecolor/releases) then download the binary which fits your environment.
+Go to [Release page](https://github.com/kubecolor/kubecolor/releases) then download the binary which fits your environment.
 
 ### Mac and Linux users via Homebrew
 
 ```sh
-brew install hidetatz/tap/kubecolor
+brew install kubecolor/tap/kubecolor
 ```
 
 ### Manually via go command
@@ -63,13 +63,13 @@ brew install hidetatz/tap/kubecolor
 *Note: if you install kubecolor via go command, --kubecolor-version  might not work*
 
 ```sh
-go install github.com/hidetatz/kubecolor/cmd/kubecolor@latest
+go install github.com/kubecolor/kubecolor/cmd/kubecolor@latest
 ```
 
 If you are not using module mode (or if just above doesn't work), try below:
 
 ```sh
-go get -u github.com/hidetatz/kubecolor/cmd/kubecolor
+go get -u github.com/kubecolor/kubecolor/cmd/kubecolor
 ```
 
 ## Usage
@@ -183,6 +183,16 @@ KUBECTL_COMMAND="kubectl.1.19" kubecolor get po
 
 When you don't set `KUBECTL_COMMAND`, then `kubectl` is used by default.
 
+### Specify object fresh age threshold
+
+When you want to figure out which object are recently created the fresh ones are colored green. It only works with `get` subcommand.
+You can customize threshold level by using environment variable `KUBECOLOR_OBJ_FRESH` with value format [time.Duration](https://golang.org/pkg/time/#ParseDuration).
+
+```shell
+KUBECOLOR_OBJ_FRESH="1m" kubecolor get po
+```
+
+Default value is `0s`, it means is disabled.
 ## Supported kubectl version
 
 Because kubecolor internally calls `kubectl` command, if you are using unsupported kubectl version, it's also not supported by kubecolor.
@@ -203,4 +213,4 @@ MIT
 
 ## Author
 
-[@hidetatz](https://github.com/hidetatz)
+[@kubecolor](https://github.com/kubecolor)
