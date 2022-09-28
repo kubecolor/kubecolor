@@ -26,8 +26,8 @@ func Test_YamlPrinter_Print(t *testing.T) {
 				none: <none>
 				bool: true`),
 			expected: testutil.NewHereDoc(`
-				[33mapiVersion[0m: [36mv1[0m
-				[33mkind[0m: "[36mPod[0m"
+				[33mapiVersion[0m: [37mv1[0m
+				[33mkind[0m: "[37mPod[0m"
 				[33mnum[0m: [35m415[0m
 				[33munknown[0m: [33m<unknown>[0m
 				[33mnone[0m: [33m<none>[0m
@@ -47,14 +47,14 @@ func Test_YamlPrinter_Print(t *testing.T) {
 				  key4:
 				    key: val`),
 			expected: testutil.NewHereDoc(`
-				[33mapiVersion[0m: [36mv1[0m
+				[33mapiVersion[0m: [37mv1[0m
 				[33mitems[0m:
-				- [37mapiVersion[0m: [36mv1[0m
+				- [37mapiVersion[0m: [37mv1[0m
 				  [37mkey[0m:
 				  - [33mkey2[0m: [35m415[0m
 				    [33mkey3[0m: [32mtrue[0m
 				  [37mkey4[0m:
-				    [33mkey[0m: [36mval[0m
+				    [33mkey[0m: [37mval[0m
 			`),
 		},
 		{
@@ -73,9 +73,9 @@ func Test_YamlPrinter_Print(t *testing.T) {
 				  [37mpreStop[0m:
 				    [33mexec[0m:
 				      [37mcommand[0m:
-				      - [36msh[0m
-				      - [36mc[0m
-				      - [36msleep 30[0m
+				      - [37msh[0m
+				      - [37mc[0m
+				      - [37msleep 30[0m
 			`),
 		},
 		{
@@ -91,14 +91,14 @@ func Test_YamlPrinter_Print(t *testing.T) {
 				  key4:
 				    key: -val`),
 			expected: testutil.NewHereDoc(`
-				[33mapiVersion[0m: [36mv1[0m
+				[33mapiVersion[0m: [37mv1[0m
 				[33mitems[0m:
-				- [37mapiVersion[0m: [36mv1[0m
+				- [37mapiVersion[0m: [37mv1[0m
 				  [37mkey[0m:
 				  - [33mkey2[0m: [35m415[0m
 				    [33mkey3[0m: [32mtrue[0m
 				  [37mkey4[0m:
-				    [33mkey[0m: [36m-val[0m
+				    [33mkey[0m: [37m-val[0m
 			`),
 		},
 		{
@@ -116,16 +116,16 @@ func Test_YamlPrinter_Print(t *testing.T) {
 				        complete alternative of kubectl
 				      annotation.short.1: normal length annotation`),
 			expected: testutil.NewHereDoc(`
-				- [37mapiVersion[0m: [36mv1[0m
-				  [37mkind[0m: [36mPod[0m
+				- [37mapiVersion[0m: [37mv1[0m
+				  [37mkind[0m: [37mPod[0m
 				  [37mmetadata[0m:
 				    [33mannotations[0m:
-				      [37mannotation.long.1[0m: [36m'Sometimes, you may want to specify what to command to use as kubectl.[0m
-				        [36mFor example, when you want to use a versioned-kubectl kubectl.1.17, you can do that by an environment variable.'[0m
-				      [37mannotation.long.2[0m: [36mkubecolor colorizes your kubectl command output and does nothing else.[0m
-				        [36mkubecolor internally calls kubectl command and try to colorizes the output so you can use kubecolor as a[0m
-				        [36mcomplete alternative of kubectl[0m
-				      [37mannotation.short.1[0m: [36mnormal length annotation[0m
+				      [37mannotation.long.1[0m: [37m'Sometimes, you may want to specify what to command to use as kubectl.[0m
+				        [37mFor example, when you want to use a versioned-kubectl kubectl.1.17, you can do that by an environment variable.'[0m
+				      [37mannotation.long.2[0m: [37mkubecolor colorizes your kubectl command output and does nothing else.[0m
+				        [37mkubecolor internally calls kubectl command and try to colorizes the output so you can use kubecolor as a[0m
+				        [37mcomplete alternative of kubectl[0m
+				      [37mannotation.short.1[0m: [37mnormal length annotation[0m
 			`),
 		},
 	}

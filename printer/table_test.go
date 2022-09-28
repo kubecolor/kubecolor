@@ -31,9 +31,9 @@ func Test_TablePrinter_Print(t *testing.T) {
 				nginx-qdf9b   1/1     Running   0          6d6h`),
 			expected: testutil.NewHereDoc(`
 				[37mNAME          READY   STATUS    RESTARTS   AGE[0m
-				[36mnginx-dnmv5[0m   [32m1/1[0m     [35mRunning[0m   [37m0[0m          [33m6d6h[0m
-				[36mnginx-m8pbc[0m   [32m1/1[0m     [35mRunning[0m   [37m0[0m          [33m6d6h[0m
-				[36mnginx-qdf9b[0m   [32m1/1[0m     [35mRunning[0m   [37m0[0m          [33m6d6h[0m
+				[37mnginx-dnmv5[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m6d6h[0m
+				[37mnginx-m8pbc[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m6d6h[0m
+				[37mnginx-qdf9b[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m6d6h[0m
 			`),
 		},
 		{
@@ -53,13 +53,13 @@ func Test_TablePrinter_Print(t *testing.T) {
 			`),
 			expected: testutil.NewHereDoc(`
 				[37mNAME                         READY   STATUS    RESTARTS   AGE[0m
-				[36mpod/nginx-8spn9[0m              [32m1/1[0m     [35mRunning[0m   [37m1[0m          [33m19d[0m
-				[36mpod/nginx-dplns[0m              [32m1/1[0m     [35mRunning[0m   [37m1[0m          [33m19d[0m
-				[36mpod/nginx-lpv5x[0m              [32m1/1[0m     [35mRunning[0m   [37m1[0m          [33m19d[0m
+				[37mpod/nginx-8spn9[0m              [36m1/1[0m     [37mRunning[0m   [36m1[0m          [37m19d[0m
+				[37mpod/nginx-dplns[0m              [36m1/1[0m     [37mRunning[0m   [36m1[0m          [37m19d[0m
+				[37mpod/nginx-lpv5x[0m              [36m1/1[0m     [37mRunning[0m   [36m1[0m          [37m19d[0m
 				[37m[0m
 				[37mNAME                               DESIRED   CURRENT   READY   AGE[0m
-				[36mreplicaset.apps/nginx[0m              [36m3[0m         [32m3[0m         [35m3[0m       [37m19d[0m
-				[36mreplicaset.apps/nginx-6799fc88d8[0m   [36m3[0m         [32m3[0m         [35m3[0m       [37m19d[0m
+				[37mreplicaset.apps/nginx[0m              [36m3[0m         [37m3[0m         [36m3[0m       [37m19d[0m
+				[37mreplicaset.apps/nginx-6799fc88d8[0m   [36m3[0m         [37m3[0m         [36m3[0m       [37m19d[0m
 			`),
 		},
 		{
@@ -72,9 +72,9 @@ func Test_TablePrinter_Print(t *testing.T) {
 				nginx-m8pbc   1/1     Running   0          6d6h
 				nginx-qdf9b   1/1     Running   0          6d6h`),
 			expected: testutil.NewHereDoc(`
-				[36mnginx-dnmv5[0m   [32m1/1[0m     [35mRunning[0m   [37m0[0m          [33m6d6h[0m
-				[36mnginx-m8pbc[0m   [32m1/1[0m     [35mRunning[0m   [37m0[0m          [33m6d6h[0m
-				[36mnginx-qdf9b[0m   [32m1/1[0m     [35mRunning[0m   [37m0[0m          [33m6d6h[0m
+				[37mnginx-dnmv5[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m6d6h[0m
+				[37mnginx-m8pbc[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m6d6h[0m
+				[37mnginx-qdf9b[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m6d6h[0m
 				`),
 		},
 		{
@@ -89,9 +89,9 @@ func Test_TablePrinter_Print(t *testing.T) {
 				nginx-qdf9b   1/1     Running   0          6d6h`),
 			expected: testutil.NewHereDoc(`
 				[30mNAME          READY   STATUS    RESTARTS   AGE[0m
-				[36mnginx-dnmv5[0m   [32m1/1[0m     [35mRunning[0m   [30m0[0m          [33m6d6h[0m
-				[36mnginx-m8pbc[0m   [32m1/1[0m     [35mRunning[0m   [30m0[0m          [33m6d6h[0m
-				[36mnginx-qdf9b[0m   [32m1/1[0m     [35mRunning[0m   [30m0[0m          [33m6d6h[0m
+				[30mnginx-dnmv5[0m   [34m1/1[0m     [30mRunning[0m   [34m0[0m          [30m6d6h[0m
+				[30mnginx-m8pbc[0m   [34m1/1[0m     [30mRunning[0m   [34m0[0m          [30m6d6h[0m
+				[30mnginx-qdf9b[0m   [34m1/1[0m     [30mRunning[0m   [34m0[0m          [30m6d6h[0m
 			`),
 		},
 		{
@@ -125,9 +125,9 @@ func Test_TablePrinter_Print(t *testing.T) {
 				nginx-qdf9b   0/1     Running            0          6d6h`),
 			expected: testutil.NewHereDoc(`
 				[37mNAME          READY   STATUS             RESTARTS   AGE[0m
-				[36mnginx-dnmv5[0m   [32m1/1[0m     [31mCrashLoopBackOff[0m   [37m0[0m          [33m6d6h[0m
-				[36mnginx-m8pbc[0m   [32m1/1[0m     [35mRunning[0m            [37m0[0m          [33m6d6h[0m
-				[36mnginx-qdf9b[0m   [33m0/1[0m     [35mRunning[0m            [37m0[0m          [33m6d6h[0m
+				[37mnginx-dnmv5[0m   [36m1/1[0m     [31mCrashLoopBackOff[0m   [36m0[0m          [37m6d6h[0m
+				[37mnginx-m8pbc[0m   [36m1/1[0m     [37mRunning[0m            [36m0[0m          [37m6d6h[0m
+				[37mnginx-qdf9b[0m   [33m0/1[0m     [37mRunning[0m            [36m0[0m          [37m6d6h[0m
 			`),
 		},
 		{
@@ -155,21 +155,21 @@ func Test_TablePrinter_Print(t *testing.T) {
 			`),
 			expected: testutil.NewHereDoc(`
 				[37mNAME                              SHORTNAMES   APIGROUP                       NAMESPACED   KIND[0m
-				[36mbindings[0m                                                                      [32mtrue[0m         [35mBinding[0m
-				[36mcomponentstatuses[0m                 [37mcs[0m                                          [32mfalse[0m        [35mComponentStatus[0m
-				[36mpods[0m                              [37mpo[0m                                          [32mtrue[0m         [35mPod[0m
-				[36mpodtemplates[0m                                                                  [32mtrue[0m         [35mPodTemplate[0m
-				[36mreplicationcontrollers[0m            [37mrc[0m                                          [32mtrue[0m         [35mReplicationController[0m
-				[36mresourcequotas[0m                    [37mquota[0m                                       [32mtrue[0m         [35mResourceQuota[0m
-				[36msecrets[0m                                                                       [32mtrue[0m         [35mSecret[0m
-				[36mserviceaccounts[0m                   [37msa[0m                                          [32mtrue[0m         [35mServiceAccount[0m
-				[36mservices[0m                          [37msvc[0m                                         [32mtrue[0m         [35mService[0m
-				[36mmutatingwebhookconfigurations[0m                  [33madmissionregistration.k8s.io[0m   [32mfalse[0m        [35mMutatingWebhookConfiguration[0m
-				[36mcustomresourcedefinitions[0m         [37mcrd,crds[0m     [33mapiextensions.k8s.io[0m           [32mfalse[0m        [35mCustomResourceDefinition[0m
-				[36mcontrollerrevisions[0m                            [33mapps[0m                           [32mtrue[0m         [35mControllerRevision[0m
-				[36mdaemonsets[0m                        [37mds[0m           [33mapps[0m                           [32mtrue[0m         [35mDaemonSet[0m
-				[36mstatefulsets[0m                      [37msts[0m          [33mapps[0m                           [32mtrue[0m         [35mStatefulSet[0m
-				[36mtokenreviews[0m                                   [33mauthentication.k8s.io[0m          [32mfalse[0m        [35mTokenReview[0m
+				[37mbindings[0m                                                                      [36mtrue[0m         [37mBinding[0m
+				[37mcomponentstatuses[0m                 [36mcs[0m                                          [36mfalse[0m        [37mComponentStatus[0m
+				[37mpods[0m                              [36mpo[0m                                          [36mtrue[0m         [37mPod[0m
+				[37mpodtemplates[0m                                                                  [36mtrue[0m         [37mPodTemplate[0m
+				[37mreplicationcontrollers[0m            [36mrc[0m                                          [36mtrue[0m         [37mReplicationController[0m
+				[37mresourcequotas[0m                    [36mquota[0m                                       [36mtrue[0m         [37mResourceQuota[0m
+				[37msecrets[0m                                                                       [36mtrue[0m         [37mSecret[0m
+				[37mserviceaccounts[0m                   [36msa[0m                                          [36mtrue[0m         [37mServiceAccount[0m
+				[37mservices[0m                          [36msvc[0m                                         [36mtrue[0m         [37mService[0m
+				[37mmutatingwebhookconfigurations[0m                  [37madmissionregistration.k8s.io[0m   [36mfalse[0m        [37mMutatingWebhookConfiguration[0m
+				[37mcustomresourcedefinitions[0m         [36mcrd,crds[0m     [37mapiextensions.k8s.io[0m           [36mfalse[0m        [37mCustomResourceDefinition[0m
+				[37mcontrollerrevisions[0m                            [37mapps[0m                           [36mtrue[0m         [37mControllerRevision[0m
+				[37mdaemonsets[0m                        [36mds[0m           [37mapps[0m                           [36mtrue[0m         [37mDaemonSet[0m
+				[37mstatefulsets[0m                      [36msts[0m          [37mapps[0m                           [36mtrue[0m         [37mStatefulSet[0m
+				[37mtokenreviews[0m                                   [37mauthentication.k8s.io[0m          [36mfalse[0m        [37mTokenReview[0m
 			`),
 		},
 	}
