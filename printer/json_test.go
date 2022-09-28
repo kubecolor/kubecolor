@@ -28,8 +28,8 @@ func Test_JsonPrinter_Print(t *testing.T) {
 				}`),
 			expected: testutil.NewHereDoc(`
 				{
-				    "[37mapiVersion[0m": "[36mv1[0m",
-				    "[37mkind[0m": "[36mPod[0m",
+				    "[37mapiVersion[0m": "[37mv1[0m",
+				    "[37mkind[0m": "[37mPod[0m",
 				    "[37mnum[0m": [35m598[0m,
 				    "[37mbool[0m": [32mtrue[0m,
 				    "[37mnull[0m": [33mnull[0m
@@ -52,13 +52,13 @@ func Test_JsonPrinter_Print(t *testing.T) {
 				}`),
 			expected: testutil.NewHereDoc(`
 				{
-				    "[37mk1[0m": "[36mv1[0m",
+				    "[37mk1[0m": "[37mv1[0m",
 				    "[37mk2[0m": {
-				        "[33mk3[0m": "[36mv3[0m",
+				        "[33mk3[0m": "[37mv3[0m",
 				        "[33mk4[0m": {
-				            "[37mk5[0m": "[36mv5[0m"
+				            "[37mk5[0m": "[37mv5[0m"
 				        },
-				        "[33mk6[0m": "[36mv6[0m"
+				        "[33mk6[0m": "[37mv6[0m"
 				    }
 				}
 			`),
@@ -83,15 +83,15 @@ func Test_JsonPrinter_Print(t *testing.T) {
 				}`),
 			expected: testutil.NewHereDoc(`
 				{
-				    "[37mapiVersion[0m": "[36mv1[0m",
+				    "[37mapiVersion[0m": "[37mv1[0m",
 				    "[37mkind[0m": {
 				        "[33mk2[0m": [
-				            "[36ma[0m",
-				            "[36mb[0m",
-				            "[36mc[0m"
+				            "[37ma[0m",
+				            "[37mb[0m",
+				            "[37mc[0m"
 				        ],
 				        "[33mk3[0m": {
-				            "[37mk4[0m": "[36mval[0m"
+				            "[37mk4[0m": "[37mval[0m"
 				        },
 				        "[33mk5[0m": {}
 				    }

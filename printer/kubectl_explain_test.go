@@ -54,38 +54,38 @@ func Test_ExplainPrinter_Print(t *testing.T) {
 				     Read-only. More info:
 				     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status`),
 			expected: testutil.NewHereDoc(`
-				[33mKIND[0m:     [36mNode[0m
-				[33mVERSION[0m:  [36mv1[0m
+				[33mKIND[0m:     [37mNode[0m
+				[33mVERSION[0m:  [37mv1[0m
 				
 				[33mDESCRIPTION[0m:
-				     [36mNode is a worker node in Kubernetes. Each node will have a unique[0m
-				     [36midentifier in the cache (i.e. in etcd).[0m
+				     [37mNode is a worker node in Kubernetes. Each node will have a unique[0m
+				     [37midentifier in the cache (i.e. in etcd).[0m
 				
 				[33mFIELDS[0m:
-				   [37mapiVersion[0m	<[36mstring[0m>
-				     [36mAPIVersion defines the versioned schema of this representation of an[0m
-				     [36mobject. Servers should convert recognized schemas to the latest internal[0m
-				     [36mvalue, and may reject unrecognized values. More info:[0m
-				     [36mhttps://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources[0m
+				   [37mapiVersion[0m	<[37mstring[0m>
+				     [37mAPIVersion defines the versioned schema of this representation of an[0m
+				     [37mobject. Servers should convert recognized schemas to the latest internal[0m
+				     [37mvalue, and may reject unrecognized values. More info:[0m
+				     [37mhttps://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources[0m
 				
-				   [37mkind[0m	<[36mstring[0m>
-				     [36mKind is a string value representing the REST resource this object[0m
-				     [36mrepresents. Servers may infer this from the endpoint the client submits[0m
-				     [36mrequests to. Cannot be updated. In CamelCase. More info:[0m
-				     [36mhttps://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds[0m
+				   [37mkind[0m	<[37mstring[0m>
+				     [37mKind is a string value representing the REST resource this object[0m
+				     [37mrepresents. Servers may infer this from the endpoint the client submits[0m
+				     [37mrequests to. Cannot be updated. In CamelCase. More info:[0m
+				     [37mhttps://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds[0m
 				
-				   [37mmetadata[0m	<[36mObject[0m>
-				     [36mStandard object's metadata. More info:[0m
-				     [36mhttps://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata[0m
+				   [37mmetadata[0m	<[37mObject[0m>
+				     [37mStandard object's metadata. More info:[0m
+				     [37mhttps://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata[0m
 				
-				   [37mspec[0m	<[36mObject[0m>
-				     [36mSpec defines the behavior of a node.[0m
-				     [36mhttps://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status[0m
+				   [37mspec[0m	<[37mObject[0m>
+				     [37mSpec defines the behavior of a node.[0m
+				     [37mhttps://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status[0m
 				
-				   [37mstatus[0m	<[36mObject[0m>
-				     [36mMost recently observed status of the node. Populated by the system.[0m
-				     [36mRead-only. More info:[0m
-				     [36mhttps://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status[0m
+				   [37mstatus[0m	<[37mObject[0m>
+				     [37mMost recently observed status of the node. Populated by the system.[0m
+				     [37mRead-only. More info:[0m
+				     [37mhttps://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status[0m
 			`),
 		},
 		{
@@ -124,35 +124,35 @@ func Test_ExplainPrinter_Print(t *testing.T) {
 				      namespace	<string>
 				`),
 			expected: testutil.NewHereDoc(`
-				[33mKIND[0m:     [36mNode[0m
-				[33mVERSION[0m:  [36mv1[0m
+				[33mKIND[0m:     [37mNode[0m
+				[33mVERSION[0m:  [37mv1[0m
 				
 				[33mDESCRIPTION[0m:
-				     [36mNode is a worker node in Kubernetes. Each node will have a unique[0m
-				     [36midentifier in the cache (i.e. in etcd).[0m
+				     [37mNode is a worker node in Kubernetes. Each node will have a unique[0m
+				     [37midentifier in the cache (i.e. in etcd).[0m
 				
 				[33mFIELDS[0m:
-				   [37mapiVersion[0m	<[36mstring[0m>
-				   [37mkind[0m	<[36mstring[0m>
-				   [37mmetadata[0m	<[36mObject[0m>
-				      [37mannotations[0m	<[36mmap[string]string[0m>
-				      [37mclusterName[0m	<[36mstring[0m>
-				      [37mcreationTimestamp[0m	<[36mstring[0m>
-				      [37mdeletionGracePeriodSeconds[0m	<[36minteger[0m>
-				      [37mdeletionTimestamp[0m	<[36mstring[0m>
-				      [37mfinalizers[0m	<[36m[]string[0m>
-				      [37mgenerateName[0m	<[36mstring[0m>
-				      [37mgeneration[0m	<[36minteger[0m>
-				      [37mlabels[0m	<[36mmap[string]string[0m>
-				      [37mmanagedFields[0m	<[36m[]Object[0m>
-				         [33mapiVersion[0m	<[36mstring[0m>
-				         [33mfieldsType[0m	<[36mstring[0m>
-				         [33mfieldsV1[0m	<[36mmap[string][0m>
-				         [33mmanager[0m	<[36mstring[0m>
-				         [33moperation[0m	<[36mstring[0m>
-				         [33mtime[0m	<[36mstring[0m>
-				      [37mname[0m	<[36mstring[0m>
-				      [37mnamespace[0m	<[36mstring[0m>
+				   [37mapiVersion[0m	<[37mstring[0m>
+				   [37mkind[0m	<[37mstring[0m>
+				   [37mmetadata[0m	<[37mObject[0m>
+				      [37mannotations[0m	<[37mmap[string]string[0m>
+				      [37mclusterName[0m	<[37mstring[0m>
+				      [37mcreationTimestamp[0m	<[37mstring[0m>
+				      [37mdeletionGracePeriodSeconds[0m	<[37minteger[0m>
+				      [37mdeletionTimestamp[0m	<[37mstring[0m>
+				      [37mfinalizers[0m	<[37m[]string[0m>
+				      [37mgenerateName[0m	<[37mstring[0m>
+				      [37mgeneration[0m	<[37minteger[0m>
+				      [37mlabels[0m	<[37mmap[string]string[0m>
+				      [37mmanagedFields[0m	<[37m[]Object[0m>
+				         [33mapiVersion[0m	<[37mstring[0m>
+				         [33mfieldsType[0m	<[37mstring[0m>
+				         [33mfieldsV1[0m	<[37mmap[string][0m>
+				         [33mmanager[0m	<[37mstring[0m>
+				         [33moperation[0m	<[37mstring[0m>
+				         [33mtime[0m	<[37mstring[0m>
+				      [37mname[0m	<[37mstring[0m>
+				      [37mnamespace[0m	<[37mstring[0m>
 			`),
 		},
 	}
