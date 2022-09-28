@@ -19,13 +19,14 @@ jobs:
       - name: Run GoReleaser
         uses: Justintime50/homebrew-releaser@v1
         with:
-          distribution: goreleaser
-          version: latest
-          args: release --rm-dist
           homebrew_owner: kubecolor
           homebrew_tap: homebrew-kubecolor
           formula_folder: Formula
           github_token: ${{ secrets.GLOBAL_GITHUB_TOKEN }}
           update_readme_table: true
+          target_darwin_amd64: true
+          target_darwin_arm64: true
+          target_linux_amd64: true
+          target_linux_arm64: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
