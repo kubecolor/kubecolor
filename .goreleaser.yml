@@ -39,8 +39,10 @@ brews:
   tap:
     owner: kubecolor
     name: homebrew-tap
+    token: "{{ .Env.GLOBAL_GITHUB_TOKEN }}"
   homepage: "https://github.com/kubecolor/kubecolor"
   description: "Colorize your kubectl output"
+  license: "MIT"
   folder: Formula
   install: |
     bin.install "kubecolor"

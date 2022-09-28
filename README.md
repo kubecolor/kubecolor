@@ -116,6 +116,14 @@ For example, when you want to pass kubecolor result to grep (`kubecolor get pods
 
 When you don't want to colorize output, you can specify `--plain`. Kubecolor understands this option and outputs the result without colorizing.
 
+### ENV Variables
+
+* `KUBECOLOR_OBJ_FRESH`
+
+When setting the variable `KUBECOLOR_OBJ_FRESH` to a duration, you can change the color of the object depending on its creation time.
+
+Please see [Specify object fresh age threshold](#specify-object-fresh-age-threshold)
+
 ### Autocompletion
 
 kubectl provides [autocompletion feature](https://kubernetes.io/docs/tasks/tools/install-kubectl/#enable-kubectl-autocompletion). If you are
