@@ -38,7 +38,7 @@ brews:
 - name: kubecolor
   tap:
     owner: kubecolor
-    name: homebrew-kubecolor
+    name: homebrew-tap
     token: "{{ .Env.GLOBAL_GITHUB_TOKEN }}"
   homepage: "https://github.com/kubecolor/kubecolor"
   description: "Colorize your kubectl output"
