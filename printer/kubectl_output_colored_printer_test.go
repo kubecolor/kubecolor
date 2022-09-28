@@ -32,9 +32,9 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				app-52mbv   881m         137Mi`),
 			expected: testutil.NewHereDoc(`
 				[37mNAME        CPU(cores)   MEMORY(bytes)[0m
-				[36mapp-29twd[0m   [32m779m[0m         [35m221Mi[0m
-				[36mapp-2hhr6[0m   [32m1036m[0m        [35m220Mi[0m
-				[36mapp-52mbv[0m   [32m881m[0m         [35m137Mi[0m
+				[37mapp-29twd[0m   [36m779m[0m         [37m221Mi[0m
+				[37mapp-2hhr6[0m   [36m1036m[0m        [37m220Mi[0m
+				[37mapp-52mbv[0m   [36m881m[0m         [37m137Mi[0m
 			`),
 		},
 		{
@@ -49,9 +49,9 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				app-2hhr6   1036m        220Mi
 				app-52mbv   881m         137Mi`),
 			expected: testutil.NewHereDoc(`
-				[36mapp-29twd[0m   [32m779m[0m         [35m221Mi[0m
-				[36mapp-2hhr6[0m   [32m1036m[0m        [35m220Mi[0m
-				[36mapp-52mbv[0m   [32m881m[0m         [35m137Mi[0m
+				[37mapp-29twd[0m   [36m779m[0m         [37m221Mi[0m
+				[37mapp-2hhr6[0m   [36m1036m[0m        [37m220Mi[0m
+				[37mapp-52mbv[0m   [36m881m[0m         [37m137Mi[0m
 			`),
 		},
 		{
@@ -80,21 +80,21 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			`),
 			expected: testutil.NewHereDoc(`
 				[37mNAME                              SHORTNAMES   APIGROUP                       NAMESPACED   KIND[0m
-				[36mbindings[0m                                                                      [32mtrue[0m         [35mBinding[0m
-				[36mcomponentstatuses[0m                 [37mcs[0m                                          [32mfalse[0m        [35mComponentStatus[0m
-				[36mpods[0m                              [37mpo[0m                                          [32mtrue[0m         [35mPod[0m
-				[36mpodtemplates[0m                                                                  [32mtrue[0m         [35mPodTemplate[0m
-				[36mreplicationcontrollers[0m            [37mrc[0m                                          [32mtrue[0m         [35mReplicationController[0m
-				[36mresourcequotas[0m                    [37mquota[0m                                       [32mtrue[0m         [35mResourceQuota[0m
-				[36msecrets[0m                                                                       [32mtrue[0m         [35mSecret[0m
-				[36mserviceaccounts[0m                   [37msa[0m                                          [32mtrue[0m         [35mServiceAccount[0m
-				[36mservices[0m                          [37msvc[0m                                         [32mtrue[0m         [35mService[0m
-				[36mmutatingwebhookconfigurations[0m                  [33madmissionregistration.k8s.io[0m   [32mfalse[0m        [35mMutatingWebhookConfiguration[0m
-				[36mcustomresourcedefinitions[0m         [37mcrd,crds[0m     [33mapiextensions.k8s.io[0m           [32mfalse[0m        [35mCustomResourceDefinition[0m
-				[36mcontrollerrevisions[0m                            [33mapps[0m                           [32mtrue[0m         [35mControllerRevision[0m
-				[36mdaemonsets[0m                        [37mds[0m           [33mapps[0m                           [32mtrue[0m         [35mDaemonSet[0m
-				[36mstatefulsets[0m                      [37msts[0m          [33mapps[0m                           [32mtrue[0m         [35mStatefulSet[0m
-				[36mtokenreviews[0m                                   [33mauthentication.k8s.io[0m          [32mfalse[0m        [35mTokenReview[0m
+				[37mbindings[0m                                                                      [36mtrue[0m         [37mBinding[0m
+				[37mcomponentstatuses[0m                 [36mcs[0m                                          [36mfalse[0m        [37mComponentStatus[0m
+				[37mpods[0m                              [36mpo[0m                                          [36mtrue[0m         [37mPod[0m
+				[37mpodtemplates[0m                                                                  [36mtrue[0m         [37mPodTemplate[0m
+				[37mreplicationcontrollers[0m            [36mrc[0m                                          [36mtrue[0m         [37mReplicationController[0m
+				[37mresourcequotas[0m                    [36mquota[0m                                       [36mtrue[0m         [37mResourceQuota[0m
+				[37msecrets[0m                                                                       [36mtrue[0m         [37mSecret[0m
+				[37mserviceaccounts[0m                   [36msa[0m                                          [36mtrue[0m         [37mServiceAccount[0m
+				[37mservices[0m                          [36msvc[0m                                         [36mtrue[0m         [37mService[0m
+				[37mmutatingwebhookconfigurations[0m                  [37madmissionregistration.k8s.io[0m   [36mfalse[0m        [37mMutatingWebhookConfiguration[0m
+				[37mcustomresourcedefinitions[0m         [36mcrd,crds[0m     [37mapiextensions.k8s.io[0m           [36mfalse[0m        [37mCustomResourceDefinition[0m
+				[37mcontrollerrevisions[0m                            [37mapps[0m                           [36mtrue[0m         [37mControllerRevision[0m
+				[37mdaemonsets[0m                        [36mds[0m           [37mapps[0m                           [36mtrue[0m         [37mDaemonSet[0m
+				[37mstatefulsets[0m                      [36msts[0m          [37mapps[0m                           [36mtrue[0m         [37mStatefulSet[0m
+				[37mtokenreviews[0m                                   [37mauthentication.k8s.io[0m          [36mfalse[0m        [37mTokenReview[0m
 			`),
 		},
 		{
@@ -122,21 +122,21 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				tokenreviews                                   authentication.k8s.io          false        TokenReview
 			`),
 			expected: testutil.NewHereDoc(`
-				[36mbindings[0m                                                                      [32mtrue[0m         [35mBinding[0m
-				[36mcomponentstatuses[0m                 [37mcs[0m                                          [32mfalse[0m        [35mComponentStatus[0m
-				[36mpods[0m                              [37mpo[0m                                          [32mtrue[0m         [35mPod[0m
-				[36mpodtemplates[0m                                                                  [32mtrue[0m         [35mPodTemplate[0m
-				[36mreplicationcontrollers[0m            [37mrc[0m                                          [32mtrue[0m         [35mReplicationController[0m
-				[36mresourcequotas[0m                    [37mquota[0m                                       [32mtrue[0m         [35mResourceQuota[0m
-				[36msecrets[0m                                                                       [32mtrue[0m         [35mSecret[0m
-				[36mserviceaccounts[0m                   [37msa[0m                                          [32mtrue[0m         [35mServiceAccount[0m
-				[36mservices[0m                          [37msvc[0m                                         [32mtrue[0m         [35mService[0m
-				[36mmutatingwebhookconfigurations[0m                  [33madmissionregistration.k8s.io[0m   [32mfalse[0m        [35mMutatingWebhookConfiguration[0m
-				[36mcustomresourcedefinitions[0m         [37mcrd,crds[0m     [33mapiextensions.k8s.io[0m           [32mfalse[0m        [35mCustomResourceDefinition[0m
-				[36mcontrollerrevisions[0m                            [33mapps[0m                           [32mtrue[0m         [35mControllerRevision[0m
-				[36mdaemonsets[0m                        [37mds[0m           [33mapps[0m                           [32mtrue[0m         [35mDaemonSet[0m
-				[36mstatefulsets[0m                      [37msts[0m          [33mapps[0m                           [32mtrue[0m         [35mStatefulSet[0m
-				[36mtokenreviews[0m                                   [33mauthentication.k8s.io[0m          [32mfalse[0m        [35mTokenReview[0m
+				[37mbindings[0m                                                                      [36mtrue[0m         [37mBinding[0m
+				[37mcomponentstatuses[0m                 [36mcs[0m                                          [36mfalse[0m        [37mComponentStatus[0m
+				[37mpods[0m                              [36mpo[0m                                          [36mtrue[0m         [37mPod[0m
+				[37mpodtemplates[0m                                                                  [36mtrue[0m         [37mPodTemplate[0m
+				[37mreplicationcontrollers[0m            [36mrc[0m                                          [36mtrue[0m         [37mReplicationController[0m
+				[37mresourcequotas[0m                    [36mquota[0m                                       [36mtrue[0m         [37mResourceQuota[0m
+				[37msecrets[0m                                                                       [36mtrue[0m         [37mSecret[0m
+				[37mserviceaccounts[0m                   [36msa[0m                                          [36mtrue[0m         [37mServiceAccount[0m
+				[37mservices[0m                          [36msvc[0m                                         [36mtrue[0m         [37mService[0m
+				[37mmutatingwebhookconfigurations[0m                  [37madmissionregistration.k8s.io[0m   [36mfalse[0m        [37mMutatingWebhookConfiguration[0m
+				[37mcustomresourcedefinitions[0m         [36mcrd,crds[0m     [37mapiextensions.k8s.io[0m           [36mfalse[0m        [37mCustomResourceDefinition[0m
+				[37mcontrollerrevisions[0m                            [37mapps[0m                           [36mtrue[0m         [37mControllerRevision[0m
+				[37mdaemonsets[0m                        [36mds[0m           [37mapps[0m                           [36mtrue[0m         [37mDaemonSet[0m
+				[37mstatefulsets[0m                      [36msts[0m          [37mapps[0m                           [36mtrue[0m         [37mStatefulSet[0m
+				[37mtokenreviews[0m                                   [37mauthentication.k8s.io[0m          [36mfalse[0m        [37mTokenReview[0m
 			`),
 		},
 		{
@@ -152,9 +152,9 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				nginx-qdf9b   1/1     Running   0          6d6h`),
 			expected: testutil.NewHereDoc(`
 				[37mNAME          READY   STATUS    RESTARTS   AGE[0m
-				[36mnginx-dnmv5[0m   [32m1/1[0m     [35mRunning[0m   [37m0[0m          [33m6d6h[0m
-				[36mnginx-m8pbc[0m   [32m1/1[0m     [35mRunning[0m   [37m0[0m          [33m6d6h[0m
-				[36mnginx-qdf9b[0m   [32m1/1[0m     [35mRunning[0m   [37m0[0m          [33m6d6h[0m
+				[37mnginx-dnmv5[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m6d6h[0m
+				[37mnginx-m8pbc[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m6d6h[0m
+				[37mnginx-qdf9b[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m6d6h[0m
 			`),
 		},
 		{
@@ -165,14 +165,14 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			},
 			input: testutil.NewHereDoc(`
 				NAME          READY   STATUS             RESTARTS   AGE
-				nginx-dnmv5   1/1     CrashLoopBackOff   0          6d6h
+				nginx-dnmv4   1/1     CrashLoopBackOff   0          6d6h
 				nginx-m8pbc   1/1     Running            0          6d6h
 				nginx-qdf9b   0/1     Running            0          6d6h`),
 			expected: testutil.NewHereDoc(`
 				[37mNAME          READY   STATUS             RESTARTS   AGE[0m
-				[36mnginx-dnmv5[0m   [32m1/1[0m     [31mCrashLoopBackOff[0m   [37m0[0m          [33m6d6h[0m
-				[36mnginx-m8pbc[0m   [32m1/1[0m     [35mRunning[0m            [37m0[0m          [33m6d6h[0m
-				[36mnginx-qdf9b[0m   [33m0/1[0m     [35mRunning[0m            [37m0[0m          [33m6d6h[0m
+				[37mnginx-dnmv4[0m   [36m1/1[0m     [31mCrashLoopBackOff[0m   [36m0[0m          [37m6d6h[0m
+				[37mnginx-m8pbc[0m   [36m1/1[0m     [37mRunning[0m            [36m0[0m          [37m6d6h[0m
+				[37mnginx-qdf9b[0m   [33m0/1[0m     [37mRunning[0m            [36m0[0m          [37m6d6h[0m
 			`),
 		},
 		{
@@ -184,14 +184,14 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			},
 			input: testutil.NewHereDoc(`
 				NAME          READY   STATUS    RESTARTS   AGE
-				nginx-dnmv5   1/1     Running   0          6d6h
+				nginx-dnmv6   1/1     Running   0          6d6h
 				nginx-m8pbc   1/1     Running   0          5m
 				nginx-qdf9b   1/1     Running   0          4m59s`),
 			expected: testutil.NewHereDoc(`
 				[37mNAME          READY   STATUS    RESTARTS   AGE[0m
-				[36mnginx-dnmv5[0m   [32m1/1[0m     [35mRunning[0m   [37m0[0m          [33m6d6h[0m
-				[36mnginx-m8pbc[0m   [32m1/1[0m     [35mRunning[0m   [37m0[0m          [33m5m[0m
-				[36mnginx-qdf9b[0m   [32m1/1[0m     [35mRunning[0m   [37m0[0m          [32m4m59s[0m
+				[37mnginx-dnmv6[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m6d6h[0m
+				[37mnginx-m8pbc[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m5m[0m
+				[37mnginx-qdf9b[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [32m4m59s[0m
 			`),
 		},
 		{
@@ -206,9 +206,9 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				nginx-m8pbc   1/1     Running   0          6d6h
 				nginx-qdf9b   1/1     Running   0          6d6h`),
 			expected: testutil.NewHereDoc(`
-				[36mnginx-dnmv5[0m   [32m1/1[0m     [35mRunning[0m   [37m0[0m          [33m6d6h[0m
-				[36mnginx-m8pbc[0m   [32m1/1[0m     [35mRunning[0m   [37m0[0m          [33m6d6h[0m
-				[36mnginx-qdf9b[0m   [32m1/1[0m     [35mRunning[0m   [37m0[0m          [33m6d6h[0m
+				[37mnginx-dnmv5[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m6d6h[0m
+				[37mnginx-m8pbc[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m6d6h[0m
+				[37mnginx-qdf9b[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m6d6h[0m
 			`),
 		},
 		{
@@ -220,14 +220,14 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			},
 			input: testutil.NewHereDoc(`
 				NAME                     READY   STATUS    RESTARTS   AGE     IP           NODE       NOMINATED NODE   READINESS GATES
-				nginx-6799fc88d8-dnmv5   1/1     Running   0          7d10h   172.18.0.5   minikube   <none>           <none>
+				nginx-6799fc88d8-dnmv7   1/1     Running   0          7d10h   172.18.0.5   minikube   <none>           <none>
 				nginx-6799fc88d8-m8pbc   1/1     Running   0          7d10h   172.18.0.4   minikube   <none>           <none>
 				nginx-6799fc88d8-qdf9b   1/1     Running   0          7d10h   172.18.0.3   minikube   <none>           <none>`),
 			expected: testutil.NewHereDoc(`
 				[37mNAME                     READY   STATUS    RESTARTS   AGE     IP           NODE       NOMINATED NODE   READINESS GATES[0m
-				[36mnginx-6799fc88d8-dnmv5[0m   [32m1/1[0m     [35mRunning[0m   [37m0[0m          [33m7d10h[0m   [36m172.18.0.5[0m   [32mminikube[0m   [35m<none>[0m           [37m<none>[0m
-				[36mnginx-6799fc88d8-m8pbc[0m   [32m1/1[0m     [35mRunning[0m   [37m0[0m          [33m7d10h[0m   [36m172.18.0.4[0m   [32mminikube[0m   [35m<none>[0m           [37m<none>[0m
-				[36mnginx-6799fc88d8-qdf9b[0m   [32m1/1[0m     [35mRunning[0m   [37m0[0m          [33m7d10h[0m   [36m172.18.0.3[0m   [32mminikube[0m   [35m<none>[0m           [37m<none>[0m
+				[37mnginx-6799fc88d8-dnmv7[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m7d10h[0m   [36m172.18.0.5[0m   [37mminikube[0m   [36m<none>[0m           [37m<none>[0m
+				[37mnginx-6799fc88d8-m8pbc[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m7d10h[0m   [36m172.18.0.4[0m   [37mminikube[0m   [36m<none>[0m           [37m<none>[0m
+				[37mnginx-6799fc88d8-qdf9b[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m7d10h[0m   [36m172.18.0.3[0m   [37mminikube[0m   [36m<none>[0m           [37m<none>[0m
 			`),
 		},
 		{
@@ -247,8 +247,8 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				}`),
 			expected: testutil.NewHereDoc(`
 				{
-				    "[37mapiVersion[0m": "[36mv1[0m",
-				    "[37mkind[0m": "[36mPod[0m",
+				    "[37mapiVersion[0m": "[37mv1[0m",
+				    "[37mkind[0m": "[37mPod[0m",
 				    "[37mnum[0m": [35m598[0m,
 				    "[37mbool[0m": [32mtrue[0m,
 				    "[37mnull[0m": [33mnull[0m
@@ -270,8 +270,8 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				none: <none>
 				bool: true`),
 			expected: testutil.NewHereDoc(`
-				[33mapiVersion[0m: [36mv1[0m
-				[33mkind[0m: "[36mPod[0m"
+				[33mapiVersion[0m: [37mv1[0m
+				[33mkind[0m: "[37mPod[0m"
 				[33mnum[0m: [35m415[0m
 				[33munknown[0m: [33m<unknown>[0m
 				[33mnone[0m: [33m<none>[0m
@@ -294,13 +294,13 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				Labels:       app=nginx
 				Annotations:  <none>`),
 			expected: testutil.NewHereDoc(`
-				[33mName[0m:         [36mnginx-lpv5x[0m
-				[33mNamespace[0m:    [36mdefault[0m
+				[33mName[0m:         [37mnginx-lpv5x[0m
+				[33mNamespace[0m:    [37mdefault[0m
 				[33mPriority[0m:     [35m0[0m
-				[33mNode[0m:         [36mminikube/172.17.0.3[0m
+				[33mNode[0m:         [37mminikube/172.17.0.3[0m
 				[33mReady[0m:        [32mtrue[0m
-				[33mStart Time[0m:   [36mSat, 10 Oct 2020 14:07:17 +0900[0m
-				[33mLabels[0m:       [36mapp=nginx[0m
+				[33mStart Time[0m:   [37mSat, 10 Oct 2020 14:07:17 +0900[0m
+				[33mLabels[0m:       [37mapp=nginx[0m
 				[33mAnnotations[0m:  [33m<none>[0m
 			`),
 		},
@@ -329,23 +329,23 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				batch/v1
 				batch/v1beta1`),
 			expected: testutil.NewHereDoc(`
-				[36macme.cert-manager.io/v1alpha2[0m
-				[36madmissionregistration.k8s.io/v1beta1[0m
-				[36mapiextensions.k8s.io/v1beta1[0m
-				[36mapiregistration.k8s.io/v1[0m
-				[36mapiregistration.k8s.io/v1beta1[0m
-				[36mapps/v1[0m
-				[36mapps/v1beta1[0m
-				[36mapps/v1beta2[0m
-				[36mauthentication.k8s.io/v1[0m
-				[36mauthentication.k8s.io/v1beta1[0m
-				[36mauthorization.k8s.io/v1[0m
-				[36mauthorization.k8s.io/v1beta1[0m
-				[36mautoscaling/v1[0m
-				[36mautoscaling/v2beta1[0m
-				[36mautoscaling/v2beta2[0m
-				[36mbatch/v1[0m
-				[36mbatch/v1beta1[0m
+				[37macme.cert-manager.io/v1alpha2[0m
+				[37madmissionregistration.k8s.io/v1beta1[0m
+				[37mapiextensions.k8s.io/v1beta1[0m
+				[37mapiregistration.k8s.io/v1[0m
+				[37mapiregistration.k8s.io/v1beta1[0m
+				[37mapps/v1[0m
+				[37mapps/v1beta1[0m
+				[37mapps/v1beta2[0m
+				[37mauthentication.k8s.io/v1[0m
+				[37mauthentication.k8s.io/v1beta1[0m
+				[37mauthorization.k8s.io/v1[0m
+				[37mauthorization.k8s.io/v1beta1[0m
+				[37mautoscaling/v1[0m
+				[37mautoscaling/v2beta1[0m
+				[37mautoscaling/v2beta2[0m
+				[37mbatch/v1[0m
+				[37mbatch/v1beta1[0m
 			`),
 		},
 		{
@@ -370,19 +370,19 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
 				`),
 			expected: testutil.NewHereDoc(`
-				[33mKIND[0m:     [36mNode[0m
-				[33mVERSION[0m:  [36mv1[0m
+				[33mKIND[0m:     [37mNode[0m
+				[33mVERSION[0m:  [37mv1[0m
 				
 				[33mDESCRIPTION[0m:
-				     [36mNode is a worker node in Kubernetes. Each node will have a unique[0m
-				     [36midentifier in the cache (i.e. in etcd).[0m
+				     [37mNode is a worker node in Kubernetes. Each node will have a unique[0m
+				     [37midentifier in the cache (i.e. in etcd).[0m
 				
 				[33mFIELDS[0m:
-				   [37mapiVersion[0m	<[36mstring[0m>
-				     [36mAPIVersion defines the versioned schema of this representation of an[0m
-				     [36mobject. Servers should convert recognized schemas to the latest internal[0m
-				     [36mvalue, and may reject unrecognized values. More info:[0m
-				     [36mhttps://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources[0m
+				   [37mapiVersion[0m	<[37mstring[0m>
+				     [37mAPIVersion defines the versioned schema of this representation of an[0m
+				     [37mobject. Servers should convert recognized schemas to the latest internal[0m
+				     [37mvalue, and may reject unrecognized values. More info:[0m
+				     [37mhttps://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources[0m
 			`),
 		},
 		{
@@ -395,8 +395,8 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				Client Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.3", GitCommit:"1e11e4a2108024935ecfcb2912226cedeafd99df", GitTreeState:"clean", BuildDate:"2020-10-14T18:49:28Z", GoVersion:"go1.15.2", Compiler:"gc", Platform:"darwin/amd64"}
 				Server Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.2", GitCommit:"f5743093fd1c663cb0cbc89748f730662345d44d", GitTreeState:"clean", BuildDate:"2020-09-16T13:32:58Z", GoVersion:"go1.15", Compiler:"gc", Platform:"linux/amd64"}`),
 			expected: testutil.NewHereDoc(`
-				[33mClient Version[0m: [37mversion.Info[0m{[33mMajor[0m:"[36m1[0m", [33mMinor[0m:"[36m19[0m", [33mGitVersion[0m:"[36mv1.19.3[0m", [33mGitCommit[0m:"[36m1e11e4a2108024935ecfcb2912226cedeafd99df[0m", [33mGitTreeState[0m:"[36mclean[0m", [33mBuildDate[0m:"[36m2020-10-14T18:49:28Z[0m", [33mGoVersion[0m:"[36mgo1.15.2[0m", [33mCompiler[0m:"[36mgc[0m", [33mPlatform[0m:"[36mdarwin/amd64[0m"}
-				[33mServer Version[0m: [37mversion.Info[0m{[33mMajor[0m:"[36m1[0m", [33mMinor[0m:"[36m19[0m", [33mGitVersion[0m:"[36mv1.19.2[0m", [33mGitCommit[0m:"[36mf5743093fd1c663cb0cbc89748f730662345d44d[0m", [33mGitTreeState[0m:"[36mclean[0m", [33mBuildDate[0m:"[36m2020-09-16T13:32:58Z[0m", [33mGoVersion[0m:"[36mgo1.15[0m", [33mCompiler[0m:"[36mgc[0m", [33mPlatform[0m:"[36mlinux/amd64[0m"}
+				[33mClient Version[0m: [37mversion.Info[0m{[33mMajor[0m:"[37m1[0m", [33mMinor[0m:"[37m19[0m", [33mGitVersion[0m:"[37mv1.19.3[0m", [33mGitCommit[0m:"[37m1e11e4a2108024935ecfcb2912226cedeafd99df[0m", [33mGitTreeState[0m:"[37mclean[0m", [33mBuildDate[0m:"[37m2020-10-14T18:49:28Z[0m", [33mGoVersion[0m:"[37mgo1.15.2[0m", [33mCompiler[0m:"[37mgc[0m", [33mPlatform[0m:"[37mdarwin/amd64[0m"}
+				[33mServer Version[0m: [37mversion.Info[0m{[33mMajor[0m:"[37m1[0m", [33mMinor[0m:"[37m19[0m", [33mGitVersion[0m:"[37mv1.19.2[0m", [33mGitCommit[0m:"[37mf5743093fd1c663cb0cbc89748f730662345d44d[0m", [33mGitTreeState[0m:"[37mclean[0m", [33mBuildDate[0m:"[37m2020-09-16T13:32:58Z[0m", [33mGoVersion[0m:"[37mgo1.15[0m", [33mCompiler[0m:"[37mgc[0m", [33mPlatform[0m:"[37mlinux/amd64[0m"}
 			`),
 		},
 		{
@@ -408,7 +408,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			input: testutil.NewHereDoc(`
 				Client Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.3", GitCommit:"1e11e4a2108024935ecfcb2912226cedeafd99df", GitTreeState:"clean", BuildDate:"2020-10-14T18:49:28Z", GoVersion:"go1.15.2", Compiler:"gc", Platform:"darwin/amd64"}`),
 			expected: testutil.NewHereDoc(`
-				[33mClient Version[0m: [37mversion.Info[0m{[33mMajor[0m:"[36m1[0m", [33mMinor[0m:"[36m19[0m", [33mGitVersion[0m:"[36mv1.19.3[0m", [33mGitCommit[0m:"[36m1e11e4a2108024935ecfcb2912226cedeafd99df[0m", [33mGitTreeState[0m:"[36mclean[0m", [33mBuildDate[0m:"[36m2020-10-14T18:49:28Z[0m", [33mGoVersion[0m:"[36mgo1.15.2[0m", [33mCompiler[0m:"[36mgc[0m", [33mPlatform[0m:"[36mdarwin/amd64[0m"}
+				[33mClient Version[0m: [37mversion.Info[0m{[33mMajor[0m:"[37m1[0m", [33mMinor[0m:"[37m19[0m", [33mGitVersion[0m:"[37mv1.19.3[0m", [33mGitCommit[0m:"[37m1e11e4a2108024935ecfcb2912226cedeafd99df[0m", [33mGitTreeState[0m:"[37mclean[0m", [33mBuildDate[0m:"[37m2020-10-14T18:49:28Z[0m", [33mGoVersion[0m:"[37mgo1.15.2[0m", [33mCompiler[0m:"[37mgc[0m", [33mPlatform[0m:"[37mdarwin/amd64[0m"}
 			`),
 		},
 		{
@@ -422,8 +422,8 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				Client Version: v1.19.3
 				Server Version: v1.19.2`),
 			expected: testutil.NewHereDoc(`
-				[33mClient Version[0m: [36mv1.19.3[0m
-				[33mServer Version[0m: [36mv1.19.2[0m
+				[33mClient Version[0m: [37mv1.19.3[0m
+				[33mServer Version[0m: [37mv1.19.2[0m
 			`),
 		},
 		{
@@ -436,7 +436,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			input: testutil.NewHereDoc(`
 				Client Version: v1.19.3`),
 			expected: testutil.NewHereDoc(`
-				[33mClient Version[0m: [36mv1.19.3[0m
+				[33mClient Version[0m: [37mv1.19.3[0m
 			`),
 		},
 		{
@@ -461,19 +461,19 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				      --insecure-skip-tls-verify=false: If true, the server's certificate will not be checked for validity. This will make your HTTPS connections insecure
 				`),
 			expected: testutil.NewHereDoc(`
-				[36mThe following options can be passed to any command:[0m
+				[37mThe following options can be passed to any command:[0m
 				
-				      [33m--add-dir-header=false[0m: [36mIf true, adds the file directory to the header of the log messages[0m
-				      [33m--alsologtostderr=false[0m: [36mlog to standard error as well as files[0m
-				      [33m--as=''[0m: [36mUsername to impersonate for the operation[0m
-				      [33m--as-group=[][0m: [36mGroup to impersonate for the operation, this flag can be repeated to specify multiple groups.[0m
-				      [33m--cache-dir='/home/dtyler/.kube/cache'[0m: [36mDefault cache directory[0m
-				      [33m--certificate-authority=''[0m: [36mPath to a cert file for the certificate authority[0m
-				      [33m--client-certificate=''[0m: [36mPath to a client certificate file for TLS[0m
-				      [33m--client-key=''[0m: [36mPath to a client key file for TLS[0m
-				      [33m--cluster=''[0m: [36mThe name of the kubeconfig cluster to use[0m
-				      [33m--context=''[0m: [36mThe name of the kubeconfig context to use[0m
-				      [33m--insecure-skip-tls-verify=false[0m: [36mIf true, the server's certificate will not be checked for validity. This will make your HTTPS connections insecure[0m
+				      [33m--add-dir-header=false[0m: [37mIf true, adds the file directory to the header of the log messages[0m
+				      [33m--alsologtostderr=false[0m: [37mlog to standard error as well as files[0m
+				      [33m--as=''[0m: [37mUsername to impersonate for the operation[0m
+				      [33m--as-group=[][0m: [37mGroup to impersonate for the operation, this flag can be repeated to specify multiple groups.[0m
+				      [33m--cache-dir='/home/dtyler/.kube/cache'[0m: [37mDefault cache directory[0m
+				      [33m--certificate-authority=''[0m: [37mPath to a cert file for the certificate authority[0m
+				      [33m--client-certificate=''[0m: [37mPath to a client certificate file for TLS[0m
+				      [33m--client-key=''[0m: [37mPath to a client key file for TLS[0m
+				      [33m--cluster=''[0m: [37mThe name of the kubeconfig cluster to use[0m
+				      [33m--context=''[0m: [37mThe name of the kubeconfig context to use[0m
+				      [33m--insecure-skip-tls-verify=false[0m: [37mIf true, the server's certificate will not be checked for validity. This will make your HTTPS connections insecure[0m
 			`),
 		},
 		{
@@ -498,14 +498,14 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				}`),
 			expected: testutil.NewHereDoc(`
 				{
-				    "[37mapiVersion[0m": "[36mapps/v1[0m",
-				    "[37mkind[0m": "[36mDeployment[0m",
+				    "[37mapiVersion[0m": "[37mapps/v1[0m",
+				    "[37mkind[0m": "[37mDeployment[0m",
 				    "[37mmetadata[0m": {
 				        "[33mannotations[0m": {
-				            "[37mdeployment.kubernetes.io/revision[0m": "[36m1[0m",
-				            "[37mtest[0m": "[36mfalse[0m"
+				            "[37mdeployment.kubernetes.io/revision[0m": "[37m1[0m",
+				            "[37mtest[0m": "[37mfalse[0m"
 				        },
-				        "[33mcreationTimestamp[0m": "[36m2020-11-04T13:14:07Z[0m",
+				        "[33mcreationTimestamp[0m": "[37m2020-11-04T13:14:07Z[0m",
 				        "[33mgeneration[0m": [35m3[0m
 				    }
 				}
@@ -548,29 +548,29 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				  updatedReplicas: 3
 				`),
 			expected: testutil.NewHereDoc(`
-				[33mapiVersion[0m: [36mapps/v1[0m
-				[33mkind[0m: [36mDeployment[0m
+				[33mapiVersion[0m: [37mapps/v1[0m
+				[33mkind[0m: [37mDeployment[0m
 				[33mmetadata[0m:
 				  [37mannotations[0m:
-				    [33mdeployment.kubernetes.io/revision[0m: "[36m1[0m"
-				    [33mtest[0m: "[36mfalse[0m"
-				  [37mcreationTimestamp[0m: "[36m2020-11-04T13:14:07Z[0m"
+				    [33mdeployment.kubernetes.io/revision[0m: "[37m1[0m"
+				    [33mtest[0m: "[37mfalse[0m"
+				  [37mcreationTimestamp[0m: "[37m2020-11-04T13:14:07Z[0m"
 				  [37mgeneration[0m: [35m3[0m
 				[33mstatus[0m:
 				  [37mavailableReplicas[0m: [35m3[0m
 				  [37mconditions[0m:
-				  - [33mlastTransitionTime[0m: "[36m2020-11-04T13:14:07Z[0m"
-				    [33mlastUpdateTime[0m: "[36m2020-11-04T13:14:27Z[0m"
-				    [33mmessage[0m: [36mReplicaSet "nginx-f89759699" has successfully progressed.[0m
-				    [33mreason[0m: [36mNewReplicaSetAvailable[0m
-				    [33mstatus[0m: "[36mTrue[0m"
-				    [33mtype[0m: [36mProgressing[0m
-				  - [33mlastTransitionTime[0m: "[36m2020-12-27T04:41:49Z[0m"
-				    [33mlastUpdateTime[0m: "[36m2020-12-27T04:41:49Z[0m"
-				    [33mmessage[0m: [36mDeployment has minimum availability.[0m
-				    [33mreason[0m: [36mMinimumReplicasAvailable[0m
-				    [33mstatus[0m: "[36mTrue[0m"
-				    [33mtype[0m: [36mAvailable[0m
+				  - [33mlastTransitionTime[0m: "[37m2020-11-04T13:14:07Z[0m"
+				    [33mlastUpdateTime[0m: "[37m2020-11-04T13:14:27Z[0m"
+				    [33mmessage[0m: [37mReplicaSet "nginx-f89759699" has successfully progressed.[0m
+				    [33mreason[0m: [37mNewReplicaSetAvailable[0m
+				    [33mstatus[0m: "[37mTrue[0m"
+				    [33mtype[0m: [37mProgressing[0m
+				  - [33mlastTransitionTime[0m: "[37m2020-12-27T04:41:49Z[0m"
+				    [33mlastUpdateTime[0m: "[37m2020-12-27T04:41:49Z[0m"
+				    [33mmessage[0m: [37mDeployment has minimum availability.[0m
+				    [33mreason[0m: [37mMinimumReplicasAvailable[0m
+				    [33mstatus[0m: "[37mTrue[0m"
+				    [33mtype[0m: [37mAvailable[0m
 				  [37mobservedGeneration[0m: [35m3[0m
 				  [37mreadyReplicas[0m: [35m3[0m
 				  [37mreplicas[0m: [35m3[0m

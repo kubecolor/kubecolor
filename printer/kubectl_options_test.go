@@ -34,19 +34,19 @@ func Test_OptionsPrinter_Print(t *testing.T) {
 				      --insecure-skip-tls-verify=false: If true, the server's certificate will not be checked for validity. This will make your HTTPS connections insecure
 				`),
 			expected: testutil.NewHereDoc(`
-				[36mThe following options can be passed to any command:[0m
+				[37mThe following options can be passed to any command:[0m
 				
-				      [33m--add-dir-header=false[0m: [36mIf true, adds the file directory to the header of the log messages[0m
-				      [33m--alsologtostderr=false[0m: [36mlog to standard error as well as files[0m
-				      [33m--as=''[0m: [36mUsername to impersonate for the operation[0m
-				      [33m--as-group=[][0m: [36mGroup to impersonate for the operation, this flag can be repeated to specify multiple groups.[0m
-				      [33m--cache-dir='/home/dtyler/.kube/cache'[0m: [36mDefault cache directory[0m
-				      [33m--certificate-authority=''[0m: [36mPath to a cert file for the certificate authority[0m
-				      [33m--client-certificate=''[0m: [36mPath to a client certificate file for TLS[0m
-				      [33m--client-key=''[0m: [36mPath to a client key file for TLS[0m
-				      [33m--cluster=''[0m: [36mThe name of the kubeconfig cluster to use[0m
-				      [33m--context=''[0m: [36mThe name of the kubeconfig context to use[0m
-				      [33m--insecure-skip-tls-verify=false[0m: [36mIf true, the server's certificate will not be checked for validity. This will make your HTTPS connections insecure[0m
+				      [33m--add-dir-header=false[0m: [37mIf true, adds the file directory to the header of the log messages[0m
+				      [33m--alsologtostderr=false[0m: [37mlog to standard error as well as files[0m
+				      [33m--as=''[0m: [37mUsername to impersonate for the operation[0m
+				      [33m--as-group=[][0m: [37mGroup to impersonate for the operation, this flag can be repeated to specify multiple groups.[0m
+				      [33m--cache-dir='/home/dtyler/.kube/cache'[0m: [37mDefault cache directory[0m
+				      [33m--certificate-authority=''[0m: [37mPath to a cert file for the certificate authority[0m
+				      [33m--client-certificate=''[0m: [37mPath to a client certificate file for TLS[0m
+				      [33m--client-key=''[0m: [37mPath to a client key file for TLS[0m
+				      [33m--cluster=''[0m: [37mThe name of the kubeconfig cluster to use[0m
+				      [33m--context=''[0m: [37mThe name of the kubeconfig context to use[0m
+				      [33m--insecure-skip-tls-verify=false[0m: [37mIf true, the server's certificate will not be checked for validity. This will make your HTTPS connections insecure[0m
 			`),
 		},
 	}
