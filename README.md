@@ -60,13 +60,21 @@ brew install kubecolor/tap/kubecolor
 
 ### Manually via go command
 
-*Note: if you install kubecolor via go command, --kubecolor-version  might not work*
+*Note: if you install kubecolor via go command without setting the `ldflags`, --kubecolor-version  might return an unset value*
 
 ```sh
-go install github.com/kubecolor/kubecolor/cmd/kubecolor@latest
+VERSION=latest
+go install -ldflags="-X main.Version=${VERSION}" github.com/kubecolor/kubecolor/cmd/kubecolor@${VERSION}
 ```
 
-If you are not using module mode (or if just above doesn't work), try below:
+You can install a specific version like:
+
+```sh
+VERSION=v0.0.21
+go install -ldflags="-X main.Version=${VERSION}" github.com/kubecolor/kubecolor/cmd/kubecolor@${VERSION}
+```
+
+If you are not using module mode (old Go version < 1.11 or command above doesn't work), try below:
 
 ```sh
 go get -u github.com/kubecolor/kubecolor/cmd/kubecolor
