@@ -1,6 +1,6 @@
+<img src="./assets/img/Kubecolor_Logo-large.svg" style="float: right;" alt="Kubecolor logo" />
+
 # kubecolor
-<img src="./assets/img/Kubecolor_Logo.svg" style="float: right;" width="480"
-  alt="Kubecolor logo" />
 
 Colorize is a `kubectl` replacement used to add colors to your kubectl output.
 
