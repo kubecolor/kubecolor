@@ -1,4 +1,5 @@
 # kubecolor
+
 <img src="./assets/img/Kubecolor_Logo.svg" align="right" style="float: right;" />
 
 `kubie` is an alternative to `kubectx`, `kubens` and the `k on` prompt modification script. It offers context switching,
