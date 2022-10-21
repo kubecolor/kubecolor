@@ -1,4 +1,4 @@
-<img src="./assets/img/Kubecolor_Logo-large.svg" style="float: right;" alt="Kubecolor logo" />
+<img align="right" alt="Kubecolor logo" src="./assets/img/Kubecolor_Logo-large.svg" />
 
 # kubecolor
 
