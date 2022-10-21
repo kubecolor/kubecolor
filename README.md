@@ -1,6 +1,16 @@
 # kubecolor
 <img src="./assets/img/Kubecolor_Logo.svg" align="right" style="float: right;" />
 
+`kubie` is an alternative to `kubectx`, `kubens` and the `k on` prompt modification script. It offers context switching,
+namespace switching and prompt modification in a way that makes each shell independent from others. It also has
+support for split configuration files, meaning it can load Kubernetes contexts from multiple files. You can configure
+the paths where kubie will look for contexts, see the [settings](#settings) section.
+
+Kubie also has other nice features such as `kubie exec` which allows you to execute commands in a context and a
+namespace without having to spawn a shell and `kubie lint` which scans your k8s config files for issues and informs
+you of what they are.
+
+
 Colorize your kubectl output.
 
 ![test](https://github.com/kubecolor/kubecolor/workflows/test/badge.svg?branch=main)
