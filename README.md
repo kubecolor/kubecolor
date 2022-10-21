@@ -1,11 +1,12 @@
 # kubecolor
 <img src="./assets/img/Kubecolor_Logo.svg" align="right"/>
 
+Colorize your kubectl output.
+
 ![test](https://github.com/kubecolor/kubecolor/workflows/test/badge.svg?branch=main)
 [![Go Report Card](https://goreportcard.com/badge/github.com/kubecolor/kubecolor)](https://goreportcard.com/report/github.com/kubecolor/kubecolor)
 [![codecov](https://codecov.io/gh/kubecolor/kubecolor/branch/main/graph/badge.svg?token=k6ysAa5ghD)](https://codecov.io/gh/kubecolor/kubecolor/)
 
-Colorize your kubectl output
 
 * get pods
 
