@@ -1,5 +1,5 @@
 # kubecolor
-<img src="./assets/img/Kubecolor_Logo.svg" align="right"/>
+<img src="./assets/img/Kubecolor_Logo.svg" align="right" style="float: right;" />
 
 Colorize your kubectl output.
 
