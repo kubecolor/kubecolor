@@ -135,6 +135,17 @@ When setting the variable `KUBECOLOR_OBJ_FRESH` to a duration, you can change th
 
 Please see [Specify object fresh age threshold](#specify-object-fresh-age-threshold)
 
+* `KUBECOLOR_FORCE_COLORS`
+
+In addition to forcing colors with `--force-colors`, you can also do so by setting the environment variable `KUBECOLOR_FORCE_COLORS=true`.
+You can use this environment variable to colorize output when you invoke kubecolor in the `watch` command (e.g. `watch kubecolor get pods`). 
+Set the following alias:
+```shell
+alias watch='KUBECOLOR_FORCE_COLORS=true watch --color '
+```
+
+Be sure to include the space at the end to enable alias expansion (without this additional space, the command `watch kgp` would fail, for example). 
+
 ### Autocompletion
 
 kubectl provides [autocompletion feature](https://kubernetes.io/docs/tasks/tools/install-kubectl/#enable-kubectl-autocompletion). If you are
