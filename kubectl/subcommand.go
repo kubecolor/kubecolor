@@ -1,6 +1,7 @@
 package kubectl
 
 import (
+	"os/exec"
 	"strings"
 )
 
@@ -12,8 +13,6 @@ type SubcommandInfo struct {
 	Help         bool
 	Recursive    bool
 	Short        bool
-
-	IsKrew bool
 }
 
 type FormatOption int
@@ -72,6 +71,7 @@ const (
 	Options
 	Ctx
 	Ns
+	KubectlPlugin
 )
 
 var strToSubcommand = map[string]Subcommand{
@@ -122,9 +122,15 @@ var strToSubcommand = map[string]Subcommand{
 }
 
 func InspectSubcommand(command string) (Subcommand, bool) {
-	sc, ok := strToSubcommand[command]
+	if sc, ok := strToSubcommand[command]; ok {
+		return sc, true
+	}
 
-	return sc, ok
+	if _, err := exec.LookPath("kubectl-" + command); err == nil {
+		return KubectlPlugin, true
+	}
+
+	return 0, false
 }
 
 func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
@@ -199,7 +205,6 @@ func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 	}
 }
 
-// TODO: return shouldColorize = false when the given args is for plugin
 func InspectSubcommandInfo(args []string) (*SubcommandInfo, bool) {
 	ret := &SubcommandInfo{}
 
