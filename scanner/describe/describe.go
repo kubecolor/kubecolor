@@ -43,14 +43,17 @@ type Token struct {
 	Kind  Kind
 }
 
+type State struct {
+	KeyIndent   int
+	ValueIndent int
+}
+
 type Scanner struct {
-	lineScanner     *bufio.Scanner
-	tokens          []Token
-	tokenIndex      int
-	keyIndent       int
-	valueIndent     int
-	lastKeyIndent   int
-	lastValueIndent int
+	lineScanner *bufio.Scanner
+	tokens      []Token
+	tokenIndex  int
+	state       State
+	lastState   State
 }
 
 func New(reader io.Reader) *Scanner {
@@ -58,10 +61,8 @@ func New(reader io.Reader) *Scanner {
 		lineScanner: bufio.NewScanner(reader),
 
 		// Set fields to intentionally wrong values
-		valueIndent:     -1,
-		keyIndent:       -1,
-		lastKeyIndent:   -1,
-		lastValueIndent: -1,
+		state:     State{KeyIndent: -1, ValueIndent: -1},
+		lastState: State{KeyIndent: -1, ValueIndent: -1},
 	}
 }
 
@@ -72,12 +73,8 @@ func (s *Scanner) Token() Token {
 	return s.tokens[s.tokenIndex]
 }
 
-func (s *Scanner) KeyIndent() int {
-	return s.keyIndent
-}
-
-func (s *Scanner) ValueIndent() int {
-	return s.valueIndent
+func (s *Scanner) State() State {
+	return s.state
 }
 
 func (s *Scanner) Err() error {
@@ -96,10 +93,8 @@ func (s *Scanner) Scan() bool {
 	clear(s.tokens) // let byte slices get GC'd
 	s.tokens = s.tokens[:0]
 	s.tokenIndex = 0
-	s.lastKeyIndent = s.keyIndent
-	s.lastValueIndent = s.valueIndent
-	s.keyIndent = 0
-	s.valueIndent = 0
+	s.lastState = s.state
+	s.state = State{}
 
 	b := s.lineScanner.Bytes()
 
@@ -122,7 +117,7 @@ func (s *Scanner) Scan() bool {
 	if keyIndex > 0 {
 		// "  IP:           10.0.0.1"
 		//  ^^
-		s.keyIndent = keyIndex
+		s.state.KeyIndent = keyIndex
 		s.tokens = append(s.tokens, Token{
 			Kind:  KindWhitespace,
 			Bytes: b[:keyIndex],
@@ -133,14 +128,13 @@ func (s *Scanner) Scan() bool {
 	//    ^^^^^^^^^^^^^^^^^^^^^^
 	leftTrimmed := b[keyIndex:]
 
-	if keyIndex == s.lastValueIndent {
+	if keyIndex == s.lastState.ValueIndent {
 		// Multiple values, so treat remainder just as value:
 		// "Labels:           app.kubernetes.io/instance=traefik-traefik"
 		// "                  app.kubernetes.io/managed-by=Helm"
 		// "                  app.kubernetes.io/name=traefik"
 		//                    ^lastValueIndent
-		s.keyIndent = s.lastKeyIndent
-		s.valueIndent = s.lastValueIndent
+		s.state = s.lastState
 		s.tokens = append(s.tokens, Token{
 			Kind:  KindValue,
 			Bytes: leftTrimmed,
@@ -190,7 +184,7 @@ func (s *Scanner) Scan() bool {
 		s.tokens = append(s.tokens, lineFeedToken)
 		return true
 	}
-	s.valueIndent = valueIndex + endOfKey + keyIndex
+	s.state.ValueIndent = valueIndex + endOfKey + keyIndex
 
 	// "           10.0.0.1"
 	//  ^^^^^^^^^^^
