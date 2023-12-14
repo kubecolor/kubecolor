@@ -10,12 +10,11 @@ import (
 
 func Test_ResolveConfig(t *testing.T) {
 	tests := []struct {
-		name                 string
-		args                 []string
-		kubectlCommand       string
-		objFreshAgeThreshold string
-		expectedArgs         []string
-		expectedConf         *KubecolorConfig
+		name         string
+		args         []string
+		env          map[string]string
+		expectedArgs []string
+		expectedConf *KubecolorConfig
 	}{
 		{
 			name:         "no config",
@@ -42,10 +41,10 @@ func Test_ResolveConfig(t *testing.T) {
 			},
 		},
 		{
-			name:           "KUBECTL_COMMAND exists",
-			args:           []string{"get", "pods", "--plain"},
-			kubectlCommand: "kubectl.1.19",
-			expectedArgs:   []string{"get", "pods"},
+			name:         "KUBECTL_COMMAND exists",
+			args:         []string{"get", "pods", "--plain"},
+			env:          map[string]string{"KUBECTL_COMMAND": "kubectl.1.19"},
+			expectedArgs: []string{"get", "pods"},
 			expectedConf: &KubecolorConfig{
 				Plain:             true,
 				DarkBackground:    true,
@@ -55,29 +54,37 @@ func Test_ResolveConfig(t *testing.T) {
 			},
 		},
 		{
-			name:                 "KUBECOLOR_OBJ_FRESH exists",
-			args:                 []string{"get", "pods"},
-			expectedArgs:         []string{"get", "pods"},
-			objFreshAgeThreshold: "1m",
+			name:         "KUBECOLOR_OBJ_FRESH exists",
+			args:         []string{"get", "pods"},
+			expectedArgs: []string{"get", "pods"},
+			env:          map[string]string{"KUBECOLOR_OBJ_FRESH": "1m"},
 			expectedConf: &KubecolorConfig{
 				Plain:             false,
 				DarkBackground:    true,
 				ForceColor:        false,
 				KubectlCmd:        "kubectl",
-				ObjFreshThreshold: time.Duration(60 * 1000000000),
+				ObjFreshThreshold: time.Minute,
+			},
+		},
+		{
+			name:         "KUBECOLOR_FORCE_COLORS env var",
+			args:         []string{"get", "pods"},
+			env:          map[string]string{"KUBECOLOR_FORCE_COLORS": "true"},
+			expectedArgs: []string{"get", "pods"},
+			expectedConf: &KubecolorConfig{
+				Plain:          false,
+				DarkBackground: true,
+				ForceColor:     true,
+				KubectlCmd:     "kubectl",
 			},
 		},
 	}
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			if tt.kubectlCommand != "" {
-				os.Setenv("KUBECTL_COMMAND", tt.kubectlCommand)
-				defer os.Unsetenv("KUBECTL_COMMAND")
-			}
-			if tt.objFreshAgeThreshold != "" {
-				os.Setenv("KUBECOLOR_OBJ_FRESH", tt.objFreshAgeThreshold)
-				defer os.Unsetenv("KUBECOLOR_OBJ_FRESH")
+			os.Clearenv()
+			for k, v := range tt.env {
+				testutil.Setenv(t, k, v)
 			}
 
 			args, conf := ResolveConfig(tt.args)
