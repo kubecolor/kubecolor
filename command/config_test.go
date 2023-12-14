@@ -1,7 +1,6 @@
 package command
 
 import (
-	"os"
 	"testing"
 	"time"
 
@@ -64,21 +63,15 @@ func Test_ResolveConfig(t *testing.T) {
 				DarkBackground:    true,
 				ForceColor:        false,
 				KubectlCmd:        "kubectl",
-				ObjFreshThreshold: time.Duration(60 * 1000000000),
+				ObjFreshThreshold: time.Minute,
 			},
 		},
 	}
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			if tt.kubectlCommand != "" {
-				os.Setenv("KUBECTL_COMMAND", tt.kubectlCommand)
-				defer os.Unsetenv("KUBECTL_COMMAND")
-			}
-			if tt.objFreshAgeThreshold != "" {
-				os.Setenv("KUBECOLOR_OBJ_FRESH", tt.objFreshAgeThreshold)
-				defer os.Unsetenv("KUBECOLOR_OBJ_FRESH")
-			}
+			testutil.Setenv(t, "KUBECTL_COMMAND", tt.kubectlCommand)
+			testutil.Setenv(t, "KUBECOLOR_OBJ_FRESH", tt.objFreshAgeThreshold)
 
 			args, conf := ResolveConfig(tt.args)
 			testutil.MustEqual(t, tt.expectedArgs, args)
