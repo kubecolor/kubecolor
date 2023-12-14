@@ -20,7 +20,7 @@ func Test_OptionsPrinter_Print(t *testing.T) {
 			darkBackground: true,
 			input: testutil.NewHereDoc(`
 				The following options can be passed to any command:
-				
+
 				      --add-dir-header=false: If true, adds the file directory to the header of the log messages
 				      --alsologtostderr=false: log to standard error as well as files
 				      --as='': Username to impersonate for the operation
@@ -35,7 +35,7 @@ func Test_OptionsPrinter_Print(t *testing.T) {
 				`),
 			expected: testutil.NewHereDoc(`
 				[37mThe following options can be passed to any command:[0m
-				
+
 				      [33m--add-dir-header=false[0m: [37mIf true, adds the file directory to the header of the log messages[0m
 				      [33m--alsologtostderr=false[0m: [37mlog to standard error as well as files[0m
 				      [33m--as=''[0m: [37mUsername to impersonate for the operation[0m

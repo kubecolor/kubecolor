@@ -34,8 +34,8 @@ you can use kubecolor as a complete alternative of kubectl. It means you can wri
 ```sh
 alias kubectl="kubecolor"
 ```
-If you use your .bash_profile on more than one computer (e.g. synced via git) that might not all have `kubecolor` 
-installed, you can avoid breaking `kubectl` like so: 
+If you use your .bash_profile on more than one computer (e.g. synced via git) that might not all have `kubecolor`
+installed, you can avoid breaking `kubectl` like so:
 
 ```sh
 command -v kubecolor >/dev/null 2>&1 && alias kubectl="kubecolor"

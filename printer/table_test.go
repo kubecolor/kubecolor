@@ -46,7 +46,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 				pod/nginx-8spn9              1/1     Running   1          19d
 				pod/nginx-dplns              1/1     Running   1          19d
 				pod/nginx-lpv5x              1/1     Running   1          19d
-				
+
 				NAME                               DESIRED   CURRENT   READY   AGE
 				replicaset.apps/nginx              3         3         3       19d
 				replicaset.apps/nginx-6799fc88d8   3         3         3       19d

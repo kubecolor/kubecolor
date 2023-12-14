@@ -357,11 +357,11 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			input: testutil.NewHereDoc(`
 				KIND:     Node
 				VERSION:  v1
-				
+
 				DESCRIPTION:
 				     Node is a worker node in Kubernetes. Each node will have a unique
 				     identifier in the cache (i.e. in etcd).
-				
+
 				FIELDS:
 				   apiVersion	<string>
 				     APIVersion defines the versioned schema of this representation of an
@@ -372,11 +372,11 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			expected: testutil.NewHereDoc(`
 				[33mKIND[0m:     [37mNode[0m
 				[33mVERSION[0m:  [37mv1[0m
-				
+
 				[33mDESCRIPTION[0m:
 				     [37mNode is a worker node in Kubernetes. Each node will have a unique[0m
 				     [37midentifier in the cache (i.e. in etcd).[0m
-				
+
 				[33mFIELDS[0m:
 				   [37mapiVersion[0m	<[37mstring[0m>
 				     [37mAPIVersion defines the versioned schema of this representation of an[0m
@@ -447,7 +447,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			},
 			input: testutil.NewHereDoc(`
 				The following options can be passed to any command:
-				
+
 				      --add-dir-header=false: If true, adds the file directory to the header of the log messages
 				      --alsologtostderr=false: log to standard error as well as files
 				      --as='': Username to impersonate for the operation
@@ -462,7 +462,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				`),
 			expected: testutil.NewHereDoc(`
 				[37mThe following options can be passed to any command:[0m
-				
+
 				      [33m--add-dir-header=false[0m: [37mIf true, adds the file directory to the header of the log messages[0m
 				      [33m--alsologtostderr=false[0m: [37mlog to standard error as well as files[0m
 				      [33m--as=''[0m: [37mUsername to impersonate for the operation[0m
