@@ -70,6 +70,6 @@ func mustScanToken(t *testing.T, s *Scanner, wantKind Kind, wantString string, w
 		t.Fatalf("Wrong value; Want key indent %d, got %d", wantKeyIndent, s.KeyIndent())
 	}
 	if wantValueIndent != s.ValueIndent() {
-		t.Fatalf("Wrong value; Want key indent %d, got %d", wantValueIndent, s.ValueIndent())
+		t.Fatalf("Wrong value; Want value indent %d, got %d", wantValueIndent, s.ValueIndent())
 	}
 }

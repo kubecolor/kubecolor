@@ -44,16 +44,24 @@ type Token struct {
 }
 
 type Scanner struct {
-	lineScanner *bufio.Scanner
-	tokens      []Token
-	tokenIndex  int
-	keyIndent   int
-	valueIndent int
+	lineScanner     *bufio.Scanner
+	tokens          []Token
+	tokenIndex      int
+	keyIndent       int
+	valueIndent     int
+	lastKeyIndent   int
+	lastValueIndent int
 }
 
 func New(reader io.Reader) *Scanner {
 	return &Scanner{
 		lineScanner: bufio.NewScanner(reader),
+
+		// Set fields to intentionally wrong values
+		valueIndent:     -1,
+		keyIndent:       -1,
+		lastKeyIndent:   -1,
+		lastValueIndent: -1,
 	}
 }
 
@@ -88,6 +96,8 @@ func (s *Scanner) Scan() bool {
 	clear(s.tokens) // let byte slices get GC'd
 	s.tokens = s.tokens[:0]
 	s.tokenIndex = 0
+	s.lastKeyIndent = s.keyIndent
+	s.lastValueIndent = s.valueIndent
 	s.keyIndent = 0
 	s.valueIndent = 0
 
@@ -122,6 +132,22 @@ func (s *Scanner) Scan() bool {
 	// "  IP:           10.0.0.1"
 	//    ^^^^^^^^^^^^^^^^^^^^^^
 	leftTrimmed := b[keyIndex:]
+
+	if keyIndex == s.lastValueIndent {
+		// Multiple values, so treat remainder just as value:
+		// "Labels:           app.kubernetes.io/instance=traefik-traefik"
+		// "                  app.kubernetes.io/managed-by=Helm"
+		// "                  app.kubernetes.io/name=traefik"
+		//                    ^lastValueIndent
+		s.keyIndent = s.lastKeyIndent
+		s.valueIndent = s.lastValueIndent
+		s.tokens = append(s.tokens, Token{
+			Kind:  KindValue,
+			Bytes: leftTrimmed,
+		})
+		s.tokens = append(s.tokens, lineFeedToken)
+		return true
+	}
 
 	// "IP:           10.0.0.1"
 	//     ^endOfKey
