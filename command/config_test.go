@@ -63,7 +63,7 @@ func Test_ResolveConfig(t *testing.T) {
 				DarkBackground:    true,
 				ForceColor:        false,
 				KubectlCmd:        "kubectl",
-				ObjFreshThreshold: time.Duration(60 * 1000000000),
+				ObjFreshThreshold: time.Minute,
 			},
 		},
 		{
@@ -82,14 +82,10 @@ func Test_ResolveConfig(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			os.Clearenv()
 			for k, v := range tt.env {
-				os.Setenv(k, v)
+				testutil.Setenv(t, k, v)
 			}
-			defer func() {
-				for k, _ := range tt.env {
-					os.Unsetenv(k)
-				}
-			}()
 
 			args, conf := ResolveConfig(tt.args)
 			testutil.MustEqual(t, tt.expectedArgs, args)
