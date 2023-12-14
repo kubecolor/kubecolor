@@ -23,6 +23,8 @@ func ResolveConfig(args []string) ([]string, *KubecolorConfig) {
 
 	darkBackground := !lightBackgroundFlagFound
 
+	colorsForcedViaEnv := os.Getenv("KUBECOLOR_FORCE_COLORS") == "true"
+
 	kubectlCmd := "kubectl"
 	if kc := os.Getenv("KUBECTL_COMMAND"); kc != "" {
 		kubectlCmd = kc
@@ -41,7 +43,7 @@ func ResolveConfig(args []string) ([]string, *KubecolorConfig) {
 	return args, &KubecolorConfig{
 		Plain:                plainFlagFound,
 		DarkBackground:       darkBackground,
-		ForceColor:           forceColorFlagFound,
+		ForceColor:           forceColorFlagFound || colorsForcedViaEnv,
 		ShowKubecolorVersion: kubecolorVersionFlagFound,
 		KubectlCmd:           kubectlCmd,
 		ObjFreshThreshold:    objFreshAgeThresholdDuration,
