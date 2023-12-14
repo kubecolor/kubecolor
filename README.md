@@ -34,8 +34,8 @@ you can use kubecolor as a complete alternative of kubectl. It means you can wri
 ```sh
 alias kubectl="kubecolor"
 ```
-If you use your .bash_profile on more than one computer (e.g. synced via git) that might not all have `kubecolor` 
-installed, you can avoid breaking `kubectl` like so: 
+If you use your .bash_profile on more than one computer (e.g. synced via git) that might not all have `kubecolor`
+installed, you can avoid breaking `kubectl` like so:
 
 ```sh
 command -v kubecolor >/dev/null 2>&1 && alias kubectl="kubecolor"
@@ -134,6 +134,17 @@ When you don't want to colorize output, you can specify `--plain`. Kubecolor und
 When setting the variable `KUBECOLOR_OBJ_FRESH` to a duration, you can change the color of the object depending on its creation time.
 
 Please see [Specify object fresh age threshold](#specify-object-fresh-age-threshold)
+
+* `KUBECOLOR_FORCE_COLORS`
+
+In addition to forcing colors with `--force-colors`, you can also do so by setting the environment variable `KUBECOLOR_FORCE_COLORS=true`.
+You can use this environment variable to colorize output when you invoke kubecolor in the `watch` command (e.g. `watch kubecolor get pods`). 
+Set the following alias:
+```shell
+alias watch='KUBECOLOR_FORCE_COLORS=true watch --color '
+```
+
+Be sure to include the space at the end to enable alias expansion (without this additional space, the command `watch kgp` would fail, for example). 
 
 ### Autocompletion
 
