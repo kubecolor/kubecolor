@@ -46,6 +46,7 @@ type Token struct {
 type State struct {
 	KeyIndent   int
 	ValueIndent int
+	Path        []string
 }
 
 type Scanner struct {
@@ -166,6 +167,7 @@ func (s *Scanner) Scan() bool {
 		Kind:  KindKey,
 		Bytes: key,
 	})
+	s.state.Path = append(s.state.Path, newPathSegment(key))
 
 	// "IP:           10.0.0.1"
 	//     ^^^^^^^^^^^^^^^^^^^
@@ -210,4 +212,14 @@ func indexOfNonSpace(b []byte) int {
 		}
 	}
 	return -1
+}
+
+func newPathSegment(key []byte) string {
+	if len(key) == 0 {
+		return ""
+	}
+	if key[len(key)-1] == ':' {
+		return string(key[:len(key)-1])
+	}
+	return string(key)
 }
