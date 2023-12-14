@@ -66,6 +66,7 @@ func isColoringSupported(sc kubectl.Subcommand) bool {
 		kubectl.Run,
 		kubectl.Ctx,
 		kubectl.Ns,
+		kubectl.Debug,
 		kubectl.KubectlPlugin,
 	}
 
