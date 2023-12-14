@@ -72,6 +72,7 @@ const (
 	Options
 	Ctx
 	Ns
+	Debug
 )
 
 var strToSubcommand = map[string]Subcommand{
@@ -119,6 +120,7 @@ var strToSubcommand = map[string]Subcommand{
 	"options":       Options,
 	"ctx":           Ctx,
 	"ns":            Ns,
+	"debug":         Debug,
 }
 
 func InspectSubcommand(command string) (Subcommand, bool) {
