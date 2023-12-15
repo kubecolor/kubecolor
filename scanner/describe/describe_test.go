@@ -76,6 +76,41 @@ func TestScanner_nested(t *testing.T) {
 	}
 }
 
+func TestScanner_tabbedValues(t *testing.T) {
+	const input = "" +
+		"  apiVersion\t<string>\n" +
+		"  kind\t<string>\n" +
+		"  metadata\t<ObjectMeta>\n" +
+		"    name\t<string>\n" +
+		"    labels\t<map[string]string>\n" +
+		"  spec\t<PodSpec>\n" +
+		"    containers\t<[]Container> -required-\n" +
+		"      args\t<[]string>\n" +
+		"      command\t<[]string>\n" +
+		"      env\t<[]EnvVar>\n" +
+		"        name\t<string> -required-\n" +
+		"        value\t<string>\n"
+
+	s := New(strings.NewReader(input))
+
+	mustScanLine(t, s, "  ~apiVersion~\t~<string>~", "apiVersion")
+	mustScanLine(t, s, "  ~kind~\t~<string>~", "kind")
+	mustScanLine(t, s, "  ~metadata~\t~<ObjectMeta>~", "metadata")
+	mustScanLine(t, s, "    ~name~\t~<string>~", "metadata/name")
+	mustScanLine(t, s, "    ~labels~\t~<map[string]string>~", "metadata/labels")
+	mustScanLine(t, s, "  ~spec~\t~<PodSpec>~", "spec")
+	mustScanLine(t, s, "    ~containers~\t~<[]Container> -required-~", "spec/containers")
+	mustScanLine(t, s, "      ~args~\t~<[]string>~", "spec/containers/args")
+	mustScanLine(t, s, "      ~command~\t~<[]string>~", "spec/containers/command")
+	mustScanLine(t, s, "      ~env~\t~<[]EnvVar>~", "spec/containers/env")
+	mustScanLine(t, s, "        ~name~\t~<string> -required-~", "spec/containers/env/name")
+	mustScanLine(t, s, "        ~value~\t~<string>~", "spec/containers/env/value")
+
+	if s.Scan() {
+		t.Fatalf("Expected no more scans, but got: %#v", s.Line())
+	}
+}
+
 func mustScanLine(t *testing.T, s *Scanner, line, path string) {
 	t.Helper()
 	if !s.Scan() {

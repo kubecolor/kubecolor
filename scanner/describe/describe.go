@@ -33,10 +33,31 @@ func (line Line) GoString() string {
 	return string(bytes.Join([][]byte{line.Indent, line.Key, line.Spacing, line.Value, line.Trailing}, []byte("~")))
 }
 
+type PathSegment struct {
+	Segment   string
+	KeyIndent int
+}
+
+func newPathSegment(line Line) PathSegment {
+	if len(line.Key) == 0 {
+		return PathSegment{}
+	}
+
+	// Converting it to string here does copy the slice, but this is intended.
+	// The [[]byte] returned by [bufio.Scanner.Bytes] references a mutating
+	// slices, which means if we keep the value for multiple [bufio.Scanner.Scan]
+	// calls, then the value might get corrupted.
+
+	if cut, ok := bytes.CutSuffix(line.Key, []byte{':'}); ok {
+		return PathSegment{Segment: string(cut), KeyIndent: line.KeyIndent()}
+	}
+	return PathSegment{Segment: string(line.Key), KeyIndent: line.KeyIndent()}
+}
+
 type Scanner struct {
-	lineScanner *bufio.Scanner
-	prevLine    Line
-	path        []pathSegment
+	lineScanner  *bufio.Scanner
+	prevLine     Line
+	pathSegments []PathSegment
 }
 
 func New(reader io.Reader) *Scanner {
@@ -51,13 +72,17 @@ func (s *Scanner) Line() Line {
 
 func (s *Scanner) Path() string {
 	var sb strings.Builder
-	for i, p := range s.path {
+	for i, p := range s.pathSegments {
 		if i > 0 {
 			sb.WriteByte('/')
 		}
 		sb.WriteString(p.Segment)
 	}
 	return sb.String()
+}
+
+func (s *Scanner) PathSegments() []PathSegment {
+	return s.pathSegments
 }
 
 func (s *Scanner) Err() error {
@@ -74,10 +99,10 @@ func (s *Scanner) Scan() bool {
 	line := s.parseLine(b)
 	if len(line.Key) > 0 {
 		segment := newPathSegment(line)
-		for len(s.path) > 0 && s.path[len(s.path)-1].KeyIndent >= segment.KeyIndent {
-			s.path = s.path[:len(s.path)-1]
+		for len(s.pathSegments) > 0 && s.pathSegments[len(s.pathSegments)-1].KeyIndent >= segment.KeyIndent {
+			s.pathSegments = s.pathSegments[:len(s.pathSegments)-1]
 		}
-		s.path = append(s.path, segment)
+		s.pathSegments = append(s.pathSegments, segment)
 	}
 	s.prevLine = line
 	return true
@@ -123,11 +148,11 @@ func (s *Scanner) parseLine(b []byte) Line {
 	// Looking for double space, as some keys have spaces in them, e.g:
 	// "QoS Class:                   Burstable"
 	//            ^endOfKey
-	endOfKey := bytes.Index(leftTrimmed, doubleSpace)
+	endOfKey := indexOfSpace(leftTrimmed)
 	if endOfKey < 0 {
 		// No end of key, so there's no value here
 
-		if bytes.HasSuffix(leftTrimmed, []byte{':'}) {
+		if leftTrimmed[len(leftTrimmed)-1] == ':' {
 			// Ending with ":" always means it's a key
 			line.Key = leftTrimmed
 			return line
@@ -140,6 +165,7 @@ func (s *Scanner) parseLine(b []byte) Line {
 			line.Value = leftTrimmed
 			return line
 		}
+
 		if len(s.prevLine.Key) == 0 && len(s.prevLine.Value) > 0 && keyIndex == s.prevLine.ValueIndent() {
 			// Previous was array element, so keep being array element
 			// "Args:"
@@ -184,30 +210,21 @@ func (s *Scanner) parseLine(b []byte) Line {
 
 func indexOfNonSpace(b []byte) int {
 	for i := 0; i < len(b); i++ {
-		if b[i] != ' ' {
+		if b[i] != ' ' && b[i] != '\t' {
 			return i
 		}
 	}
 	return -1
 }
 
-type pathSegment struct {
-	Segment   string
-	KeyIndent int
-}
-
-func newPathSegment(line Line) pathSegment {
-	if len(line.Key) == 0 {
-		return pathSegment{}
+func indexOfSpace(b []byte) int {
+	spaceIndex := bytes.Index(b, doubleSpace)
+	tabIndex := bytes.IndexByte(b, '\t')
+	if spaceIndex >= 0 && tabIndex >= 0 {
+		return min(spaceIndex, tabIndex)
 	}
-
-	// Converting it to string here does copy the slice, but this is intended.
-	// The [[]byte] returned by [bufio.Scanner.Bytes] references a mutating
-	// slices, which means if we keep the value for multiple [bufio.Scanner.Scan]
-	// calls, then the value might get corrupted.
-
-	if cut, ok := bytes.CutSuffix(line.Key, []byte{':'}); ok {
-		return pathSegment{Segment: string(cut), KeyIndent: line.KeyIndent()}
+	if spaceIndex >= 0 {
+		return spaceIndex
 	}
-	return pathSegment{Segment: string(line.Key), KeyIndent: line.KeyIndent()}
+	return tabIndex
 }
