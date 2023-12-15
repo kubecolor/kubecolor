@@ -1,0 +1,21 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Docker (don't actually need these in Docker builds)
+.dockerignore
+Dockerfile
+
+# Documentation
+**/*.md
+**/*.txt
+LICENSE
+
+# Build files
+Makefile
+.github
+
+# Data
+**/*.yml
+**/*.yaml
