@@ -3,12 +3,11 @@ package describe
 import (
 	"strings"
 	"testing"
-
-	"github.com/kubecolor/kubecolor/testutil"
 )
 
 func TestScanner_noKeyIndent(t *testing.T) {
 	const input = "" +
+		"    \n" +
 		"Name:             traefik-64d54f8757-blrj9\n" +
 		"Namespace:        traefik\n" +
 		"Labels:           app.kubernetes.io/instance=traefik-traefik\n" +
@@ -19,66 +18,52 @@ func TestScanner_noKeyIndent(t *testing.T) {
 
 	s := New(strings.NewReader(input))
 
-	mustScanToken(t, s, KindKey, "Name:", 0, 18)
-	mustScanToken(t, s, KindWhitespace, "             ", 0, 18)
-	mustScanToken(t, s, KindValue, "traefik-64d54f8757-blrj9", 0, 18)
-	mustScanToken(t, s, KindEOL, "\n", 0, 18)
-	mustMatchState(t, s, 0, 18, []string{"Name"})
-
-	mustScanToken(t, s, KindKey, "Namespace:", 0, 18)
-	mustScanToken(t, s, KindWhitespace, "        ", 0, 18)
-	mustScanToken(t, s, KindValue, "traefik", 0, 18)
-	mustScanToken(t, s, KindEOL, "\n", 0, 18)
-	mustMatchState(t, s, 0, 18, []string{"Namespace"})
-
-	mustScanToken(t, s, KindKey, "Labels:", 0, 18)
-	mustScanToken(t, s, KindWhitespace, "           ", 0, 18)
-	mustScanToken(t, s, KindValue, "app.kubernetes.io/instance=traefik-traefik", 0, 18)
-	mustScanToken(t, s, KindEOL, "\n", 0, 18)
-	mustMatchState(t, s, 0, 18, []string{"Labels"})
-
-	mustScanToken(t, s, KindWhitespace, "                  ", 0, 18)
-	mustScanToken(t, s, KindValue, "app.kubernetes.io/managed-by=Helm", 0, 18)
-	mustScanToken(t, s, KindEOL, "\n", 0, 18)
-	mustMatchState(t, s, 0, 18, []string{"Labels"})
-
-	mustScanToken(t, s, KindWhitespace, "                  ", 0, 18)
-	mustScanToken(t, s, KindValue, "app.kubernetes.io/name=traefik", 0, 18)
-	mustScanToken(t, s, KindEOL, "\n", 0, 18)
-	mustMatchState(t, s, 0, 18, []string{"Labels"})
-
-	mustScanToken(t, s, KindKey, "Status:", 0, 18)
-	mustScanToken(t, s, KindWhitespace, "           ", 0, 18)
-	mustScanToken(t, s, KindValue, "Running", 0, 18)
-	mustScanToken(t, s, KindEOL, "\n", 0, 18)
-	mustMatchState(t, s, 0, 18, []string{"Status"})
-
-	mustScanToken(t, s, KindKey, "IP:", 0, 18)
-	mustScanToken(t, s, KindWhitespace, "               ", 0, 18)
-	mustScanToken(t, s, KindValue, "10.0.0.1", 0, 18)
-	mustScanToken(t, s, KindEOL, "\n", 0, 18)
-	mustMatchState(t, s, 0, 18, []string{"IP"})
+	mustScanLine(t, s, "~~~~    ", "")
+	mustScanLine(t, s, "~Name:~             ~traefik-64d54f8757-blrj9~", "Name")
+	mustScanLine(t, s, "~Namespace:~        ~traefik~", "Namespace")
+	mustScanLine(t, s, "~Labels:~           ~app.kubernetes.io/instance=traefik-traefik~", "Labels")
+	mustScanLine(t, s, "                  ~~~app.kubernetes.io/managed-by=Helm~", "Labels")
+	mustScanLine(t, s, "                  ~~~app.kubernetes.io/name=traefik~", "Labels")
+	mustScanLine(t, s, "~Status:~           ~Running~", "Status")
+	mustScanLine(t, s, "~IP:~               ~10.0.0.1~", "IP")
 
 	if s.Scan() {
-		t.Fatalf("Expected no more scans, but got: %#v", s.Token())
+		t.Fatalf("Expected no more scans, but got: %#v", s.Line())
 	}
 }
 
-func mustScanToken(t *testing.T, s *Scanner, wantKind Kind, wantString string, wantKeyIndent int, wantValueIndent int) {
+func TestScanner_list(t *testing.T) {
+	const input = "" +
+		"Args:\n" +
+		"  --first-flag\n" +
+		"  --second-flag=with single spaces in value\n" +
+		"  --last-flag\n"
+
+	s := New(strings.NewReader(input))
+
+	mustScanLine(t, s, "~Args:~~~", "Args")
+	mustScanLine(t, s, "  ~~~--first-flag~", "Args")
+	mustScanLine(t, s, "  ~~~--second-flag=with single spaces in value~", "Args")
+	mustScanLine(t, s, "  ~~~--last-flag~", "Args")
+
+	if s.Scan() {
+		t.Fatalf("Expected no more scans, but got: %#v", s.Line())
+	}
+}
+
+func mustScanLine(t *testing.T, s *Scanner, line, path string) {
 	t.Helper()
 	if !s.Scan() {
-		t.Fatalf("Failed scan; Expected value kind=%s: %q", wantKind, wantString)
+		t.Fatalf("Failed scan; Expected value %q", line)
 	}
-	testutil.MustEqual(t, Token{
-		Kind:  wantKind,
-		Bytes: []byte(wantString),
-	}, s.Token())
-}
 
-func mustMatchState(t *testing.T, s *Scanner, wantKeyIndent, wantValueIndent int, path []string) {
-	testutil.MustEqual(t, State{
-		KeyIndent:   wantKeyIndent,
-		ValueIndent: wantValueIndent,
-		Path:        path,
-	}, s.State())
+	gotLine := s.Line().GoString()
+	if gotLine != line {
+		t.Errorf("Wrong line (format: indent~key~spacing~value~trailing)\nWant %q\nGot  %q", line, gotLine)
+	}
+
+	gotPath := s.Path()
+	if gotPath != path {
+		t.Errorf("Wrong path; Expected %q, but got %q", path, gotPath)
+	}
 }

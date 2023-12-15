@@ -3,79 +3,54 @@ package describe
 import (
 	"bufio"
 	"bytes"
-	"fmt"
 	"io"
+	"strings"
 )
 
 var doubleSpace = []byte{' ', ' '}
-var lineFeed = []byte{'\n'}
-var lineFeedToken = Token{Kind: KindEOL, Bytes: lineFeed}
 
-type Kind byte
-
-const (
-	KindUnknown Kind = iota
-	KindKey
-	KindValue
-	KindWhitespace
-	KindEOL
-)
-
-func (k Kind) String() string {
-	switch k {
-	case KindUnknown:
-		return "unknown"
-	case KindKey:
-		return "key"
-	case KindValue:
-		return "value"
-	case KindWhitespace:
-		return "whitespace"
-	case KindEOL:
-		return "eol"
-	default:
-		return fmt.Sprintf("%[1]T(%[1]d)", k)
-	}
+type Line struct {
+	Indent   []byte
+	Key      []byte
+	Spacing  []byte
+	Value    []byte
+	Trailing []byte
 }
 
-type Token struct {
-	Bytes []byte
-	Kind  Kind
+func (line Line) KeyIndent() int {
+	return len(line.Indent)
 }
 
-type State struct {
-	KeyIndent   int
-	ValueIndent int
-	Path        []string
+func (line Line) ValueIndent() int {
+	return len(line.Indent) + len(line.Key) + len(line.Spacing)
+}
+
+func (line Line) String() string {
+	return string(bytes.Join([][]byte{line.Indent, line.Key, line.Spacing, line.Value, line.Trailing}, nil))
+}
+
+func (line Line) GoString() string {
+	return string(bytes.Join([][]byte{line.Indent, line.Key, line.Spacing, line.Value, line.Trailing}, []byte("~")))
 }
 
 type Scanner struct {
 	lineScanner *bufio.Scanner
-	tokens      []Token
-	tokenIndex  int
-	state       State
-	lastState   State
+	prevLine    Line
+	path        []string
 }
 
 func New(reader io.Reader) *Scanner {
 	return &Scanner{
 		lineScanner: bufio.NewScanner(reader),
-
-		// Set fields to intentionally wrong values
-		state:     State{KeyIndent: -1, ValueIndent: -1},
-		lastState: State{KeyIndent: -1, ValueIndent: -1},
 	}
 }
 
-func (s *Scanner) Token() Token {
-	if s.tokenIndex >= len(s.tokens) {
-		return Token{}
-	}
-	return s.tokens[s.tokenIndex]
+func (s *Scanner) Line() Line {
+	return s.prevLine
 }
 
-func (s *Scanner) State() State {
-	return s.state
+func (s *Scanner) Path() string {
+	return strings.Join(s.path, "/")
 }
 
 func (s *Scanner) Err() error {
@@ -83,21 +58,22 @@ func (s *Scanner) Err() error {
 }
 
 func (s *Scanner) Scan() bool {
-	if s.tokenIndex < len(s.tokens)-1 {
-		s.tokenIndex++
-		return true
-	}
 	if !s.lineScanner.Scan() {
 		return false
 	}
 
-	clear(s.tokens) // let byte slices get GC'd
-	s.tokens = s.tokens[:0]
-	s.tokenIndex = 0
-	s.lastState = s.state
-	s.state = State{}
-
 	b := s.lineScanner.Bytes()
+
+	line := s.parseLine(b)
+	if len(line.Key) > 0 {
+		s.path = []string{newPathSegment(line.Key)}
+	}
+	s.prevLine = line
+	return true
+}
+
+func (s *Scanner) parseLine(b []byte) Line {
+	var line Line
 
 	// "  IP:           10.0.0.1"
 	//    ^keyIndex
@@ -105,43 +81,30 @@ func (s *Scanner) Scan() bool {
 	if keyIndex < 0 {
 		// No chars on this line. Must be empty line.
 		if len(b) > 0 {
-			s.tokens = append(s.tokens, Token{
-				Kind:  KindWhitespace,
-				Bytes: b,
-			})
+			line.Trailing = b
 		}
-		s.tokens = append(s.tokens, lineFeedToken)
-		return true
+		return line
 	}
 
 	// Add the indentation whitespace
 	if keyIndex > 0 {
 		// "  IP:           10.0.0.1"
 		//  ^^
-		s.state.KeyIndent = keyIndex
-		s.tokens = append(s.tokens, Token{
-			Kind:  KindWhitespace,
-			Bytes: b[:keyIndex],
-		})
+		line.Indent = b[:keyIndex]
 	}
 
 	// "  IP:           10.0.0.1"
 	//    ^^^^^^^^^^^^^^^^^^^^^^
 	leftTrimmed := b[keyIndex:]
 
-	if keyIndex == s.lastState.ValueIndent {
+	if len(s.prevLine.Value) > 0 && keyIndex == s.prevLine.ValueIndent() {
 		// Multiple values, so treat remainder just as value:
 		// "Labels:           app.kubernetes.io/instance=traefik-traefik"
 		// "                  app.kubernetes.io/managed-by=Helm"
 		// "                  app.kubernetes.io/name=traefik"
 		//                    ^lastValueIndent
-		s.state = s.lastState
-		s.tokens = append(s.tokens, Token{
-			Kind:  KindValue,
-			Bytes: leftTrimmed,
-		})
-		s.tokens = append(s.tokens, lineFeedToken)
-		return true
+		line.Value = leftTrimmed
+		return line
 	}
 
 	// "IP:           10.0.0.1"
@@ -152,57 +115,54 @@ func (s *Scanner) Scan() bool {
 	endOfKey := bytes.Index(leftTrimmed, doubleSpace)
 	if endOfKey < 0 {
 		// No end of key, so there's no value here
-		s.tokens = append(s.tokens, Token{
-			Kind:  KindKey,
-			Bytes: leftTrimmed,
-		})
-		s.tokens = append(s.tokens, lineFeedToken)
-		return true
+
+		if len(s.prevLine.Key) > 0 && len(s.prevLine.Value) == 0 && keyIndex > s.prevLine.KeyIndent() {
+			// "Args:"
+			// "  --this-flag"
+			//    ^keyIndex
+			line.Value = leftTrimmed
+			return line
+		}
+		if len(s.prevLine.Key) == 0 && len(s.prevLine.Value) > 0 && keyIndex == s.prevLine.ValueIndent() {
+			// Previous was array element, so keep being array element
+			// "Args:"
+			// "  --first-flag"
+			// "  --this-flag"
+			//    ^keyIndex
+			line.Value = leftTrimmed
+			return line
+		}
+
+		line.Key = leftTrimmed
+		return line
 	}
 
 	// "IP:           10.0.0.1"
 	//  ^^^
 	key := leftTrimmed[:endOfKey]
-	s.tokens = append(s.tokens, Token{
-		Kind:  KindKey,
-		Bytes: key,
-	})
-	s.state.Path = append(s.state.Path, newPathSegment(key))
+	line.Key = key
 
 	// "IP:           10.0.0.1"
 	//     ^^^^^^^^^^^^^^^^^^^
-	trailing := leftTrimmed[endOfKey:]
+	pastKey := leftTrimmed[endOfKey:]
 
 	// "IP:           10.0.0.1"
 	//                ^valueIndex
-	valueIndex := indexOfNonSpace(trailing)
+	valueIndex := indexOfNonSpace(pastKey)
 	if valueIndex < 0 {
 		// Maybe just some trailing whitespace on the line
 		// "data:  " => "  "
-		s.tokens = append(s.tokens, Token{
-			Kind:  KindWhitespace,
-			Bytes: trailing,
-		})
-		s.tokens = append(s.tokens, lineFeedToken)
-		return true
+		line.Trailing = pastKey
+		return line
 	}
-	s.state.ValueIndent = valueIndex + endOfKey + keyIndex
 
 	// "           10.0.0.1"
 	//  ^^^^^^^^^^^
-	s.tokens = append(s.tokens, Token{
-		Kind:  KindWhitespace,
-		Bytes: trailing[:valueIndex],
-	})
+	line.Spacing = pastKey[:valueIndex]
 	// "           10.0.0.1"
 	//             ^^^^^^^^
-	s.tokens = append(s.tokens, Token{
-		Kind:  KindValue,
-		Bytes: trailing[valueIndex:],
-	})
-
-	s.tokens = append(s.tokens, lineFeedToken)
-	return true
+	line.Value = pastKey[valueIndex:]
+	return line
 }
 
 func indexOfNonSpace(b []byte) int {
