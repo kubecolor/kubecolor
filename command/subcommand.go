@@ -67,6 +67,7 @@ func isColoringSupported(sc kubectl.Subcommand) bool {
 		kubectl.Ctx,
 		kubectl.Ns,
 		kubectl.Debug,
+		kubectl.KubectlPlugin,
 	}
 
 	for _, u := range unsupported {
