@@ -24,7 +24,7 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 		line := scanner.Line()
 
 		// when there are multiple columns, treat is as table format
-		if bytes.Count(line.Value, doubleSpace) > 2 {
+		if bytes.Count(line.Value, doubleSpace) > 3 {
 			dp.TablePrinter.printLineAsTableFormat(w, line.String(), getColorsByBackground(dp.DarkBackground))
 			continue
 		}
