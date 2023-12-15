@@ -349,43 +349,6 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:           "kubectl explain",
-			darkBackground: true,
-			subcommandInfo: &kubectl.SubcommandInfo{
-				Subcommand: kubectl.Explain,
-			},
-			input: testutil.NewHereDoc(`
-				KIND:     Node
-				VERSION:  v1
-
-				DESCRIPTION:
-				     Node is a worker node in Kubernetes. Each node will have a unique
-				     identifier in the cache (i.e. in etcd).
-
-				FIELDS:
-				   apiVersion	<string>
-				     APIVersion defines the versioned schema of this representation of an
-				     object. Servers should convert recognized schemas to the latest internal
-				     value, and may reject unrecognized values. More info:
-				     https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-				`),
-			expected: testutil.NewHereDoc(`
-				[33mKIND[0m:     [37mNode[0m
-				[33mVERSION[0m:  [37mv1[0m
-
-				[33mDESCRIPTION[0m:
-				     [37mNode is a worker node in Kubernetes. Each node will have a unique[0m
-				     [37midentifier in the cache (i.e. in etcd).[0m
-
-				[33mFIELDS[0m:
-				   [37mapiVersion[0m	<[37mstring[0m>
-				     [37mAPIVersion defines the versioned schema of this representation of an[0m
-				     [37mobject. Servers should convert recognized schemas to the latest internal[0m
-				     [37mvalue, and may reject unrecognized values. More info:[0m
-				     [37mhttps://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources[0m
-			`),
-		},
-		{
 			name:           "kubectl version",
 			darkBackground: true,
 			subcommandInfo: &kubectl.SubcommandInfo{

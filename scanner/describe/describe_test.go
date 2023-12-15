@@ -118,6 +118,35 @@ func TestScanner_tabbedValues(t *testing.T) {
 	}
 }
 
+func TestScanner_explainText(t *testing.T) {
+	const input = "" +
+		"FIELDS:\n" +
+		"  apiVersion\t<string>\n" +
+		"    APIVersion defines the versioned schema of this representation of an object.\n" +
+		"    Servers should convert recognized schemas to the latest internal value, and\n" +
+		"    may reject unrecognized values. More info:\n" +
+		"    https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources\n" +
+		"  spec\t<PodSpec>\n" +
+		"    Specification of the desired behavior of the pod. More info:\n" +
+		"    https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status\n"
+
+	s := NewScanner(strings.NewReader(input))
+
+	mustScanLine(t, s, "~FIELDS:~~~", "FIELDS")
+	mustScanLine(t, s, "  ~apiVersion~\t~<string>~", "FIELDS/apiVersion")
+	mustScanLine(t, s, "    ~~~APIVersion defines the versioned schema of this representation of an object.~", "FIELDS/apiVersion")
+	mustScanLine(t, s, "    ~~~Servers should convert recognized schemas to the latest internal value, and~", "FIELDS/apiVersion")
+	mustScanLine(t, s, "    ~~~may reject unrecognized values. More info:~", "FIELDS/apiVersion")
+	mustScanLine(t, s, "    ~~~https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources~", "FIELDS/apiVersion")
+	mustScanLine(t, s, "  ~spec~\t~<PodSpec>~", "FIELDS/spec")
+	mustScanLine(t, s, "    ~~~Specification of the desired behavior of the pod. More info:~", "FIELDS/spec")
+	mustScanLine(t, s, "    ~~~https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status~", "FIELDS/spec")
+
+	if s.Scan() {
+		t.Fatalf("Expected no more scans, but got: %#v", s.Line())
+	}
+}
+
 func TestScanner_recreateString(t *testing.T) {
 	b, err := testdataFS.ReadFile("testdata/explain-pod.txt")
 	if err != nil {
@@ -153,7 +182,7 @@ func mustScanLine(t *testing.T, s *Scanner, line, path string) {
 		t.Errorf("Wrong line (format: indent~key~spacing~value~trailing)\nWant %q\nGot  %q", line, gotLine)
 	}
 
-	gotPath := s.Path()
+	gotPath := s.Path().String()
 	if gotPath != path {
 		t.Errorf("Wrong path; Expected %q, but got %q", path, gotPath)
 	}

@@ -33,6 +33,37 @@ func (line Line) GoString() string {
 	return string(bytes.Join([][]byte{line.Indent, line.Key, line.Spacing, line.Value, line.Trailing}, []byte("~")))
 }
 
+type Path []PathSegment
+
+func (p Path) String() string {
+	if len(p) == 0 {
+		return ""
+	}
+	if len(p) == 1 {
+		return p[0].Segment
+	}
+	var sb strings.Builder
+	for i, p := range p {
+		if i > 0 {
+			sb.WriteByte('/')
+		}
+		sb.WriteString(p.Segment)
+	}
+	return sb.String()
+}
+
+func (p Path) HasPrefix(segments ...string) bool {
+	for i, s := range segments {
+		if i >= len(p) {
+			return false
+		}
+		if p[i].Segment != s {
+			return false
+		}
+	}
+	return true
+}
+
 type PathSegment struct {
 	Segment   string
 	KeyIndent int
@@ -55,9 +86,12 @@ func newPathSegment(line Line) PathSegment {
 }
 
 type Scanner struct {
-	lineScanner  *bufio.Scanner
-	prevLine     Line
-	pathSegments []PathSegment
+	lineScanner *bufio.Scanner
+	// currentLine is used in [Scanner.Line]
+	currentLine Line
+	// prevNonZeroLine is used when code wants to reference previous line
+	prevNonZeroLine Line
+	pathSegments    []PathSegment
 }
 
 func NewScanner(reader io.Reader) *Scanner {
@@ -67,27 +101,10 @@ func NewScanner(reader io.Reader) *Scanner {
 }
 
 func (s *Scanner) Line() Line {
-	return s.prevLine
+	return s.currentLine
 }
 
-func (s *Scanner) Path() string {
-	if len(s.pathSegments) == 0 {
-		return ""
-	}
-	if len(s.pathSegments) == 1 {
-		return s.pathSegments[0].Segment
-	}
-	var sb strings.Builder
-	for i, p := range s.pathSegments {
-		if i > 0 {
-			sb.WriteByte('/')
-		}
-		sb.WriteString(p.Segment)
-	}
-	return sb.String()
-}
-
-func (s *Scanner) PathSegments() []PathSegment {
+func (s *Scanner) Path() Path {
 	return s.pathSegments
 }
 
@@ -110,7 +127,10 @@ func (s *Scanner) Scan() bool {
 		}
 		s.pathSegments = append(s.pathSegments, segment)
 	}
-	s.prevLine = line
+	s.currentLine = line
+	if len(line.Key) > 0 || len(line.Value) > 0 {
+		s.prevNonZeroLine = line
+	}
 	return true
 }
 
@@ -139,7 +159,7 @@ func (s *Scanner) parseLine(b []byte) Line {
 	//    ^^^^^^^^^^^^^^^^^^^^^^
 	leftTrimmed := b[keyIndex:]
 
-	if len(s.prevLine.Value) > 0 && keyIndex == s.prevLine.ValueIndent() {
+	if len(s.prevNonZeroLine.Value) > 0 && keyIndex == s.prevNonZeroLine.ValueIndent() {
 		// Multiple values, so treat remainder just as value:
 		// "Labels:           app.kubernetes.io/instance=traefik-traefik"
 		// "                  app.kubernetes.io/managed-by=Helm"
@@ -159,20 +179,35 @@ func (s *Scanner) parseLine(b []byte) Line {
 		// No end of key, so there's no value here
 
 		if leftTrimmed[len(leftTrimmed)-1] == ':' {
-			// Ending with ":" always means it's a key
-			line.Key = leftTrimmed
-			return line
+			// Ending with ":" always means it's a key.
+			// Exception: in `kubectl explain` lots of lines ends with "More info:"
+			if !bytes.HasSuffix(leftTrimmed, []byte(" info:")) {
+				line.Key = leftTrimmed
+				return line
+			}
 		}
 
-		if len(s.prevLine.Key) > 0 && len(s.prevLine.Value) == 0 && keyIndex > s.prevLine.KeyIndent() {
-			// "Args:"
-			// "  --this-flag"
-			//    ^keyIndex
-			line.Value = leftTrimmed
-			return line
+		if len(s.prevNonZeroLine.Key) > 0 && keyIndex > s.prevNonZeroLine.KeyIndent() {
+			if len(s.prevNonZeroLine.Value) == 0 {
+				// "Args:"
+				// "  --this-flag"
+				//    ^keyIndex
+				line.Value = leftTrimmed
+				return line
+			}
+
+			lastValueWithoutRequired := bytes.TrimSuffix(s.prevNonZeroLine.Value, []byte(" -required-"))
+			if s.prevNonZeroLine.Value[0] == '<' && lastValueWithoutRequired[len(lastValueWithoutRequired)-1] == '>' {
+				// Special case for type declarations (e.g in `kubectl explain`)
+				// "apiVersion    <string>"
+				// "  --this-flag"
+				//    ^keyIndex
+				line.Value = leftTrimmed
+				return line
+			}
 		}
 
-		if len(s.prevLine.Key) == 0 && len(s.prevLine.Value) > 0 && keyIndex == s.prevLine.ValueIndent() {
+		if len(s.prevNonZeroLine.Key) == 0 && len(s.prevNonZeroLine.Value) > 0 && keyIndex == s.prevNonZeroLine.ValueIndent() {
 			// Previous was array element, so keep being array element
 			// "Args:"
 			// "  --first-flag"
