@@ -30,6 +30,8 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository }}:${{ github.sha }}
+          build-args:
+            VERSION=${{ github.sha }}
   push_to_registry_on_tag:
     name: Push docker image to GitHub Container Registry on tag
     runs-on: ubuntu-latest
@@ -55,3 +57,5 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}:${{ github.ref_name}}
             ghcr.io/${{ github.repository }}:latest
+          build-args:
+            VERSION=${{ github.ref_name }}
