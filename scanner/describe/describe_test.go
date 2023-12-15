@@ -23,7 +23,7 @@ func TestScanner_noKeyIndent(t *testing.T) {
 		"Status:           Running\n" +
 		"IP:               10.0.0.1\n"
 
-	s := New(strings.NewReader(input))
+	s := NewScanner(strings.NewReader(input))
 
 	mustScanLine(t, s, "~~~~    ", "")
 	mustScanLine(t, s, "~Name:~             ~traefik-64d54f8757-blrj9~", "Name")
@@ -46,7 +46,7 @@ func TestScanner_list(t *testing.T) {
 		"  --second-flag=with single spaces in value\n" +
 		"  --last-flag\n"
 
-	s := New(strings.NewReader(input))
+	s := NewScanner(strings.NewReader(input))
 
 	mustScanLine(t, s, "~Args:~~~", "Args")
 	mustScanLine(t, s, "  ~~~--first-flag~", "Args")
@@ -68,7 +68,7 @@ func TestScanner_nested(t *testing.T) {
 		"  linkerd:\n" +
 		"    State:          Running\n"
 
-	s := New(strings.NewReader(input))
+	s := NewScanner(strings.NewReader(input))
 
 	mustScanLine(t, s, "~Containers:~~~", "Containers")
 	mustScanLine(t, s, "  ~traefik:~~~", "Containers/traefik")
@@ -98,7 +98,7 @@ func TestScanner_tabbedValues(t *testing.T) {
 		"        name\t<string> -required-\n" +
 		"        value\t<string>\n"
 
-	s := New(strings.NewReader(input))
+	s := NewScanner(strings.NewReader(input))
 
 	mustScanLine(t, s, "  ~apiVersion~\t~<string>~", "apiVersion")
 	mustScanLine(t, s, "  ~kind~\t~<string>~", "kind")
@@ -126,7 +126,7 @@ func TestScanner_recreateString(t *testing.T) {
 
 	var buf bytes.Buffer
 
-	s := New(bytes.NewReader(b))
+	s := NewScanner(bytes.NewReader(b))
 	for s.Scan() {
 		buf.WriteString(s.Line().String())
 		buf.WriteByte('\n')

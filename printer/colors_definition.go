@@ -21,7 +21,8 @@ var (
 	// colors which look good in dark-backgrounded environment
 	KeyColorForDark    = color.Cyan
 	StringColorForDark = color.White
-	BoolColorForDark   = color.Green
+	TrueColorForDark   = color.Green
+	FalseColorForDark  = color.Red
 	NumberColorForDark = color.Magenta
 	NullColorForDark   = color.Yellow
 	HeaderColorForDark = color.White // for plain table
@@ -29,7 +30,8 @@ var (
 	// colors which look good in light-backgrounded environment
 	KeyColorForLight    = color.Blue
 	StringColorForLight = color.Black
-	BoolColorForLight   = color.Green
+	TrueColorForLight   = color.Green
+	FalseColorForLight  = color.Red
 	NumberColorForLight = color.Magenta
 	NullColorForLight   = color.Yellow
 	HeaderColorForLight = color.Black // for plain table

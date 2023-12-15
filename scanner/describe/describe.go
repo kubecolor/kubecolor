@@ -60,7 +60,7 @@ type Scanner struct {
 	pathSegments []PathSegment
 }
 
-func New(reader io.Reader) *Scanner {
+func NewScanner(reader io.Reader) *Scanner {
 	return &Scanner{
 		lineScanner: bufio.NewScanner(reader),
 	}
@@ -71,6 +71,12 @@ func (s *Scanner) Line() Line {
 }
 
 func (s *Scanner) Path() string {
+	if len(s.pathSegments) == 0 {
+		return ""
+	}
+	if len(s.pathSegments) == 1 {
+		return s.pathSegments[0].Segment
+	}
 	var sb strings.Builder
 	for i, p := range s.pathSegments {
 		if i > 0 {

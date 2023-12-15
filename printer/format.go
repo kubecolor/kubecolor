@@ -1,7 +1,6 @@
 package printer
 
 import (
-	"strconv"
 	"strings"
 
 	"github.com/kubecolor/kubecolor/color"
@@ -29,21 +28,25 @@ func getColorByKeyIndent(indent int, basicIndentWidth int, dark bool) color.Colo
 // getColorByValueType returns a color by value.
 // This is intended to be used to colorize any structured data e.g. Json, Yaml.
 func getColorByValueType(val string, dark bool) color.Color {
-	if val == "null" || val == "<none>" || val == "<unknown>" {
+	switch val {
+	case "null", "<none>", "<unknown>", "<unset>":
 		if dark {
 			return NullColorForDark
 		}
 		return NullColorForLight
-	}
-
-	if val == "true" || val == "false" {
+	case "true", "True":
 		if dark {
-			return BoolColorForDark
+			return TrueColorForDark
 		}
-		return BoolColorForLight
+		return TrueColorForLight
+	case "false", "False":
+		if dark {
+			return FalseColorForDark
+		}
+		return FalseColorForLight
 	}
 
-	if _, err := strconv.Atoi(val); err == nil {
+	if isOnlyDigits(val) {
 		if dark {
 			return NumberColorForDark
 		}
@@ -54,6 +57,19 @@ func getColorByValueType(val string, dark bool) color.Color {
 		return StringColorForDark
 	}
 	return StringColorForLight
+}
+
+func isOnlyDigits(s string) bool {
+	for _, r := range s {
+		if !isDigit(r) {
+			return false
+		}
+	}
+	return true
+}
+
+func isDigit(r rune) bool {
+	return r >= '0' && r <= '9'
 }
 
 // getColorsByBackground returns a preset of colors depending on given background color
