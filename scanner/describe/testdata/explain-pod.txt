@@ -1,0 +1,1177 @@
+KIND:       Pod
+VERSION:    v1
+
+DESCRIPTION:
+    Pod is a collection of containers that can run on a host. This resource is
+    created by clients and scheduled onto hosts.
+
+FIELDS:
+  apiVersion	<string>
+  kind	<string>
+  metadata	<ObjectMeta>
+    annotations	<map[string]string>
+    creationTimestamp	<string>
+    deletionGracePeriodSeconds	<integer>
+    deletionTimestamp	<string>
+    finalizers	<[]string>
+    generateName	<string>
+    generation	<integer>
+    labels	<map[string]string>
+    managedFields	<[]ManagedFieldsEntry>
+      apiVersion	<string>
+      fieldsType	<string>
+      fieldsV1	<FieldsV1>
+      manager	<string>
+      operation	<string>
+      subresource	<string>
+      time	<string>
+    name	<string>
+    namespace	<string>
+    ownerReferences	<[]OwnerReference>
+      apiVersion	<string> -required-
+      blockOwnerDeletion	<boolean>
+      controller	<boolean>
+      kind	<string> -required-
+      name	<string> -required-
+      uid	<string> -required-
+    resourceVersion	<string>
+    selfLink	<string>
+    uid	<string>
+  spec	<PodSpec>
+    activeDeadlineSeconds	<integer>
+    affinity	<Affinity>
+      nodeAffinity	<NodeAffinity>
+        preferredDuringSchedulingIgnoredDuringExecution	<[]PreferredSchedulingTerm>
+          preference	<NodeSelectorTerm> -required-
+            matchExpressions	<[]NodeSelectorRequirement>
+              key	<string> -required-
+              operator	<string> -required-
+              values	<[]string>
+            matchFields	<[]NodeSelectorRequirement>
+              key	<string> -required-
+              operator	<string> -required-
+              values	<[]string>
+          weight	<integer> -required-
+        requiredDuringSchedulingIgnoredDuringExecution	<NodeSelector>
+          nodeSelectorTerms	<[]NodeSelectorTerm> -required-
+            matchExpressions	<[]NodeSelectorRequirement>
+              key	<string> -required-
+              operator	<string> -required-
+              values	<[]string>
+            matchFields	<[]NodeSelectorRequirement>
+              key	<string> -required-
+              operator	<string> -required-
+              values	<[]string>
+      podAffinity	<PodAffinity>
+        preferredDuringSchedulingIgnoredDuringExecution	<[]WeightedPodAffinityTerm>
+          podAffinityTerm	<PodAffinityTerm> -required-
+            labelSelector	<LabelSelector>
+              matchExpressions	<[]LabelSelectorRequirement>
+                key	<string> -required-
+                operator	<string> -required-
+                values	<[]string>
+              matchLabels	<map[string]string>
+            namespaceSelector	<LabelSelector>
+              matchExpressions	<[]LabelSelectorRequirement>
+                key	<string> -required-
+                operator	<string> -required-
+                values	<[]string>
+              matchLabels	<map[string]string>
+            namespaces	<[]string>
+            topologyKey	<string> -required-
+          weight	<integer> -required-
+        requiredDuringSchedulingIgnoredDuringExecution	<[]PodAffinityTerm>
+          labelSelector	<LabelSelector>
+            matchExpressions	<[]LabelSelectorRequirement>
+              key	<string> -required-
+              operator	<string> -required-
+              values	<[]string>
+            matchLabels	<map[string]string>
+          namespaceSelector	<LabelSelector>
+            matchExpressions	<[]LabelSelectorRequirement>
+              key	<string> -required-
+              operator	<string> -required-
+              values	<[]string>
+            matchLabels	<map[string]string>
+          namespaces	<[]string>
+          topologyKey	<string> -required-
+      podAntiAffinity	<PodAntiAffinity>
+        preferredDuringSchedulingIgnoredDuringExecution	<[]WeightedPodAffinityTerm>
+          podAffinityTerm	<PodAffinityTerm> -required-
+            labelSelector	<LabelSelector>
+              matchExpressions	<[]LabelSelectorRequirement>
+                key	<string> -required-
+                operator	<string> -required-
+                values	<[]string>
+              matchLabels	<map[string]string>
+            namespaceSelector	<LabelSelector>
+              matchExpressions	<[]LabelSelectorRequirement>
+                key	<string> -required-
+                operator	<string> -required-
+                values	<[]string>
+              matchLabels	<map[string]string>
+            namespaces	<[]string>
+            topologyKey	<string> -required-
+          weight	<integer> -required-
+        requiredDuringSchedulingIgnoredDuringExecution	<[]PodAffinityTerm>
+          labelSelector	<LabelSelector>
+            matchExpressions	<[]LabelSelectorRequirement>
+              key	<string> -required-
+              operator	<string> -required-
+              values	<[]string>
+            matchLabels	<map[string]string>
+          namespaceSelector	<LabelSelector>
+            matchExpressions	<[]LabelSelectorRequirement>
+              key	<string> -required-
+              operator	<string> -required-
+              values	<[]string>
+            matchLabels	<map[string]string>
+          namespaces	<[]string>
+          topologyKey	<string> -required-
+    automountServiceAccountToken	<boolean>
+    containers	<[]Container> -required-
+      args	<[]string>
+      command	<[]string>
+      env	<[]EnvVar>
+        name	<string> -required-
+        value	<string>
+        valueFrom	<EnvVarSource>
+          configMapKeyRef	<ConfigMapKeySelector>
+            key	<string> -required-
+            name	<string>
+            optional	<boolean>
+          fieldRef	<ObjectFieldSelector>
+            apiVersion	<string>
+            fieldPath	<string> -required-
+          resourceFieldRef	<ResourceFieldSelector>
+            containerName	<string>
+            divisor	<Quantity>
+            resource	<string> -required-
+          secretKeyRef	<SecretKeySelector>
+            key	<string> -required-
+            name	<string>
+            optional	<boolean>
+      envFrom	<[]EnvFromSource>
+        configMapRef	<ConfigMapEnvSource>
+          name	<string>
+          optional	<boolean>
+        prefix	<string>
+        secretRef	<SecretEnvSource>
+          name	<string>
+          optional	<boolean>
+      image	<string>
+      imagePullPolicy	<string>
+      lifecycle	<Lifecycle>
+        postStart	<LifecycleHandler>
+          exec	<ExecAction>
+            command	<[]string>
+          httpGet	<HTTPGetAction>
+            host	<string>
+            httpHeaders	<[]HTTPHeader>
+              name	<string> -required-
+              value	<string> -required-
+            path	<string>
+            port	<IntOrString> -required-
+            scheme	<string>
+          tcpSocket	<TCPSocketAction>
+            host	<string>
+            port	<IntOrString> -required-
+        preStop	<LifecycleHandler>
+          exec	<ExecAction>
+            command	<[]string>
+          httpGet	<HTTPGetAction>
+            host	<string>
+            httpHeaders	<[]HTTPHeader>
+              name	<string> -required-
+              value	<string> -required-
+            path	<string>
+            port	<IntOrString> -required-
+            scheme	<string>
+          tcpSocket	<TCPSocketAction>
+            host	<string>
+            port	<IntOrString> -required-
+      livenessProbe	<Probe>
+        exec	<ExecAction>
+          command	<[]string>
+        failureThreshold	<integer>
+        grpc	<GRPCAction>
+          port	<integer> -required-
+          service	<string>
+        httpGet	<HTTPGetAction>
+          host	<string>
+          httpHeaders	<[]HTTPHeader>
+            name	<string> -required-
+            value	<string> -required-
+          path	<string>
+          port	<IntOrString> -required-
+          scheme	<string>
+        initialDelaySeconds	<integer>
+        periodSeconds	<integer>
+        successThreshold	<integer>
+        tcpSocket	<TCPSocketAction>
+          host	<string>
+          port	<IntOrString> -required-
+        terminationGracePeriodSeconds	<integer>
+        timeoutSeconds	<integer>
+      name	<string> -required-
+      ports	<[]ContainerPort>
+        containerPort	<integer> -required-
+        hostIP	<string>
+        hostPort	<integer>
+        name	<string>
+        protocol	<string>
+      readinessProbe	<Probe>
+        exec	<ExecAction>
+          command	<[]string>
+        failureThreshold	<integer>
+        grpc	<GRPCAction>
+          port	<integer> -required-
+          service	<string>
+        httpGet	<HTTPGetAction>
+          host	<string>
+          httpHeaders	<[]HTTPHeader>
+            name	<string> -required-
+            value	<string> -required-
+          path	<string>
+          port	<IntOrString> -required-
+          scheme	<string>
+        initialDelaySeconds	<integer>
+        periodSeconds	<integer>
+        successThreshold	<integer>
+        tcpSocket	<TCPSocketAction>
+          host	<string>
+          port	<IntOrString> -required-
+        terminationGracePeriodSeconds	<integer>
+        timeoutSeconds	<integer>
+      resizePolicy	<[]ContainerResizePolicy>
+        resourceName	<string> -required-
+        restartPolicy	<string> -required-
+      resources	<ResourceRequirements>
+        claims	<[]ResourceClaim>
+          name	<string> -required-
+        limits	<map[string]Quantity>
+        requests	<map[string]Quantity>
+      securityContext	<SecurityContext>
+        allowPrivilegeEscalation	<boolean>
+        capabilities	<Capabilities>
+          add	<[]string>
+          drop	<[]string>
+        privileged	<boolean>
+        procMount	<string>
+        readOnlyRootFilesystem	<boolean>
+        runAsGroup	<integer>
+        runAsNonRoot	<boolean>
+        runAsUser	<integer>
+        seLinuxOptions	<SELinuxOptions>
+          level	<string>
+          role	<string>
+          type	<string>
+          user	<string>
+        seccompProfile	<SeccompProfile>
+          localhostProfile	<string>
+          type	<string> -required-
+        windowsOptions	<WindowsSecurityContextOptions>
+          gmsaCredentialSpec	<string>
+          gmsaCredentialSpecName	<string>
+          hostProcess	<boolean>
+          runAsUserName	<string>
+      startupProbe	<Probe>
+        exec	<ExecAction>
+          command	<[]string>
+        failureThreshold	<integer>
+        grpc	<GRPCAction>
+          port	<integer> -required-
+          service	<string>
+        httpGet	<HTTPGetAction>
+          host	<string>
+          httpHeaders	<[]HTTPHeader>
+            name	<string> -required-
+            value	<string> -required-
+          path	<string>
+          port	<IntOrString> -required-
+          scheme	<string>
+        initialDelaySeconds	<integer>
+        periodSeconds	<integer>
+        successThreshold	<integer>
+        tcpSocket	<TCPSocketAction>
+          host	<string>
+          port	<IntOrString> -required-
+        terminationGracePeriodSeconds	<integer>
+        timeoutSeconds	<integer>
+      stdin	<boolean>
+      stdinOnce	<boolean>
+      terminationMessagePath	<string>
+      terminationMessagePolicy	<string>
+      tty	<boolean>
+      volumeDevices	<[]VolumeDevice>
+        devicePath	<string> -required-
+        name	<string> -required-
+      volumeMounts	<[]VolumeMount>
+        mountPath	<string> -required-
+        mountPropagation	<string>
+        name	<string> -required-
+        readOnly	<boolean>
+        subPath	<string>
+        subPathExpr	<string>
+      workingDir	<string>
+    dnsConfig	<PodDNSConfig>
+      nameservers	<[]string>
+      options	<[]PodDNSConfigOption>
+        name	<string>
+        value	<string>
+      searches	<[]string>
+    dnsPolicy	<string>
+    enableServiceLinks	<boolean>
+    ephemeralContainers	<[]EphemeralContainer>
+      args	<[]string>
+      command	<[]string>
+      env	<[]EnvVar>
+        name	<string> -required-
+        value	<string>
+        valueFrom	<EnvVarSource>
+          configMapKeyRef	<ConfigMapKeySelector>
+            key	<string> -required-
+            name	<string>
+            optional	<boolean>
+          fieldRef	<ObjectFieldSelector>
+            apiVersion	<string>
+            fieldPath	<string> -required-
+          resourceFieldRef	<ResourceFieldSelector>
+            containerName	<string>
+            divisor	<Quantity>
+            resource	<string> -required-
+          secretKeyRef	<SecretKeySelector>
+            key	<string> -required-
+            name	<string>
+            optional	<boolean>
+      envFrom	<[]EnvFromSource>
+        configMapRef	<ConfigMapEnvSource>
+          name	<string>
+          optional	<boolean>
+        prefix	<string>
+        secretRef	<SecretEnvSource>
+          name	<string>
+          optional	<boolean>
+      image	<string>
+      imagePullPolicy	<string>
+      lifecycle	<Lifecycle>
+        postStart	<LifecycleHandler>
+          exec	<ExecAction>
+            command	<[]string>
+          httpGet	<HTTPGetAction>
+            host	<string>
+            httpHeaders	<[]HTTPHeader>
+              name	<string> -required-
+              value	<string> -required-
+            path	<string>
+            port	<IntOrString> -required-
+            scheme	<string>
+          tcpSocket	<TCPSocketAction>
+            host	<string>
+            port	<IntOrString> -required-
+        preStop	<LifecycleHandler>
+          exec	<ExecAction>
+            command	<[]string>
+          httpGet	<HTTPGetAction>
+            host	<string>
+            httpHeaders	<[]HTTPHeader>
+              name	<string> -required-
+              value	<string> -required-
+            path	<string>
+            port	<IntOrString> -required-
+            scheme	<string>
+          tcpSocket	<TCPSocketAction>
+            host	<string>
+            port	<IntOrString> -required-
+      livenessProbe	<Probe>
+        exec	<ExecAction>
+          command	<[]string>
+        failureThreshold	<integer>
+        grpc	<GRPCAction>
+          port	<integer> -required-
+          service	<string>
+        httpGet	<HTTPGetAction>
+          host	<string>
+          httpHeaders	<[]HTTPHeader>
+            name	<string> -required-
+            value	<string> -required-
+          path	<string>
+          port	<IntOrString> -required-
+          scheme	<string>
+        initialDelaySeconds	<integer>
+        periodSeconds	<integer>
+        successThreshold	<integer>
+        tcpSocket	<TCPSocketAction>
+          host	<string>
+          port	<IntOrString> -required-
+        terminationGracePeriodSeconds	<integer>
+        timeoutSeconds	<integer>
+      name	<string> -required-
+      ports	<[]ContainerPort>
+        containerPort	<integer> -required-
+        hostIP	<string>
+        hostPort	<integer>
+        name	<string>
+        protocol	<string>
+      readinessProbe	<Probe>
+        exec	<ExecAction>
+          command	<[]string>
+        failureThreshold	<integer>
+        grpc	<GRPCAction>
+          port	<integer> -required-
+          service	<string>
+        httpGet	<HTTPGetAction>
+          host	<string>
+          httpHeaders	<[]HTTPHeader>
+            name	<string> -required-
+            value	<string> -required-
+          path	<string>
+          port	<IntOrString> -required-
+          scheme	<string>
+        initialDelaySeconds	<integer>
+        periodSeconds	<integer>
+        successThreshold	<integer>
+        tcpSocket	<TCPSocketAction>
+          host	<string>
+          port	<IntOrString> -required-
+        terminationGracePeriodSeconds	<integer>
+        timeoutSeconds	<integer>
+      resizePolicy	<[]ContainerResizePolicy>
+        resourceName	<string> -required-
+        restartPolicy	<string> -required-
+      resources	<ResourceRequirements>
+        claims	<[]ResourceClaim>
+          name	<string> -required-
+        limits	<map[string]Quantity>
+        requests	<map[string]Quantity>
+      securityContext	<SecurityContext>
+        allowPrivilegeEscalation	<boolean>
+        capabilities	<Capabilities>
+          add	<[]string>
+          drop	<[]string>
+        privileged	<boolean>
+        procMount	<string>
+        readOnlyRootFilesystem	<boolean>
+        runAsGroup	<integer>
+        runAsNonRoot	<boolean>
+        runAsUser	<integer>
+        seLinuxOptions	<SELinuxOptions>
+          level	<string>
+          role	<string>
+          type	<string>
+          user	<string>
+        seccompProfile	<SeccompProfile>
+          localhostProfile	<string>
+          type	<string> -required-
+        windowsOptions	<WindowsSecurityContextOptions>
+          gmsaCredentialSpec	<string>
+          gmsaCredentialSpecName	<string>
+          hostProcess	<boolean>
+          runAsUserName	<string>
+      startupProbe	<Probe>
+        exec	<ExecAction>
+          command	<[]string>
+        failureThreshold	<integer>
+        grpc	<GRPCAction>
+          port	<integer> -required-
+          service	<string>
+        httpGet	<HTTPGetAction>
+          host	<string>
+          httpHeaders	<[]HTTPHeader>
+            name	<string> -required-
+            value	<string> -required-
+          path	<string>
+          port	<IntOrString> -required-
+          scheme	<string>
+        initialDelaySeconds	<integer>
+        periodSeconds	<integer>
+        successThreshold	<integer>
+        tcpSocket	<TCPSocketAction>
+          host	<string>
+          port	<IntOrString> -required-
+        terminationGracePeriodSeconds	<integer>
+        timeoutSeconds	<integer>
+      stdin	<boolean>
+      stdinOnce	<boolean>
+      targetContainerName	<string>
+      terminationMessagePath	<string>
+      terminationMessagePolicy	<string>
+      tty	<boolean>
+      volumeDevices	<[]VolumeDevice>
+        devicePath	<string> -required-
+        name	<string> -required-
+      volumeMounts	<[]VolumeMount>
+        mountPath	<string> -required-
+        mountPropagation	<string>
+        name	<string> -required-
+        readOnly	<boolean>
+        subPath	<string>
+        subPathExpr	<string>
+      workingDir	<string>
+    hostAliases	<[]HostAlias>
+      hostnames	<[]string>
+      ip	<string>
+    hostIPC	<boolean>
+    hostNetwork	<boolean>
+    hostPID	<boolean>
+    hostUsers	<boolean>
+    hostname	<string>
+    imagePullSecrets	<[]LocalObjectReference>
+      name	<string>
+    initContainers	<[]Container>
+      args	<[]string>
+      command	<[]string>
+      env	<[]EnvVar>
+        name	<string> -required-
+        value	<string>
+        valueFrom	<EnvVarSource>
+          configMapKeyRef	<ConfigMapKeySelector>
+            key	<string> -required-
+            name	<string>
+            optional	<boolean>
+          fieldRef	<ObjectFieldSelector>
+            apiVersion	<string>
+            fieldPath	<string> -required-
+          resourceFieldRef	<ResourceFieldSelector>
+            containerName	<string>
+            divisor	<Quantity>
+            resource	<string> -required-
+          secretKeyRef	<SecretKeySelector>
+            key	<string> -required-
+            name	<string>
+            optional	<boolean>
+      envFrom	<[]EnvFromSource>
+        configMapRef	<ConfigMapEnvSource>
+          name	<string>
+          optional	<boolean>
+        prefix	<string>
+        secretRef	<SecretEnvSource>
+          name	<string>
+          optional	<boolean>
+      image	<string>
+      imagePullPolicy	<string>
+      lifecycle	<Lifecycle>
+        postStart	<LifecycleHandler>
+          exec	<ExecAction>
+            command	<[]string>
+          httpGet	<HTTPGetAction>
+            host	<string>
+            httpHeaders	<[]HTTPHeader>
+              name	<string> -required-
+              value	<string> -required-
+            path	<string>
+            port	<IntOrString> -required-
+            scheme	<string>
+          tcpSocket	<TCPSocketAction>
+            host	<string>
+            port	<IntOrString> -required-
+        preStop	<LifecycleHandler>
+          exec	<ExecAction>
+            command	<[]string>
+          httpGet	<HTTPGetAction>
+            host	<string>
+            httpHeaders	<[]HTTPHeader>
+              name	<string> -required-
+              value	<string> -required-
+            path	<string>
+            port	<IntOrString> -required-
+            scheme	<string>
+          tcpSocket	<TCPSocketAction>
+            host	<string>
+            port	<IntOrString> -required-
+      livenessProbe	<Probe>
+        exec	<ExecAction>
+          command	<[]string>
+        failureThreshold	<integer>
+        grpc	<GRPCAction>
+          port	<integer> -required-
+          service	<string>
+        httpGet	<HTTPGetAction>
+          host	<string>
+          httpHeaders	<[]HTTPHeader>
+            name	<string> -required-
+            value	<string> -required-
+          path	<string>
+          port	<IntOrString> -required-
+          scheme	<string>
+        initialDelaySeconds	<integer>
+        periodSeconds	<integer>
+        successThreshold	<integer>
+        tcpSocket	<TCPSocketAction>
+          host	<string>
+          port	<IntOrString> -required-
+        terminationGracePeriodSeconds	<integer>
+        timeoutSeconds	<integer>
+      name	<string> -required-
+      ports	<[]ContainerPort>
+        containerPort	<integer> -required-
+        hostIP	<string>
+        hostPort	<integer>
+        name	<string>
+        protocol	<string>
+      readinessProbe	<Probe>
+        exec	<ExecAction>
+          command	<[]string>
+        failureThreshold	<integer>
+        grpc	<GRPCAction>
+          port	<integer> -required-
+          service	<string>
+        httpGet	<HTTPGetAction>
+          host	<string>
+          httpHeaders	<[]HTTPHeader>
+            name	<string> -required-
+            value	<string> -required-
+          path	<string>
+          port	<IntOrString> -required-
+          scheme	<string>
+        initialDelaySeconds	<integer>
+        periodSeconds	<integer>
+        successThreshold	<integer>
+        tcpSocket	<TCPSocketAction>
+          host	<string>
+          port	<IntOrString> -required-
+        terminationGracePeriodSeconds	<integer>
+        timeoutSeconds	<integer>
+      resizePolicy	<[]ContainerResizePolicy>
+        resourceName	<string> -required-
+        restartPolicy	<string> -required-
+      resources	<ResourceRequirements>
+        claims	<[]ResourceClaim>
+          name	<string> -required-
+        limits	<map[string]Quantity>
+        requests	<map[string]Quantity>
+      securityContext	<SecurityContext>
+        allowPrivilegeEscalation	<boolean>
+        capabilities	<Capabilities>
+          add	<[]string>
+          drop	<[]string>
+        privileged	<boolean>
+        procMount	<string>
+        readOnlyRootFilesystem	<boolean>
+        runAsGroup	<integer>
+        runAsNonRoot	<boolean>
+        runAsUser	<integer>
+        seLinuxOptions	<SELinuxOptions>
+          level	<string>
+          role	<string>
+          type	<string>
+          user	<string>
+        seccompProfile	<SeccompProfile>
+          localhostProfile	<string>
+          type	<string> -required-
+        windowsOptions	<WindowsSecurityContextOptions>
+          gmsaCredentialSpec	<string>
+          gmsaCredentialSpecName	<string>
+          hostProcess	<boolean>
+          runAsUserName	<string>
+      startupProbe	<Probe>
+        exec	<ExecAction>
+          command	<[]string>
+        failureThreshold	<integer>
+        grpc	<GRPCAction>
+          port	<integer> -required-
+          service	<string>
+        httpGet	<HTTPGetAction>
+          host	<string>
+          httpHeaders	<[]HTTPHeader>
+            name	<string> -required-
+            value	<string> -required-
+          path	<string>
+          port	<IntOrString> -required-
+          scheme	<string>
+        initialDelaySeconds	<integer>
+        periodSeconds	<integer>
+        successThreshold	<integer>
+        tcpSocket	<TCPSocketAction>
+          host	<string>
+          port	<IntOrString> -required-
+        terminationGracePeriodSeconds	<integer>
+        timeoutSeconds	<integer>
+      stdin	<boolean>
+      stdinOnce	<boolean>
+      terminationMessagePath	<string>
+      terminationMessagePolicy	<string>
+      tty	<boolean>
+      volumeDevices	<[]VolumeDevice>
+        devicePath	<string> -required-
+        name	<string> -required-
+      volumeMounts	<[]VolumeMount>
+        mountPath	<string> -required-
+        mountPropagation	<string>
+        name	<string> -required-
+        readOnly	<boolean>
+        subPath	<string>
+        subPathExpr	<string>
+      workingDir	<string>
+    nodeName	<string>
+    nodeSelector	<map[string]string>
+    os	<PodOS>
+      name	<string> -required-
+    overhead	<map[string]Quantity>
+    preemptionPolicy	<string>
+    priority	<integer>
+    priorityClassName	<string>
+    readinessGates	<[]PodReadinessGate>
+      conditionType	<string> -required-
+    resourceClaims	<[]PodResourceClaim>
+      name	<string> -required-
+      source	<ClaimSource>
+        resourceClaimName	<string>
+        resourceClaimTemplateName	<string>
+    restartPolicy	<string>
+    runtimeClassName	<string>
+    schedulerName	<string>
+    schedulingGates	<[]PodSchedulingGate>
+      name	<string> -required-
+    securityContext	<PodSecurityContext>
+      fsGroup	<integer>
+      fsGroupChangePolicy	<string>
+      runAsGroup	<integer>
+      runAsNonRoot	<boolean>
+      runAsUser	<integer>
+      seLinuxOptions	<SELinuxOptions>
+        level	<string>
+        role	<string>
+        type	<string>
+        user	<string>
+      seccompProfile	<SeccompProfile>
+        localhostProfile	<string>
+        type	<string> -required-
+      supplementalGroups	<[]integer>
+      sysctls	<[]Sysctl>
+        name	<string> -required-
+        value	<string> -required-
+      windowsOptions	<WindowsSecurityContextOptions>
+        gmsaCredentialSpec	<string>
+        gmsaCredentialSpecName	<string>
+        hostProcess	<boolean>
+        runAsUserName	<string>
+    serviceAccount	<string>
+    serviceAccountName	<string>
+    setHostnameAsFQDN	<boolean>
+    shareProcessNamespace	<boolean>
+    subdomain	<string>
+    terminationGracePeriodSeconds	<integer>
+    tolerations	<[]Toleration>
+      effect	<string>
+      key	<string>
+      operator	<string>
+      tolerationSeconds	<integer>
+      value	<string>
+    topologySpreadConstraints	<[]TopologySpreadConstraint>
+      labelSelector	<LabelSelector>
+        matchExpressions	<[]LabelSelectorRequirement>
+          key	<string> -required-
+          operator	<string> -required-
+          values	<[]string>
+        matchLabels	<map[string]string>
+      matchLabelKeys	<[]string>
+      maxSkew	<integer> -required-
+      minDomains	<integer>
+      nodeAffinityPolicy	<string>
+      nodeTaintsPolicy	<string>
+      topologyKey	<string> -required-
+      whenUnsatisfiable	<string> -required-
+    volumes	<[]Volume>
+      awsElasticBlockStore	<AWSElasticBlockStoreVolumeSource>
+        fsType	<string>
+        partition	<integer>
+        readOnly	<boolean>
+        volumeID	<string> -required-
+      azureDisk	<AzureDiskVolumeSource>
+        cachingMode	<string>
+        diskName	<string> -required-
+        diskURI	<string> -required-
+        fsType	<string>
+        kind	<string>
+        readOnly	<boolean>
+      azureFile	<AzureFileVolumeSource>
+        readOnly	<boolean>
+        secretName	<string> -required-
+        shareName	<string> -required-
+      cephfs	<CephFSVolumeSource>
+        monitors	<[]string> -required-
+        path	<string>
+        readOnly	<boolean>
+        secretFile	<string>
+        secretRef	<LocalObjectReference>
+          name	<string>
+        user	<string>
+      cinder	<CinderVolumeSource>
+        fsType	<string>
+        readOnly	<boolean>
+        secretRef	<LocalObjectReference>
+          name	<string>
+        volumeID	<string> -required-
+      configMap	<ConfigMapVolumeSource>
+        defaultMode	<integer>
+        items	<[]KeyToPath>
+          key	<string> -required-
+          mode	<integer>
+          path	<string> -required-
+        name	<string>
+        optional	<boolean>
+      csi	<CSIVolumeSource>
+        driver	<string> -required-
+        fsType	<string>
+        nodePublishSecretRef	<LocalObjectReference>
+          name	<string>
+        readOnly	<boolean>
+        volumeAttributes	<map[string]string>
+      downwardAPI	<DownwardAPIVolumeSource>
+        defaultMode	<integer>
+        items	<[]DownwardAPIVolumeFile>
+          fieldRef	<ObjectFieldSelector>
+            apiVersion	<string>
+            fieldPath	<string> -required-
+          mode	<integer>
+          path	<string> -required-
+          resourceFieldRef	<ResourceFieldSelector>
+            containerName	<string>
+            divisor	<Quantity>
+            resource	<string> -required-
+      emptyDir	<EmptyDirVolumeSource>
+        medium	<string>
+        sizeLimit	<Quantity>
+      ephemeral	<EphemeralVolumeSource>
+        volumeClaimTemplate	<PersistentVolumeClaimTemplate>
+          metadata	<ObjectMeta>
+            annotations	<map[string]string>
+            creationTimestamp	<string>
+            deletionGracePeriodSeconds	<integer>
+            deletionTimestamp	<string>
+            finalizers	<[]string>
+            generateName	<string>
+            generation	<integer>
+            labels	<map[string]string>
+            managedFields	<[]ManagedFieldsEntry>
+              apiVersion	<string>
+              fieldsType	<string>
+              fieldsV1	<FieldsV1>
+              manager	<string>
+              operation	<string>
+              subresource	<string>
+              time	<string>
+            name	<string>
+            namespace	<string>
+            ownerReferences	<[]OwnerReference>
+              apiVersion	<string> -required-
+              blockOwnerDeletion	<boolean>
+              controller	<boolean>
+              kind	<string> -required-
+              name	<string> -required-
+              uid	<string> -required-
+            resourceVersion	<string>
+            selfLink	<string>
+            uid	<string>
+          spec	<PersistentVolumeClaimSpec> -required-
+            accessModes	<[]string>
+            dataSource	<TypedLocalObjectReference>
+              apiGroup	<string>
+              kind	<string> -required-
+              name	<string> -required-
+            dataSourceRef	<TypedObjectReference>
+              apiGroup	<string>
+              kind	<string> -required-
+              name	<string> -required-
+              namespace	<string>
+            resources	<ResourceRequirements>
+              claims	<[]ResourceClaim>
+                name	<string> -required-
+              limits	<map[string]Quantity>
+              requests	<map[string]Quantity>
+            selector	<LabelSelector>
+              matchExpressions	<[]LabelSelectorRequirement>
+                key	<string> -required-
+                operator	<string> -required-
+                values	<[]string>
+              matchLabels	<map[string]string>
+            storageClassName	<string>
+            volumeMode	<string>
+            volumeName	<string>
+      fc	<FCVolumeSource>
+        fsType	<string>
+        lun	<integer>
+        readOnly	<boolean>
+        targetWWNs	<[]string>
+        wwids	<[]string>
+      flexVolume	<FlexVolumeSource>
+        driver	<string> -required-
+        fsType	<string>
+        options	<map[string]string>
+        readOnly	<boolean>
+        secretRef	<LocalObjectReference>
+          name	<string>
+      flocker	<FlockerVolumeSource>
+        datasetName	<string>
+        datasetUUID	<string>
+      gcePersistentDisk	<GCEPersistentDiskVolumeSource>
+        fsType	<string>
+        partition	<integer>
+        pdName	<string> -required-
+        readOnly	<boolean>
+      gitRepo	<GitRepoVolumeSource>
+        directory	<string>
+        repository	<string> -required-
+        revision	<string>
+      glusterfs	<GlusterfsVolumeSource>
+        endpoints	<string> -required-
+        path	<string> -required-
+        readOnly	<boolean>
+      hostPath	<HostPathVolumeSource>
+        path	<string> -required-
+        type	<string>
+      iscsi	<ISCSIVolumeSource>
+        chapAuthDiscovery	<boolean>
+        chapAuthSession	<boolean>
+        fsType	<string>
+        initiatorName	<string>
+        iqn	<string> -required-
+        iscsiInterface	<string>
+        lun	<integer> -required-
+        portals	<[]string>
+        readOnly	<boolean>
+        secretRef	<LocalObjectReference>
+          name	<string>
+        targetPortal	<string> -required-
+      name	<string> -required-
+      nfs	<NFSVolumeSource>
+        path	<string> -required-
+        readOnly	<boolean>
+        server	<string> -required-
+      persistentVolumeClaim	<PersistentVolumeClaimVolumeSource>
+        claimName	<string> -required-
+        readOnly	<boolean>
+      photonPersistentDisk	<PhotonPersistentDiskVolumeSource>
+        fsType	<string>
+        pdID	<string> -required-
+      portworxVolume	<PortworxVolumeSource>
+        fsType	<string>
+        readOnly	<boolean>
+        volumeID	<string> -required-
+      projected	<ProjectedVolumeSource>
+        defaultMode	<integer>
+        sources	<[]VolumeProjection>
+          configMap	<ConfigMapProjection>
+            items	<[]KeyToPath>
+              key	<string> -required-
+              mode	<integer>
+              path	<string> -required-
+            name	<string>
+            optional	<boolean>
+          downwardAPI	<DownwardAPIProjection>
+            items	<[]DownwardAPIVolumeFile>
+              fieldRef	<ObjectFieldSelector>
+                apiVersion	<string>
+                fieldPath	<string> -required-
+              mode	<integer>
+              path	<string> -required-
+              resourceFieldRef	<ResourceFieldSelector>
+                containerName	<string>
+                divisor	<Quantity>
+                resource	<string> -required-
+          secret	<SecretProjection>
+            items	<[]KeyToPath>
+              key	<string> -required-
+              mode	<integer>
+              path	<string> -required-
+            name	<string>
+            optional	<boolean>
+          serviceAccountToken	<ServiceAccountTokenProjection>
+            audience	<string>
+            expirationSeconds	<integer>
+            path	<string> -required-
+      quobyte	<QuobyteVolumeSource>
+        group	<string>
+        readOnly	<boolean>
+        registry	<string> -required-
+        tenant	<string>
+        user	<string>
+        volume	<string> -required-
+      rbd	<RBDVolumeSource>
+        fsType	<string>
+        image	<string> -required-
+        keyring	<string>
+        monitors	<[]string> -required-
+        pool	<string>
+        readOnly	<boolean>
+        secretRef	<LocalObjectReference>
+          name	<string>
+        user	<string>
+      scaleIO	<ScaleIOVolumeSource>
+        fsType	<string>
+        gateway	<string> -required-
+        protectionDomain	<string>
+        readOnly	<boolean>
+        secretRef	<LocalObjectReference> -required-
+          name	<string>
+        sslEnabled	<boolean>
+        storageMode	<string>
+        storagePool	<string>
+        system	<string> -required-
+        volumeName	<string>
+      secret	<SecretVolumeSource>
+        defaultMode	<integer>
+        items	<[]KeyToPath>
+          key	<string> -required-
+          mode	<integer>
+          path	<string> -required-
+        optional	<boolean>
+        secretName	<string>
+      storageos	<StorageOSVolumeSource>
+        fsType	<string>
+        readOnly	<boolean>
+        secretRef	<LocalObjectReference>
+          name	<string>
+        volumeName	<string>
+        volumeNamespace	<string>
+      vsphereVolume	<VsphereVirtualDiskVolumeSource>
+        fsType	<string>
+        storagePolicyID	<string>
+        storagePolicyName	<string>
+        volumePath	<string> -required-
+  status	<PodStatus>
+    conditions	<[]PodCondition>
+      lastProbeTime	<string>
+      lastTransitionTime	<string>
+      message	<string>
+      reason	<string>
+      status	<string> -required-
+      type	<string> -required-
+    containerStatuses	<[]ContainerStatus>
+      allocatedResources	<map[string]Quantity>
+      containerID	<string>
+      image	<string> -required-
+      imageID	<string> -required-
+      lastState	<ContainerState>
+        running	<ContainerStateRunning>
+          startedAt	<string>
+        terminated	<ContainerStateTerminated>
+          containerID	<string>
+          exitCode	<integer> -required-
+          finishedAt	<string>
+          message	<string>
+          reason	<string>
+          signal	<integer>
+          startedAt	<string>
+        waiting	<ContainerStateWaiting>
+          message	<string>
+          reason	<string>
+      name	<string> -required-
+      ready	<boolean> -required-
+      resources	<ResourceRequirements>
+        claims	<[]ResourceClaim>
+          name	<string> -required-
+        limits	<map[string]Quantity>
+        requests	<map[string]Quantity>
+      restartCount	<integer> -required-
+      started	<boolean>
+      state	<ContainerState>
+        running	<ContainerStateRunning>
+          startedAt	<string>
+        terminated	<ContainerStateTerminated>
+          containerID	<string>
+          exitCode	<integer> -required-
+          finishedAt	<string>
+          message	<string>
+          reason	<string>
+          signal	<integer>
+          startedAt	<string>
+        waiting	<ContainerStateWaiting>
+          message	<string>
+          reason	<string>
+    ephemeralContainerStatuses	<[]ContainerStatus>
+      allocatedResources	<map[string]Quantity>
+      containerID	<string>
+      image	<string> -required-
+      imageID	<string> -required-
+      lastState	<ContainerState>
+        running	<ContainerStateRunning>
+          startedAt	<string>
+        terminated	<ContainerStateTerminated>
+          containerID	<string>
+          exitCode	<integer> -required-
+          finishedAt	<string>
+          message	<string>
+          reason	<string>
+          signal	<integer>
+          startedAt	<string>
+        waiting	<ContainerStateWaiting>
+          message	<string>
+          reason	<string>
+      name	<string> -required-
+      ready	<boolean> -required-
+      resources	<ResourceRequirements>
+        claims	<[]ResourceClaim>
+          name	<string> -required-
+        limits	<map[string]Quantity>
+        requests	<map[string]Quantity>
+      restartCount	<integer> -required-
+      started	<boolean>
+      state	<ContainerState>
+        running	<ContainerStateRunning>
+          startedAt	<string>
+        terminated	<ContainerStateTerminated>
+          containerID	<string>
+          exitCode	<integer> -required-
+          finishedAt	<string>
+          message	<string>
+          reason	<string>
+          signal	<integer>
+          startedAt	<string>
+        waiting	<ContainerStateWaiting>
+          message	<string>
+          reason	<string>
+    hostIP	<string>
+    initContainerStatuses	<[]ContainerStatus>
+      allocatedResources	<map[string]Quantity>
+      containerID	<string>
+      image	<string> -required-
+      imageID	<string> -required-
+      lastState	<ContainerState>
+        running	<ContainerStateRunning>
+          startedAt	<string>
+        terminated	<ContainerStateTerminated>
+          containerID	<string>
+          exitCode	<integer> -required-
+          finishedAt	<string>
+          message	<string>
+          reason	<string>
+          signal	<integer>
+          startedAt	<string>
+        waiting	<ContainerStateWaiting>
+          message	<string>
+          reason	<string>
+      name	<string> -required-
+      ready	<boolean> -required-
+      resources	<ResourceRequirements>
+        claims	<[]ResourceClaim>
+          name	<string> -required-
+        limits	<map[string]Quantity>
+        requests	<map[string]Quantity>
+      restartCount	<integer> -required-
+      started	<boolean>
+      state	<ContainerState>
+        running	<ContainerStateRunning>
+          startedAt	<string>
+        terminated	<ContainerStateTerminated>
+          containerID	<string>
+          exitCode	<integer> -required-
+          finishedAt	<string>
+          message	<string>
+          reason	<string>
+          signal	<integer>
+          startedAt	<string>
+        waiting	<ContainerStateWaiting>
+          message	<string>
+          reason	<string>
+    message	<string>
+    nominatedNodeName	<string>
+    phase	<string>
+    podIP	<string>
+    podIPs	<[]PodIP>
+      ip	<string>
+    qosClass	<string>
+    reason	<string>
+    resize	<string>
+    startTime	<string>

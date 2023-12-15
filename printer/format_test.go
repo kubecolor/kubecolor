@@ -48,8 +48,11 @@ func Test_getColorByValueType(t *testing.T) {
 		{"dark null", true, "null", NullColorForDark},
 		{"light null", false, "<none>", NullColorForLight},
 
-		{"dark bool", true, "true", BoolColorForDark},
-		{"light bool", false, "false", BoolColorForLight},
+		{"dark true", true, "true", TrueColorForDark},
+		{"light true", false, "true", TrueColorForLight},
+
+		{"dark false", true, "false", FalseColorForDark},
+		{"light false", false, "false", FalseColorForLight},
 
 		{"dark number", true, "123", NumberColorForDark},
 		{"light number", false, "456", NumberColorForLight},

@@ -19,18 +19,22 @@ var (
 	// e.g. Json, Yaml, kubectl-describe format etc.
 
 	// colors which look good in dark-backgrounded environment
-	KeyColorForDark    = color.Cyan
-	StringColorForDark = color.White
-	BoolColorForDark   = color.Green
-	NumberColorForDark = color.Magenta
-	NullColorForDark   = color.Yellow
-	HeaderColorForDark = color.White // for plain table
+	KeyColorForDark      = color.Cyan
+	StringColorForDark   = color.White
+	TrueColorForDark     = color.Green
+	FalseColorForDark    = color.Red
+	NumberColorForDark   = color.Magenta
+	NullColorForDark     = color.Yellow
+	HeaderColorForDark   = color.White // for plain table
+	RequiredColorForDark = color.Red   // for `kubectl explain`
 
 	// colors which look good in light-backgrounded environment
-	KeyColorForLight    = color.Blue
-	StringColorForLight = color.Black
-	BoolColorForLight   = color.Green
-	NumberColorForLight = color.Magenta
-	NullColorForLight   = color.Yellow
-	HeaderColorForLight = color.Black // for plain table
+	KeyColorForLight      = color.Blue
+	StringColorForLight   = color.Black
+	TrueColorForLight     = color.Green
+	FalseColorForLight    = color.Red
+	NumberColorForLight   = color.Magenta
+	NullColorForLight     = color.Yellow
+	HeaderColorForLight   = color.Black // for plain table
+	RequiredColorForLight = color.Red   // for `kubectl explain`
 )
