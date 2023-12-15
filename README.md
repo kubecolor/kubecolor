@@ -243,4 +243,6 @@ MIT
 
 ## Author
 
+This project is a heavily modified version of the original KubeColor maintained at [https://github.com/hidetatz/kubecolor](https://github.com/hidetatz/kubecolor)
+
 [@kubecolor](https://github.com/kubecolor)
