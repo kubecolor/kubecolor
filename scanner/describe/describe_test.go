@@ -51,6 +51,31 @@ func TestScanner_list(t *testing.T) {
 	}
 }
 
+func TestScanner_nested(t *testing.T) {
+	const input = "" +
+		"Containers:\n" +
+		"  traefik:\n" +
+		"    Image:          docker.io/traefik:v2.10.6\n" +
+		"    State:          Running\n" +
+		"      Started:      Wed, 13 Dec 2023 22:55:39 +0100\n" +
+		"  linkerd:\n" +
+		"    State:          Running\n"
+
+	s := New(strings.NewReader(input))
+
+	mustScanLine(t, s, "~Containers:~~~", "Containers")
+	mustScanLine(t, s, "  ~traefik:~~~", "Containers/traefik")
+	mustScanLine(t, s, "    ~Image:~          ~docker.io/traefik:v2.10.6~", "Containers/traefik/Image")
+	mustScanLine(t, s, "    ~State:~          ~Running~", "Containers/traefik/State")
+	mustScanLine(t, s, "      ~Started:~      ~Wed, 13 Dec 2023 22:55:39 +0100~", "Containers/traefik/State/Started")
+	mustScanLine(t, s, "  ~linkerd:~~~", "Containers/linkerd")
+	mustScanLine(t, s, "    ~State:~          ~Running~", "Containers/linkerd/State")
+
+	if s.Scan() {
+		t.Fatalf("Expected no more scans, but got: %#v", s.Line())
+	}
+}
+
 func mustScanLine(t *testing.T, s *Scanner, line, path string) {
 	t.Helper()
 	if !s.Scan() {

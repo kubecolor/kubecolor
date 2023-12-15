@@ -36,7 +36,7 @@ func (line Line) GoString() string {
 type Scanner struct {
 	lineScanner *bufio.Scanner
 	prevLine    Line
-	path        []string
+	path        []pathSegment
 }
 
 func New(reader io.Reader) *Scanner {
@@ -50,7 +50,14 @@ func (s *Scanner) Line() Line {
 }
 
 func (s *Scanner) Path() string {
-	return strings.Join(s.path, "/")
+	var sb strings.Builder
+	for i, p := range s.path {
+		if i > 0 {
+			sb.WriteByte('/')
+		}
+		sb.WriteString(p.Segment)
+	}
+	return sb.String()
 }
 
 func (s *Scanner) Err() error {
@@ -66,7 +73,11 @@ func (s *Scanner) Scan() bool {
 
 	line := s.parseLine(b)
 	if len(line.Key) > 0 {
-		s.path = []string{newPathSegment(line.Key)}
+		segment := newPathSegment(line)
+		for len(s.path) > 0 && s.path[len(s.path)-1].KeyIndent >= segment.KeyIndent {
+			s.path = s.path[:len(s.path)-1]
+		}
+		s.path = append(s.path, segment)
 	}
 	s.prevLine = line
 	return true
@@ -115,6 +126,12 @@ func (s *Scanner) parseLine(b []byte) Line {
 	endOfKey := bytes.Index(leftTrimmed, doubleSpace)
 	if endOfKey < 0 {
 		// No end of key, so there's no value here
+
+		if bytes.HasSuffix(leftTrimmed, []byte{':'}) {
+			// Ending with ":" always means it's a key
+			line.Key = leftTrimmed
+			return line
+		}
 
 		if len(s.prevLine.Key) > 0 && len(s.prevLine.Value) == 0 && keyIndex > s.prevLine.KeyIndent() {
 			// "Args:"
@@ -174,12 +191,23 @@ func indexOfNonSpace(b []byte) int {
 	return -1
 }
 
-func newPathSegment(key []byte) string {
-	if len(key) == 0 {
-		return ""
+type pathSegment struct {
+	Segment   string
+	KeyIndent int
+}
+
+func newPathSegment(line Line) pathSegment {
+	if len(line.Key) == 0 {
+		return pathSegment{}
 	}
-	if key[len(key)-1] == ':' {
-		return string(key[:len(key)-1])
+
+	// Converting it to string here does copy the slice, but this is intended.
+	// The [[]byte] returned by [bufio.Scanner.Bytes] references a mutating
+	// slices, which means if we keep the value for multiple [bufio.Scanner.Scan]
+	// calls, then the value might get corrupted.
+
+	if cut, ok := bytes.CutSuffix(line.Key, []byte{':'}); ok {
+		return pathSegment{Segment: string(cut), KeyIndent: line.KeyIndent()}
 	}
-	return string(key)
+	return pathSegment{Segment: string(line.Key), KeyIndent: line.KeyIndent()}
 }
