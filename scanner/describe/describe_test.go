@@ -1,9 +1,16 @@
 package describe
 
 import (
+	"bytes"
+	"embed"
 	"strings"
 	"testing"
+
+	"github.com/kubecolor/kubecolor/testutil"
 )
+
+//go:embed testdata
+var testdataFS embed.FS
 
 func TestScanner_noKeyIndent(t *testing.T) {
 	const input = "" +
@@ -109,6 +116,30 @@ func TestScanner_tabbedValues(t *testing.T) {
 	if s.Scan() {
 		t.Fatalf("Expected no more scans, but got: %#v", s.Line())
 	}
+}
+
+func TestScanner_recreateString(t *testing.T) {
+	b, err := testdataFS.ReadFile("testdata/explain-pod.txt")
+	if err != nil {
+		t.Fatalf("Read testdata file: %s", err)
+	}
+
+	var buf bytes.Buffer
+
+	s := New(bytes.NewReader(b))
+	for s.Scan() {
+		buf.WriteString(s.Line().String())
+		buf.WriteByte('\n')
+	}
+	if err := s.Err(); err != nil {
+		t.Fatalf("Scan error: %s", err)
+	}
+
+	if buf.Len() < 39_000 {
+		t.Fatalf("The file content should be about 40,000 bytes, but got %d", buf.Len())
+	}
+
+	testutil.MustEqual(t, string(b), buf.String())
 }
 
 func mustScanLine(t *testing.T, s *Scanner, line, path string) {
