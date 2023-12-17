@@ -5,8 +5,11 @@ import (
 	"bytes"
 	"io"
 	"strings"
+
+	"github.com/kubecolor/kubecolor/internal/bytesutil"
 )
 
+var spaceCharset = " \t\v"
 var doubleSpace = []byte{' ', ' '}
 
 type Line struct {
@@ -139,7 +142,7 @@ func (s *Scanner) parseLine(b []byte) Line {
 
 	// "  IP:           10.0.0.1"
 	//    ^keyIndex
-	keyIndex := indexOfNonSpace(b)
+	keyIndex := bytesutil.IndexOfNonSpace(b, " \t")
 	if keyIndex < 0 {
 		// No chars on this line. Must be empty line.
 		if len(b) > 0 {
@@ -174,7 +177,7 @@ func (s *Scanner) parseLine(b []byte) Line {
 	// Looking for double space, as some keys have spaces in them, e.g:
 	// "QoS Class:                   Burstable"
 	//            ^endOfKey
-	endOfKey := indexOfSpace(leftTrimmed)
+	endOfKey := bytesutil.IndexOfDoubleSpace(leftTrimmed)
 	if endOfKey < 0 {
 		// No end of key, so there's no value here
 
@@ -232,7 +235,7 @@ func (s *Scanner) parseLine(b []byte) Line {
 
 	// "IP:           10.0.0.1"
 	//                ^valueIndex
-	valueIndex := indexOfNonSpace(pastKey)
+	valueIndex := bytesutil.IndexOfNonSpace(pastKey, spaceCharset)
 	if valueIndex < 0 {
 		// Maybe just some trailing whitespace on the line
 		// "data:  " => "  "
@@ -247,25 +250,4 @@ func (s *Scanner) parseLine(b []byte) Line {
 	//             ^^^^^^^^
 	line.Value = pastKey[valueIndex:]
 	return line
-}
-
-func indexOfNonSpace(b []byte) int {
-	for i := 0; i < len(b); i++ {
-		if b[i] != ' ' && b[i] != '\t' {
-			return i
-		}
-	}
-	return -1
-}
-
-func indexOfSpace(b []byte) int {
-	spaceIndex := bytes.Index(b, doubleSpace)
-	tabIndex := bytes.IndexByte(b, '\t')
-	if spaceIndex >= 0 && tabIndex >= 0 {
-		return min(spaceIndex, tabIndex)
-	}
-	if spaceIndex >= 0 {
-		return spaceIndex
-	}
-	return tabIndex
 }
