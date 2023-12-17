@@ -8,7 +8,6 @@ KubeColor is a `kubectl` replacement used to add colors to your kubectl output.
 [![Go Report Card](https://goreportcard.com/badge/github.com/kubecolor/kubecolor)](https://goreportcard.com/report/github.com/kubecolor/kubecolor)
 [![codecov](https://codecov.io/gh/kubecolor/kubecolor/branch/main/graph/badge.svg?token=k6ysAa5ghD)](https://codecov.io/gh/kubecolor/kubecolor/)
 
-
 * get pods
 
 ![image](https://user-images.githubusercontent.com/60682957/95733375-04929680-0cbd-11eb-82f3-adbcfecf4a3e.png)
@@ -61,26 +60,12 @@ Go to [Release page](https://github.com/kubecolor/kubecolor/releases) then downl
 brew install kubecolor/tap/kubecolor
 ```
 
-### Manually via go command
+### Manually via Go command
 
-*Note: if you install kubecolor via go command without setting the `ldflags`, --kubecolor-version  might return an unset value*
-
-```sh
-VERSION=latest
-go install -ldflags="-X main.Version=${VERSION}" github.com/kubecolor/kubecolor/cmd/kubecolor@${VERSION}
-```
-
-You can install a specific version like:
+Requires Go 1.21 (or later)
 
 ```sh
-VERSION=v0.0.21
-go install -ldflags="-X main.Version=${VERSION}" github.com/kubecolor/kubecolor/cmd/kubecolor@${VERSION}
-```
-
-If you are not using module mode (old Go version < 1.11 or command above doesn't work), try below:
-
-```sh
-go get -u github.com/kubecolor/kubecolor/cmd/kubecolor
+go install github.com/kubecolor/kubecolor@latest
 ```
 
 ## Usage
@@ -138,13 +123,14 @@ Please see [Specify object fresh age threshold](#specify-object-fresh-age-thresh
 * `KUBECOLOR_FORCE_COLORS`
 
 In addition to forcing colors with `--force-colors`, you can also do so by setting the environment variable `KUBECOLOR_FORCE_COLORS=true`.
-You can use this environment variable to colorize output when you invoke kubecolor in the `watch` command (e.g. `watch kubecolor get pods`). 
+You can use this environment variable to colorize output when you invoke kubecolor in the `watch` command (e.g. `watch kubecolor get pods`).
 Set the following alias:
+
 ```shell
 alias watch='KUBECOLOR_FORCE_COLORS=true watch --color '
 ```
 
-Be sure to include the space at the end to enable alias expansion (without this additional space, the command `watch kgp` would fail, for example). 
+Be sure to include the space at the end to enable alias expansion (without this additional space, the command `watch kgp` would fail, for example).
 
 ### Autocompletion
 
@@ -170,6 +156,7 @@ complete -o default -F __start_kubectl k
 #### Zsh
 
 For zsh make sure these lines are present in your zsh config file:
+
 ```shell
 # get zsh complete kubectl
 source <(kubectl completion zsh)
@@ -223,6 +210,7 @@ KUBECOLOR_OBJ_FRESH="1m" kubecolor get po
 ```
 
 Default value is `0s`, it means is disabled.
+
 ## Supported kubectl version
 
 Because kubecolor internally calls `kubectl` command, if you are using unsupported kubectl version, it's also not supported by kubecolor.

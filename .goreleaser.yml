@@ -7,7 +7,7 @@ before:
 
 builds:
 - id: kubecolor
-  main: ./cmd/kubecolor/main.go
+  main: ./main.go
   binary: kubecolor
   ldflags:
     - -s -w
