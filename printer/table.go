@@ -66,7 +66,7 @@ func isAllCellsUpper(cells []tablescan.Cell) bool {
 
 func isAllUpper(s string) bool {
 	for _, r := range s {
-		if unicode.IsLower(r) {
+		if !unicode.IsUpper(r) {
 			return false
 		}
 	}
