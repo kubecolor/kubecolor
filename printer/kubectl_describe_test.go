@@ -103,10 +103,10 @@ func Test_DescribePrinter_Print(t *testing.T) {
 				Events:              <none>`),
 			expected: testutil.NewHereDoc(`
 				[33mConditions[0m:
-				[37m[0m  [36mType[0m             [37mStatus[0m  [36mLastHeartbeatTime[0m                 [37mLastTransitionTime[0m                [36mReason[0m                       [37mMessage[0m
-				[37m[0m  [36m----[0m             [37m------[0m  [36m-----------------[0m                 [37m------------------[0m                [36m------[0m                       [37m-------[0m
-				[37m[0m  [36mMemoryPressure[0m   [37mFalse[0m   [36mSun, 18 Oct 2020 12:00:54 +0900[0m   [37mWed, 14 Oct 2020 09:28:18 +0900[0m   [36mKubeletHasSufficientMemory[0m   [37mkubelet has sufficient memory available[0m
-				[37m[0m  [36mDiskPressure[0m     [37mFalse[0m   [36mSun, 18 Oct 2020 12:00:54 +0900[0m   [37mWed, 14 Oct 2020 09:28:18 +0900[0m   [36mKubeletHasNoDiskPressure[0m     [37mkubelet has no disk pressure[0m
+				  [37mType[0m             [36mStatus[0m  [37mLastHeartbeatTime[0m                 [36mLastTransitionTime[0m                [37mReason[0m                       [36mMessage[0m
+				[37m  ----             ------  -----------------                 ------------------                ------                       -------[0m
+				  [37mMemoryPressure[0m   [36mFalse[0m   [37mSun, 18 Oct 2020 12:00:54 +0900[0m   [36mWed, 14 Oct 2020 09:28:18 +0900[0m   [37mKubeletHasSufficientMemory[0m   [36mkubelet has sufficient memory available[0m
+				  [37mDiskPressure[0m     [36mFalse[0m   [37mSun, 18 Oct 2020 12:00:54 +0900[0m   [36mWed, 14 Oct 2020 09:28:18 +0900[0m   [37mKubeletHasNoDiskPressure[0m     [36mkubelet has no disk pressure[0m
 				[33mAddresses[0m:
 				  [37mInternalIP[0m:  [37m172.17.0.3[0m
 				  [37mHostname[0m:    [37mminikube[0m
@@ -122,17 +122,17 @@ func Test_DescribePrinter_Print(t *testing.T) {
 				  [37mMachine ID[0m:                 [37m55d2ccaefc9847c9a69356e7f3bd23f4[0m
 				  [37mSystem UUID[0m:                [37mfe312784-2364-4bba-a55e-f56051539c21[0m
 				[33mNon-terminated Pods[0m:          [37m(14 in total)[0m
-				[37m[0m  [36mNamespace[0m                   [37mName[0m                                [36mCPU Requests[0m  [37mCPU Limits[0m  [36mMemory Requests[0m  [37mMemory Limits[0m  [36mAGE[0m
-				[37m[0m  [36m---------[0m                   [37m----[0m                                [36m------------[0m  [37m----------[0m  [36m---------------[0m  [37m-------------[0m  [36m---[0m
-				[37m[0m  [36mdefault[0m                     [37mnginx-6799fc88d8-dnmv5[0m              [36m0 (0%)[0m        [37m0 (0%)[0m      [36m0 (0%)[0m           [37m0 (0%)[0m         [36m7d21h[0m
-				[37m[0m  [36mdefault[0m                     [37mnginx-6799fc88d8-m8pbc[0m              [36m0 (0%)[0m        [37m0 (0%)[0m      [36m0 (0%)[0m           [37m0 (0%)[0m         [36m7d21h[0m
-				[37m[0m  [36mdefault[0m                     [37mnginx-6799fc88d8-qdf9b[0m              [36m0 (0%)[0m        [37m0 (0%)[0m      [36m0 (0%)[0m           [37m0 (0%)[0m         [36m7d21h[0m
+				  [37mNamespace[0m                   [36mName[0m                                [37mCPU Requests[0m  [36mCPU Limits[0m  [37mMemory Requests[0m  [36mMemory Limits[0m  [37mAGE[0m
+				[37m  ---------                   ----                                ------------  ----------  ---------------  -------------  ---[0m
+				  [37mdefault[0m                     [36mnginx-6799fc88d8-dnmv5[0m              [37m0 (0%)[0m        [36m0 (0%)[0m      [37m0 (0%)[0m           [36m0 (0%)[0m         [37m7d21h[0m
+				  [37mdefault[0m                     [36mnginx-6799fc88d8-m8pbc[0m              [37m0 (0%)[0m        [36m0 (0%)[0m      [37m0 (0%)[0m           [36m0 (0%)[0m         [37m7d21h[0m
+				  [37mdefault[0m                     [36mnginx-6799fc88d8-qdf9b[0m              [37m0 (0%)[0m        [36m0 (0%)[0m      [37m0 (0%)[0m           [36m0 (0%)[0m         [37m7d21h[0m
 				[33mAllocated resources[0m:
 				  [37m(Total limits may be over 100 percent, i.e., overcommitted.)[0m
-				[37m[0m  [37mResource[0m           [37mRequests[0m    [36mLimits[0m
-				[37m[0m  [37m--------[0m           [37m--------[0m    [36m------[0m
-				[37m[0m  [37mcpu[0m                [37m650m (10%)[0m  [36m0 (0%)[0m
-				[37m[0m  [37mmemory[0m             [37m70Mi (3%)[0m   [36m170Mi (8%)[0m
+				  [37mResource[0m           [36mRequests[0m    [37mLimits[0m
+				[37m  --------           --------    ------[0m
+				  [37mcpu[0m                [36m650m (10%)[0m  [37m0 (0%)[0m
+				  [37mmemory[0m             [36m70Mi (3%)[0m   [37m170Mi (8%)[0m
 				[33mEvents[0m:              [33m<none>[0m
 			`),
 		},

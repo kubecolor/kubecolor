@@ -7,6 +7,20 @@ import (
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
+func TestScanner_emptyLines(t *testing.T) {
+	const input = "\n\n\n"
+
+	s := NewScanner(strings.NewReader(input))
+
+	mustScanCells(t, s)
+	mustScanCells(t, s)
+	mustScanCells(t, s)
+
+	if s.Scan() {
+		t.Fatalf("Expected no more scans, but got: %q", s.Bytes())
+	}
+}
+
 func TestScanner_regularTable(t *testing.T) {
 	const input = "" +
 		"NAME    READY   STATUS      RESTARTS         AGE\n" +
@@ -20,7 +34,26 @@ func TestScanner_regularTable(t *testing.T) {
 	mustScanCells(t, s, "pod-b", "0/1", "Error", "0", "13d")
 
 	if s.Scan() {
-		t.Fatalf("Expected no more scans, but got: %#v", "TODO")
+		t.Fatalf("Expected no more scans, but got: %q", s.Bytes())
+	}
+}
+
+func TestScanner_describeTable(t *testing.T) {
+	const input = "" +
+		"Name    Ready   Status      Restarts         Age\n" +
+		"----    -----   ------      --------         ---\n" +
+		"pod-a   1/1     Running     21 (7d23h ago)   250d\n" +
+		"pod-b   0/1     Error       0                13d\n"
+
+	s := NewScanner(strings.NewReader(input))
+
+	mustScanCells(t, s, "Name", "Ready", "Status", "Restarts", "Age")
+	mustScanCells(t, s, "----", "-----", "------", "--------", "---")
+	mustScanCells(t, s, "pod-a", "1/1", "Running", "21 (7d23h ago)", "250d")
+	mustScanCells(t, s, "pod-b", "0/1", "Error", "0", "13d")
+
+	if s.Scan() {
+		t.Fatalf("Expected no more scans, but got: %q", s.Bytes())
 	}
 }
 
@@ -37,7 +70,7 @@ func TestScanner_emptyCells(t *testing.T) {
 	mustScanCells(t, s, "pod-b", "", "Error", "0", "")
 
 	if s.Scan() {
-		t.Fatalf("Expected no more scans, but got: %#v", "TODO")
+		t.Fatalf("Expected no more scans, but got: %q", s.Bytes())
 	}
 }
 
@@ -62,7 +95,7 @@ func TestScanner_multipleTables(t *testing.T) {
 	mustScanCells(t, s, "deploy-b", "0/1", "0", "0", "13d")
 
 	if s.Scan() {
-		t.Fatalf("Expected no more scans, but got: %#v", "TODO")
+		t.Fatalf("Expected no more scans, but got: %q", s.Bytes())
 	}
 }
 
@@ -87,7 +120,7 @@ func TestScanner_multipleTightlyPackedTables(t *testing.T) {
 	mustScanCells(t, s, "deploy-b", "0/1", "0", "0", "13d")
 
 	if s.Scan() {
-		t.Fatalf("Expected no more scans, but got: %#v", "TODO")
+		t.Fatalf("Expected no more scans, but got: %q", s.Bytes())
 	}
 }
 
@@ -101,10 +134,10 @@ func TestScanner_noHeaderAndEmptyCells(t *testing.T) {
 
 	mustScanCells(t, s, "pod-a", "", "Running", "", "250d")
 	mustScanCells(t, s, "pod-b", "0/1", "", "0", "")
-	mustScanCells(t, s, "pod-c", "0/1", "Error", "0", "13d")
+	mustScanCells(t, s, "pod-c", "2/2", "Error", "0", "13d")
 
 	if s.Scan() {
-		t.Fatalf("Expected no more scans, but got: %#v", "TODO")
+		t.Fatalf("Expected no more scans, but got: %q", s.Bytes())
 	}
 }
 
