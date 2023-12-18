@@ -3,7 +3,11 @@ on:
   push:
     branches:
     - "main"
-  pull_request: {}
+  pull_request:
+    paths-ignore:
+      - 'assets/**'
+      - '**.md'
+
 jobs:
   test:
     runs-on: ${{ matrix.os }}
