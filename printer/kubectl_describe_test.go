@@ -122,17 +122,17 @@ func Test_DescribePrinter_Print(t *testing.T) {
 				  [37mMachine ID[0m:                 [37m55d2ccaefc9847c9a69356e7f3bd23f4[0m
 				  [37mSystem UUID[0m:                [37mfe312784-2364-4bba-a55e-f56051539c21[0m
 				[33mNon-terminated Pods[0m:          [37m(14 in total)[0m
-				[37m[0m  [36mNamespace[0m                   [36mName[0m                                [37mCPU Requests[0m  [36mCPU Limits[0m  [37mMemory Requests[0m  [36mMemory Limits[0m  [37mAGE[0m
-				[37m[0m  [36m---------[0m                   [36m----[0m                                [37m------------[0m  [36m----------[0m  [37m---------------[0m  [36m-------------[0m  [37m---[0m
-				[37m[0m  [36mdefault[0m                     [36mnginx-6799fc88d8-dnmv5[0m              [37m0 (0%)[0m        [36m0 (0%)[0m      [37m0 (0%)[0m           [36m0 (0%)[0m         [37m7d21h[0m
-				[37m[0m  [36mdefault[0m                     [36mnginx-6799fc88d8-m8pbc[0m              [37m0 (0%)[0m        [36m0 (0%)[0m      [37m0 (0%)[0m           [36m0 (0%)[0m         [37m7d21h[0m
-				[37m[0m  [36mdefault[0m                     [36mnginx-6799fc88d8-qdf9b[0m              [37m0 (0%)[0m        [36m0 (0%)[0m      [37m0 (0%)[0m           [36m0 (0%)[0m         [37m7d21h[0m
+				[37m[0m  [36mNamespace[0m                   [37mName[0m                                [36mCPU Requests[0m  [37mCPU Limits[0m  [36mMemory Requests[0m  [37mMemory Limits[0m  [36mAGE[0m
+				[37m[0m  [36m---------[0m                   [37m----[0m                                [36m------------[0m  [37m----------[0m  [36m---------------[0m  [37m-------------[0m  [36m---[0m
+				[37m[0m  [36mdefault[0m                     [37mnginx-6799fc88d8-dnmv5[0m              [36m0 (0%)[0m        [37m0 (0%)[0m      [36m0 (0%)[0m           [37m0 (0%)[0m         [36m7d21h[0m
+				[37m[0m  [36mdefault[0m                     [37mnginx-6799fc88d8-m8pbc[0m              [36m0 (0%)[0m        [37m0 (0%)[0m      [36m0 (0%)[0m           [37m0 (0%)[0m         [36m7d21h[0m
+				[37m[0m  [36mdefault[0m                     [37mnginx-6799fc88d8-qdf9b[0m              [36m0 (0%)[0m        [37m0 (0%)[0m      [36m0 (0%)[0m           [37m0 (0%)[0m         [36m7d21h[0m
 				[33mAllocated resources[0m:
 				  [37m(Total limits may be over 100 percent, i.e., overcommitted.)[0m
-				[37m[0m  [36mResource[0m           [37mRequests[0m    [36mLimits[0m
-				[37m[0m  [36m--------[0m           [37m--------[0m    [36m------[0m
-				[37m[0m  [36mcpu[0m                [37m650m (10%)[0m  [36m0 (0%)[0m
-				[37m[0m  [36mmemory[0m             [37m70Mi (3%)[0m   [36m170Mi (8%)[0m
+				[37m[0m  [37mResource[0m           [37mRequests[0m    [36mLimits[0m
+				[37m[0m  [37m--------[0m           [37m--------[0m    [36m------[0m
+				[37m[0m  [37mcpu[0m                [37m650m (10%)[0m  [36m0 (0%)[0m
+				[37m[0m  [37mmemory[0m             [37m70Mi (3%)[0m   [36m170Mi (8%)[0m
 				[33mEvents[0m:              [33m<none>[0m
 			`),
 		},

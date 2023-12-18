@@ -14,6 +14,8 @@ import (
 type DescribePrinter struct {
 	DarkBackground bool
 	TablePrinter   *TablePrinter
+
+	tableBytes *bytes.Buffer
 }
 
 func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
@@ -25,8 +27,14 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 
 		// when there are multiple columns, treat is as table format
 		if bytes.Count(line.Value, doubleSpace) > 3 {
-			dp.TablePrinter.printLineAsTableFormat(w, line.String(), getColorsByBackground(dp.DarkBackground))
+			if dp.tableBytes == nil {
+				dp.tableBytes = &bytes.Buffer{}
+			}
+			fmt.Fprintln(dp.tableBytes, line.String())
 			continue
+		} else if dp.tableBytes != nil {
+			dp.TablePrinter.Print(dp.tableBytes, w)
+			dp.tableBytes = nil
 		}
 
 		fmt.Fprintf(w, "%s", line.Indent)
