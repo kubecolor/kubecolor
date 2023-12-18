@@ -16,12 +16,13 @@ jobs:
         - windows-latest
     steps:
     - name: checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
+
     - name: setup go
-      uses: actions/setup-go@v2
-    - name: test
-      run: make coverage
-    - name: upload coverage
-      uses: codecov/codecov-action@v1
+      uses: actions/setup-go@v5
       with:
-        token: ${{ secrets.CODECOV_TOKEN }}
+        go-version-file: go.mod
+
+    - name: test
+      run: go test ./...
+
