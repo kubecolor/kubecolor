@@ -23,7 +23,7 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 		line := scanner.Line()
 
 		// when there are multiple columns, treat is as table format
-		if bytesutil.CountColumns(line.Value, " \t\v") >= 3 {
+		if bytesutil.CountColumns(line.Value, " \t") >= 3 {
 			dp.TablePrinter.printLineAsTableFormat(w, line.String(), getColorsByBackground(dp.DarkBackground))
 			continue
 		}

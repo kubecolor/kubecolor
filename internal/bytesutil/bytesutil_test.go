@@ -40,7 +40,7 @@ func TestCountColumns(t *testing.T) {
 		},
 	}
 
-	const spaceCharset = " \t\v"
+	const spaceCharset = " \t"
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {

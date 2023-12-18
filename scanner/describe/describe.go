@@ -9,7 +9,7 @@ import (
 	"github.com/kubecolor/kubecolor/internal/bytesutil"
 )
 
-var spaceCharset = " \t\v"
+var spaceCharset = " \t"
 var doubleSpace = []byte{' ', ' '}
 
 type Line struct {
@@ -142,7 +142,7 @@ func (s *Scanner) parseLine(b []byte) Line {
 
 	// "  IP:           10.0.0.1"
 	//    ^keyIndex
-	keyIndex := bytesutil.IndexOfNonSpace(b, " \t")
+	keyIndex := bytesutil.IndexOfNonSpace(b, spaceCharset)
 	if keyIndex < 0 {
 		// No chars on this line. Must be empty line.
 		if len(b) > 0 {
