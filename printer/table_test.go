@@ -56,7 +56,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 				[37mpod/nginx-8spn9[0m              [36m1/1[0m     [37mRunning[0m   [36m1[0m          [37m19d[0m
 				[37mpod/nginx-dplns[0m              [36m1/1[0m     [37mRunning[0m   [36m1[0m          [37m19d[0m
 				[37mpod/nginx-lpv5x[0m              [36m1/1[0m     [37mRunning[0m   [36m1[0m          [37m19d[0m
-				[37m[0m
+
 				[37mNAME                               DESIRED   CURRENT   READY   AGE[0m
 				[37mreplicaset.apps/nginx[0m              [36m3[0m         [37m3[0m         [36m3[0m       [37m19d[0m
 				[37mreplicaset.apps/nginx-6799fc88d8[0m   [36m3[0m         [37m3[0m         [36m3[0m       [37m19d[0m
