@@ -5,8 +5,8 @@ COPY go.mod go.sum .
 RUN go mod download
 
 COPY . .
-ARG VERSION=unset
-RUN go install -ldflags="-X main.Version=${VERSION}" ./cmd/kubecolor
+ARG VERSION
+RUN go install -ldflags="-X main.Version=${VERSION}" .
 
 FROM gcr.io/distroless/base:nonroot
 COPY --from=build /go/bin/kubecolor /usr/local/bin/
