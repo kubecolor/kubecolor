@@ -152,9 +152,9 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				nginx-qdf9b   1/1     Running   0          6d6h`),
 			expected: testutil.NewHereDoc(`
 				[37mNAME          READY   STATUS    RESTARTS   AGE[0m
-				[37mnginx-dnmv5[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m6d6h[0m
-				[37mnginx-m8pbc[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m6d6h[0m
-				[37mnginx-qdf9b[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m6d6h[0m
+				[37mnginx-dnmv5[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
+				[37mnginx-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
+				[37mnginx-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
 			`),
 		},
 		{
@@ -171,8 +171,8 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			expected: testutil.NewHereDoc(`
 				[37mNAME          READY   STATUS             RESTARTS   AGE[0m
 				[37mnginx-dnmv4[0m   [36m1/1[0m     [31mCrashLoopBackOff[0m   [36m0[0m          [37m6d6h[0m
-				[37mnginx-m8pbc[0m   [36m1/1[0m     [37mRunning[0m            [36m0[0m          [37m6d6h[0m
-				[37mnginx-qdf9b[0m   [33m0/1[0m     [37mRunning[0m            [36m0[0m          [37m6d6h[0m
+				[37mnginx-m8pbc[0m   [36m1/1[0m     [32mRunning[0m            [36m0[0m          [37m6d6h[0m
+				[37mnginx-qdf9b[0m   [33m0/1[0m     [32mRunning[0m            [36m0[0m          [37m6d6h[0m
 			`),
 		},
 		{
@@ -189,9 +189,9 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				nginx-qdf9b   1/1     Running   0          4m59s`),
 			expected: testutil.NewHereDoc(`
 				[37mNAME          READY   STATUS    RESTARTS   AGE[0m
-				[37mnginx-dnmv6[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m6d6h[0m
-				[37mnginx-m8pbc[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m5m[0m
-				[37mnginx-qdf9b[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [32m4m59s[0m
+				[37mnginx-dnmv6[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
+				[37mnginx-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m5m[0m
+				[37mnginx-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [32m4m59s[0m
 			`),
 		},
 		{
@@ -206,9 +206,9 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				nginx-m8pbc   1/1     Running   0          6d6h
 				nginx-qdf9b   1/1     Running   0          6d6h`),
 			expected: testutil.NewHereDoc(`
-				[37mnginx-dnmv5[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m6d6h[0m
-				[37mnginx-m8pbc[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m6d6h[0m
-				[37mnginx-qdf9b[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m6d6h[0m
+				[37mnginx-dnmv5[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
+				[37mnginx-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
+				[37mnginx-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
 			`),
 		},
 		{
@@ -225,9 +225,9 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				nginx-6799fc88d8-qdf9b   1/1     Running   0          7d10h   172.18.0.3   minikube   <none>           <none>`),
 			expected: testutil.NewHereDoc(`
 				[37mNAME                     READY   STATUS    RESTARTS   AGE     IP           NODE       NOMINATED NODE   READINESS GATES[0m
-				[37mnginx-6799fc88d8-dnmv7[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m7d10h[0m   [36m172.18.0.5[0m   [37mminikube[0m   [36m<none>[0m           [37m<none>[0m
-				[37mnginx-6799fc88d8-m8pbc[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m7d10h[0m   [36m172.18.0.4[0m   [37mminikube[0m   [36m<none>[0m           [37m<none>[0m
-				[37mnginx-6799fc88d8-qdf9b[0m   [36m1/1[0m     [37mRunning[0m   [36m0[0m          [37m7d10h[0m   [36m172.18.0.3[0m   [37mminikube[0m   [36m<none>[0m           [37m<none>[0m
+				[37mnginx-6799fc88d8-dnmv7[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m7d10h[0m   [36m172.18.0.5[0m   [37mminikube[0m   [36m<none>[0m           [37m<none>[0m
+				[37mnginx-6799fc88d8-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m7d10h[0m   [36m172.18.0.4[0m   [37mminikube[0m   [36m<none>[0m           [37m<none>[0m
+				[37mnginx-6799fc88d8-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m7d10h[0m   [36m172.18.0.3[0m   [37mminikube[0m   [36m<none>[0m           [37m<none>[0m
 			`),
 		},
 		{
