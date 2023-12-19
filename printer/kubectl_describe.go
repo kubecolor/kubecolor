@@ -1,12 +1,12 @@
 package printer
 
 import (
-	"bytes"
 	"fmt"
 	"io"
 	"strings"
 
 	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/internal/bytesutil"
 	"github.com/kubecolor/kubecolor/scanner/describe"
 )
 
@@ -19,12 +19,11 @@ type DescribePrinter struct {
 func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 	scanner := describe.NewScanner(r)
 	const basicIndentWidth = 2 // according to kubectl describe format
-	doubleSpace := []byte("  ")
 	for scanner.Scan() {
 		line := scanner.Line()
 
 		// when there are multiple columns, treat is as table format
-		if bytes.Count(line.Value, doubleSpace) > 3 {
+		if bytesutil.CountColumns(line.Value, " \t") >= 3 {
 			dp.TablePrinter.printLineAsTableFormat(w, line.String(), getColorsByBackground(dp.DarkBackground))
 			continue
 		}
