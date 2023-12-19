@@ -67,7 +67,7 @@ func Test_DescribePrinter_Print(t *testing.T) {
 		{
 			name:           "table format in kubectl describe can be colored by describe",
 			darkBackground: true,
-			tablePrinter:   NewTablePrinter(false, true, nil),
+			tablePrinter:   NewTablePrinter(false, true, ColorSchema{}, nil),
 			input: testutil.NewHereDoc(`
 				Conditions:
 				  Type             Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message

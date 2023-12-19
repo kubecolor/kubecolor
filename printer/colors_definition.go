@@ -38,3 +38,51 @@ var (
 	HeaderColorForLight   = color.Black // for plain table
 	RequiredColorForLight = color.Red   // for `kubectl explain`
 )
+
+type ColorSchema struct {
+	DefaultColor, // defaut when no specific mapping is found for the command
+	KeyColor, // used to color keys (where ?)
+	StringColor, // default color for strings
+	TrueColor, // used when value is true
+	FalseColor, // used when value is false or an error
+	NumberColor, // used when the value is a number
+	NullColor, // used when the value is null or a warning
+	HeaderColor, // used to print headers
+	FreshColor, // color used when the time value is under a certain delay
+	RequiredColor color.Color // used when the value is required or is an error
+	RandomColor []color.Color // used to display multiple colons, cycle between colors
+}
+
+// newColorSchema returns the color schema depending on the chosen theme
+func NewColorSchema(dark bool) ColorSchema {
+
+	if dark {
+		return ColorSchema{
+			DefaultColor:  color.Yellow,
+			KeyColor:      color.Cyan,
+			StringColor:   color.White,
+			TrueColor:     color.Green,
+			FalseColor:    color.Red,
+			NumberColor:   color.Magenta,
+			NullColor:     color.Yellow,
+			HeaderColor:   color.White,
+			FreshColor:    color.Green,
+			RequiredColor: color.Red,
+			RandomColor:   []color.Color{color.White, color.Cyan},
+		}
+	}
+
+	return ColorSchema{
+		DefaultColor:  color.Yellow,
+		KeyColor:      color.Blue,
+		StringColor:   color.Black,
+		TrueColor:     color.Green,
+		FalseColor:    color.Red,
+		NumberColor:   color.Magenta,
+		NullColor:     color.Yellow,
+		HeaderColor:   color.Black,
+		FreshColor:    color.Green,
+		RequiredColor: color.Red,
+		RandomColor:   []color.Color{color.Black, color.Blue},
+	}
+}

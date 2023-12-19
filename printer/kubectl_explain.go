@@ -13,6 +13,7 @@ import (
 // ExplainPrinter is a specific printer to print kubectl explain format.
 type ExplainPrinter struct {
 	DarkBackground bool
+	ColorSchema    ColorSchema
 	Recursive      bool
 }
 
@@ -42,21 +43,17 @@ func (ep *ExplainPrinter) Print(r io.Reader, w io.Writer) {
 
 func (ep *ExplainPrinter) keyColor(line describe.Line, isFields bool) color.Color {
 	if ep.Recursive && isFields {
-		return getColorByKeyIndent(line.KeyIndent(), 2, ep.DarkBackground)
+		return getColorByKeyIndent(line.KeyIndent(), 2, ep.ColorSchema)
 	}
 
-	return getColorByKeyIndent(0, 2, ep.DarkBackground)
+	return getColorByKeyIndent(0, 2, ep.ColorSchema)
 }
 
 func (ep *ExplainPrinter) printVal(w io.Writer, val string) {
 	const suffix = "-required-"
 	if withoutSuffix, ok := strings.CutSuffix(val, suffix); ok {
 		fmt.Fprint(w, withoutSuffix)
-		if ep.DarkBackground {
-			fmt.Fprint(w, color.Apply(suffix, RequiredColorForDark))
-		} else {
-			fmt.Fprint(w, color.Apply(suffix, RequiredColorForLight))
-		}
+		fmt.Fprint(w, color.Apply(suffix, ep.ColorSchema.RequiredColor))
 		return
 	}
 	fmt.Fprint(w, val)

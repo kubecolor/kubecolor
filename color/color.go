@@ -17,6 +17,15 @@ const (
 	Magenta
 	Cyan
 	White
+
+	LightBlack Color = iota + 90 // Grey...
+	LightRed
+	LightGreen
+	LightYellow
+	LightBlue
+	LightMagenta
+	LightCyan
+	LightWhite // White...
 )
 
 func (c Color) sequence() int {

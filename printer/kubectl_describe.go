@@ -40,7 +40,7 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 
 		fmt.Fprintf(w, "%s", line.Indent)
 		if len(line.Key) > 0 {
-			keyColor := getColorByKeyIndent(line.KeyIndent(), basicIndentWidth, dp.DarkBackground)
+			keyColor := getColorByKeyIndent(line.KeyIndent(), basicIndentWidth, dp.TablePrinter.ColorSchema)
 			key := string(line.Key)
 			if withoutColon, ok := strings.CutSuffix(key, ":"); ok {
 				fmt.Fprint(w, color.Apply(withoutColon, keyColor), ":")
@@ -62,11 +62,11 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 
 func (dp *DescribePrinter) valueColor(path describe.Path, value string) color.Color {
 	if describeUseStatusColoring(path) {
-		if col, ok := ColorStatus(value); ok {
+		if col, ok := ColorStatus(value, dp.TablePrinter.ColorSchema); ok {
 			return col
 		}
 	}
-	return getColorByValueType(value, dp.DarkBackground)
+	return getColorByValueType(value, dp.TablePrinter.ColorSchema)
 }
 
 var describePathsToColor = []*regexp.Regexp{

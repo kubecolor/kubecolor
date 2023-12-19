@@ -13,50 +13,32 @@ func toSpaces(n int) string {
 
 // getColorByKeyIndent returns a color based on the given indent.
 // When you want to change key color based on indent depth (e.g. Json, Yaml), use this function
-func getColorByKeyIndent(indent int, basicIndentWidth int, dark bool) color.Color {
+func getColorByKeyIndent(indent int, basicIndentWidth int, schema ColorSchema) color.Color {
 	switch indent / basicIndentWidth % 2 {
 	case 1:
-		if dark {
-			return color.White
-		}
-		return color.Black
+		return schema.StringColor
 	default:
-		return color.Yellow
+		return schema.DefaultColor
 	}
 }
 
 // getColorByValueType returns a color by value.
 // This is intended to be used to colorize any structured data e.g. Json, Yaml.
-func getColorByValueType(val string, dark bool) color.Color {
+func getColorByValueType(val string, schema ColorSchema) color.Color {
 	switch val {
 	case "null", "<none>", "<unknown>", "<unset>":
-		if dark {
-			return NullColorForDark
-		}
-		return NullColorForLight
+		return schema.NullColor
 	case "true", "True":
-		if dark {
-			return TrueColorForDark
-		}
-		return TrueColorForLight
+		return schema.TrueColor
 	case "false", "False":
-		if dark {
-			return FalseColorForDark
-		}
-		return FalseColorForLight
+		return schema.FalseColor
 	}
 
 	if isOnlyDigits(val) {
-		if dark {
-			return NumberColorForDark
-		}
-		return NumberColorForLight
+		return schema.NumberColor
 	}
 
-	if dark {
-		return StringColorForDark
-	}
-	return StringColorForLight
+	return schema.StringColor
 }
 
 func isOnlyDigits(s string) bool {
@@ -73,22 +55,22 @@ func isDigit(r rune) bool {
 }
 
 // getColorsByBackground returns a preset of colors depending on given background color
-func getColorsByBackground(dark bool) []color.Color {
-	if dark {
-		return colorsForDarkBackground
-	}
+// func getColorsByBackground(dark bool) []color.Color {
+// 	if dark {
+// 		return colorsForDarkBackground
+// 	}
 
-	return colorsForLightBackground
-}
+// 	return colorsForLightBackground
+// }
 
 // getHeaderColorByBackground returns a defined color for Header (not actual data) by the background color
-func getHeaderColorByBackground(dark bool) color.Color {
-	if dark {
-		return HeaderColorForDark
-	}
+// func getHeaderColorByBackground(dark bool) color.Color {
+// 	if dark {
+// 		return HeaderColorForDark
+// 	}
 
-	return HeaderColorForLight
-}
+// 	return HeaderColorForLight
+// }
 
 // findIndent returns a length of indent (spaces at left) in the given line
 func findIndent(line string) int {

@@ -8,7 +8,7 @@ import (
 	"github.com/kubecolor/kubecolor/color"
 )
 
-// SingleColoredPrinter is a printer to print something in pre-cofigured color.
+// SingleColoredPrinter is a printer to print something in pre-configured color.
 type SingleColoredPrinter struct {
 	Color color.Color
 }

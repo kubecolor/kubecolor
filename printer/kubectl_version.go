@@ -11,6 +11,7 @@ import (
 
 type VersionShortPrinter struct {
 	DarkBackground bool
+	ColorSchema    ColorSchema
 }
 
 // kubectl version --short format
@@ -23,14 +24,15 @@ func (vsp *VersionShortPrinter) Print(r io.Reader, w io.Writer) {
 		splitted := strings.Split(line, ": ")
 		key, val := splitted[0], splitted[1]
 		fmt.Fprintf(w, "%s: %s\n",
-			color.Apply(key, getColorByKeyIndent(0, 2, vsp.DarkBackground)),
-			color.Apply(val, getColorByValueType(val, vsp.DarkBackground)),
+			color.Apply(key, getColorByKeyIndent(0, 2, vsp.ColorSchema)),
+			color.Apply(val, getColorByValueType(val, vsp.ColorSchema)),
 		)
 	}
 }
 
 type VersionPrinter struct {
 	DarkBackground bool
+	ColorSchema    ColorSchema
 }
 
 func (vp *VersionPrinter) Print(r io.Reader, w io.Writer) {
@@ -39,7 +41,7 @@ func (vp *VersionPrinter) Print(r io.Reader, w io.Writer) {
 		line := scanner.Text()
 		splitted := strings.SplitN(line, ": ", 2)
 		key, val := splitted[0], splitted[1]
-		key = color.Apply(key, getColorByKeyIndent(0, 2, vp.DarkBackground))
+		key = color.Apply(key, getColorByKeyIndent(0, 2, vp.ColorSchema))
 
 		// val is go struct like
 		// version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.2", GitCommit:"f5743093fd1c663cb0cbc89748f730662345d44d", GitTreeState:"clean", BuildDate:"2020-09-16T13:32:58Z", GoVersion:"go1.15", Compiler:"gc", Platform:"linux/amd64"}
@@ -51,15 +53,15 @@ func (vp *VersionPrinter) Print(r io.Reader, w io.Writer) {
 		values := strings.Split(pkgAndValues[1], ", ")
 		coloredValues := make([]string, len(values))
 
-		fmt.Fprintf(w, "%s: %s{", key, color.Apply(packageName, getColorByKeyIndent(2, 2, vp.DarkBackground)))
+		fmt.Fprintf(w, "%s: %s{", key, color.Apply(packageName, getColorByKeyIndent(2, 2, vp.ColorSchema)))
 		for i, value := range values {
 			kv := strings.SplitN(value, ":", 2)
-			coloredKey := color.Apply(kv[0], getColorByKeyIndent(0, 2, vp.DarkBackground))
+			coloredKey := color.Apply(kv[0], getColorByKeyIndent(0, 2, vp.ColorSchema))
 
 			isValDoubleQuotationSurrounded := strings.HasPrefix(kv[1], `"`) && strings.HasSuffix(kv[1], `"`)
 			val := strings.TrimRight(strings.TrimLeft(kv[1], `"`), `"`)
 
-			coloredVal := color.Apply(val, getColorByValueType(kv[1], vp.DarkBackground))
+			coloredVal := color.Apply(val, getColorByValueType(kv[1], vp.ColorSchema))
 
 			if isValDoubleQuotationSurrounded {
 				coloredValues[i] = fmt.Sprintf(`%s:"%s"`, coloredKey, coloredVal)

@@ -10,14 +10,14 @@ import (
 
 func Test_OptionsPrinter_Print(t *testing.T) {
 	tests := []struct {
-		name           string
-		darkBackground bool
-		input          string
-		expected       string
+		name        string
+		colorSchema ColorSchema
+		input       string
+		expected    string
 	}{
 		{
-			name:           "successful",
-			darkBackground: true,
+			name:        "successful",
+			colorSchema: NewColorSchema(true),
 			input: testutil.NewHereDoc(`
 				The following options can be passed to any command:
 
@@ -56,7 +56,7 @@ func Test_OptionsPrinter_Print(t *testing.T) {
 			t.Parallel()
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
-			printer := OptionsPrinter{DarkBackground: tt.darkBackground}
+			printer := OptionsPrinter{ColorSchema: tt.colorSchema}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())
 		})

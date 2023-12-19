@@ -19,9 +19,10 @@ type KubectlOutputColoredPrinter struct {
 	DarkBackground    bool
 	Recursive         bool
 	ObjFreshThreshold time.Duration
+	ColorSchema       ColorSchema
 }
 
-func ColorStatus(status string) (color.Color, bool) {
+func ColorStatus(status string, colorschema ColorSchema) (color.Color, bool) {
 	switch status {
 	case
 		// from https://github.com/kubernetes/kubernetes/blob/master/pkg/kubelet/events/event.go
@@ -80,7 +81,7 @@ func ColorStatus(status string) (color.Color, bool) {
 
 		// PVC status
 		"Lost":
-		return color.Red, true
+		return colorschema.FalseColor, true
 	case
 		// from https://github.com/kubernetes/kubernetes/blob/master/pkg/kubelet/events/event.go
 		// Container event reason list
@@ -118,7 +119,7 @@ func ColorStatus(status string) (color.Color, bool) {
 		// PVC status
 		"Available",
 		"Released":
-		return color.Yellow, true
+		return colorschema.NullColor, true
 	case
 		"Running",
 		"Completed",
@@ -137,7 +138,7 @@ func ColorStatus(status string) (color.Color, bool) {
 
 		// PVC status
 		"Bound":
-		return color.Green, true
+		return colorschema.TrueColor, true
 	}
 	return 0, false
 }
@@ -147,14 +148,14 @@ func ColorStatus(status string) (color.Color, bool) {
 func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 	withHeader := !kp.SubcommandInfo.NoHeader
 
-	var printer Printer = &SingleColoredPrinter{Color: color.Green} // default in green
+	var printer Printer = &SingleColoredPrinter{Color: kp.ColorSchema.DefaultColor} // default in green
 
 	switch kp.SubcommandInfo.Subcommand {
 	case kubectl.Top, kubectl.APIResources:
-		printer = NewTablePrinter(withHeader, kp.DarkBackground, nil)
+		printer = NewTablePrinter(withHeader, kp.DarkBackground, kp.ColorSchema, nil)
 
 	case kubectl.APIVersions:
-		printer = NewTablePrinter(false, kp.DarkBackground, nil) // api-versions always doesn't have header
+		printer = NewTablePrinter(false, kp.DarkBackground, kp.ColorSchema, nil) // api-versions always doesn't have header
 
 	case kubectl.Get:
 		switch {
@@ -162,9 +163,10 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 			printer = NewTablePrinter(
 				withHeader,
 				kp.DarkBackground,
+				kp.ColorSchema,
 				func(_ int, column string) (color.Color, bool) {
 					// first try to match a status
-					col, matched := ColorStatus(column)
+					col, matched := ColorStatus(column, kp.ColorSchema)
 					if matched {
 						return col, true
 					}
@@ -183,7 +185,7 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 
 					// Object age when fresh then green
 					if checkIfObjFresh(column, kp.ObjFreshThreshold) {
-						return color.Green, true
+						return kp.ColorSchema.FreshColor, true
 					}
 
 					return 0, false
@@ -198,8 +200,8 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 	case kubectl.Describe:
 		printer = &DescribePrinter{
 			DarkBackground: kp.DarkBackground,
-			TablePrinter: NewTablePrinter(false, kp.DarkBackground, func(_ int, column string) (color.Color, bool) {
-				return ColorStatus(column)
+			TablePrinter: NewTablePrinter(false, kp.DarkBackground, kp.ColorSchema, func(_ int, column string) (color.Color, bool) {
+				return ColorStatus(column, kp.ColorSchema)
 			},
 			),
 		}
@@ -221,11 +223,12 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 		default:
 			printer = &VersionPrinter{
 				DarkBackground: kp.DarkBackground,
+				ColorSchema:    kp.ColorSchema,
 			}
 		}
 	case kubectl.Options:
 		printer = &OptionsPrinter{
-			DarkBackground: kp.DarkBackground,
+			ColorSchema: kp.ColorSchema,
 		}
 	case kubectl.Apply:
 		switch {

@@ -11,8 +11,8 @@ import (
 
 type YamlPrinter struct {
 	DarkBackground bool
-
-	inString bool
+	ColorSchema    ColorSchema
+	inString       bool
 }
 
 func (yp *YamlPrinter) Print(r io.Reader, w io.Writer) {
@@ -30,7 +30,7 @@ func (yp *YamlPrinter) printLineAsYamlFormat(line string, w io.Writer, dark bool
 
 	if yp.inString {
 		// if inString is true, the line must be a part of a string which is broken into several lines
-		fmt.Fprintf(w, "%s%s\n", indent, yp.toColorizedStringValue(trimmedLine, dark))
+		fmt.Fprintf(w, "%s%s\n", indent, yp.toColorizedStringValue(trimmedLine))
 		yp.inString = !yp.isStringClosed(trimmedLine)
 		return
 	}
@@ -40,7 +40,7 @@ func (yp *YamlPrinter) printLineAsYamlFormat(line string, w io.Writer, dark bool
 	if len(splitted) == 2 {
 		// key: value
 		key, val := splitted[0], splitted[1]
-		fmt.Fprintf(w, "%s%s: %s\n", indent, yp.toColorizedYamlKey(key, indentCnt, 2, dark), yp.toColorizedYamlValue(val, dark))
+		fmt.Fprintf(w, "%s%s: %s\n", indent, yp.toColorizedYamlKey(key, indentCnt, 2, dark), yp.toColorizedYamlValue(val))
 		yp.inString = yp.isStringOpenedButNotClosed(val)
 		return
 	}
@@ -52,7 +52,7 @@ func (yp *YamlPrinter) printLineAsYamlFormat(line string, w io.Writer, dark bool
 		return
 	}
 
-	fmt.Fprintf(w, "%s%s\n", indent, yp.toColorizedYamlValue(splitted[0], dark))
+	fmt.Fprintf(w, "%s%s\n", indent, yp.toColorizedYamlValue(splitted[0]))
 }
 
 func (yp *YamlPrinter) toColorizedYamlKey(key string, indentCnt, basicWidth int, dark bool) string {
@@ -71,10 +71,10 @@ func (yp *YamlPrinter) toColorizedYamlKey(key string, indentCnt, basicWidth int,
 		indentCnt += 2
 	}
 
-	return fmt.Sprintf(format, color.Apply(key, getColorByKeyIndent(indentCnt, basicWidth, dark)))
+	return fmt.Sprintf(format, color.Apply(key, getColorByKeyIndent(indentCnt, basicWidth, yp.ColorSchema)))
 }
 
-func (yp *YamlPrinter) toColorizedYamlValue(value string, dark bool) string {
+func (yp *YamlPrinter) toColorizedYamlValue(value string) string {
 	if value == "{}" {
 		return "{}"
 	}
@@ -97,14 +97,10 @@ func (yp *YamlPrinter) toColorizedYamlValue(value string, dark bool) string {
 		format = "%s"
 	}
 
-	return fmt.Sprintf(format, color.Apply(trimmedValue, getColorByValueType(value, dark)))
+	return fmt.Sprintf(format, color.Apply(trimmedValue, getColorByValueType(value, yp.ColorSchema)))
 }
 
-func (yp *YamlPrinter) toColorizedStringValue(value string, dark bool) string {
-	c := StringColorForLight
-	if dark {
-		c = StringColorForDark
-	}
+func (yp *YamlPrinter) toColorizedStringValue(value string) string {
 
 	isDoubleQuoted := strings.HasPrefix(value, `"`) && strings.HasSuffix(value, `"`)
 	trimmedValue := strings.TrimRight(strings.TrimLeft(value, `"`), `"`)
@@ -116,7 +112,7 @@ func (yp *YamlPrinter) toColorizedStringValue(value string, dark bool) string {
 	default:
 		format = "%s"
 	}
-	return fmt.Sprintf(format, color.Apply(trimmedValue, c))
+	return fmt.Sprintf(format, color.Apply(trimmedValue, yp.ColorSchema.StringColor))
 }
 
 func (yp *YamlPrinter) isStringClosed(line string) bool {

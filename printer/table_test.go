@@ -16,6 +16,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 		colorDeciderFn func(index int, column string) (color.Color, bool)
 		withHeader     bool
 		darkBackground bool
+		colorSchema    ColorSchema
 		input          string
 		expected       string
 	}{
@@ -24,6 +25,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			colorDeciderFn: nil,
 			withHeader:     true,
 			darkBackground: true,
+			colorSchema:    ColorSchema{},
 			input: testutil.NewHereDoc(`
 				NAME          READY   STATUS    RESTARTS   AGE
 				nginx-dnmv5   1/1     Running   0          6d6h
@@ -41,6 +43,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			colorDeciderFn: nil,
 			withHeader:     true,
 			darkBackground: true,
+			colorSchema:    ColorSchema{},
 			input: testutil.NewHereDoc(`
 				NAME                         READY   STATUS    RESTARTS   AGE
 				pod/nginx-8spn9              1/1     Running   1          19d
@@ -67,6 +70,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			colorDeciderFn: nil,
 			withHeader:     false,
 			darkBackground: true,
+			colorSchema:    ColorSchema{},
 			input: testutil.NewHereDoc(`
 				nginx-dnmv5   1/1     Running   0          6d6h
 				nginx-m8pbc   1/1     Running   0          6d6h
@@ -82,6 +86,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			colorDeciderFn: nil,
 			withHeader:     true,
 			darkBackground: false,
+			colorSchema:    ColorSchema{},
 			input: testutil.NewHereDoc(`
 				NAME          READY   STATUS    RESTARTS   AGE
 				nginx-dnmv5   1/1     Running   0          6d6h
@@ -117,6 +122,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			},
 			withHeader:     true,
 			darkBackground: true,
+			colorSchema:    ColorSchema{},
 			// "CrashLoopBackOff" will be red, "0/1" will be yellow
 			input: testutil.NewHereDoc(`
 				NAME          READY   STATUS             RESTARTS   AGE
@@ -135,6 +141,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			colorDeciderFn: nil,
 			withHeader:     true,
 			darkBackground: true,
+			colorSchema:    ColorSchema{},
 			input: testutil.NewHereDoc(`
 				NAME                              SHORTNAMES   APIGROUP                       NAMESPACED   KIND
 				bindings                                                                      true         Binding
@@ -179,7 +186,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			t.Parallel()
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
-			printer := NewTablePrinter(tt.withHeader, tt.darkBackground, tt.colorDeciderFn)
+			printer := NewTablePrinter(tt.withHeader, tt.darkBackground, tt.colorSchema, tt.colorDeciderFn)
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())
 		})
