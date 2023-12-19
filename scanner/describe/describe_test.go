@@ -152,6 +152,8 @@ func TestScanner_recreateString(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Read testdata file: %s", err)
 	}
+	// Force CRLF into LF, for Windows
+	b = bytes.ReplaceAll(b, []byte("\r\n"), []byte("\n"))
 
 	var buf bytes.Buffer
 
