@@ -65,6 +65,9 @@ func ColorStatus(status string) (color.Color, bool) {
 		// Lifecycle hooks
 		"FailedPostStartHook",
 		"FailedPreStopHook",
+		// Node status list
+		"NotReady",
+		"NetworkUnavailable",
 
 		// some other status
 		"ContainerStatusUnknown",
@@ -73,7 +76,10 @@ func ColorStatus(status string) (color.Color, bool) {
 		"Evicted",
 		"FailedScheduling",
 		"Error",
-		"ErrImagePull":
+		"ErrImagePull",
+
+		// PVC status
+		"Lost":
 		return color.Red, true
 	case
 		// from https://github.com/kubernetes/kubernetes/blob/master/pkg/kubelet/events/event.go
@@ -103,19 +109,36 @@ func ColorStatus(status string) (color.Color, bool) {
 		"ContainerCreating",
 		"PodInitializing",
 		"Terminating",
-		"Warning":
+		"Terminated",
+		"Warning",
+
+		// PV reclaim policy
+		"Delete",
+
+		// PVC status
+		"Available",
+		"Released":
 		return color.Yellow, true
+	case
+		"Running",
+		"Completed",
+		"Pulled",
+		"Created",
+		"Rebooted",
+		"NodeReady",
+		"Started",
+		"Normal",
+		"VolumeResizeSuccessful",
+		"FileSystemResizeSuccessful",
+		"Ready",
+
+		// PV reclaim policy
+		"Retain",
+
+		// PVC status
+		"Bound":
+		return color.Green, true
 	}
-	// some ok status, not colored:
-	// "Pulled",
-	// "Created",
-	// "Rebooted",
-	// "SandboxChanged",
-	// "VolumeResizeSuccessful",
-	// "FileSystemResizeSuccessful",
-	// "NodeReady",
-	// "Started",
-	// "Normal",
 	return 0, false
 }
 
