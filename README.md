@@ -4,7 +4,7 @@
 
 KubeColor is a `kubectl` replacement used to add colors to your kubectl output.
 
-![test](https://github.com/kubecolor/kubecolor/workflows/test/badge.svg?branch=main)
+[![test](https://github.com/kubecolor/kubecolor/actions/workflows/test.yml/badge.svg)](https://github.com/kubecolor/kubecolor/actions/workflows/test.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/kubecolor/kubecolor)](https://goreportcard.com/report/github.com/kubecolor/kubecolor)
 [![codecov](https://codecov.io/gh/kubecolor/kubecolor/branch/main/graph/badge.svg?token=k6ysAa5ghD)](https://codecov.io/gh/kubecolor/kubecolor/)
 
