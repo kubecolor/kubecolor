@@ -192,9 +192,9 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 				},
 			)
 		case kp.SubcommandInfo.FormatOption == kubectl.Json:
-			printer = &JsonPrinter{DarkBackground: kp.DarkBackground}
+			printer = &JsonPrinter{DarkBackground: kp.DarkBackground, ColorSchema: kp.ColorSchema}
 		case kp.SubcommandInfo.FormatOption == kubectl.Yaml:
-			printer = &YamlPrinter{DarkBackground: kp.DarkBackground}
+			printer = &YamlPrinter{DarkBackground: kp.DarkBackground, ColorSchema: kp.ColorSchema}
 		}
 
 	case kubectl.Describe:
@@ -208,20 +208,22 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 	case kubectl.Explain:
 		printer = &ExplainPrinter{
 			DarkBackground: kp.DarkBackground,
+			ColorSchema:    kp.ColorSchema,
 			Recursive:      kp.Recursive,
 		}
 	case kubectl.Version:
 		switch {
 		case kp.SubcommandInfo.FormatOption == kubectl.Json:
-			printer = &JsonPrinter{DarkBackground: kp.DarkBackground}
+			printer = &JsonPrinter{DarkBackground: kp.DarkBackground, ColorSchema: kp.ColorSchema}
 		case kp.SubcommandInfo.FormatOption == kubectl.Yaml:
-			printer = &YamlPrinter{DarkBackground: kp.DarkBackground}
-		case kp.SubcommandInfo.Short:
-			printer = &VersionShortPrinter{
+			printer = &YamlPrinter{DarkBackground: kp.DarkBackground, ColorSchema: kp.ColorSchema}
+		case kp.SubcommandInfo.Client:
+			printer = &VersionClientPrinter{
 				DarkBackground: kp.DarkBackground,
+				ColorSchema:    kp.ColorSchema,
 			}
 		default:
-			printer = &VersionPrinter{
+			printer = &VersionClientPrinter{
 				DarkBackground: kp.DarkBackground,
 				ColorSchema:    kp.ColorSchema,
 			}
@@ -233,16 +235,16 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 	case kubectl.Apply:
 		switch {
 		case kp.SubcommandInfo.FormatOption == kubectl.Json:
-			printer = &JsonPrinter{DarkBackground: kp.DarkBackground}
+			printer = &JsonPrinter{DarkBackground: kp.DarkBackground, ColorSchema: kp.ColorSchema}
 		case kp.SubcommandInfo.FormatOption == kubectl.Yaml:
-			printer = &YamlPrinter{DarkBackground: kp.DarkBackground}
+			printer = &YamlPrinter{DarkBackground: kp.DarkBackground, ColorSchema: kp.ColorSchema}
 		default:
 			printer = &ApplyPrinter{DarkBackground: kp.DarkBackground}
 		}
 	}
 
 	if kp.SubcommandInfo.Help {
-		printer = &SingleColoredPrinter{Color: color.White}
+		printer = &SingleColoredPrinter{Color: kp.ColorSchema.DefaultColor}
 	}
 
 	printer.Print(r, w)

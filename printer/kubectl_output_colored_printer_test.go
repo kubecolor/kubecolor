@@ -362,45 +362,46 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				[33mServer Version[0m: [37mversion.Info[0m{[33mMajor[0m:"[37m1[0m", [33mMinor[0m:"[37m19[0m", [33mGitVersion[0m:"[37mv1.19.2[0m", [33mGitCommit[0m:"[37mf5743093fd1c663cb0cbc89748f730662345d44d[0m", [33mGitTreeState[0m:"[37mclean[0m", [33mBuildDate[0m:"[37m2020-09-16T13:32:58Z[0m", [33mGoVersion[0m:"[37mgo1.15[0m", [33mCompiler[0m:"[37mgc[0m", [33mPlatform[0m:"[37mlinux/amd64[0m"}
 			`),
 		},
+		// {
+		// 	name:           "kubectl version --client",
+		// 	darkBackground: true,
+		// 	subcommandInfo: &kubectl.SubcommandInfo{
+		// 		Subcommand: kubectl.Version,
+		// 	},
+		// 	input: testutil.NewHereDoc(`
+		// 		Client Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.3", GitCommit:"1e11e4a2108024935ecfcb2912226cedeafd99df", GitTreeState:"clean", BuildDate:"2020-10-14T18:49:28Z", GoVersion:"go1.15.2", Compiler:"gc", Platform:"darwin/amd64"}`),
+		// 	expected: testutil.NewHereDoc(`
+		// 		[33mClient Version[0m: [37mversion.Info[0m{[33mMajor[0m:"[37m1[0m", [33mMinor[0m:"[37m19[0m", [33mGitVersion[0m:"[37mv1.19.3[0m", [33mGitCommit[0m:"[37m1e11e4a2108024935ecfcb2912226cedeafd99df[0m", [33mGitTreeState[0m:"[37mclean[0m", [33mBuildDate[0m:"[37m2020-10-14T18:49:28Z[0m", [33mGoVersion[0m:"[37mgo1.15.2[0m", [33mCompiler[0m:"[37mgc[0m", [33mPlatform[0m:"[37mdarwin/amd64[0m"}
+		// 	`),
+		// },
+		// {
+		// 	name:           "kubectl version --short",
+		// 	darkBackground: true,
+		// 	subcommandInfo: &kubectl.SubcommandInfo{
+		// 		Subcommand: kubectl.Version,
+		// 		Short:      true,
+		// 	},
+		// 	input: testutil.NewHereDoc(`
+		// 		Client Version: v1.19.3
+		// 		Server Version: v1.19.2`),
+		// 	expected: testutil.NewHereDoc(`
+		// 		[33mClient Version[0m: [37mv1.19.3[0m
+		// 		[33mServer Version[0m: [37mv1.19.2[0m
+		// 	`),
+		// },
 		{
 			name:           "kubectl version --client",
 			darkBackground: true,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.Version,
+				Client:     true,
 			},
 			input: testutil.NewHereDoc(`
-				Client Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.3", GitCommit:"1e11e4a2108024935ecfcb2912226cedeafd99df", GitTreeState:"clean", BuildDate:"2020-10-14T18:49:28Z", GoVersion:"go1.15.2", Compiler:"gc", Platform:"darwin/amd64"}`),
+				Client Version: v1.29.0
+				Kustomize Version: v5.0.4-0.20230601165947-6ce0bf390ce3`),
 			expected: testutil.NewHereDoc(`
-				[33mClient Version[0m: [37mversion.Info[0m{[33mMajor[0m:"[37m1[0m", [33mMinor[0m:"[37m19[0m", [33mGitVersion[0m:"[37mv1.19.3[0m", [33mGitCommit[0m:"[37m1e11e4a2108024935ecfcb2912226cedeafd99df[0m", [33mGitTreeState[0m:"[37mclean[0m", [33mBuildDate[0m:"[37m2020-10-14T18:49:28Z[0m", [33mGoVersion[0m:"[37mgo1.15.2[0m", [33mCompiler[0m:"[37mgc[0m", [33mPlatform[0m:"[37mdarwin/amd64[0m"}
-			`),
-		},
-		{
-			name:           "kubectl version --short",
-			darkBackground: true,
-			subcommandInfo: &kubectl.SubcommandInfo{
-				Subcommand: kubectl.Version,
-				Short:      true,
-			},
-			input: testutil.NewHereDoc(`
-				Client Version: v1.19.3
-				Server Version: v1.19.2`),
-			expected: testutil.NewHereDoc(`
-				[33mClient Version[0m: [37mv1.19.3[0m
-				[33mServer Version[0m: [37mv1.19.2[0m
-			`),
-		},
-		{
-			name:           "kubectl version --short --client",
-			darkBackground: true,
-			subcommandInfo: &kubectl.SubcommandInfo{
-				Subcommand: kubectl.Version,
-				Short:      true,
-			},
-			input: testutil.NewHereDoc(`
-				Client Version: v1.19.3`),
-			expected: testutil.NewHereDoc(`
-				[33mClient Version[0m: [37mv1.19.3[0m
-			`),
+				[33mClient Version[0m: [37mv1.19.3[0m
+				[33mKustomize Version[0m: [37mv5.0.4-0.20230601165947-6ce0bf390ce3`),
 		},
 		{
 			name:           "kubectl options",
@@ -551,6 +552,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				SubcommandInfo:    tt.subcommandInfo,
 				DarkBackground:    tt.darkBackground,
 				ObjFreshThreshold: tt.objFreshThreshold,
+				ColorSchema:       NewColorSchema(tt.darkBackground),
 			}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())

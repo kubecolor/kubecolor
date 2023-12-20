@@ -54,8 +54,7 @@ func TestInspectSubcommandInfo(t *testing.T) {
 		{"explain pod --recursive", &SubcommandInfo{Subcommand: Explain, Recursive: true}, true},
 
 		{"version", &SubcommandInfo{Subcommand: Version}, true},
-		{"version --client", &SubcommandInfo{Subcommand: Version}, true},
-		{"version --short", &SubcommandInfo{Subcommand: Version, Short: true}, true},
+		{"version --client", &SubcommandInfo{Subcommand: Version, Client: true}, true},
 		{"version -o json", &SubcommandInfo{Subcommand: Version, FormatOption: Json}, true},
 		{"version -o yaml", &SubcommandInfo{Subcommand: Version, FormatOption: Yaml}, true},
 

@@ -9,15 +9,15 @@ import (
 	"github.com/kubecolor/kubecolor/color"
 )
 
-type VersionShortPrinter struct {
+type VersionClientPrinter struct {
 	DarkBackground bool
 	ColorSchema    ColorSchema
 }
 
-// kubectl version --short format
-// Client Version: v1.19.3
-// Server Version: v1.19.2
-func (vsp *VersionShortPrinter) Print(r io.Reader, w io.Writer) {
+// kubectl version --client=true
+// Client Version: v1.29.0
+// Kustomize Version: v5.0.4-0.20230601165947-6ce0bf390ce3
+func (vsp *VersionClientPrinter) Print(r io.Reader, w io.Writer) {
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -35,6 +35,10 @@ type VersionPrinter struct {
 	ColorSchema    ColorSchema
 }
 
+// kubectl version --client=false
+// Client Version: v1.29.0
+// Kustomize Version: v5.0.4-0.20230601165947-6ce0bf390ce3
+// Server Version: v1.27.5-gke.200
 func (vp *VersionPrinter) Print(r io.Reader, w io.Writer) {
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {

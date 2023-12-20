@@ -105,7 +105,7 @@ func Test_JsonPrinter_Print(t *testing.T) {
 			t.Parallel()
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
-			printer := JsonPrinter{DarkBackground: tt.darkBackground}
+			printer := JsonPrinter{DarkBackground: tt.darkBackground, ColorSchema: NewColorSchema(tt.darkBackground)}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())
 		})

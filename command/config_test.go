@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/kubecolor/kubecolor/printer"
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
@@ -26,6 +27,7 @@ func Test_ResolveConfig(t *testing.T) {
 				ForceColor:        false,
 				KubectlCmd:        "kubectl",
 				ObjFreshThreshold: time.Duration(0),
+				ColorSchema:       printer.NewColorSchema(true),
 			},
 		},
 		{
@@ -38,6 +40,7 @@ func Test_ResolveConfig(t *testing.T) {
 				ForceColor:        true,
 				KubectlCmd:        "kubectl",
 				ObjFreshThreshold: time.Duration(0),
+				ColorSchema:       printer.NewColorSchema(false),
 			},
 		},
 		{
@@ -51,6 +54,7 @@ func Test_ResolveConfig(t *testing.T) {
 				ForceColor:        false,
 				KubectlCmd:        "kubectl.1.19",
 				ObjFreshThreshold: time.Duration(0),
+				ColorSchema:       printer.NewColorSchema(true),
 			},
 		},
 		{
@@ -64,6 +68,7 @@ func Test_ResolveConfig(t *testing.T) {
 				ForceColor:        false,
 				KubectlCmd:        "kubectl",
 				ObjFreshThreshold: time.Minute,
+				ColorSchema:       printer.NewColorSchema(true),
 			},
 		},
 		{
@@ -76,6 +81,7 @@ func Test_ResolveConfig(t *testing.T) {
 				DarkBackground: true,
 				ForceColor:     true,
 				KubectlCmd:     "kubectl",
+				ColorSchema:    printer.NewColorSchema(true),
 			},
 		},
 	}

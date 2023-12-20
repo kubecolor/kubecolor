@@ -12,7 +12,7 @@ type SubcommandInfo struct {
 	Watch        bool
 	Help         bool
 	Recursive    bool
-	Short        bool
+	Client       bool
 }
 
 type FormatOption int
@@ -186,14 +186,14 @@ func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 				}
 
 			}
-		} else if strings.HasPrefix(args[i], "--short") {
+		} else if strings.HasPrefix(args[i], "--client") {
 			switch args[i] {
-			case "--short=true":
-				info.Short = true
-			case "--short=false":
-				info.Short = false
+			case "--client=true":
+				info.Client = true
+			case "--client=false":
+				info.Client = false
 			default:
-				info.Short = true
+				info.Client = true
 			}
 		} else if args[i] == "--no-headers" {
 			info.NoHeader = true

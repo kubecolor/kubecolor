@@ -34,14 +34,17 @@ func Test_VersionPrinter_Print(t *testing.T) {
 			t.Parallel()
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
-			printer := VersionPrinter{DarkBackground: tt.darkBackground}
+			printer := VersionPrinter{
+				DarkBackground: tt.darkBackground,
+				ColorSchema:    NewColorSchema(tt.darkBackground),
+			}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())
 		})
 	}
 }
 
-func Test_VersionShortPrinter_Print(t *testing.T) {
+func Test_VersionClientPrinter_Print(t *testing.T) {
 	tests := []struct {
 		name           string
 		darkBackground bool
@@ -49,7 +52,7 @@ func Test_VersionShortPrinter_Print(t *testing.T) {
 		expected       string
 	}{
 		{
-			name:           "--short can be colorized",
+			name:           "--client can be colorized",
 			darkBackground: true,
 			input: testutil.NewHereDoc(`
 				Client Version: v1.19.3
@@ -66,7 +69,10 @@ func Test_VersionShortPrinter_Print(t *testing.T) {
 			t.Parallel()
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
-			printer := VersionShortPrinter{DarkBackground: tt.darkBackground}
+			printer := VersionClientPrinter{
+				DarkBackground: tt.darkBackground,
+				ColorSchema:    NewColorSchema(tt.darkBackground),
+			}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())
 		})
