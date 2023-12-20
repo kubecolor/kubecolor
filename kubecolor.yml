@@ -1,0 +1,21 @@
+theme:
+  get:
+    header: red
+  describe:
+    header: blue
+  all:
+    default: green
+    key: cyan
+    string: white
+    true: green
+    false: red
+    error: red
+    warning: yellow
+    number: magenta
+    null: yellow
+    header: blue
+    fresh: green
+    required: red
+    tabs:
+      - cyan
+      - white
