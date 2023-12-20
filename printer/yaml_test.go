@@ -135,7 +135,10 @@ func Test_YamlPrinter_Print(t *testing.T) {
 			t.Parallel()
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
-			printer := YamlPrinter{DarkBackground: tt.darkBackground}
+			printer := YamlPrinter{
+				DarkBackground: tt.darkBackground,
+				ColorSchema:    NewColorSchema(tt.darkBackground),
+			}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())
 		})

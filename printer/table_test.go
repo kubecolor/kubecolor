@@ -86,7 +86,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			colorDeciderFn: nil,
 			withHeader:     true,
 			darkBackground: false,
-			colorSchema:    NewColorSchema(true),
+			colorSchema:    NewColorSchema(false),
 			input: testutil.NewHereDoc(`
 				NAME          READY   STATUS    RESTARTS   AGE
 				nginx-dnmv5   1/1     Running   0          6d6h
