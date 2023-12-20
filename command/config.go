@@ -102,6 +102,10 @@ func ResolveConfig(args []string) ([]string, *KubecolorConfig) {
 			ColorSchema.NumberColor = color.StringToColor(colorName)
 		case "required":
 			ColorSchema.RequiredColor = color.StringToColor(colorName)
+		case "tabs":
+			for _, val := range config.Strings("theme.all.tabs") {
+				ColorSchema.RandomColor = append(ColorSchema.RandomColor, color.StringToColor(val))
+			}
 		default:
 		}
 	}

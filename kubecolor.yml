@@ -17,5 +17,5 @@ theme:
     fresh: green
     required: red
     tabs:
-      - cyan
       - white
+      - lightcyan
