@@ -29,7 +29,7 @@ func Test_ResolveConfig(t *testing.T) {
 			},
 		},
 		{
-			name:         "plain, dark, force",
+			name:         "plain, light, force",
 			args:         []string{"get", "pods", "--plain", "--light-background", "--force-colors"},
 			expectedArgs: []string{"get", "pods"},
 			expectedConf: &KubecolorConfig{
