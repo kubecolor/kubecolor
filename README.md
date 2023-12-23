@@ -121,6 +121,10 @@ alias watch='KUBECOLOR_FORCE_COLORS=true watch --color '
 
 Be sure to include the space at the end to enable alias expansion (without this additional space, the command `watch kgp` would fail, for example).
 
+* `KUBECOLOR_LIGHT_BACKGROUND`
+
+In addition to use the light color preset with `--light-background`, you can also do so by setting the environment variable `KUBECOLOR_LIGHT_BACKGROUND=true`.
+
 ### Autocompletion
 
 kubectl provides [autocompletion feature](https://kubernetes.io/docs/tasks/tools/install-kubectl/#enable-kubectl-autocompletion). If you are

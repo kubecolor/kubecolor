@@ -67,6 +67,18 @@ func Test_ResolveConfig(t *testing.T) {
 			},
 		},
 		{
+			name:         "KUBECOLOR_LIGHT_BACKGROUND via env",
+			args:         []string{"get", "pods"},
+			expectedArgs: []string{"get", "pods"},
+			env:          map[string]string{"KUBECOLOR_LIGHT_BACKGROUND": "true"},
+			expectedConf: &KubecolorConfig{
+				Plain:          false,
+				DarkBackground: false,
+				ForceColor:     false,
+				KubectlCmd:     "kubectl",
+			},
+		},
+		{
 			name:         "KUBECOLOR_FORCE_COLORS env var",
 			args:         []string{"get", "pods"},
 			env:          map[string]string{"KUBECOLOR_FORCE_COLORS": "true"},
