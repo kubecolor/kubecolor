@@ -21,9 +21,8 @@ func ResolveConfig(args []string) ([]string, *KubecolorConfig) {
 	args, forceColorFlagFound := findAndRemoveBoolFlagIfExists(args, "--force-colors")
 	args, kubecolorVersionFlagFound := findAndRemoveBoolFlagIfExists(args, "--kubecolor-version")
 
-	darkBackground := !lightBackgroundFlagFound
-
 	colorsForcedViaEnv := os.Getenv("KUBECOLOR_FORCE_COLORS") == "true"
+	lightBackgroundViaEnv := os.Getenv("KUBECOLOR_LIGHT_BACKGROUND") == "true"
 
 	kubectlCmd := "kubectl"
 	if kc := os.Getenv("KUBECTL_COMMAND"); kc != "" {
@@ -42,7 +41,7 @@ func ResolveConfig(args []string) ([]string, *KubecolorConfig) {
 
 	return args, &KubecolorConfig{
 		Plain:                plainFlagFound,
-		DarkBackground:       darkBackground,
+		DarkBackground:       !lightBackgroundFlagFound && !lightBackgroundViaEnv,
 		ForceColor:           forceColorFlagFound || colorsForcedViaEnv,
 		ShowKubecolorVersion: kubecolorVersionFlagFound,
 		KubectlCmd:           kubectlCmd,

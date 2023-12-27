@@ -29,7 +29,7 @@ func Test_ResolveConfig(t *testing.T) {
 			},
 		},
 		{
-			name:         "plain, dark, force",
+			name:         "plain, light, force",
 			args:         []string{"get", "pods", "--plain", "--light-background", "--force-colors"},
 			expectedArgs: []string{"get", "pods"},
 			expectedConf: &KubecolorConfig{
@@ -64,6 +64,18 @@ func Test_ResolveConfig(t *testing.T) {
 				ForceColor:        false,
 				KubectlCmd:        "kubectl",
 				ObjFreshThreshold: time.Minute,
+			},
+		},
+		{
+			name:         "KUBECOLOR_LIGHT_BACKGROUND via env",
+			args:         []string{"get", "pods"},
+			expectedArgs: []string{"get", "pods"},
+			env:          map[string]string{"KUBECOLOR_LIGHT_BACKGROUND": "true"},
+			expectedConf: &KubecolorConfig{
+				Plain:          false,
+				DarkBackground: false,
+				ForceColor:     false,
+				KubectlCmd:     "kubectl",
 			},
 		},
 		{
