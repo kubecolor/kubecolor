@@ -239,7 +239,11 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 	}
 
 	if kp.SubcommandInfo.Help {
-		printer = &SingleColoredPrinter{Color: color.White}
+		stringColor := StringColorForDark
+		if !kp.DarkBackground {
+			stringColor = StringColorForLight
+		}
+		printer = &SingleColoredPrinter{Color: stringColor}
 	}
 
 	printer.Print(r, w)
