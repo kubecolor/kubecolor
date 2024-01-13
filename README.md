@@ -1,4 +1,4 @@
-<img alt="Kubecolor logo" src="./assets/img/Kubecolor_Logo_large.png" />
+![Kubecolor logo](./assets/img/Kubecolor_Logo_large.png)
 
 # kubecolor
 
@@ -7,7 +7,11 @@ KubeColor is a `kubectl` replacement used to add colors to your kubectl output.
 [![test](https://github.com/kubecolor/kubecolor/actions/workflows/test.yml/badge.svg)](https://github.com/kubecolor/kubecolor/actions/workflows/test.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/kubecolor/kubecolor)](https://goreportcard.com/report/github.com/kubecolor/kubecolor)
 
-![Preview screenshots](./docs/kubectl-combined.png)
+<picture>
+  <source srcset="./docs/kubectl-combined.png" media="(min-width: 1600px)" />
+  <source srcset="./docs/kubectl-combined-medium.png" media="(min-width: 800px)" />
+  <img alt="Preview screenshots" src="./docs/kubectl-combined-small.png" width="787" height="916" />
+</picture>
 
 * You can also change color theme for light-backgrounded environment
 
