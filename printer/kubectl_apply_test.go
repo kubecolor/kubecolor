@@ -12,7 +12,6 @@ func Test_ApplyPrinter_Print(t *testing.T) {
 	tests := []struct {
 		name           string
 		darkBackground bool
-		tablePrinter   *TablePrinter
 		input          string
 		expected       string
 	}{

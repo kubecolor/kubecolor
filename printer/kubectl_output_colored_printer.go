@@ -200,8 +200,7 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 			DarkBackground: kp.DarkBackground,
 			TablePrinter: NewTablePrinter(false, kp.DarkBackground, func(_ int, column string) (color.Color, bool) {
 				return ColorStatus(column)
-			},
-			),
+			}),
 		}
 	case kubectl.Explain:
 		printer = &ExplainPrinter{
