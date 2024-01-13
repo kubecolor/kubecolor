@@ -10,7 +10,7 @@ KubeColor is a `kubectl` replacement used to add colors to your kubectl output.
 <picture>
   <source srcset="./docs/kubectl-combined.png" media="(min-width: 1600px)" />
   <source srcset="./docs/kubectl-combined-medium.png" media="(min-width: 800px)" />
-  <img alt="Preview screenshots" src="./docs/kubectl-combined-small.png" width="787" height="916" />
+  <img alt="Preview screenshots" src="./docs/kubectl-combined-small.png" />
 </picture>
 
 * You can also change color theme for light-backgrounded environment
