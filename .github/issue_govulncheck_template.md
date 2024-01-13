@@ -1,5 +1,5 @@
 ---
-title: "[govulncheck] Vulnerabilities found"
+title: "Vulnerabilities found"
 labels: security, govulncheck
 ---
 [Govulncheck](https://pkg.go.dev/golang.org/x/vuln/cmd/govulncheck) has found some issues in the latest GitHub Action run: <{{ env.ACTION_FULL_URL }}>.
