@@ -1,4 +1,4 @@
-FROM golang:1.21 as build
+FROM golang:1.21.6 as build
 
 WORKDIR /go/src/kubecolor
 COPY go.mod go.sum .
