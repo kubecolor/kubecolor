@@ -1,13 +1,18 @@
 package tablescan
 
 import (
-	"bufio"
 	"bytes"
+	"context"
+	"errors"
 	"io"
 	"strings"
+	"time"
 
 	"github.com/kubecolor/kubecolor/internal/bytesutil"
+	"github.com/kubecolor/kubecolor/internal/ctxscanner"
 )
+
+var DefaultBufferTimeout = 50 * time.Millisecond
 
 type Cell struct {
 	Trimmed        string
@@ -31,18 +36,22 @@ func NewCell(full string) Cell {
 }
 
 type Scanner struct {
-	lineScanner     *bufio.Scanner
+	BufferTimeout time.Duration
+
+	lineScanner     *ctxscanner.Scanner
 	headerIndices   []int
 	currentCells    []Cell
-	currentLine string
+	currentLine     string
 	leadingSpaces   string
 	bufferedLines   []string
 	reuseScanResult bool
+	scanWithTimeout bool
 }
 
 func NewScanner(reader io.Reader) *Scanner {
 	return &Scanner{
-		lineScanner: bufio.NewScanner(reader),
+		BufferTimeout: DefaultBufferTimeout,
+		lineScanner:   ctxscanner.New(reader),
 	}
 }
 
@@ -108,6 +117,23 @@ func (s *Scanner) Scan() bool {
 	return true
 }
 
+func (s *Scanner) scanOnce() (bool, error) {
+	ctx := context.Background()
+	if s.scanWithTimeout {
+		newCtx, cancel := context.WithTimeout(ctx, s.BufferTimeout)
+		ctx = newCtx
+		defer cancel()
+	}
+	if ok, err := s.lineScanner.Scan(ctx); !ok {
+		// Unsuccessful scan: stop using timeout
+		s.scanWithTimeout = false
+		return false, err
+	}
+	// Successful scan: keep scanning with timeout
+	s.scanWithTimeout = true
+	return true, nil
+}
+
 func (s *Scanner) bufferTableLines() bool {
 	if len(s.bufferedLines) > 0 {
 		return true
@@ -119,8 +145,18 @@ func (s *Scanner) bufferTableLines() bool {
 	for {
 		if s.reuseScanResult {
 			s.reuseScanResult = false
-		} else if !s.lineScanner.Scan() {
-			return len(s.bufferedLines) > 0
+		} else {
+			if ok, err := s.scanOnce(); !ok {
+				anyLines := len(s.bufferedLines) > 0
+				// If it timed out, then do the "no timeout" scan now
+				if !anyLines && errors.Is(err, context.Canceled) {
+					if ok, _ := s.scanOnce(); !ok {
+						return false
+					}
+				} else {
+					return anyLines
+				}
+			}
 		}
 
 		b := s.lineScanner.Bytes()
@@ -172,7 +208,7 @@ func isProbablyNewTable(headerIndices []int, line []byte) bool {
 
 func bytewiseAndNonSpace(oldBytes, newBytes []byte) []byte {
 	if len(newBytes) > len(oldBytes) {
-		oldBytes = append(oldBytes, bytes.Repeat([]byte(" "), len(newBytes) - len(oldBytes))...)
+		oldBytes = append(oldBytes, bytes.Repeat([]byte(" "), len(newBytes)-len(oldBytes))...)
 	}
 	for i, b := range newBytes {
 		if b == ' ' {
