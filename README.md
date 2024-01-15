@@ -43,17 +43,29 @@ Additionally, if `kubectl` resulted an error, kubecolor just shows the error mes
 
 ## Installation
 
-### Download binary via GitHub release
-
-Go to [Release page](https://github.com/kubecolor/kubecolor/releases) then download the binary which fits your environment.
-
-### Mac and Linux users via Homebrew
+### Homebrew
 
 ```sh
 brew install kubecolor/tap/kubecolor
 ```
 
-### Manually via Go command
+### Scoop
+
+```sh
+scoop install kubecolor
+```
+
+### Nix
+
+```sh
+nix-shell -p kubecolor
+```
+
+### Download binary via GitHub release
+
+Go to [Release page](https://github.com/kubecolor/kubecolor/releases) then download the binary which fits your environment.
+
+### Compile from source
 
 Requires Go 1.21 (or later)
 
