@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Run govulncheck
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: actions/setup-go@v5
         with:
