@@ -58,6 +58,11 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 		}
 		fmt.Fprintf(w, "%s\n", line.Trailing)
 	}
+
+	if dp.tableBytes != nil {
+		dp.TablePrinter.Print(dp.tableBytes, w)
+		dp.tableBytes = nil
+	}
 }
 
 func (dp *DescribePrinter) valueColor(path describe.Path, value string) color.Color {
