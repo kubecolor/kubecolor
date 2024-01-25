@@ -136,6 +136,34 @@ func Test_DescribePrinter_Print(t *testing.T) {
 				[33mEvents[0m:              [33m<none>[0m
 			`),
 		},
+		{
+			name:           "table format in kubectl describe at the end",
+			darkBackground: true,
+			tablePrinter:   NewTablePrinter(false, true, nil),
+			input: testutil.NewHereDoc(`
+				Name:         cert-manager:leaderelection
+				Labels:       app=cert-manager
+											app.kubernetes.io/version=v1.12.3
+				Annotations:  meta.helm.sh/release-name: cert-manager
+											meta.helm.sh/release-namespace: nais-system
+				PolicyRule:
+					Resources                   Non-Resource URLs  Resource Names             Verbs
+					---------                   -----------------  --------------             -----
+					leases.coordination.k8s.io  []                 []                         [create]
+					leases.coordination.k8s.io  []                 [cert-manager-controller]  [get update patch]`),
+			expected: testutil.NewHereDoc(`
+				[33mName[0m:         [37mcert-manager:leaderelection[0m
+				[33mLabels[0m:       [37mapp=cert-manager[0m
+											[37mapp.kubernetes.io/version=v1.12.3[0m
+				[33mAnnotations[0m:  [37mmeta.helm.sh/release-name: cert-manager[0m
+											[37mmeta.helm.sh/release-namespace: nais-system[0m
+				[33mPolicyRule[0m:
+					[37mResources[0m                   [36mNon-Resource URLs[0m  [37mResource Names[0m             [36mVerbs[0m
+					[37m---------[0m                   [36m-----------------[0m  [37m--------------[0m             [36m-----[0m
+					[37mleases.coordination.k8s.io[0m  [36m[][0m                 [37m[][0m                         [36m[create][0m
+					[37mleases.coordination.k8s.io[0m  [36m[][0m                 [37m[cert-manager-controller][0m  [36m[get update patch][0m
+			`),
+		},
 	}
 	for _, tt := range tests {
 		tt := tt
