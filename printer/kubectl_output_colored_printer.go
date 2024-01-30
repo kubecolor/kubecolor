@@ -77,7 +77,7 @@ func ColorStatus(status string) (color.Color, bool) {
 		"FailedScheduling",
 		"Error",
 		"ErrImagePull",
-
+		"OOMKilled",
 		// PVC status
 		"Lost":
 		return color.Red, true
