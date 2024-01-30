@@ -29,7 +29,7 @@ func getColorByKeyIndent(indent int, basicIndentWidth int, dark bool) color.Colo
 // This is intended to be used to colorize any structured data e.g. Json, Yaml.
 func getColorByValueType(val string, dark bool) color.Color {
 	switch val {
-	case "null", "<none>", "<unknown>", "<unset>":
+	case "null", "<none>", "<unknown>", "<unset>", "<nil>":
 		if dark {
 			return NullColorForDark
 		}
