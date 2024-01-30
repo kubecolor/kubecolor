@@ -28,7 +28,16 @@ func Test_DescribePrinter_Print(t *testing.T) {
 				Ready:        true
 				Start Time:   Sat, 10 Oct 2020 14:07:17 +0900
 				Labels:       app=nginx
-				Annotations:  <none>`),
+				Annotations:  <none>
+				Conditions:
+				  Type              Status
+				  Initialized       True
+				  Ready             False
+				  ContainersReady   True
+				  PodScheduled      True
+				Volumes:
+				  kube-api-access-7fdrt:
+				    ConfigMapOptional:       <nil>`),
 			expected: testutil.NewHereDoc(`
 				[33mName[0m:         [37mnginx-lpv5x[0m
 				[33mNamespace[0m:    [37mdefault[0m
@@ -38,6 +47,15 @@ func Test_DescribePrinter_Print(t *testing.T) {
 				[33mStart Time[0m:   [37mSat, 10 Oct 2020 14:07:17 +0900[0m
 				[33mLabels[0m:       [37mapp=nginx[0m
 				[33mAnnotations[0m:  [33m<none>[0m
+				[33mConditions[0m:
+				  [37mType[0m              [37mStatus[0m
+				  [37mInitialized[0m       [32mTrue[0m
+				  [37mReady[0m             [31mFalse[0m
+				  [37mContainersReady[0m   [32mTrue[0m
+				  [37mPodScheduled[0m      [32mTrue[0m
+				[33mVolumes[0m:
+				  [37mkube-api-access-7fdrt[0m:
+				    [33mConfigMapOptional[0m:       [33m<nil>[0m
 			`),
 		},
 		{
