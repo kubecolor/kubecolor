@@ -51,7 +51,6 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 		fmt.Fprintf(w, "%s", line.Spacing)
 		if len(line.Value) > 0 {
 			val := string(line.Value)
-
 			valColor := dp.valueColor(scanner.Path(), val)
 			fmt.Fprint(w, color.Apply(val, valColor))
 
@@ -66,6 +65,7 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 }
 
 func (dp *DescribePrinter) valueColor(path describe.Path, value string) color.Color {
+	value = strings.TrimSpace(value)
 	if describeUseStatusColoring(path) {
 		if col, ok := ColorStatus(value); ok {
 			return col
