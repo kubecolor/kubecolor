@@ -44,6 +44,8 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 			key := string(line.Key)
 			if withoutColon, ok := strings.CutSuffix(key, ":"); ok {
 				fmt.Fprint(w, color.Apply(withoutColon, keyColor), ":")
+			} else if withoutColon, ok := strings.CutSuffix(key, "="); ok { // color value of annotation and label
+				fmt.Fprint(w, color.Apply(withoutColon, keyColor), "=")
 			} else {
 				fmt.Fprint(w, color.Apply(key, keyColor))
 			}
@@ -52,8 +54,16 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 		if len(line.Value) > 0 {
 			val := string(line.Value)
 			valColor := dp.valueColor(scanner.Path(), val)
-			fmt.Fprint(w, color.Apply(val, valColor))
-
+			// color value of annotation and label
+			if k, v, ok := strings.Cut(val, ": "); ok {
+				vColor := dp.valueColor(scanner.Path(), v)
+				fmt.Fprint(w, color.Apply(k, valColor), ": ", color.Apply(v, vColor))
+			} else if k, v, ok := strings.Cut(val, "="); ok {
+				vColor := dp.valueColor(scanner.Path(), v)
+				fmt.Fprint(w, color.Apply(k, valColor), "=", color.Apply(v, vColor))
+			} else {
+				fmt.Fprint(w, color.Apply(val, valColor))
+			}
 		}
 		fmt.Fprintf(w, "%s\n", line.Trailing)
 	}

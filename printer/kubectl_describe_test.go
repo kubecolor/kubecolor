@@ -29,6 +29,11 @@ func Test_DescribePrinter_Print(t *testing.T) {
 				Start Time:   Sat, 10 Oct 2020 14:07:17 +0900
 				Labels:       app=nginx
 				Annotations:  <none>
+				Containers:
+				  container-1:
+				    Environment Variables from:
+				      anycm	ConfigMap  Optional: true
+				      anysec	Secret     Optional: false
 				Conditions:
 				  Type              Status
 				  Initialized       True
@@ -45,8 +50,13 @@ func Test_DescribePrinter_Print(t *testing.T) {
 				[33mNode[0m:         [37mminikube/172.17.0.3[0m
 				[33mReady[0m:        [32mtrue[0m
 				[33mStart Time[0m:   [37mSat, 10 Oct 2020 14:07:17 +0900[0m
-				[33mLabels[0m:       [37mapp=nginx[0m
+				[33mLabels[0m:       [37mapp[0m=[37mnginx[0m
 				[33mAnnotations[0m:  [33m<none>[0m
+				[33mContainers[0m:
+				  [37mcontainer-1[0m:
+				    [33mEnvironment Variables from[0m:
+				      [37manycm	ConfigMap  Optional[0m: [32mtrue[0m
+				      [37manysec	Secret     Optional[0m: [31mfalse[0m
 				[33mConditions[0m:
 				  [37mType[0m              [37mStatus[0m
 				  [37mInitialized[0m       [32mTrue[0m
@@ -162,8 +172,10 @@ func Test_DescribePrinter_Print(t *testing.T) {
 				Name:         cert-manager:leaderelection
 				Labels:       app=cert-manager
 											app.kubernetes.io/version=v1.12.3
+											some-label=false
 				Annotations:  meta.helm.sh/release-name: cert-manager
 											meta.helm.sh/release-namespace: nais-system
+											some-annotation: true
 				PolicyRule:
 					Resources                   Non-Resource URLs  Resource Names             Verbs
 					---------                   -----------------  --------------             -----
@@ -171,10 +183,12 @@ func Test_DescribePrinter_Print(t *testing.T) {
 					leases.coordination.k8s.io  []                 [cert-manager-controller]  [get update patch]`),
 			expected: testutil.NewHereDoc(`
 				[33mName[0m:         [37mcert-manager:leaderelection[0m
-				[33mLabels[0m:       [37mapp=cert-manager[0m
-											[37mapp.kubernetes.io/version=v1.12.3[0m
-				[33mAnnotations[0m:  [37mmeta.helm.sh/release-name: cert-manager[0m
-											[37mmeta.helm.sh/release-namespace: nais-system[0m
+				[33mLabels[0m:       [37mapp[0m=[37mcert-manager[0m
+											[37mapp.kubernetes.io/version[0m=[37mv1.12.3[0m
+											[37msome-label[0m=[31mfalse[0m
+				[33mAnnotations[0m:  [37mmeta.helm.sh/release-name[0m: [37mcert-manager[0m
+											[37mmeta.helm.sh/release-namespace[0m: [37mnais-system[0m
+											[37msome-annotation[0m: [32mtrue[0m
 				[33mPolicyRule[0m:
 					[37mResources[0m                   [36mNon-Resource URLs[0m  [37mResource Names[0m             [36mVerbs[0m
 					[37m---------[0m                   [36m-----------------[0m  [37m--------------[0m             [36m-----[0m

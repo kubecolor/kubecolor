@@ -28,6 +28,18 @@ func IndexOfDoubleSpace(b []byte) int {
 	return tabIndex
 }
 
+var equalOrColon = [][]byte{[]byte(": "), []byte("=")}
+
+func IndexOfEqualOrColon(b []byte) int {
+	for _, mark := range equalOrColon {
+		colonIndex := bytes.Index(b, mark)
+		if colonIndex >= 0 {
+			return colonIndex + 1
+		}
+	}
+	return -1
+}
+
 func CountColumns(b []byte, spaceCharset string) int {
 	var count int
 	for {
