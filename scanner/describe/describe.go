@@ -177,10 +177,7 @@ func (s *Scanner) parseLine(b []byte) Line {
 	// Looking for double space, as some keys have spaces in them, e.g:
 	// "QoS Class:                   Burstable"
 	//            ^endOfKey
-	endOfKey := bytesutil.IndexOfEqualOrColon(leftTrimmed)
-	if endOfKey < 0 {
-		endOfKey = bytesutil.IndexOfDoubleSpace(leftTrimmed)
-	}
+	endOfKey := bytesutil.IndexOfDoubleSpace(leftTrimmed)
 	if endOfKey < 0 {
 		// No end of key, so there's no value here
 

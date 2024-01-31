@@ -55,8 +55,8 @@ func Test_DescribePrinter_Print(t *testing.T) {
 				[33mContainers[0m:
 				  [37mcontainer-1[0m:
 				    [33mEnvironment Variables from[0m:
-				      [37manycm	ConfigMap  Optional[0m: [32mtrue[0m
-				      [37manysec	Secret     Optional[0m: [31mfalse[0m
+				      [37manycm[0m	[37mConfigMap  Optional[0m: [32mtrue[0m
+				      [37manysec[0m	[37mSecret     Optional[0m: [31mfalse[0m
 				[33mConditions[0m:
 				  [37mType[0m              [37mStatus[0m
 				  [37mInitialized[0m       [32mTrue[0m

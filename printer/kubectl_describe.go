@@ -44,24 +44,15 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 			key := string(line.Key)
 			if withoutColon, ok := strings.CutSuffix(key, ":"); ok {
 				fmt.Fprint(w, color.Apply(withoutColon, keyColor), ":")
-			} else if withoutColon, ok := strings.CutSuffix(key, "="); ok { // color value of annotation and label
-				fmt.Fprint(w, color.Apply(withoutColon, keyColor), "=")
-			} else {
+			} else if !dp.colorFprintLabelOrAnnotation(w, scanner.Path(), key) {
 				fmt.Fprint(w, color.Apply(key, keyColor))
 			}
 		}
 		fmt.Fprintf(w, "%s", line.Spacing)
 		if len(line.Value) > 0 {
 			val := string(line.Value)
-			valColor := dp.valueColor(scanner.Path(), val)
-			// color value of annotation and label
-			if k, v, ok := strings.Cut(val, ": "); ok {
-				vColor := dp.valueColor(scanner.Path(), v)
-				fmt.Fprint(w, color.Apply(k, valColor), ": ", color.Apply(v, vColor))
-			} else if k, v, ok := strings.Cut(val, "="); ok {
-				vColor := dp.valueColor(scanner.Path(), v)
-				fmt.Fprint(w, color.Apply(k, valColor), "=", color.Apply(v, vColor))
-			} else {
+			if !dp.colorFprintLabelOrAnnotation(w, scanner.Path(), val) {
+				valColor := dp.valueColor(scanner.Path(), val)
 				fmt.Fprint(w, color.Apply(val, valColor))
 			}
 		}
@@ -72,6 +63,27 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 		dp.TablePrinter.Print(dp.tableBytes, w)
 		dp.tableBytes = nil
 	}
+}
+
+var labelOrAnnotationSeps = []string{": ", "="}
+
+func (dp *DescribePrinter) colorFprintLabelOrAnnotation(w io.Writer, path describe.Path, val string) bool {
+	if describeUseStatusColoring(path) {
+		for _, sep := range labelOrAnnotationSeps {
+			if k, v, ok := strings.Cut(val, sep); ok {
+				var kColor color.Color
+				if dp.DarkBackground {
+					kColor = color.White
+				} else {
+					kColor = color.Black
+				}
+				vColor := dp.valueColor(path, v)
+				fmt.Fprint(w, color.Apply(k, kColor), sep, color.Apply(v, vColor))
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func (dp *DescribePrinter) valueColor(path describe.Path, value string) color.Color {
@@ -88,6 +100,8 @@ var describePathsToColor = []*regexp.Regexp{
 	regexp.MustCompile(`^Status$`),
 	regexp.MustCompile(`^(Init )?Containers/[^/]*/State(/Reason)?$`),
 	regexp.MustCompile(`^Containers/[^/]*/Last State(/Reason)?$`),
+	regexp.MustCompile(`^(Labels|Annotations)/*`),
+	regexp.MustCompile(`^(Init )?Containers/[^/]+/Environment Variables from/.+`),
 }
 
 func describeUseStatusColoring(path describe.Path) bool {
