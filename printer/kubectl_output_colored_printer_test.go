@@ -300,7 +300,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				[33mNode[0m:         [37mminikube/172.17.0.3[0m
 				[33mReady[0m:        [32mtrue[0m
 				[33mStart Time[0m:   [37mSat, 10 Oct 2020 14:07:17 +0900[0m
-				[33mLabels[0m:       [37mapp[0m=[37mnginx[0m
+				[33mLabels[0m:       app=[37mnginx[0m
 				[33mAnnotations[0m:  [33m<none>[0m
 			`),
 		},
