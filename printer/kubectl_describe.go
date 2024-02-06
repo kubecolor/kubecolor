@@ -56,19 +56,12 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 		fmt.Fprintf(w, "%s", line.Spacing)
 		if len(line.Value) > 0 {
 			val := string(line.Value)
-			kColor := func() color.Color {
-				if dp.DarkBackground {
-					return color.White
-				} else {
-					return color.Black
-				}
-			}()
 			if k, v, ok := strings.Cut(val, ": "); ok { // split annotation and env from
 				vColor := dp.valueColor(scanner.Path(), v)
-				fmt.Fprint(w, color.Apply(k, kColor), ": ", color.Apply(v, vColor))
+				fmt.Fprint(w, k, ": ", color.Apply(v, vColor))
 			} else if k, v, ok := strings.Cut(val, "="); ok { // split label
 				vColor := dp.valueColor(scanner.Path(), v)
-				fmt.Fprint(w, color.Apply(k, kColor), "=", color.Apply(v, vColor))
+				fmt.Fprint(w, k, "=", color.Apply(v, vColor))
 			} else {
 				valColor := dp.valueColor(scanner.Path(), val)
 				fmt.Fprint(w, color.Apply(val, valColor))
