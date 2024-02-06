@@ -20,14 +20,19 @@ type DescribePrinter struct {
 	tableBytes *bytes.Buffer
 }
 
+var onlyValuePathToColor = regexp.MustCompile(`^(Labels|Annotations|(Init )?Containers/[^/]+/Environment Variables from)/.+`)
+
 func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 	scanner := describe.NewScanner(r)
 	const basicIndentWidth = 2 // according to kubectl describe format
 	for scanner.Scan() {
 		line := scanner.Line()
 
-		// when there are multiple columns, treat is as table format
-		if bytesutil.CountColumns(line.Value, " \t") >= 3 {
+		if onlyValuePathToColor.MatchString(scanner.Path().String()) { // if line path matches label or annotation or env from
+			line.Value = bytes.Join([][]byte{line.Key, line.Value}, line.Spacing)
+			line.Key = nil
+			line.Spacing = nil
+		} else if bytesutil.CountColumns(line.Value, " \t") >= 3 { // when there are multiple columns, treat is as table format
 			if dp.tableBytes == nil {
 				dp.tableBytes = &bytes.Buffer{}
 			}
@@ -44,14 +49,27 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 			key := string(line.Key)
 			if withoutColon, ok := strings.CutSuffix(key, ":"); ok {
 				fmt.Fprint(w, color.Apply(withoutColon, keyColor), ":")
-			} else if !dp.colorFprintLabelOrAnnotation(w, scanner.Path(), key) {
+			} else {
 				fmt.Fprint(w, color.Apply(key, keyColor))
 			}
 		}
 		fmt.Fprintf(w, "%s", line.Spacing)
 		if len(line.Value) > 0 {
 			val := string(line.Value)
-			if !dp.colorFprintLabelOrAnnotation(w, scanner.Path(), val) {
+			kColor := func() color.Color {
+				if dp.DarkBackground {
+					return color.White
+				} else {
+					return color.Black
+				}
+			}()
+			if k, v, ok := strings.Cut(val, ": "); ok { // split annotation and env from
+				vColor := dp.valueColor(scanner.Path(), v)
+				fmt.Fprint(w, color.Apply(k, kColor), ": ", color.Apply(v, vColor))
+			} else if k, v, ok := strings.Cut(val, "="); ok { // split label
+				vColor := dp.valueColor(scanner.Path(), v)
+				fmt.Fprint(w, color.Apply(k, kColor), "=", color.Apply(v, vColor))
+			} else {
 				valColor := dp.valueColor(scanner.Path(), val)
 				fmt.Fprint(w, color.Apply(val, valColor))
 			}
@@ -63,27 +81,6 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 		dp.TablePrinter.Print(dp.tableBytes, w)
 		dp.tableBytes = nil
 	}
-}
-
-var labelOrAnnotationSeps = []string{": ", "="}
-
-func (dp *DescribePrinter) colorFprintLabelOrAnnotation(w io.Writer, path describe.Path, val string) bool {
-	if describeUseStatusColoring(path) {
-		for _, sep := range labelOrAnnotationSeps {
-			if k, v, ok := strings.Cut(val, sep); ok {
-				var kColor color.Color
-				if dp.DarkBackground {
-					kColor = color.White
-				} else {
-					kColor = color.Black
-				}
-				vColor := dp.valueColor(path, v)
-				fmt.Fprint(w, color.Apply(k, kColor), sep, color.Apply(v, vColor))
-				return true
-			}
-		}
-	}
-	return false
 }
 
 func (dp *DescribePrinter) valueColor(path describe.Path, value string) color.Color {
@@ -100,8 +97,6 @@ var describePathsToColor = []*regexp.Regexp{
 	regexp.MustCompile(`^Status$`),
 	regexp.MustCompile(`^(Init )?Containers/[^/]*/State(/Reason)?$`),
 	regexp.MustCompile(`^Containers/[^/]*/Last State(/Reason)?$`),
-	regexp.MustCompile(`^(Labels|Annotations)/*`),
-	regexp.MustCompile(`^(Init )?Containers/[^/]+/Environment Variables from/.+`),
 }
 
 func describeUseStatusColoring(path describe.Path) bool {
