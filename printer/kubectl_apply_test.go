@@ -43,12 +43,21 @@ func Test_ApplyPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:           "dry run",
+			name:           "client dry run",
 			darkBackground: true,
 			input: testutil.NewHereDoc(`
 				deployment.apps/foo unchanged (dry run)`),
 			expected: testutil.NewHereDoc(`
 				deployment.apps/foo [35munchanged[0m [36m(dry run)[0m
+			`),
+		},
+		{
+			name:           "server dry run",
+			darkBackground: true,
+			input: testutil.NewHereDoc(`
+				deployment.apps/foo unchanged (server dry run)`),
+			expected: testutil.NewHereDoc(`
+				deployment.apps/foo [35munchanged[0m [36m(server dry run)[0m
 			`),
 		},
 		{
