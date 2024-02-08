@@ -13,75 +13,79 @@ type ApplyPrinter struct {
 	DarkBackground bool
 }
 
+const (
+	applyActionCreatedStr    = "created"
+	applyActionConfiguredStr = "configured"
+	applyActionUnchangedStr  = "unchanged"
+
+	applyDryRunStr       = "(dry run)"
+	applyDryRunServerStr = "(server dry run)"
+)
+
+var applyDarkColors = map[string]color.Color{
+	applyActionCreatedStr:    color.Green,
+	applyActionConfiguredStr: color.Yellow,
+	applyActionUnchangedStr:  color.Magenta,
+	applyDryRunStr:           color.Cyan,
+	applyDryRunServerStr:     color.Cyan,
+}
+var applyLightColors = map[string]color.Color{
+	applyActionCreatedStr:    color.Green,
+	applyActionConfiguredStr: color.Yellow,
+	applyActionUnchangedStr:  color.Magenta,
+	applyDryRunStr:           color.Blue,
+	applyDryRunServerStr:     color.Cyan,
+}
+
 // kubectl apply
 // deployment.apps/foo unchanged
 // deployment.apps/bar created
 // deployment.apps/quux configured
 func (ap *ApplyPrinter) Print(r io.Reader, w io.Writer) {
-	const (
-		applyActionCreated    = "created"
-		applyActionConfigured = "configured"
-		applyActionUnchanged  = "unchanged"
-
-		dryRunStr = "(dry run)"
-	)
-
-	darkColors := map[string]color.Color{
-		applyActionCreated:    color.Green,
-		applyActionConfigured: color.Yellow,
-		applyActionUnchanged:  color.Magenta,
-		dryRunStr:             color.Cyan,
-	}
-	lightColors := map[string]color.Color{
-		applyActionCreated:    color.Green,
-		applyActionConfigured: color.Yellow,
-		applyActionUnchanged:  color.Magenta,
-		dryRunStr:             color.Blue,
-	}
-
-	colors := func(action string, dark bool) color.Color {
-		if dark {
-			return darkColors[action]
-		}
-		return lightColors[action]
-	}
-
-	colorize := func(line, action string, dryRun bool, wr io.Writer) {
-		if dryRun {
-			arg := strings.TrimSuffix(line, fmt.Sprintf(" %s %s", action, dryRunStr))
-			fmt.Fprintf(w, "%s %s %s\n",
-				arg,
-				color.Apply(action, colors(action, ap.DarkBackground)),
-				color.Apply(dryRunStr, colors(dryRunStr, ap.DarkBackground)),
-			)
-			return
-		}
-
-		arg := strings.TrimSuffix(line, " "+action)
-		fmt.Fprintf(w, "%s %s\n", arg, color.Apply(action, colors(action, ap.DarkBackground)))
-	}
-
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
 		line := scanner.Text()
-		switch {
-		// on dry run cases, it shows "xxx created (dry run)"
-		case strings.HasSuffix(line, fmt.Sprintf(" %s %s", applyActionCreated, dryRunStr)):
-			colorize(line, applyActionCreated, true, w)
-		case strings.HasSuffix(line, fmt.Sprintf(" %s %s", applyActionConfigured, dryRunStr)):
-			colorize(line, applyActionConfigured, true, w)
-		case strings.HasSuffix(line, fmt.Sprintf(" %s %s", applyActionUnchanged, dryRunStr)):
-			colorize(line, applyActionUnchanged, true, w)
-
-		// not dry run cases, it shows "xxx created"
-		case strings.HasSuffix(line, " "+applyActionCreated):
-			colorize(line, applyActionCreated, false, w)
-		case strings.HasSuffix(line, " "+applyActionConfigured):
-			colorize(line, applyActionConfigured, false, w)
-		case strings.HasSuffix(line, " "+applyActionUnchanged):
-			colorize(line, applyActionUnchanged, false, w)
-		default:
-			fmt.Fprintf(w, "%s\n", color.Apply(line, color.Green))
+		if line == "" {
+			fmt.Fprintln(w, line)
+			continue
 		}
+
+		formatted := ap.formatColoredLine(line)
+		if formatted == "" {
+			fmt.Fprintln(w, color.Apply(line, color.Green))
+			continue
+		}
+
+		fmt.Fprintln(w, formatted)
 	}
+}
+
+func (ap *ApplyPrinter) formatColoredLine(line string) string {
+	resource, after, hasAction := strings.Cut(line, " ")
+	if !hasAction {
+		return ""
+	}
+	action, after, hasDryRun := strings.Cut(after, " ")
+	actionColor, actionOk := ap.getColorFor(action)
+	if !actionOk {
+		return ""
+	}
+	if !hasDryRun {
+		return fmt.Sprintf("%s %s", resource, color.Apply(action, actionColor))
+	}
+	dryRun := strings.TrimPrefix(after, " ")
+	dryRunColor, dryRunOk := ap.getColorFor(dryRun)
+	if !dryRunOk {
+		return ""
+	}
+	return fmt.Sprintf("%s %s %s", resource, color.Apply(action, actionColor), color.Apply(dryRun, dryRunColor))
+}
+
+func (ap *ApplyPrinter) getColorFor(action string) (color.Color, bool) {
+	if ap.DarkBackground {
+		c, ok := applyDarkColors[action]
+		return c, ok
+	}
+	c, ok := applyLightColors[action]
+	return c, ok
 }
