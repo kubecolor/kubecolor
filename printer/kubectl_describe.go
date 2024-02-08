@@ -20,14 +20,19 @@ type DescribePrinter struct {
 	tableBytes *bytes.Buffer
 }
 
+var onlyValuePathToColor = regexp.MustCompile(`^(Labels|Annotations|(Init )?Containers/[^/]+/Environment Variables from)/.+`)
+
 func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 	scanner := describe.NewScanner(r)
 	const basicIndentWidth = 2 // according to kubectl describe format
 	for scanner.Scan() {
 		line := scanner.Line()
 
-		// when there are multiple columns, treat is as table format
-		if bytesutil.CountColumns(line.Value, " \t") >= 3 {
+		if onlyValuePathToColor.MatchString(scanner.Path().String()) { // if line path matches label or annotation or env from
+			line.Value = bytes.Join([][]byte{line.Key, line.Value}, line.Spacing)
+			line.Key = nil
+			line.Spacing = nil
+		} else if bytesutil.CountColumns(line.Value, " \t") >= 3 { // when there are multiple columns, treat is as table format
 			if dp.tableBytes == nil {
 				dp.tableBytes = &bytes.Buffer{}
 			}
@@ -51,9 +56,16 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 		fmt.Fprintf(w, "%s", line.Spacing)
 		if len(line.Value) > 0 {
 			val := string(line.Value)
-			valColor := dp.valueColor(scanner.Path(), val)
-			fmt.Fprint(w, color.Apply(val, valColor))
-
+			if k, v, ok := strings.Cut(val, ": "); ok { // split annotation and env from
+				vColor := dp.valueColor(scanner.Path(), v)
+				fmt.Fprint(w, k, ": ", color.Apply(v, vColor))
+			} else if k, v, ok := strings.Cut(val, "="); ok { // split label
+				vColor := dp.valueColor(scanner.Path(), v)
+				fmt.Fprint(w, k, "=", color.Apply(v, vColor))
+			} else {
+				valColor := dp.valueColor(scanner.Path(), val)
+				fmt.Fprint(w, color.Apply(val, valColor))
+			}
 		}
 		fmt.Fprintf(w, "%s\n", line.Trailing)
 	}
