@@ -78,7 +78,7 @@ func ColorStatus(status string, colorschema ColorSchema) (color.Color, bool) {
 		"FailedScheduling",
 		"Error",
 		"ErrImagePull",
-
+		"OOMKilled",
 		// PVC status
 		"Lost":
 		return colorschema.FalseColor, true
@@ -202,8 +202,7 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 			DarkBackground: kp.DarkBackground,
 			TablePrinter: NewTablePrinter(false, kp.DarkBackground, kp.ColorSchema, func(_ int, column string) (color.Color, bool) {
 				return ColorStatus(column, kp.ColorSchema)
-			},
-			),
+			}),
 		}
 	case kubectl.Explain:
 		printer = &ExplainPrinter{

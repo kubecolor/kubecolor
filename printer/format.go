@@ -26,7 +26,7 @@ func getColorByKeyIndent(indent int, basicIndentWidth int, schema ColorSchema) c
 // This is intended to be used to colorize any structured data e.g. Json, Yaml.
 func getColorByValueType(val string, schema ColorSchema) color.Color {
 	switch val {
-	case "null", "<none>", "<unknown>", "<unset>":
+	case "null", "<none>", "<unknown>", "<unset>", "<nil>":
 		return schema.NullColor
 	case "true", "True":
 		return schema.TrueColor

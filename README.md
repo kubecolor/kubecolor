@@ -1,4 +1,4 @@
-<img alt="Kubecolor logo" src="./assets/img/Kubecolor_Logo_large.png" />
+![Kubecolor logo](./assets/img/Kubecolor_Logo_large.png)
 
 # kubecolor
 
@@ -7,7 +7,11 @@ KubeColor is a `kubectl` replacement used to add colors to your kubectl output.
 [![test](https://github.com/kubecolor/kubecolor/actions/workflows/test.yml/badge.svg)](https://github.com/kubecolor/kubecolor/actions/workflows/test.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/kubecolor/kubecolor)](https://goreportcard.com/report/github.com/kubecolor/kubecolor)
 
-![Preview screenshots](./docs/kubectl-combined.png)
+<picture>
+  <source srcset="./docs/kubectl-combined.png" media="(min-width: 1600px)" />
+  <source srcset="./docs/kubectl-combined-medium.png" media="(min-width: 800px)" />
+  <img alt="Preview screenshots" src="./docs/kubectl-combined-small.png" />
+</picture>
 
 * You can also change color theme for light-backgrounded environment
 
@@ -39,17 +43,43 @@ Additionally, if `kubectl` resulted an error, kubecolor just shows the error mes
 
 ## Installation
 
-### Download binary via GitHub release
+### Homebrew
 
-Go to [Release page](https://github.com/kubecolor/kubecolor/releases) then download the binary which fits your environment.
-
-### Mac and Linux users via Homebrew
+![GitHub Release](https://img.shields.io/github/v/release/kubecolor/kubecolor?display_name=tag&label=Homebrew&color=4cc61f)
 
 ```sh
 brew install kubecolor/tap/kubecolor
 ```
 
-### Manually via Go command
+### Scoop
+
+![Scoop Version](https://img.shields.io/scoop/v/kubecolor?label=Scoop%2FMain&color=4cc61f)
+
+```sh
+scoop install kubecolor
+```
+
+### Nix
+
+[![nixpkgs unstable package](https://repology.org/badge/version-for-repo/nix_unstable/kubecolor.svg)](https://repology.org/project/kubecolor/versions)
+
+```sh
+nix-shell -p kubecolor
+```
+
+### AUR (Arch User Repositories)
+
+[![AUR package](https://repology.org/badge/version-for-repo/aur/kubecolor.svg)](https://repology.org/project/kubecolor/versions)
+
+```sh
+yay -Syu kubecolor
+```
+
+### Download binary via GitHub release
+
+Go to [Release page](https://github.com/kubecolor/kubecolor/releases) then download the binary which fits your environment.
+
+### Compile from source
 
 Requires Go 1.21 (or later)
 
@@ -120,6 +150,10 @@ alias watch='KUBECOLOR_FORCE_COLORS=true watch --color '
 ```
 
 Be sure to include the space at the end to enable alias expansion (without this additional space, the command `watch kgp` would fail, for example).
+
+* `KUBECOLOR_LIGHT_BACKGROUND`
+
+In addition to use the light color preset with `--light-background`, you can also do so by setting the environment variable `KUBECOLOR_LIGHT_BACKGROUND=true`.
 
 ### Autocompletion
 

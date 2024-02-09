@@ -10,11 +10,6 @@ import (
 	"github.com/kubecolor/kubecolor/scanner/tablescan"
 )
 
-type tableColumnColor struct {
-	IndexInLine int
-	Color       color.Color
-}
-
 type TablePrinter struct {
 	WithHeader     bool
 	DarkBackground bool
