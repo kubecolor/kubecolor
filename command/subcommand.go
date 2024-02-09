@@ -13,14 +13,14 @@ var isOutputTerminal = func() bool {
 	return isatty.IsTerminal(os.Stdout.Fd()) || isatty.IsCygwinTerminal(os.Stdout.Fd())
 }
 
-func ResolveSubcommand(args []string, config *KubecolorConfig) (bool, *kubectl.SubcommandInfo) {
-	// subcommandFound becomes false when subcommand is not found; e.g. "kubecolor --help"
-	subcommandInfo, subcommandFound := kubectl.InspectSubcommandInfo(args)
-
+func ResolveSubcommand(args []string, config *Config) (bool, *kubectl.SubcommandInfo) {
 	// if --plain found, it does not colorize
 	if config.Plain {
-		return false, subcommandInfo
+		return false, nil
 	}
+
+	// subcommandFound becomes false when subcommand is not found; e.g. "kubecolor --help"
+	subcommandInfo, subcommandFound := kubectl.InspectSubcommandInfo(args)
 
 	// if subcommand is not found (e.g. kubecolor --help or just "kubecolor"),
 	// it is treated as help because kubectl shows help for such input

@@ -25,7 +25,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			colorDeciderFn: nil,
 			withHeader:     true,
 			darkBackground: true,
-			colorSchema:    NewColorSchema(true),
+			colorSchema:    color.NewTheme(color.PresetDark),
 			input: testutil.NewHereDoc(`
 				NAME          READY   STATUS    RESTARTS   AGE
 				nginx-dnmv5   1/1     Running   0          6d6h
@@ -43,7 +43,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			colorDeciderFn: nil,
 			withHeader:     true,
 			darkBackground: true,
-			colorSchema:    NewColorSchema(true),
+			colorSchema:    color.NewTheme(color.PresetDark),
 			input: testutil.NewHereDoc(`
 				NAME                         READY   STATUS    RESTARTS   AGE
 				pod/nginx-8spn9              1/1     Running   1          19d
@@ -70,7 +70,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			colorDeciderFn: nil,
 			withHeader:     false,
 			darkBackground: true,
-			colorSchema:    NewColorSchema(true),
+			colorSchema:    color.NewTheme(color.PresetDark),
 			input: testutil.NewHereDoc(`
 				nginx-dnmv5   1/1     Running   0          6d6h
 				nginx-m8pbc   1/1     Running   0          6d6h
@@ -86,7 +86,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			colorDeciderFn: nil,
 			withHeader:     true,
 			darkBackground: false,
-			colorSchema:    NewColorSchema(false),
+			colorSchema:    color.NewTheme(color.PresetLight),
 			input: testutil.NewHereDoc(`
 				NAME          READY   STATUS    RESTARTS   AGE
 				nginx-dnmv5   1/1     Running   0          6d6h
@@ -122,7 +122,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			},
 			withHeader:     true,
 			darkBackground: true,
-			colorSchema:    NewColorSchema(true),
+			colorSchema:    color.NewTheme(color.PresetDark),
 			// "CrashLoopBackOff" will be red, "0/1" will be yellow
 			input: testutil.NewHereDoc(`
 				NAME          READY   STATUS             RESTARTS   AGE
@@ -141,7 +141,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			colorDeciderFn: nil,
 			withHeader:     true,
 			darkBackground: true,
-			colorSchema:    NewColorSchema(true),
+			colorSchema:    color.NewTheme(color.PresetDark),
 			input: testutil.NewHereDoc(`
 				NAME                              SHORTNAMES   APIGROUP                       NAMESPACED   KIND
 				bindings                                                                      true         Binding

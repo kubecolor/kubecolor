@@ -10,7 +10,7 @@ import (
 )
 
 type OptionsPrinter struct {
-	ColorSchema ColorSchema
+	Theme *color.Theme
 }
 
 func (op *OptionsPrinter) Print(r io.Reader, w io.Writer) {
@@ -25,7 +25,7 @@ func (op *OptionsPrinter) Print(r io.Reader, w io.Writer) {
 		}
 
 		if isFirstLine {
-			fmt.Fprintf(w, "%s\n", color.Apply(line, op.ColorSchema.StringColor))
+			fmt.Fprintf(w, "%s\n", color.Apply(line, op.Theme.StringColor))
 			isFirstLine = false
 			continue
 		}
@@ -37,6 +37,6 @@ func (op *OptionsPrinter) Print(r io.Reader, w io.Writer) {
 		splitted := strings.SplitN(trimmedLine, ": ", 2)
 		key, val := splitted[0], splitted[1]
 
-		fmt.Fprintf(w, "%s%s: %s\n", indent, color.Apply(key, getColorByKeyIndent(0, 2, op.ColorSchema)), color.Apply(val, getColorByValueType(val, op.ColorSchema)))
+		fmt.Fprintf(w, "%s%s: %s\n", indent, color.Apply(key, getColorByKeyIndent(0, 2, op.Theme)), color.Apply(val, getColorByValueType(val, op.Theme)))
 	}
 }

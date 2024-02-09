@@ -5,6 +5,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/kubecolor/kubecolor/color"
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
@@ -137,7 +138,7 @@ func Test_YamlPrinter_Print(t *testing.T) {
 			var w bytes.Buffer
 			printer := YamlPrinter{
 				DarkBackground: tt.darkBackground,
-				ColorSchema:    NewColorSchema(tt.darkBackground),
+				Theme:          color.NewTheme(tt.darkBackground),
 			}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())

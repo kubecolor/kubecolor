@@ -13,32 +13,32 @@ func toSpaces(n int) string {
 
 // getColorByKeyIndent returns a color based on the given indent.
 // When you want to change key color based on indent depth (e.g. Json, Yaml), use this function
-func getColorByKeyIndent(indent int, basicIndentWidth int, schema ColorSchema) color.Color {
+func getColorByKeyIndent(indent int, basicIndentWidth int, theme *color.Theme) color.Color {
 	switch indent / basicIndentWidth % 2 {
 	case 1:
-		return schema.StringColor
+		return theme.StringColor
 	default:
-		return schema.DefaultColor
+		return theme.DefaultColor
 	}
 }
 
 // getColorByValueType returns a color by value.
 // This is intended to be used to colorize any structured data e.g. Json, Yaml.
-func getColorByValueType(val string, schema ColorSchema) color.Color {
+func getColorByValueType(val string, theme *color.Theme) color.Color {
 	switch val {
 	case "null", "<none>", "<unknown>", "<unset>", "<nil>":
-		return schema.NullColor
+		return theme.NullColor
 	case "true", "True":
-		return schema.TrueColor
+		return theme.TrueColor
 	case "false", "False":
-		return schema.FalseColor
+		return theme.FalseColor
 	}
 
 	if isOnlyDigits(val) {
-		return schema.NumberColor
+		return theme.NumberColor
 	}
 
-	return schema.StringColor
+	return theme.StringColor
 }
 
 func isOnlyDigits(s string) bool {

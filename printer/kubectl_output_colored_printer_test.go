@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/kubecolor/kubecolor/color"
 	"github.com/kubecolor/kubecolor/kubectl"
 	"github.com/kubecolor/kubecolor/testutil"
 )
@@ -554,7 +555,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				SubcommandInfo:    tt.subcommandInfo,
 				DarkBackground:    tt.darkBackground,
 				ObjFreshThreshold: tt.objFreshThreshold,
-				ColorSchema:       NewColorSchema(tt.darkBackground),
+				Theme:             color.NewTheme(tt.darkBackground),
 			}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())

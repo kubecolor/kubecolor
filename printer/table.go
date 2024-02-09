@@ -13,17 +13,16 @@ import (
 type TablePrinter struct {
 	WithHeader     bool
 	DarkBackground bool
-	ColorSchema    ColorSchema
+	Theme          *color.Theme
 	ColorDeciderFn func(index int, column string) (color.Color, bool)
 
 	hasLeadingNamespaceColumn bool
 }
 
-func NewTablePrinter(withHeader, darkBackground bool, colorSchema ColorSchema, colorDeciderFn func(index int, column string) (color.Color, bool)) *TablePrinter {
+func NewTablePrinter(withHeader bool, theme *color.Theme, colorDeciderFn func(index int, column string) (color.Color, bool)) *TablePrinter {
 	return &TablePrinter{
 		WithHeader:     withHeader,
-		DarkBackground: darkBackground,
-		ColorSchema:    colorSchema,
+		Theme:          theme,
 		ColorDeciderFn: colorDeciderFn,
 	}
 }
@@ -39,7 +38,7 @@ func (tp *TablePrinter) Print(r io.Reader, w io.Writer) {
 		}
 		if (tp.WithHeader && isFirstLine) || isAllCellsUpper(cells) {
 			isFirstLine = false
-			fmt.Fprintf(w, "%s\n", color.Apply(scanner.Text(), tp.ColorSchema.HeaderColor))
+			fmt.Fprintf(w, "%s\n", color.Apply(scanner.Text(), tp.Theme.HeaderColor))
 
 			if strings.EqualFold(cells[0].Trimmed, "namespace") {
 				tp.hasLeadingNamespaceColumn = true
@@ -48,7 +47,7 @@ func (tp *TablePrinter) Print(r io.Reader, w io.Writer) {
 		}
 
 		fmt.Fprintf(w, "%s", scanner.LeadingSpaces())
-		tp.printLineAsTableFormat(w, cells, tp.ColorSchema.RandomColor)
+		tp.printLineAsTableFormat(w, cells, tp.Theme.ColumnColorCycle)
 	}
 }
 

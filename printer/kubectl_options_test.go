@@ -5,6 +5,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/kubecolor/kubecolor/color"
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
@@ -17,7 +18,7 @@ func Test_OptionsPrinter_Print(t *testing.T) {
 	}{
 		{
 			name:        "successful",
-			colorSchema: NewColorSchema(true),
+			colorSchema: color.NewTheme(color.PresetDark),
 			input: testutil.NewHereDoc(`
 				The following options can be passed to any command:
 
@@ -56,7 +57,7 @@ func Test_OptionsPrinter_Print(t *testing.T) {
 			t.Parallel()
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
-			printer := OptionsPrinter{ColorSchema: tt.colorSchema}
+			printer := OptionsPrinter{Theme: tt.colorSchema}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())
 		})

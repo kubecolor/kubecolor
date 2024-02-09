@@ -3,126 +3,188 @@ package command
 import (
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 
 	"github.com/kubecolor/kubecolor/color"
-	"github.com/kubecolor/kubecolor/printer"
 )
 
-type KubecolorConfig struct {
+type Config struct {
 	Plain                bool
-	DarkBackground       bool
 	ForceColor           bool
 	ShowKubecolorVersion bool
 	KubectlCmd           string
 	ObjFreshThreshold    time.Duration
-	ColorSchema          printer.ColorSchema
+	Theme                *color.Theme
+
+	ArgsPassthrough []string
 }
 
-func ResolveConfig(args []string) ([]string, *KubecolorConfig) {
-	args, plainFlagFound := findAndRemoveBoolFlagIfExists(args, "--plain")
-	args, lightBackgroundFlagFound := findAndRemoveBoolFlagIfExists(args, "--light-background")
-	args, forceColorFlagFound := findAndRemoveBoolFlagIfExists(args, "--force-colors")
-	args, kubecolorVersionFlagFound := findAndRemoveBoolFlagIfExists(args, "--kubecolor-version")
-
-	colorsForcedViaEnv := os.Getenv("KUBECOLOR_FORCE_COLORS") == "true"
-	lightBackgroundViaEnv := os.Getenv("KUBECOLOR_LIGHT_BACKGROUND") == "true"
-
-	kubectlCmd := "kubectl"
-	if kc := os.Getenv("KUBECTL_COMMAND"); kc != "" {
-		kubectlCmd = kc
+func ResolveConfig(inputArgs []string) (*Config, error) {
+	config := &Config{
+		KubectlCmd:        "kubectl",
+		ObjFreshThreshold: time.Duration(0),
 	}
 
-	objFreshAgeThresholdDuration := time.Duration(0)
-	objFreshAgeThresholdEnv := "KUBECOLOR_OBJ_FRESH"
-	if objFreshAgeThreshold := os.Getenv(objFreshAgeThresholdEnv); objFreshAgeThreshold != "" {
-		var err error
-		objFreshAgeThresholdDuration, err = time.ParseDuration(objFreshAgeThreshold)
-		if err != nil {
-			fmt.Printf("[WARN] [kubecolor] cannot parse duration taken from env %s. See kubecolor document. %v\n", objFreshAgeThresholdEnv, err)
+	themePreset := color.PresetDefault
+
+	if themePresetEnv, ok, err := parseThemePresetEnv("KUBECOLOR_THEME"); err != nil {
+		return nil, err
+	} else if ok {
+		themePreset = themePresetEnv
+	}
+
+	if lightThemeEnv, ok, err := parseBoolEnv("KUBECOLOR_LIGHT_BACKGROUND"); err != nil {
+		return nil, err
+	} else if ok {
+		if lightThemeEnv {
+			themePreset = color.PresetDark
+		} else {
+			themePreset = color.PresetLight
 		}
 	}
 
-	// Parse the color schema if provided
-	// format is like "default:32;key:36;string:37;true:32;false:31;number:35;null:33;header:37;fresh:32;required:31;random:36,37"
-	ColorSchema := printer.NewColorSchema(darkBackground)
-	customColorEnv := "KUBECOLOR_CUSTOM_COLOR"
-	if customColor := os.Getenv(customColorEnv); customColor != "" {
-		customSelections := strings.Split(customColor, ";")
-		for _, customSelection := range customSelections {
-			keyVal := strings.Split(customSelection, ":")
-			if len(keyVal) != 2 {
-				fmt.Printf("[WARN] [kubecolor] cannot parse custom color selection taken from env %s. See kubecolor docs.\n", customSelection)
-				break
+	for _, s := range inputArgs {
+		flag, value, _ := strings.Cut(s, "=")
+		switch flag {
+		case "--plain":
+			if b, err := parseBoolFlag(flag, value); err != nil {
+				return nil, err
+			} else {
+				config.Plain = b
 			}
-
-			// Check the random case as the value if a list
-			if keyVal[0] == "random" {
-				rndColors := strings.Split(keyVal[1], ",")
-				for _, newColor := range rndColors {
-					val, err := strconv.Atoi(newColor)
-					if err != nil {
-						fmt.Printf("[WARN] [kubecolor] cannot parse custom color taken from env %s. See kubecolor document. %v\n", customSelection, err)
-						break
-					}
-					ColorSchema.RandomColor = append(ColorSchema.RandomColor, color.Color(val))
+		case "--light-background":
+			if b, err := parseBoolFlag(flag, value); err != nil {
+				return nil, err
+			} else {
+				if b {
+					themePreset = color.PresetLight
+				} else {
+					themePreset = color.PresetDark
 				}
-				continue
 			}
-
-			key := keyVal[0]
-			val, err := strconv.Atoi(keyVal[1])
-			if err != nil {
-				fmt.Printf("[WARN] [kubecolor] cannot parse custom color taken from env %s. See kubecolor document. %v\n", customSelection, err)
-				break
+		case "--force-colors":
+			if b, err := parseBoolFlag(flag, value); err != nil {
+				return nil, err
+			} else {
+				config.ForceColor = b
 			}
-			colorName := color.Color(val)
-
-			switch key {
-			case "default":
-				ColorSchema.DefaultColor = colorName
-			case "key":
-				ColorSchema.KeyColor = colorName
-			case "string":
-				ColorSchema.StringColor = colorName
-			case "true":
-				ColorSchema.TrueColor = colorName
-			case "false":
-				ColorSchema.FalseColor = colorName
-			case "number":
-				ColorSchema.NumberColor = colorName
-			case "null":
-				ColorSchema.NumberColor = colorName
-			case "header":
-				ColorSchema.HeaderColor = colorName
-			case "fresh":
-				ColorSchema.NumberColor = colorName
-			case "required":
-				ColorSchema.RequiredColor = colorName
-			default:
+		case "--kubecolor-version":
+			if b, err := parseBoolFlag(flag, value); err != nil {
+				return nil, err
+			} else {
+				config.ShowKubecolorVersion = b
 			}
+		case "--kubecolor-theme":
+			if result, err := parseThemePresetFlag(flag, value); err != nil {
+				return nil, err
+			} else {
+				themePreset = result
+			}
+		default:
+			config.ArgsPassthrough = append(config.ArgsPassthrough, s)
 		}
 	}
 
-	return args, &KubecolorConfig{
-		Plain:                plainFlagFound,
-		DarkBackground:       !lightBackgroundFlagFound && !lightBackgroundViaEnv,
-		ForceColor:           forceColorFlagFound || colorsForcedViaEnv,
-		ShowKubecolorVersion: kubecolorVersionFlagFound,
-		KubectlCmd:           kubectlCmd,
-		ObjFreshThreshold:    objFreshAgeThresholdDuration,
-		ColorSchema:          ColorSchema,
+	config.Theme = color.NewTheme(themePreset)
+
+	if err := config.Theme.OverrideFromEnv(); err != nil {
+		return nil, fmt.Errorf("read theme from env: %w", err)
 	}
+
+	if b, ok, err := parseBoolEnv("KUBECOLOR_FORCE_COLORS"); err != nil {
+		return nil, err
+	} else if ok {
+		config.ForceColor = b
+	}
+
+	if dur, ok, err := parseDurationEnv("KUBECOLOR_OBJ_FRESH"); err != nil {
+		return nil, err
+	} else if ok {
+		config.ObjFreshThreshold = dur
+	}
+
+	if cmd := os.Getenv("KUBECTL_COMMAND"); cmd != "" {
+		config.KubectlCmd = cmd
+	}
+
+	return config, nil
 }
 
-func findAndRemoveBoolFlagIfExists(args []string, key string) ([]string, bool) {
-	for i, arg := range args {
-		if arg == key {
-			return append(args[:i], args[i+1:]...), true
-		}
+func parseBool(value string) (result bool, ok bool, err error) {
+	if value == "" {
+		return false, false, nil
 	}
+	ok = true
+	switch strings.ToLower(value) {
+	case "true":
+		result = true
+	case "false":
+		result = false
+	default:
+		return false, false, fmt.Errorf(`must be either "true" or "false"`)
+	}
+	return result, ok, err
+}
 
-	return args, false
+func parseBoolFlag(flag, value string) (result bool, err error) {
+	result, ok, err := parseBool(value)
+	if err != nil {
+		return false, fmt.Errorf("flag %s: %w", flag, err)
+	}
+	if !ok {
+		// bool flags treat no value as true (e.g "--plain" is same as "--plain=true")
+		return true, nil
+	}
+	return result, nil
+}
+
+func parseBoolEnv(env string) (result bool, ok bool, err error) {
+	result, ok, err = parseBool(os.Getenv(env))
+	if err != nil {
+		return false, false, fmt.Errorf("parse env %s: %w", env, err)
+	}
+	return result, ok, err
+}
+
+func parseDuration(value string) (time.Duration, bool, error) {
+	if value == "" {
+		return 0, false, nil
+	}
+	result, err := time.ParseDuration(value)
+	if err != nil {
+		return 0, false, err
+	}
+	return result, true, nil
+}
+
+func parseDurationEnv(env string) (time.Duration, bool, error) {
+	result, ok, err := parseDuration(os.Getenv(env))
+	if err != nil {
+		return 0, false, fmt.Errorf("parse env %s: %w", env, err)
+	}
+	return result, ok, nil
+}
+
+func parseThemePresetEnv(env string) (color.Preset, bool, error) {
+	value := os.Getenv(env)
+	if value == "" {
+		return 0, false, nil
+	}
+	t, err := color.ParsePreset(value)
+	if err != nil {
+		return 0, false, fmt.Errorf("parse env %s: %w", env, err)
+	}
+	return t, true, nil
+}
+
+func parseThemePresetFlag(flag, value string) (color.Preset, error) {
+	if value == "" {
+		return 0, fmt.Errorf("flag %s: must be in format %s=value", flag, flag)
+	}
+	t, err := color.ParsePreset(value)
+	if err != nil {
+		return 0, fmt.Errorf("flag %s: %w", flag, err)
+	}
+	return t, nil
 }

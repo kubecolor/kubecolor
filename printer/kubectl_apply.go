@@ -10,31 +10,7 @@ import (
 )
 
 type ApplyPrinter struct {
-	DarkBackground bool
-}
-
-const (
-	applyActionCreatedStr    = "created"
-	applyActionConfiguredStr = "configured"
-	applyActionUnchangedStr  = "unchanged"
-
-	applyDryRunStr       = "(dry run)"
-	applyDryRunServerStr = "(server dry run)"
-)
-
-var applyDarkColors = map[string]color.Color{
-	applyActionCreatedStr:    color.Green,
-	applyActionConfiguredStr: color.Yellow,
-	applyActionUnchangedStr:  color.Magenta,
-	applyDryRunStr:           color.Cyan,
-	applyDryRunServerStr:     color.Cyan,
-}
-var applyLightColors = map[string]color.Color{
-	applyActionCreatedStr:    color.Green,
-	applyActionConfiguredStr: color.Yellow,
-	applyActionUnchangedStr:  color.Magenta,
-	applyDryRunStr:           color.Blue,
-	applyDryRunServerStr:     color.Cyan,
+	Theme *color.Theme
 }
 
 // kubectl apply
@@ -82,10 +58,16 @@ func (ap *ApplyPrinter) formatColoredLine(line string) string {
 }
 
 func (ap *ApplyPrinter) getColorFor(action string) (color.Color, bool) {
-	if ap.DarkBackground {
-		c, ok := applyDarkColors[action]
-		return c, ok
+	switch action {
+	case "created":
+		return ap.Theme.Apply.CreatedColor, true
+	case "configured":
+		return ap.Theme.Apply.ConfiguredColor, true
+	case "unchanged":
+		return ap.Theme.Apply.UnchangedColor, true
+	case "(dry run)", "(server dry run)":
+		return ap.Theme.Apply.DryRunColor, true
+	default:
+		return 0, false
 	}
-	c, ok := applyLightColors[action]
-	return c, ok
 }

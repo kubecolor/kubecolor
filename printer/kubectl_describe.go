@@ -14,8 +14,7 @@ import (
 
 // DescribePrinter is a specific printer to print kubectl describe format.
 type DescribePrinter struct {
-	DarkBackground bool
-	TablePrinter   *TablePrinter
+	TablePrinter *TablePrinter
 
 	tableBytes *bytes.Buffer
 }
@@ -45,7 +44,7 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 
 		fmt.Fprintf(w, "%s", line.Indent)
 		if len(line.Key) > 0 {
-			keyColor := getColorByKeyIndent(line.KeyIndent(), basicIndentWidth, dp.TablePrinter.ColorSchema)
+			keyColor := getColorByKeyIndent(line.KeyIndent(), basicIndentWidth, dp.TablePrinter.Theme)
 			key := string(line.Key)
 			if withoutColon, ok := strings.CutSuffix(key, ":"); ok {
 				fmt.Fprint(w, color.Apply(withoutColon, keyColor), ":")
@@ -79,11 +78,11 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 func (dp *DescribePrinter) valueColor(path describe.Path, value string) color.Color {
 	value = strings.TrimSpace(value)
 	if describeUseStatusColoring(path) {
-		if col, ok := ColorStatus(value, dp.TablePrinter.ColorSchema); ok {
+		if col, ok := ColorStatus(value, dp.TablePrinter.Theme); ok {
 			return col
 		}
 	}
-	return getColorByValueType(value, dp.TablePrinter.ColorSchema)
+	return getColorByValueType(value, dp.TablePrinter.Theme)
 }
 
 var describePathsToColor = []*regexp.Regexp{

@@ -3,6 +3,7 @@ package command
 import (
 	"testing"
 
+	"github.com/kubecolor/kubecolor/color"
 	"github.com/kubecolor/kubecolor/kubectl"
 	"github.com/kubecolor/kubecolor/testutil"
 )
@@ -11,7 +12,7 @@ func Test_ResolveSubcommand(t *testing.T) {
 	tests := []struct {
 		name                   string
 		args                   []string
-		conf                   *KubecolorConfig
+		conf                   *Config
 		isOutputTerminal       func() bool
 		expectedShouldColorize bool
 		expectedInfo           *kubectl.SubcommandInfo
@@ -20,11 +21,11 @@ func Test_ResolveSubcommand(t *testing.T) {
 			name:             "basic case",
 			args:             []string{"get", "pods"},
 			isOutputTerminal: func() bool { return true },
-			conf: &KubecolorConfig{
-				Plain:          false,
-				DarkBackground: true,
-				ForceColor:     false,
-				KubectlCmd:     "kubectl",
+			conf: &Config{
+				Plain:      false,
+				ForceColor: false,
+				KubectlCmd: "kubectl",
+				Theme:      color.NewTheme(color.PresetDark),
 			},
 			expectedShouldColorize: true,
 			expectedInfo:           &kubectl.SubcommandInfo{Subcommand: kubectl.Get},
@@ -33,24 +34,24 @@ func Test_ResolveSubcommand(t *testing.T) {
 			name:             "when plain, it won't colorize",
 			args:             []string{"get", "pods"},
 			isOutputTerminal: func() bool { return true },
-			conf: &KubecolorConfig{
-				Plain:          true,
-				DarkBackground: true,
-				ForceColor:     false,
-				KubectlCmd:     "kubectl",
+			conf: &Config{
+				Plain:      true,
+				ForceColor: false,
+				KubectlCmd: "kubectl",
+				Theme:      color.NewTheme(color.PresetDark),
 			},
 			expectedShouldColorize: false,
-			expectedInfo:           &kubectl.SubcommandInfo{Subcommand: kubectl.Get},
+			expectedInfo:           nil,
 		},
 		{
 			name:             "when help, it will colorize",
 			args:             []string{"get", "pods", "-h"},
 			isOutputTerminal: func() bool { return true },
-			conf: &KubecolorConfig{
-				Plain:          false,
-				DarkBackground: true,
-				ForceColor:     false,
-				KubectlCmd:     "kubectl",
+			conf: &Config{
+				Plain:      false,
+				ForceColor: false,
+				KubectlCmd: "kubectl",
+				Theme:      color.NewTheme(color.PresetDark),
 			},
 			expectedShouldColorize: true,
 			expectedInfo:           &kubectl.SubcommandInfo{Subcommand: kubectl.Get, Help: true},
@@ -59,24 +60,24 @@ func Test_ResolveSubcommand(t *testing.T) {
 			name:             "when both plain and force, plain is chosen",
 			args:             []string{"get", "pods"},
 			isOutputTerminal: func() bool { return true },
-			conf: &KubecolorConfig{
-				Plain:          true,
-				DarkBackground: true,
-				ForceColor:     true,
-				KubectlCmd:     "kubectl",
+			conf: &Config{
+				Plain:      true,
+				ForceColor: true,
+				KubectlCmd: "kubectl",
+				Theme:      color.NewTheme(color.PresetDark),
 			},
 			expectedShouldColorize: false,
-			expectedInfo:           &kubectl.SubcommandInfo{Subcommand: kubectl.Get},
+			expectedInfo:           nil,
 		},
 		{
 			name:             "when no subcommand is found, it becomes help",
 			args:             []string{},
 			isOutputTerminal: func() bool { return true },
-			conf: &KubecolorConfig{
-				Plain:          false,
-				DarkBackground: true,
-				ForceColor:     false,
-				KubectlCmd:     "kubectl",
+			conf: &Config{
+				Plain:      false,
+				ForceColor: false,
+				KubectlCmd: "kubectl",
+				Theme:      color.NewTheme(color.PresetDark),
 			},
 			expectedShouldColorize: true,
 			expectedInfo:           &kubectl.SubcommandInfo{Help: true},
@@ -85,11 +86,11 @@ func Test_ResolveSubcommand(t *testing.T) {
 			name:             "when not tty, it won't colorize",
 			args:             []string{"get", "pods"},
 			isOutputTerminal: func() bool { return false },
-			conf: &KubecolorConfig{
-				Plain:          false,
-				DarkBackground: true,
-				ForceColor:     false,
-				KubectlCmd:     "kubectl",
+			conf: &Config{
+				Plain:      false,
+				ForceColor: false,
+				KubectlCmd: "kubectl",
+				Theme:      color.NewTheme(color.PresetDark),
 			},
 			expectedShouldColorize: false,
 			expectedInfo:           &kubectl.SubcommandInfo{Subcommand: kubectl.Get},
@@ -98,11 +99,11 @@ func Test_ResolveSubcommand(t *testing.T) {
 			name:             "even if not tty, if force, it colorizes",
 			args:             []string{"get", "pods"},
 			isOutputTerminal: func() bool { return false },
-			conf: &KubecolorConfig{
-				Plain:          false,
-				DarkBackground: true,
-				ForceColor:     true,
-				KubectlCmd:     "kubectl",
+			conf: &Config{
+				Plain:      false,
+				ForceColor: true,
+				KubectlCmd: "kubectl",
+				Theme:      color.NewTheme(color.PresetDark),
 			},
 			expectedShouldColorize: true,
 			expectedInfo:           &kubectl.SubcommandInfo{Subcommand: kubectl.Get},
@@ -111,11 +112,11 @@ func Test_ResolveSubcommand(t *testing.T) {
 			name:             "when the subcommand is unsupported, it won't colorize",
 			args:             []string{"-h"},
 			isOutputTerminal: func() bool { return true },
-			conf: &KubecolorConfig{
-				Plain:          false,
-				DarkBackground: true,
-				ForceColor:     false,
-				KubectlCmd:     "kubectl",
+			conf: &Config{
+				Plain:      false,
+				ForceColor: false,
+				KubectlCmd: "kubectl",
+				Theme:      color.NewTheme(color.PresetDark),
 			},
 			expectedShouldColorize: true,
 			expectedInfo:           &kubectl.SubcommandInfo{Help: true},

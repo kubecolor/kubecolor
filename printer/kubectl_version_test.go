@@ -5,6 +5,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/kubecolor/kubecolor/color"
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
@@ -36,7 +37,7 @@ func Test_VersionPrinter_Print(t *testing.T) {
 			var w bytes.Buffer
 			printer := VersionPrinter{
 				DarkBackground: tt.darkBackground,
-				ColorSchema:    NewColorSchema(tt.darkBackground),
+				Theme:          color.NewTheme(tt.darkBackground),
 			}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())
@@ -71,7 +72,7 @@ func Test_VersionClientPrinter_Print(t *testing.T) {
 			var w bytes.Buffer
 			printer := VersionClientPrinter{
 				DarkBackground: tt.darkBackground,
-				ColorSchema:    NewColorSchema(tt.darkBackground),
+				Theme:          color.NewTheme(tt.darkBackground),
 			}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())

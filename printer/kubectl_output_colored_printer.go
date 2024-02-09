@@ -1,7 +1,6 @@
 package printer
 
 import (
-	"fmt"
 	"io"
 	"regexp"
 	"strconv"
@@ -16,13 +15,12 @@ import (
 // which kubectl subcommand is executed.
 type KubectlOutputColoredPrinter struct {
 	SubcommandInfo    *kubectl.SubcommandInfo
-	DarkBackground    bool
 	Recursive         bool
 	ObjFreshThreshold time.Duration
-	ColorSchema       ColorSchema
+	Theme             *color.Theme
 }
 
-func ColorStatus(status string, colorschema ColorSchema) (color.Color, bool) {
+func ColorStatus(status string, theme *color.Theme) (color.Color, bool) {
 	switch status {
 	case
 		// from https://github.com/kubernetes/kubernetes/blob/master/pkg/kubelet/events/event.go
@@ -81,7 +79,7 @@ func ColorStatus(status string, colorschema ColorSchema) (color.Color, bool) {
 		"OOMKilled",
 		// PVC status
 		"Lost":
-		return colorschema.FalseColor, true
+		return theme.FalseColor, true
 	case
 		// from https://github.com/kubernetes/kubernetes/blob/master/pkg/kubelet/events/event.go
 		// Container event reason list
@@ -119,7 +117,7 @@ func ColorStatus(status string, colorschema ColorSchema) (color.Color, bool) {
 		// PVC status
 		"Available",
 		"Released":
-		return colorschema.NullColor, true
+		return theme.NullColor, true
 	case
 		"Running",
 		"Completed",
@@ -138,7 +136,7 @@ func ColorStatus(status string, colorschema ColorSchema) (color.Color, bool) {
 
 		// PVC status
 		"Bound":
-		return colorschema.TrueColor, true
+		return theme.TrueColor, true
 	}
 	return 0, false
 }
@@ -148,25 +146,24 @@ func ColorStatus(status string, colorschema ColorSchema) (color.Color, bool) {
 func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 	withHeader := !kp.SubcommandInfo.NoHeader
 
-	var printer Printer = &SingleColoredPrinter{Color: kp.ColorSchema.DefaultColor} // default in green
+	var printer Printer = &SingleColoredPrinter{Color: kp.Theme.DefaultColor} // default in green
 
 	switch kp.SubcommandInfo.Subcommand {
 	case kubectl.Top, kubectl.APIResources:
-		printer = NewTablePrinter(withHeader, kp.DarkBackground, kp.ColorSchema, nil)
+		printer = NewTablePrinter(withHeader, kp.Theme, nil)
 
 	case kubectl.APIVersions:
-		printer = NewTablePrinter(false, kp.DarkBackground, kp.ColorSchema, nil) // api-versions always doesn't have header
+		printer = NewTablePrinter(false, kp.Theme, nil) // api-versions always doesn't have header
 
 	case kubectl.Get:
 		switch {
 		case kp.SubcommandInfo.FormatOption == kubectl.None, kp.SubcommandInfo.FormatOption == kubectl.Wide:
 			printer = NewTablePrinter(
 				withHeader,
-				kp.DarkBackground,
-				kp.ColorSchema,
+				kp.Theme,
 				func(_ int, column string) (color.Color, bool) {
 					// first try to match a status
-					col, matched := ColorStatus(column, kp.ColorSchema)
+					col, matched := ColorStatus(column, kp.Theme)
 					if matched {
 						return col, true
 					}
@@ -185,93 +182,85 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 
 					// Object age when fresh then green
 					if checkIfObjFresh(column, kp.ObjFreshThreshold) {
-						return kp.ColorSchema.FreshColor, true
+						return kp.Theme.DurationFreshColor, true
 					}
 
 					return 0, false
 				},
 			)
 		case kp.SubcommandInfo.FormatOption == kubectl.Json:
-			printer = &JsonPrinter{DarkBackground: kp.DarkBackground, ColorSchema: kp.ColorSchema}
+			printer = &JsonPrinter{Theme: kp.Theme}
 		case kp.SubcommandInfo.FormatOption == kubectl.Yaml:
-			printer = &YamlPrinter{DarkBackground: kp.DarkBackground, ColorSchema: kp.ColorSchema}
+			printer = &YamlPrinter{Theme: kp.Theme}
 		}
 
 	case kubectl.Describe:
 		printer = &DescribePrinter{
-			DarkBackground: kp.DarkBackground,
-			TablePrinter: NewTablePrinter(false, kp.DarkBackground, kp.ColorSchema, func(_ int, column string) (color.Color, bool) {
-				return ColorStatus(column, kp.ColorSchema)
+			TablePrinter: NewTablePrinter(false, kp.Theme, func(_ int, column string) (color.Color, bool) {
+				return ColorStatus(column, kp.Theme)
 			}),
 		}
 	case kubectl.Explain:
 		printer = &ExplainPrinter{
-			DarkBackground: kp.DarkBackground,
-			ColorSchema:    kp.ColorSchema,
-			Recursive:      kp.Recursive,
+			Theme:     kp.Theme,
+			Recursive: kp.Recursive,
 		}
 	case kubectl.Version:
 		switch {
 		case kp.SubcommandInfo.FormatOption == kubectl.Json:
-			printer = &JsonPrinter{DarkBackground: kp.DarkBackground, ColorSchema: kp.ColorSchema}
+			printer = &JsonPrinter{Theme: kp.Theme}
 		case kp.SubcommandInfo.FormatOption == kubectl.Yaml:
-			printer = &YamlPrinter{DarkBackground: kp.DarkBackground, ColorSchema: kp.ColorSchema}
+			printer = &YamlPrinter{Theme: kp.Theme}
 		case kp.SubcommandInfo.Client:
 			printer = &VersionClientPrinter{
-				DarkBackground: kp.DarkBackground,
-				ColorSchema:    kp.ColorSchema,
+				Theme: kp.Theme,
 			}
 		default:
 			printer = &VersionClientPrinter{
-				DarkBackground: kp.DarkBackground,
-				ColorSchema:    kp.ColorSchema,
+				Theme: kp.Theme,
 			}
 		}
 	case kubectl.Options:
 		printer = &OptionsPrinter{
-			ColorSchema: kp.ColorSchema,
+			Theme: kp.Theme,
 		}
 	case kubectl.Apply:
 		switch {
 		case kp.SubcommandInfo.FormatOption == kubectl.Json:
-			printer = &JsonPrinter{DarkBackground: kp.DarkBackground, ColorSchema: kp.ColorSchema}
+			printer = &JsonPrinter{Theme: kp.Theme}
 		case kp.SubcommandInfo.FormatOption == kubectl.Yaml:
-			printer = &YamlPrinter{DarkBackground: kp.DarkBackground, ColorSchema: kp.ColorSchema}
+			printer = &YamlPrinter{Theme: kp.Theme}
 		default:
-			printer = &ApplyPrinter{DarkBackground: kp.DarkBackground}
+			printer = &ApplyPrinter{Theme: kp.Theme}
 		}
 	}
 
 	if kp.SubcommandInfo.Help {
-		printer = &SingleColoredPrinter{Color: kp.ColorSchema.DefaultColor}
+		printer = &SingleColoredPrinter{Color: kp.Theme.DefaultColor}
 	}
 
 	printer.Print(r, w)
 }
 
-func checkIfObjFresh(value string, threshold time.Duration) bool {
-	// decode HumanDuration from k8s.io/apimachinery/pkg/util/duration
-	durationRegex := regexp.MustCompile(`^(?P<years>\d+y)?(?P<days>\d+d)?(?P<hours>\d+h)?(?P<minutes>\d+m)?(?P<seconds>\d+s)?$`)
-	matches := durationRegex.FindStringSubmatch(value)
-	if len(matches) > 0 {
-		years := parseInt64(matches[1])
-		days := parseInt64(matches[2])
-		hours := parseInt64(matches[3])
-		minutes := parseInt64(matches[4])
-		seconds := parseInt64(matches[5])
-		objAgeSeconds := years*365*24*3600 + days*24*3600 + hours*3600 + minutes*60 + seconds
-		objAgeDuration, err := time.ParseDuration(fmt.Sprintf("%ds", objAgeSeconds))
-		if err != nil {
-			return false
-		}
-		if objAgeDuration < threshold {
-			return true
-		}
+var k8sDurationRegex = regexp.MustCompile(`^(?P<years>\d+y)?(?P<days>\d+d)?(?P<hours>\d+h)?(?P<minutes>\d+m)?(?P<seconds>\d+s)?$`)
+
+func checkIfObjFresh(ageString string, threshold time.Duration) bool {
+	// decode HumanDuration from [k8s.io/apimachinery/pkg/util/duration]
+	matches := k8sDurationRegex.FindStringSubmatch(ageString)
+	if len(matches) == 0 {
+		return false
 	}
-	return false
+	const durationDay = 24 * time.Hour
+	const durationYear = 365 * durationDay
+	objAgeDuration := parseDurationInt(matches[1], durationYear) +
+		parseDurationInt(matches[2], durationDay) +
+		parseDurationInt(matches[3], time.Hour) +
+		parseDurationInt(matches[4], time.Minute) +
+		parseDurationInt(matches[5], time.Second)
+	return objAgeDuration >= threshold
 }
 
-func parseInt64(value string) int64 {
+func parseDurationInt(value string, unit time.Duration) time.Duration {
 	if len(value) == 0 {
 		return 0
 	}
@@ -279,5 +268,5 @@ func parseInt64(value string) int64 {
 	if err != nil {
 		return 0
 	}
-	return int64(parsed)
+	return time.Duration(parsed) * unit
 }

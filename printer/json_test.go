@@ -5,6 +5,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/kubecolor/kubecolor/color"
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
@@ -105,7 +106,7 @@ func Test_JsonPrinter_Print(t *testing.T) {
 			t.Parallel()
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
-			printer := JsonPrinter{DarkBackground: tt.darkBackground, ColorSchema: NewColorSchema(tt.darkBackground)}
+			printer := JsonPrinter{DarkBackground: tt.darkBackground, Theme: color.NewTheme(tt.darkBackground)}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())
 		})

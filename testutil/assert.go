@@ -8,10 +8,18 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-func MustEqual(t testing.TB, want, got interface{}) {
+func MustEqual(t testing.TB, want, got any) {
 	t.Helper()
 
 	if diff := cmp.Diff(want, got); diff != "" {
 		t.Errorf("diff (-want +got):\n%s", diff)
+	}
+}
+
+func NoError(t testing.TB, err error, unexpectedValue any) {
+	t.Helper()
+
+	if err != nil {
+		t.Errorf("unexpected error: %s\nunexpected value: %#v", err, unexpectedValue)
 	}
 }
