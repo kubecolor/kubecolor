@@ -12,13 +12,13 @@ import (
 func Test_OptionsPrinter_Print(t *testing.T) {
 	tests := []struct {
 		name        string
-		colorSchema ColorSchema
+		themePreset color.Preset
 		input       string
 		expected    string
 	}{
 		{
 			name:        "successful",
-			colorSchema: color.NewTheme(color.PresetDark),
+			themePreset: color.PresetDark,
 			input: testutil.NewHereDoc(`
 				The following options can be passed to any command:
 
@@ -57,7 +57,7 @@ func Test_OptionsPrinter_Print(t *testing.T) {
 			t.Parallel()
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
-			printer := OptionsPrinter{Theme: tt.colorSchema}
+			printer := OptionsPrinter{Theme: color.NewTheme(tt.themePreset)}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())
 		})

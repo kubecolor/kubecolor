@@ -54,24 +54,6 @@ func isDigit(r rune) bool {
 	return r >= '0' && r <= '9'
 }
 
-// getColorsByBackground returns a preset of colors depending on given background color
-// func getColorsByBackground(dark bool) []color.Color {
-// 	if dark {
-// 		return colorsForDarkBackground
-// 	}
-
-// 	return colorsForLightBackground
-// }
-
-// getHeaderColorByBackground returns a defined color for Header (not actual data) by the background color
-// func getHeaderColorByBackground(dark bool) color.Color {
-// 	if dark {
-// 		return HeaderColorForDark
-// 	}
-
-// 	return HeaderColorForLight
-// }
-
 // findIndent returns a length of indent (spaces at left) in the given line
 func findIndent(line string) int {
 	return len(line) - len(strings.TrimLeft(line, " "))

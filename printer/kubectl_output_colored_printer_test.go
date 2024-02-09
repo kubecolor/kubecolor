@@ -2,6 +2,7 @@ package printer
 
 import (
 	"bytes"
+	"os"
 	"strings"
 	"testing"
 	"time"
@@ -14,15 +15,15 @@ import (
 func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 	tests := []struct {
 		name              string
-		darkBackground    bool
+		themePreset       color.Preset
 		objFreshThreshold time.Duration
 		subcommandInfo    *kubectl.SubcommandInfo
 		input             string
 		expected          string
 	}{
 		{
-			name:           "kubectl top pod",
-			darkBackground: true,
+			name:        "kubectl top pod",
+			themePreset: color.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.Top,
 			},
@@ -39,8 +40,8 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:           "kubectl top pod --no-headers",
-			darkBackground: true,
+			name:        "kubectl top pod --no-headers",
+			themePreset: color.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.Top,
 				NoHeader:   true,
@@ -56,8 +57,8 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:           "kubectl api-resources",
-			darkBackground: true,
+			name:        "kubectl api-resources",
+			themePreset: color.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.APIResources,
 			},
@@ -99,8 +100,8 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:           "kubectl api-resources --no-headers",
-			darkBackground: true,
+			name:        "kubectl api-resources --no-headers",
+			themePreset: color.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.APIResources,
 				NoHeader:   true,
@@ -141,8 +142,8 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:           "kubectl get pod",
-			darkBackground: true,
+			name:        "kubectl get pod",
+			themePreset: color.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.Get,
 			},
@@ -159,8 +160,8 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:           "kubectl get pod",
-			darkBackground: true,
+			name:        "kubectl get pod with crashloop",
+			themePreset: color.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.Get,
 			},
@@ -177,9 +178,9 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:              "kubectl get pod",
-			darkBackground:    true,
-			objFreshThreshold: time.Duration(300 * 1000000000),
+			name:              "kubectl get pod with fresh objects",
+			themePreset:       color.PresetDark,
+			objFreshThreshold: 5 * time.Minute,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.Get,
 			},
@@ -196,8 +197,8 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:           "kubectl get pod --no-headers",
-			darkBackground: true,
+			name:        "kubectl get pod --no-headers",
+			themePreset: color.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.Get,
 				NoHeader:   true,
@@ -213,8 +214,8 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:           "kubectl get pod -o wide",
-			darkBackground: true,
+			name:        "kubectl get pod -o wide",
+			themePreset: color.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand:   kubectl.Get,
 				FormatOption: kubectl.Wide,
@@ -232,8 +233,8 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:           "kubectl get pod -o json",
-			darkBackground: true,
+			name:        "kubectl get pod -o json",
+			themePreset: color.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand:   kubectl.Get,
 				FormatOption: kubectl.Json,
@@ -257,8 +258,8 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:           "kubectl get pod -o yaml",
-			darkBackground: true,
+			name:        "kubectl get pod -o yaml",
+			themePreset: color.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand:   kubectl.Get,
 				FormatOption: kubectl.Yaml,
@@ -280,8 +281,8 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:           "kubectl describe pod",
-			darkBackground: true,
+			name:        "kubectl describe pod",
+			themePreset: color.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.Describe,
 			},
@@ -306,8 +307,8 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:           "kubectl api-versions",
-			darkBackground: true,
+			name:        "kubectl api-versions",
+			themePreset: color.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.APIVersions,
 			},
@@ -349,50 +350,9 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				[37mbatch/v1beta1[0m
 			`),
 		},
-		// {
-		// 	name:           "kubectl version",
-		// 	darkBackground: true,
-		// 	subcommandInfo: &kubectl.SubcommandInfo{
-		// 		Subcommand: kubectl.Version,
-		// 	},
-		// 	input: testutil.NewHereDoc(`
-		// 		Client Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.3", GitCommit:"1e11e4a2108024935ecfcb2912226cedeafd99df", GitTreeState:"clean", BuildDate:"2020-10-14T18:49:28Z", GoVersion:"go1.15.2", Compiler:"gc", Platform:"darwin/amd64"}
-		// 		Server Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.2", GitCommit:"f5743093fd1c663cb0cbc89748f730662345d44d", GitTreeState:"clean", BuildDate:"2020-09-16T13:32:58Z", GoVersion:"go1.15", Compiler:"gc", Platform:"linux/amd64"}`),
-		// 	expected: testutil.NewHereDoc(`
-		// 		[33mClient Version[0m: [37mversion.Info[0m{[33mMajor[0m:"[37m1[0m", [33mMinor[0m:"[37m19[0m", [33mGitVersion[0m:"[37mv1.19.3[0m", [33mGitCommit[0m:"[37m1e11e4a2108024935ecfcb2912226cedeafd99df[0m", [33mGitTreeState[0m:"[37mclean[0m", [33mBuildDate[0m:"[37m2020-10-14T18:49:28Z[0m", [33mGoVersion[0m:"[37mgo1.15.2[0m", [33mCompiler[0m:"[37mgc[0m", [33mPlatform[0m:"[37mdarwin/amd64[0m"}
-		// 		[33mServer Version[0m: [37mversion.Info[0m{[33mMajor[0m:"[37m1[0m", [33mMinor[0m:"[37m19[0m", [33mGitVersion[0m:"[37mv1.19.2[0m", [33mGitCommit[0m:"[37mf5743093fd1c663cb0cbc89748f730662345d44d[0m", [33mGitTreeState[0m:"[37mclean[0m", [33mBuildDate[0m:"[37m2020-09-16T13:32:58Z[0m", [33mGoVersion[0m:"[37mgo1.15[0m", [33mCompiler[0m:"[37mgc[0m", [33mPlatform[0m:"[37mlinux/amd64[0m"}
-		// 	`),
-		// },
-		// {
-		// 	name:           "kubectl version --client",
-		// 	darkBackground: true,
-		// 	subcommandInfo: &kubectl.SubcommandInfo{
-		// 		Subcommand: kubectl.Version,
-		// 	},
-		// 	input: testutil.NewHereDoc(`
-		// 		Client Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.3", GitCommit:"1e11e4a2108024935ecfcb2912226cedeafd99df", GitTreeState:"clean", BuildDate:"2020-10-14T18:49:28Z", GoVersion:"go1.15.2", Compiler:"gc", Platform:"darwin/amd64"}`),
-		// 	expected: testutil.NewHereDoc(`
-		// 		[33mClient Version[0m: [37mversion.Info[0m{[33mMajor[0m:"[37m1[0m", [33mMinor[0m:"[37m19[0m", [33mGitVersion[0m:"[37mv1.19.3[0m", [33mGitCommit[0m:"[37m1e11e4a2108024935ecfcb2912226cedeafd99df[0m", [33mGitTreeState[0m:"[37mclean[0m", [33mBuildDate[0m:"[37m2020-10-14T18:49:28Z[0m", [33mGoVersion[0m:"[37mgo1.15.2[0m", [33mCompiler[0m:"[37mgc[0m", [33mPlatform[0m:"[37mdarwin/amd64[0m"}
-		// 	`),
-		// },
-		// {
-		// 	name:           "kubectl version --short",
-		// 	darkBackground: true,
-		// 	subcommandInfo: &kubectl.SubcommandInfo{
-		// 		Subcommand: kubectl.Version,
-		// 		Short:      true,
-		// 	},
-		// 	input: testutil.NewHereDoc(`
-		// 		Client Version: v1.19.3
-		// 		Server Version: v1.19.2`),
-		// 	expected: testutil.NewHereDoc(`
-		// 		[33mClient Version[0m: [37mv1.19.3[0m
-		// 		[33mServer Version[0m: [37mv1.19.2[0m
-		// 	`),
-		// },
 		{
-			name:           "kubectl version --client",
-			darkBackground: true,
+			name:        "kubectl version --client",
+			themePreset: color.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.Version,
 				Client:     true,
@@ -407,8 +367,8 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				`),
 		},
 		{
-			name:           "kubectl options",
-			darkBackground: true,
+			name:        "kubectl options",
+			themePreset: color.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.Options,
 			},
@@ -444,8 +404,8 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:           "kubectl apply -o json",
-			darkBackground: true,
+			name:        "kubectl apply -o json",
+			themePreset: color.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand:   kubectl.Apply,
 				FormatOption: kubectl.Json,
@@ -479,8 +439,8 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:           "kubectl apply -o yaml",
-			darkBackground: true,
+			name:        "kubectl apply -o yaml",
+			themePreset: color.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand:   kubectl.Apply,
 				FormatOption: kubectl.Yaml,
@@ -548,14 +508,14 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			os.Clearenv()
 			t.Parallel()
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
 			printer := KubectlOutputColoredPrinter{
 				SubcommandInfo:    tt.subcommandInfo,
-				DarkBackground:    tt.darkBackground,
 				ObjFreshThreshold: tt.objFreshThreshold,
-				Theme:             color.NewTheme(tt.darkBackground),
+				Theme:             color.NewTheme(tt.themePreset),
 			}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())

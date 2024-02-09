@@ -1,8 +1,8 @@
 package printer
 
 import (
+	"fmt"
 	"io"
-	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -242,31 +242,34 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 	printer.Print(r, w)
 }
 
-var k8sDurationRegex = regexp.MustCompile(`^(?P<years>\d+y)?(?P<days>\d+d)?(?P<hours>\d+h)?(?P<minutes>\d+m)?(?P<seconds>\d+s)?$`)
-
 func checkIfObjFresh(ageString string, threshold time.Duration) bool {
 	// decode HumanDuration from [k8s.io/apimachinery/pkg/util/duration]
-	matches := k8sDurationRegex.FindStringSubmatch(ageString)
-	if len(matches) == 0 {
-		return false
-	}
-	const durationDay = 24 * time.Hour
-	const durationYear = 365 * durationDay
-	objAgeDuration := parseDurationInt(matches[1], durationYear) +
-		parseDurationInt(matches[2], durationDay) +
-		parseDurationInt(matches[3], time.Hour) +
-		parseDurationInt(matches[4], time.Minute) +
-		parseDurationInt(matches[5], time.Second)
-	return objAgeDuration >= threshold
-}
+	var objAgeDuration time.Duration
+	rest := ageString
 
-func parseDurationInt(value string, unit time.Duration) time.Duration {
-	if len(value) == 0 {
-		return 0
+	for range 5 {
+		var num int64
+		var char rune
+		varsRead, _ := fmt.Sscanf(rest, "%d%c%s", &num, &char, &rest)
+		if varsRead < 2 {
+			break
+		} else if varsRead < 3 {
+			rest = ""
+		}
+
+		switch char {
+		case 'y':
+			objAgeDuration += 365 * 24 * time.Hour * time.Duration(num)
+		case 'd':
+			objAgeDuration += 24 * time.Hour * time.Duration(num)
+		case 'h':
+			objAgeDuration += time.Hour * time.Duration(num)
+		case 'm':
+			objAgeDuration += time.Minute * time.Duration(num)
+		case 's':
+			objAgeDuration += time.Second * time.Duration(num)
+		}
 	}
-	parsed, err := strconv.Atoi(value[:len(value)-1])
-	if err != nil {
-		return 0
-	}
-	return time.Duration(parsed) * unit
+
+	return objAgeDuration > 0 && objAgeDuration < threshold
 }

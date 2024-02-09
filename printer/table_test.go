@@ -15,8 +15,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 		name           string
 		colorDeciderFn func(index int, column string) (color.Color, bool)
 		withHeader     bool
-		darkBackground bool
-		colorSchema    ColorSchema
+		themePreset    color.Preset
 		input          string
 		expected       string
 	}{
@@ -24,8 +23,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			name:           "header is not colored - dark",
 			colorDeciderFn: nil,
 			withHeader:     true,
-			darkBackground: true,
-			colorSchema:    color.NewTheme(color.PresetDark),
+			themePreset:    color.PresetDark,
 			input: testutil.NewHereDoc(`
 				NAME          READY   STATUS    RESTARTS   AGE
 				nginx-dnmv5   1/1     Running   0          6d6h
@@ -42,8 +40,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			name:           "multiple headers",
 			colorDeciderFn: nil,
 			withHeader:     true,
-			darkBackground: true,
-			colorSchema:    color.NewTheme(color.PresetDark),
+			themePreset:    color.PresetDark,
 			input: testutil.NewHereDoc(`
 				NAME                         READY   STATUS    RESTARTS   AGE
 				pod/nginx-8spn9              1/1     Running   1          19d
@@ -69,8 +66,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			name:           "withheader=false, 1st line is not colored in header color but colored as a content of table",
 			colorDeciderFn: nil,
 			withHeader:     false,
-			darkBackground: true,
-			colorSchema:    color.NewTheme(color.PresetDark),
+			themePreset:    color.PresetDark,
 			input: testutil.NewHereDoc(`
 				nginx-dnmv5   1/1     Running   0          6d6h
 				nginx-m8pbc   1/1     Running   0          6d6h
@@ -85,8 +81,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			name:           "when darkBackground=false, color preset for light is used",
 			colorDeciderFn: nil,
 			withHeader:     true,
-			darkBackground: false,
-			colorSchema:    color.NewTheme(color.PresetLight),
+			themePreset:    color.PresetLight,
 			input: testutil.NewHereDoc(`
 				NAME          READY   STATUS    RESTARTS   AGE
 				nginx-dnmv5   1/1     Running   0          6d6h
@@ -120,9 +115,8 @@ func Test_TablePrinter_Print(t *testing.T) {
 
 				return 0, false
 			},
-			withHeader:     true,
-			darkBackground: true,
-			colorSchema:    color.NewTheme(color.PresetDark),
+			withHeader:  true,
+			themePreset: color.PresetDark,
 			// "CrashLoopBackOff" will be red, "0/1" will be yellow
 			input: testutil.NewHereDoc(`
 				NAME          READY   STATUS             RESTARTS   AGE
@@ -140,8 +134,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			name:           "a table whose some parts are missing can be handled",
 			colorDeciderFn: nil,
 			withHeader:     true,
-			darkBackground: true,
-			colorSchema:    color.NewTheme(color.PresetDark),
+			themePreset:    color.PresetDark,
 			input: testutil.NewHereDoc(`
 				NAME                              SHORTNAMES   APIGROUP                       NAMESPACED   KIND
 				bindings                                                                      true         Binding
@@ -186,7 +179,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			t.Parallel()
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
-			printer := NewTablePrinter(tt.withHeader, tt.darkBackground, tt.colorSchema, tt.colorDeciderFn)
+			printer := NewTablePrinter(tt.withHeader, color.NewTheme(tt.themePreset), tt.colorDeciderFn)
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())
 		})

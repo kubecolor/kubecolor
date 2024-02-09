@@ -11,14 +11,14 @@ import (
 
 func Test_JsonPrinter_Print(t *testing.T) {
 	tests := []struct {
-		name           string
-		darkBackground bool
-		input          string
-		expected       string
+		name        string
+		themePreset color.Preset
+		input       string
+		expected    string
 	}{
 		{
-			name:           "values can be colored by its type",
-			darkBackground: true,
+			name:        "values can be colored by its type",
+			themePreset: color.PresetDark,
 			input: testutil.NewHereDoc(`
 				{
 				    "apiVersion": "v1",
@@ -38,8 +38,8 @@ func Test_JsonPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:           "keys can be colored by its indentation level",
-			darkBackground: true,
+			name:        "keys can be colored by its indentation level",
+			themePreset: color.PresetDark,
 			input: testutil.NewHereDoc(`
 				{
 				    "k1": "v1",
@@ -65,8 +65,8 @@ func Test_JsonPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:           "{} and [] are not colorized",
-			darkBackground: true,
+			name:        "{} and [] are not colorized",
+			themePreset: color.PresetDark,
 			input: testutil.NewHereDoc(`
 				{
 				    "apiVersion": "v1",
@@ -106,7 +106,7 @@ func Test_JsonPrinter_Print(t *testing.T) {
 			t.Parallel()
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
-			printer := JsonPrinter{DarkBackground: tt.darkBackground, Theme: color.NewTheme(tt.darkBackground)}
+			printer := JsonPrinter{Theme: color.NewTheme(tt.themePreset)}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())
 		})

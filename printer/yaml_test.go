@@ -11,14 +11,14 @@ import (
 
 func Test_YamlPrinter_Print(t *testing.T) {
 	tests := []struct {
-		name           string
-		darkBackground bool
-		input          string
-		expected       string
+		name        string
+		themePreset color.Preset
+		input       string
+		expected    string
 	}{
 		{
-			name:           "values can be colored by its type",
-			darkBackground: true,
+			name:        "values can be colored by its type",
+			themePreset: color.PresetDark,
 			input: testutil.NewHereDoc(`
 				apiVersion: v1
 				kind: "Pod"
@@ -36,8 +36,8 @@ func Test_YamlPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:           "key color changes based on its indentation",
-			darkBackground: true,
+			name:        "key color changes based on its indentation",
+			themePreset: color.PresetDark,
 			input: testutil.NewHereDoc(`
 				apiVersion: v1
 				items:
@@ -59,8 +59,8 @@ func Test_YamlPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:           "elements in an array can be colored",
-			darkBackground: true,
+			name:        "elements in an array can be colored",
+			themePreset: color.PresetDark,
 			input: testutil.NewHereDoc(`
 				lifecycle:
 				  preStop:
@@ -80,8 +80,8 @@ func Test_YamlPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:           "a value contains dash",
-			darkBackground: true,
+			name:        "a value contains dash",
+			themePreset: color.PresetDark,
 			input: testutil.NewHereDoc(`
 				apiVersion: v1
 				items:
@@ -103,8 +103,8 @@ func Test_YamlPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:           "a long string which is broken into several lines can be colored",
-			darkBackground: true,
+			name:        "a long string which is broken into several lines can be colored",
+			themePreset: color.PresetDark,
 			input: testutil.NewHereDoc(`
 				- apiVersion: v1
 				  kind: Pod
@@ -137,8 +137,7 @@ func Test_YamlPrinter_Print(t *testing.T) {
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
 			printer := YamlPrinter{
-				DarkBackground: tt.darkBackground,
-				Theme:          color.NewTheme(tt.darkBackground),
+				Theme: color.NewTheme(tt.themePreset),
 			}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())
