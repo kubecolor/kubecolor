@@ -17,7 +17,9 @@ const (
 	Magenta
 	Cyan
 	White
+)
 
+const (
 	LightBlack Color = iota + 90 // Grey...
 	LightRed
 	LightGreen
