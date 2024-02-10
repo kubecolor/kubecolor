@@ -2,6 +2,8 @@ package color
 
 import (
 	"fmt"
+	"strconv"
+	"strings"
 )
 
 type Color int
@@ -57,15 +59,67 @@ func (c Color) String() string {
 	case LightYellow:
 		return "light yellow"
 	case LightBlue:
-		return "blue"
+		return "light blue"
 	case LightMagenta:
-		return "magenta"
+		return "light magenta"
 	case LightCyan:
-		return "cyan"
+		return "light cyan"
 	case LightWhite:
-		return "white"
+		return "light white"
 	default:
 		return fmt.Sprintf("%[1]T(%[1]d)", c)
+	}
+}
+
+var colorParseReplacer = strings.NewReplacer(
+	` `, "",
+	`-`, "",
+	`_`, "",
+)
+
+func Parse(s string) (Color, error) {
+	trimmed := strings.TrimSpace(s)
+	if trimmed == "" {
+		return 0, nil
+	}
+	if num, err := strconv.Atoi(trimmed); err == nil {
+		return Color(num), nil
+	}
+	switch colorParseReplacer.Replace(strings.ToLower(trimmed)) {
+	case "black":
+		return Black, nil
+	case "red":
+		return Red, nil
+	case "green":
+		return Green, nil
+	case "yellow", "orange":
+		return Yellow, nil
+	case "blue":
+		return Blue, nil
+	case "magenta", "purple":
+		return Magenta, nil
+	case "cyan":
+		return Cyan, nil
+	case "white":
+		return White, nil
+	case "lightblack":
+		return LightBlack, nil
+	case "lightred":
+		return LightRed, nil
+	case "lightgreen", "lime":
+		return LightGreen, nil
+	case "lightyellow", "lightorange":
+		return LightYellow, nil
+	case "lightblue":
+		return LightBlue, nil
+	case "lightmagenta", "lightpurple":
+		return LightMagenta, nil
+	case "lightcyan":
+		return LightCyan, nil
+	case "lightwhite":
+		return LightWhite, nil
+	default:
+		return 0, fmt.Errorf("unknown color: %q", s)
 	}
 }
 
@@ -74,5 +128,8 @@ func (c Color) sequence() int {
 }
 
 func Apply(val string, c Color) string {
+	if c == 0 {
+		return val
+	}
 	return fmt.Sprintf("%s[%dm%s%s[0m", escape, c.sequence(), val, escape)
 }

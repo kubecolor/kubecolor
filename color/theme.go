@@ -2,6 +2,7 @@ package color
 
 import (
 	"fmt"
+	"os"
 	"strings"
 )
 
@@ -134,6 +135,103 @@ func NewTheme(preset Preset) *Theme {
 }
 
 func (t *Theme) OverrideFromEnv() error {
-	// TODO: implement this
+	if err := t.Status.OverrideFromEnv(); err != nil {
+		return err
+	}
+	if err := t.Apply.OverrideFromEnv(); err != nil {
+		return err
+	}
+
+	if err := setColorFromEnv(&t.DefaultColor, "KUBECOLOR_THEME_DEFAULT"); err != nil {
+		return err
+	}
+	if err := setColorFromEnv(&t.ErrorColor, "KUBECOLOR_THEME_ERROR"); err != nil {
+		return err
+	}
+	if err := setColorFromEnv(&t.StringColor, "KUBECOLOR_THEME_STRING"); err != nil {
+		return err
+	}
+	if err := setColorFromEnv(&t.TrueColor, "KUBECOLOR_THEME_TRUE"); err != nil {
+		return err
+	}
+	if err := setColorFromEnv(&t.FalseColor, "KUBECOLOR_THEME_FALSE"); err != nil {
+		return err
+	}
+	if err := setColorFromEnv(&t.NumberColor, "KUBECOLOR_THEME_NUMBER"); err != nil {
+		return err
+	}
+	if err := setColorFromEnv(&t.NullColor, "KUBECOLOR_THEME_NULL"); err != nil {
+		return err
+	}
+	if err := setColorFromEnv(&t.DurationFreshColor, "KUBECOLOR_THEME_DURATION_FRESH"); err != nil {
+		return err
+	}
+	if err := setColorFromEnv(&t.HeaderColor, "KUBECOLOR_THEME_HEADER"); err != nil {
+		return err
+	}
+	if err := setColorSliceFromEnv(&t.ColumnColorCycle, "KUBECOLOR_THEME_COLUMN_CYCLE"); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (t *ThemeStatus) OverrideFromEnv() error {
+	if err := setColorFromEnv(&t.SuccessColor, "KUBECOLOR_THEME_STATUS_SUCCESS"); err != nil {
+		return err
+	}
+	if err := setColorFromEnv(&t.WarningColor, "KUBECOLOR_THEME_STATUS_WARNING"); err != nil {
+		return err
+	}
+	if err := setColorFromEnv(&t.ErrorColor, "KUBECOLOR_THEME_STATUS_ERROR"); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (t *ThemeApply) OverrideFromEnv() error {
+	if err := setColorFromEnv(&t.CreatedColor, "KUBECOLOR_THEME_APPLY_CREATED"); err != nil {
+		return err
+	}
+	if err := setColorFromEnv(&t.ConfiguredColor, "KUBECOLOR_THEME_APPLY_CONFIGURED"); err != nil {
+		return err
+	}
+	if err := setColorFromEnv(&t.UnchangedColor, "KUBECOLOR_THEME_APPLY_UNCHANGED"); err != nil {
+		return err
+	}
+	if err := setColorFromEnv(&t.DryRunColor, "KUBECOLOR_THEME_APPLY_DRYRUN"); err != nil {
+		return err
+	}
+	return nil
+}
+
+func setColorSliceFromEnv(target *[]Color, env string) error {
+	value := os.Getenv(env)
+	if value == "" {
+		return nil
+	}
+	var cols []Color
+	// The split character is picked to specifically not collide
+	// with gookit/color's syntax: [https://pkg.go.dev/github.com/gookit/color#ParseCodeFromAttr]
+	for _, v := range strings.Split(value, "/") {
+		col, err := Parse(v)
+		if err != nil {
+			return err
+		}
+		cols = append(cols, col)
+	}
+	*target = cols
+	return nil
+}
+
+func setColorFromEnv(target *Color, env string) error {
+	value := os.Getenv(env)
+	if value == "" {
+		return nil
+	}
+	col, err := Parse(value)
+	if err != nil {
+		return err
+	}
+	*target = col
 	return nil
 }
