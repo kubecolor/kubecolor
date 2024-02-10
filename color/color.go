@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// TODO: replace with gookit/color
 type Color int
 
 const escape = "\x1b"
@@ -85,6 +86,8 @@ func Parse(s string) (Color, error) {
 	if num, err := strconv.Atoi(trimmed); err == nil {
 		return Color(num), nil
 	}
+	// TODO: Replace this before merging with gookit/color parsing,
+	// so we don't break available colors
 	switch colorParseReplacer.Replace(strings.ToLower(trimmed)) {
 	case "black":
 		return Black, nil

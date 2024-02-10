@@ -234,26 +234,25 @@ KUBECOLOR_OBJ_FRESH="1m" kubecolor get po
 
 Default value is `0s`, it means is disabled.
 
-### Change Color Schema
+### Change color theme
 
-As of version `v0.3.0` it is now possible to use your own color scheme !
+*(Feature available since v0.3.0)*
 
-To do so, define the environment variable `KUBECOLOR_CUSTOM_COLOR` as a SemiColums (`;`) delimited string, setting one or many of the available keys:
+// TODO: Update this whole section
 
 Key      | Description
----      | --- 
+---      | ---
 default  | used when no specific mapping is found for the command
 key      | used to color keys in a `key:value` situation ; value will be either on the following types
 string   | used for single `strings`
-true     |  used when value is `true`
+true     | used when value is `true`
 false    | used when value is `false` or an `error`
 number   | used when the value is a `number`
 null     | used when the value is `null` or a `warning`
 header   | used to print top headers
 fresh    | used for a `delay` or `duration`, like a pod's age
-required |  used when the value is required or is an `error`
+required | used when the value is required or is an `error`
 random   | list of comma separated numbers, used to cycle color of each column
-
 
 Use possible color / values from this table (colors may vary depending on your terminal settings, this color chart is just a reference and results may differ)
 
@@ -267,7 +266,7 @@ Black                                           | 30
 <font color="magenta">Magenta</font>            | 35
 <font color="cyan">Cyan</font>                  | 36
 <font color="white">White</font>                | 37
-<font color="grey">Light Black ( Grey)</font>   | 90
+<font color="grey">Light Black (Grey)</font>    | 90
 <font color="orange">Light Red</font>           | 91
 <font color="lime">Light Green</font>           | 92
 <font color="yellow">Light Yellow</font>        | 93
@@ -275,11 +274,6 @@ Black                                           | 30
 <font color="pink">Light Magenta</font>         | 95
 <font color="aquamarine">Light Cyan</font>      | 96
 <font color="silver">Light White (White)</font> | 97
-
-Ex:
-```bash
-export KUBECOLOR_CUSTOM_COLOR="default:32;key:36;string:37;true:32;false:31;number:35;null:33;header:37;fresh:32;required:31;random:36,37"
-```
 
 ## Supported kubectl version
 
