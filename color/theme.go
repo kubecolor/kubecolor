@@ -215,7 +215,7 @@ func setColorSliceFromEnv(target *[]Color, env string) error {
 	for _, v := range strings.Split(value, "/") {
 		col, err := Parse(v)
 		if err != nil {
-			return err
+			return fmt.Errorf("%s: %w", env, err)
 		}
 		cols = append(cols, col)
 	}
@@ -230,7 +230,7 @@ func setColorFromEnv(target *Color, env string) error {
 	}
 	col, err := Parse(value)
 	if err != nil {
-		return err
+		return fmt.Errorf("%s: %w", env, err)
 	}
 	*target = col
 	return nil
