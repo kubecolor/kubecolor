@@ -30,6 +30,45 @@ const (
 	LightWhite // White...
 )
 
+func (c Color) String() string {
+	switch c {
+	case Black:
+		return "black"
+	case Red:
+		return "red"
+	case Green:
+		return "green"
+	case Yellow:
+		return "yellow"
+	case Blue:
+		return "blue"
+	case Magenta:
+		return "magenta"
+	case Cyan:
+		return "cyan"
+	case White:
+		return "white"
+	case LightBlack:
+		return "light black"
+	case LightRed:
+		return "light red"
+	case LightGreen:
+		return "light green"
+	case LightYellow:
+		return "light yellow"
+	case LightBlue:
+		return "blue"
+	case LightMagenta:
+		return "magenta"
+	case LightCyan:
+		return "cyan"
+	case LightWhite:
+		return "white"
+	default:
+		return fmt.Sprintf("%[1]T(%[1]d)", c)
+	}
+}
+
 func (c Color) sequence() int {
 	return int(c)
 }

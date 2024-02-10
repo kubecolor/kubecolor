@@ -44,20 +44,20 @@ func Test_getColorByValueType(t *testing.T) {
 		val         string
 		expected    color.Color
 	}{
-		{"dark null", color.PresetDark, "null", NullColorForDark},
-		{"light null", color.PresetLight, "<none>", NullColorForLight},
+		{"dark null", color.PresetDark, "null", color.Yellow},
+		{"light null", color.PresetLight, "<none>", color.Yellow},
 
-		{"dark true", color.PresetDark, "true", TrueColorForDark},
-		{"light true", color.PresetLight, "true", TrueColorForLight},
+		{"dark true", color.PresetDark, "true", color.Green},
+		{"light true", color.PresetLight, "true", color.Green},
 
-		{"dark false", color.PresetDark, "false", FalseColorForDark},
-		{"light false", color.PresetLight, "false", FalseColorForLight},
+		{"dark false", color.PresetDark, "false", color.Red},
+		{"light false", color.PresetLight, "false", color.Red},
 
-		{"dark number", color.PresetDark, "123", NumberColorForDark},
-		{"light number", color.PresetLight, "456", NumberColorForLight},
+		{"dark number", color.PresetDark, "123", color.Magenta},
+		{"light number", color.PresetLight, "456", color.Magenta},
 
-		{"dark string", color.PresetDark, "aaa", StringColorForDark},
-		{"light string", color.PresetLight, "12345a", StringColorForLight},
+		{"dark string", color.PresetDark, "aaa", color.White},
+		{"light string", color.PresetLight, "12345a", color.Black},
 	}
 	for _, tt := range tests {
 		tt := tt
