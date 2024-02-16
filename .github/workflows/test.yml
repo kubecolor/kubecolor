@@ -1,12 +1,10 @@
 name: test
 on:
   push:
-    branches:
-    - "main"
   pull_request:
     paths-ignore:
-      - 'assets/**'
-      - '**.md'
+      - "assets/**"
+      - "**.md"
 
 jobs:
   test:
@@ -15,18 +13,21 @@ jobs:
       fail-fast: false
       matrix:
         os:
-        - ubuntu-latest
-        - macOS-latest
-        - windows-latest
+          - ubuntu-latest
+          - macOS-latest
+          - windows-latest
     steps:
-    - name: checkout
-      uses: actions/checkout@v4
+      - name: checkout
+        uses: actions/checkout@v4
 
-    - name: setup go
-      uses: actions/setup-go@v5
-      with:
-        go-version-file: go.mod
+      - name: setup go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
 
-    - name: test
-      run: go test ./...
+      - name: test
+        run: make test
 
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        if: matrix.os == 'ubuntu-latest'
