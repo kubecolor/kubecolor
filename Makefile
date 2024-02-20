@@ -1,5 +1,6 @@
 help: ## Print usage
 	@sed -r '/^(\w+-*\w+):[^#]*##/!d;s/^([^:]+):[^#]*##\s*(.*)/\x1b[36m\1\t:\x1b[m \2/g' ${MAKEFILE_LIST}
+.PHONY: help
 
 build-: ## build package
 	go build -v .
