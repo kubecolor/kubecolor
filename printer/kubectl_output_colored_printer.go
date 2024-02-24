@@ -131,6 +131,7 @@ func ColorStatus(status string) (color.Color, bool) {
 		"VolumeResizeSuccessful",
 		"FileSystemResizeSuccessful",
 		"Ready",
+		"Scheduled",
 
 		// PV reclaim policy
 		"Retain",
@@ -156,7 +157,7 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 	case kubectl.APIVersions:
 		printer = NewTablePrinter(false, kp.DarkBackground, nil) // api-versions always doesn't have header
 
-	case kubectl.Get:
+	case kubectl.Get, kubectl.Events:
 		switch {
 		case kp.SubcommandInfo.FormatOption == kubectl.None, kp.SubcommandInfo.FormatOption == kubectl.Wide:
 			printer = NewTablePrinter(

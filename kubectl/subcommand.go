@@ -73,6 +73,7 @@ const (
 	Ns
 	Debug
 	KubectlPlugin
+	Events
 )
 
 var strToSubcommand = map[string]Subcommand{
@@ -121,6 +122,7 @@ var strToSubcommand = map[string]Subcommand{
 	"ctx":           Ctx,
 	"ns":            Ns,
 	"debug":         Debug,
+	"events":        Events,
 }
 
 func InspectSubcommand(command string) (Subcommand, bool) {
