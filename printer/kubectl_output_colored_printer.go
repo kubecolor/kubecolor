@@ -132,6 +132,7 @@ func ColorStatus(status string) (color.Color, bool) {
 		"FileSystemResizeSuccessful",
 		"Ready",
 		"Scheduled",
+		"SuccessfulCreate",
 
 		// PV reclaim policy
 		"Retain",
