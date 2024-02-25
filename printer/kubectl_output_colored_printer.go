@@ -117,7 +117,9 @@ func ColorStatus(status string) (color.Color, bool) {
 
 		// PVC status
 		"Available",
-		"Released":
+		"Released",
+
+		"ScalingReplicaSet":
 		return color.Yellow, true
 	case
 		"Running",

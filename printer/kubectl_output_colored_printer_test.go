@@ -540,6 +540,45 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				  [37mupdatedReplicas[0m: [35m3[0m
 			`),
 		},
+		{
+			name: "kubectl events",
+			darkBackground: true,
+			subcommandInfo: &kubectl.SubcommandInfo{
+				Subcommand:   kubectl.Events,
+			},
+			input: testutil.NewHereDoc(`
+				LAST SEEN   TYPE     REASON              OBJECT                       MESSAGE
+				13s         Normal   SuccessfulCreate    ReplicaSet/nginx-76d6c9b8c   Created pod: nginx-76d6c9b8c-fmshc
+				13s         Normal   SuccessfulCreate    ReplicaSet/nginx-76d6c9b8c   Created pod: nginx-76d6c9b8c-bkmwp
+				13s         Normal   ScalingReplicaSet   Deployment/nginx             Scaled up replica set nginx-76d6c9b8c to 2
+				12s         Normal   Scheduled           Pod/nginx-76d6c9b8c-fmshc    Successfully assigned default/nginx-76d6c9b8c-fmshc to minikube
+				12s         Normal   Scheduled           Pod/nginx-76d6c9b8c-bkmwp    Successfully assigned default/nginx-76d6c9b8c-bkmwp to minikube
+				12s         Normal   Pulling             Pod/nginx-76d6c9b8c-bkmwp    Pulling image "nginx"
+				12s         Normal   Pulling             Pod/nginx-76d6c9b8c-fmshc    Pulling image "nginx"
+				11s         Normal   Created             Pod/nginx-76d6c9b8c-bkmwp    Created container nginx
+				11s         Normal   Started             Pod/nginx-76d6c9b8c-bkmwp    Started container nginx
+				11s         Normal   Pulled              Pod/nginx-76d6c9b8c-bkmwp    Successfully pulled image "nginx" in 1.421388084s
+				10s         Normal   Pulled              Pod/nginx-76d6c9b8c-fmshc    Successfully pulled image "nginx" in 2.892136877s
+				9s          Normal   Created             Pod/nginx-76d6c9b8c-fmshc    Created container nginx
+				9s          Normal   Started             Pod/nginx-76d6c9b8c-fmshc    Started container nginx
+			`),
+			expected: testutil.NewHereDoc(`
+				[37mLAST SEEN   TYPE     REASON              OBJECT                       MESSAGE[0m
+				[37m13s[0m         [32mNormal[0m   [32mSuccessfulCreate[0m    [36mReplicaSet/nginx-76d6c9b8c[0m   [37mCreated pod: nginx-76d6c9b8c-fmshc[0m
+				[37m13s[0m         [32mNormal[0m   [32mSuccessfulCreate[0m    [36mReplicaSet/nginx-76d6c9b8c[0m   [37mCreated pod: nginx-76d6c9b8c-bkmwp[0m
+				[37m13s[0m         [32mNormal[0m   [33mScalingReplicaSet[0m   [36mDeployment/nginx[0m             [37mScaled up replica set nginx-76d6c9b8c to 2[0m
+				[37m12s[0m         [32mNormal[0m   [32mScheduled[0m           [36mPod/nginx-76d6c9b8c-fmshc[0m    [37mSuccessfully assigned default/nginx-76d6c9b8c-fmshc to minikube[0m
+				[37m12s[0m         [32mNormal[0m   [32mScheduled[0m           [36mPod/nginx-76d6c9b8c-bkmwp[0m    [37mSuccessfully assigned default/nginx-76d6c9b8c-bkmwp to minikube[0m
+				[37m12s[0m         [32mNormal[0m   [33mPulling[0m             [36mPod/nginx-76d6c9b8c-bkmwp[0m    [37mPulling image "nginx"[0m
+				[37m12s[0m         [32mNormal[0m   [33mPulling[0m             [36mPod/nginx-76d6c9b8c-fmshc[0m    [37mPulling image "nginx"[0m
+				[37m11s[0m         [32mNormal[0m   [32mCreated[0m             [36mPod/nginx-76d6c9b8c-bkmwp[0m    [37mCreated container nginx[0m
+				[37m11s[0m         [32mNormal[0m   [32mStarted[0m             [36mPod/nginx-76d6c9b8c-bkmwp[0m    [37mStarted container nginx[0m
+				[37m11s[0m         [32mNormal[0m   [32mPulled[0m              [36mPod/nginx-76d6c9b8c-bkmwp[0m    [37mSuccessfully pulled image "nginx" in 1.421388084s[0m
+				[37m10s[0m         [32mNormal[0m   [32mPulled[0m              [36mPod/nginx-76d6c9b8c-fmshc[0m    [37mSuccessfully pulled image "nginx" in 2.892136877s[0m
+				[37m9s[0m          [32mNormal[0m   [32mCreated[0m             [36mPod/nginx-76d6c9b8c-fmshc[0m    [37mCreated container nginx[0m
+				[37m9s[0m          [32mNormal[0m   [32mStarted[0m             [36mPod/nginx-76d6c9b8c-fmshc[0m    [37mStarted container nginx[0m
+			`),
+		},
 	}
 	for _, tt := range tests {
 		tt := tt
