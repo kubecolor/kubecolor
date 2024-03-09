@@ -6,6 +6,7 @@ KubeColor is a `kubectl` replacement used to add colors to your kubectl output.
 
 [![test](https://github.com/kubecolor/kubecolor/actions/workflows/test.yml/badge.svg)](https://github.com/kubecolor/kubecolor/actions/workflows/test.yml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/kubecolor/kubecolor)](https://goreportcard.com/report/github.com/kubecolor/kubecolor)
+[![codecov](https://codecov.io/gh/kubecolor/kubecolor/graph/badge.svg)](https://codecov.io/gh/kubecolor/kubecolor)
 
 <picture>
   <source srcset="./docs/kubectl-combined.png" media="(min-width: 1600px)" />
@@ -287,7 +288,21 @@ It means you can use plugins from kubecolor (e.g. you can do `kubecolor plugin_n
 
 ## Contributions
 
-Always welcome. Just opening an issue should be also greatful.
+Always welcome. Just opening an issue should be also grateful.
+
+## Versioning
+
+This project tries to follow [SemVer 2.0.0](https://semver.org/)
+on the command-line interface (CLI), i.e which flags and environment variables
+it accepts.
+
+**We do not** however promise compatibility on the Go source code.
+If you import kubecolor's Go module and use it as a library, then things may
+unexpectedly break within minor or patch version changes.
+
+> [!WARNING]
+> As we have not yet reached v1.0.0, we may have some breaking changes
+> in cases where it is deemed necessary.
 
 ## LICENSE
 
