@@ -6,20 +6,20 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/scanner/tablescan"
 )
 
 type TablePrinter struct {
 	WithHeader     bool
 	DarkBackground bool
-	Theme          *color.Theme
-	ColorDeciderFn func(index int, column string) (color.Color, bool)
+	Theme          *config.Theme
+	ColorDeciderFn func(index int, column string) (config.Color, bool)
 
 	hasLeadingNamespaceColumn bool
 }
 
-func NewTablePrinter(withHeader bool, theme *color.Theme, colorDeciderFn func(index int, column string) (color.Color, bool)) *TablePrinter {
+func NewTablePrinter(withHeader bool, theme *config.Theme, colorDeciderFn func(index int, column string) (config.Color, bool)) *TablePrinter {
 	return &TablePrinter{
 		WithHeader:     withHeader,
 		Theme:          theme,
@@ -38,7 +38,7 @@ func (tp *TablePrinter) Print(r io.Reader, w io.Writer) {
 		}
 		if (tp.WithHeader && isFirstLine) || isAllCellsUpper(cells) {
 			isFirstLine = false
-			fmt.Fprintf(w, "%s\n", color.Apply(scanner.Text(), tp.Theme.HeaderColor))
+			fmt.Fprintf(w, "%s\n", tp.Theme.Header.Render(scanner.Text()))
 
 			if strings.EqualFold(cells[0].Trimmed, "namespace") {
 				tp.hasLeadingNamespaceColumn = true
@@ -47,7 +47,7 @@ func (tp *TablePrinter) Print(r io.Reader, w io.Writer) {
 		}
 
 		fmt.Fprintf(w, "%s", scanner.LeadingSpaces())
-		tp.printLineAsTableFormat(w, cells, tp.Theme.ColumnColorCycle)
+		tp.printLineAsTableFormat(w, cells, tp.Theme.ColumnCycle)
 	}
 }
 
@@ -79,7 +79,7 @@ func isAllUpper(s string) bool {
 //	nginx-8spn9              1/1     Running   0          31h
 //	nginx-dplns              1/1     Running   0          31h
 //	nginx-lpv5x              1/1     Running   0          31h
-func (tp *TablePrinter) printLineAsTableFormat(w io.Writer, cells []tablescan.Cell, colorsPreset []color.Color) {
+func (tp *TablePrinter) printLineAsTableFormat(w io.Writer, cells []tablescan.Cell, colorsPreset []config.Color) {
 	for i, cell := range cells {
 		c := tp.getColumnBaseColor(i, colorsPreset)
 
@@ -90,7 +90,7 @@ func (tp *TablePrinter) printLineAsTableFormat(w io.Writer, cells []tablescan.Ce
 		}
 		// Write colored column
 		if cell.Trimmed != "" {
-			fmt.Fprint(w, color.Apply(cell.Trimmed, c))
+			fmt.Fprint(w, c.Render(cell.Trimmed))
 		}
 		fmt.Fprint(w, cell.TrailingSpaces)
 	}
@@ -98,7 +98,7 @@ func (tp *TablePrinter) printLineAsTableFormat(w io.Writer, cells []tablescan.Ce
 	fmt.Fprintf(w, "\n")
 }
 
-func (tp *TablePrinter) getColumnBaseColor(index int, colorsPreset []color.Color) color.Color {
+func (tp *TablePrinter) getColumnBaseColor(index int, colorsPreset []config.Color) config.Color {
 	if tp.hasLeadingNamespaceColumn {
 		index++
 	}

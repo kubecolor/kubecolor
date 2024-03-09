@@ -5,20 +5,20 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
 func Test_ApplyPrinter_Print(t *testing.T) {
 	tests := []struct {
 		name        string
-		themePreset color.Preset
+		themePreset config.Preset
 		input       string
 		expected    string
 	}{
 		{
 			name:        "created",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			input: testutil.NewHereDoc(`
 				deployment.apps/foo created`),
 			expected: testutil.NewHereDoc(`
@@ -27,7 +27,7 @@ func Test_ApplyPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "configured",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			input: testutil.NewHereDoc(`
 				deployment.apps/foo configured`),
 			expected: testutil.NewHereDoc(`
@@ -36,7 +36,7 @@ func Test_ApplyPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "unchanged",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			input: testutil.NewHereDoc(`
 				deployment.apps/foo unchanged`),
 			expected: testutil.NewHereDoc(`
@@ -45,7 +45,7 @@ func Test_ApplyPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "client dry run",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			input: testutil.NewHereDoc(`
 				deployment.apps/foo unchanged (dry run)`),
 			expected: testutil.NewHereDoc(`
@@ -54,7 +54,7 @@ func Test_ApplyPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "server dry run",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			input: testutil.NewHereDoc(`
 				deployment.apps/foo unchanged (server dry run)`),
 			expected: testutil.NewHereDoc(`
@@ -63,7 +63,7 @@ func Test_ApplyPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "something else. This likely won't happen but fallbacks here just in case.",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			input: testutil.NewHereDoc(`
 				deployment.apps/foo bar`),
 			expected: testutil.NewHereDoc(`
@@ -77,7 +77,7 @@ func Test_ApplyPrinter_Print(t *testing.T) {
 			t.Parallel()
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
-			printer := ApplyPrinter{Theme: color.NewTheme(tt.themePreset)}
+			printer := ApplyPrinter{Theme: config.NewTheme(tt.themePreset)}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())
 		})

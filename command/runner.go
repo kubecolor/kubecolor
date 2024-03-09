@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/kubectl"
 	"github.com/kubecolor/kubecolor/printer"
 	"github.com/mattn/go-colorable"
@@ -27,7 +27,7 @@ type Printers struct {
 }
 
 // This is defined here to be replaced in test
-var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, objFreshThreshold time.Duration, theme *color.Theme) *Printers {
+var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, objFreshThreshold time.Duration, theme *config.Theme) *Printers {
 	return &Printers{
 		FullColoredPrinter: &printer.KubectlOutputColoredPrinter{
 			SubcommandInfo:    subcommandInfo,
@@ -36,12 +36,12 @@ var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, objFreshThreshold
 			Theme:             theme,
 		},
 		ErrorPrinter: &printer.WithFuncPrinter{
-			Fn: func(line string) color.Color {
+			Fn: func(line string) config.Color {
 				if strings.HasPrefix(strings.ToLower(line), "error") {
-					return theme.ErrorColor
+					return theme.Error
 				}
 
-				return theme.StringColor
+				return theme.String
 			},
 		},
 	}

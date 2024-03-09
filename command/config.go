@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 )
 
 type Config struct {
@@ -15,32 +15,26 @@ type Config struct {
 	ShowKubecolorVersion bool
 	KubectlCmd           string
 	ObjFreshThreshold    time.Duration
-	Theme                *color.Theme
+	Theme                *config.Theme
 
 	ArgsPassthrough []string
 }
 
 func ResolveConfig(inputArgs []string) (*Config, error) {
-	config := &Config{
-		KubectlCmd:        "kubectl",
-		ObjFreshThreshold: time.Duration(0),
-	}
+	cfg := &Config{}
 
-	themePreset := color.PresetDefault
-
-	if themePresetEnv, ok, err := parseThemePresetEnv("KUBECOLOR_THEME"); err != nil {
+	v, err := config.LoadViper()
+	if err != nil {
 		return nil, err
-	} else if ok {
-		themePreset = themePresetEnv
 	}
 
 	if lightThemeEnv, ok, err := parseBoolEnv("KUBECOLOR_LIGHT_BACKGROUND"); err != nil {
 		return nil, err
 	} else if ok {
 		if lightThemeEnv {
-			themePreset = color.PresetDark
+			v.Set("preset", "dark")
 		} else {
-			themePreset = color.PresetLight
+			v.Set("preset", "light")
 		}
 	}
 
@@ -51,64 +45,56 @@ func ResolveConfig(inputArgs []string) (*Config, error) {
 			if b, err := parseBoolFlag(flag, value); err != nil {
 				return nil, err
 			} else {
-				config.Plain = b
+				cfg.Plain = b
 			}
 		case "--light-background":
 			if b, err := parseBoolFlag(flag, value); err != nil {
 				return nil, err
 			} else {
 				if b {
-					themePreset = color.PresetLight
+					v.Set("preset", "light")
 				} else {
-					themePreset = color.PresetDark
+					v.Set("preset", "dark")
 				}
 			}
 		case "--force-colors":
 			if b, err := parseBoolFlag(flag, value); err != nil {
 				return nil, err
 			} else {
-				config.ForceColor = b
+				cfg.ForceColor = b
 			}
 		case "--kubecolor-version":
 			if b, err := parseBoolFlag(flag, value); err != nil {
 				return nil, err
 			} else {
-				config.ShowKubecolorVersion = b
+				cfg.ShowKubecolorVersion = b
 			}
 		case "--kubecolor-theme":
-			if result, err := parseThemePresetFlag(flag, value); err != nil {
-				return nil, err
-			} else {
-				themePreset = result
-			}
+			v.Set("preset", value)
 		default:
-			config.ArgsPassthrough = append(config.ArgsPassthrough, s)
+			cfg.ArgsPassthrough = append(cfg.ArgsPassthrough, s)
 		}
 	}
 
-	config.Theme = color.NewTheme(themePreset)
-
-	if err := config.Theme.OverrideFromEnv(); err != nil {
-		return nil, fmt.Errorf("read theme from env: %w", err)
+	if err := config.ApplyThemePreset(v); err != nil {
+		return nil, err
 	}
+
+	newCfg, err := config.Unmarshal(v)
+	if err != nil {
+		return nil, err
+	}
+	cfg.KubectlCmd = newCfg.Kubectl
+	cfg.ObjFreshThreshold = newCfg.ObjFreshThreshold
+	cfg.Theme = &newCfg.Theme
 
 	if b, ok, err := parseBoolEnv("KUBECOLOR_FORCE_COLORS"); err != nil {
 		return nil, err
 	} else if ok {
-		config.ForceColor = b
+		cfg.ForceColor = b
 	}
 
-	if dur, ok, err := parseDurationEnv("KUBECOLOR_OBJ_FRESH"); err != nil {
-		return nil, err
-	} else if ok {
-		config.ObjFreshThreshold = dur
-	}
-
-	if cmd := os.Getenv("KUBECTL_COMMAND"); cmd != "" {
-		config.KubectlCmd = cmd
-	}
-
-	return config, nil
+	return cfg, nil
 }
 
 func parseBool(value string) (result bool, ok bool, err error) {
@@ -164,27 +150,4 @@ func parseDurationEnv(env string) (time.Duration, bool, error) {
 		return 0, false, fmt.Errorf("parse env %s: %w", env, err)
 	}
 	return result, ok, nil
-}
-
-func parseThemePresetEnv(env string) (color.Preset, bool, error) {
-	value := os.Getenv(env)
-	if value == "" {
-		return 0, false, nil
-	}
-	t, err := color.ParsePreset(value)
-	if err != nil {
-		return 0, false, fmt.Errorf("parse env %s: %w", env, err)
-	}
-	return t, true, nil
-}
-
-func parseThemePresetFlag(flag, value string) (color.Preset, error) {
-	if value == "" {
-		return 0, fmt.Errorf("flag %s: must be in format %s=value", flag, flag)
-	}
-	t, err := color.ParsePreset(value)
-	if err != nil {
-		return 0, fmt.Errorf("flag %s: %w", flag, err)
-	}
-	return t, nil
 }

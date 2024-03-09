@@ -6,11 +6,11 @@ import (
 	"io"
 	"strings"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 )
 
 type OptionsPrinter struct {
-	Theme *color.Theme
+	Theme *config.Theme
 }
 
 func (op *OptionsPrinter) Print(r io.Reader, w io.Writer) {
@@ -25,7 +25,7 @@ func (op *OptionsPrinter) Print(r io.Reader, w io.Writer) {
 		}
 
 		if isFirstLine {
-			fmt.Fprintf(w, "%s\n", color.Apply(line, op.Theme.StringColor))
+			fmt.Fprintf(w, "%s\n", op.Theme.String.Render(line))
 			isFirstLine = false
 			continue
 		}
@@ -37,6 +37,6 @@ func (op *OptionsPrinter) Print(r io.Reader, w io.Writer) {
 		splitted := strings.SplitN(trimmedLine, ": ", 2)
 		key, val := splitted[0], splitted[1]
 
-		fmt.Fprintf(w, "%s%s: %s\n", indent, color.Apply(key, getColorByKeyIndent(0, 2, op.Theme)), color.Apply(val, getColorByValueType(val, op.Theme)))
+		fmt.Fprintf(w, "%s%s: %s\n", indent, getColorByKeyIndent(0, 2, op.Theme).Render(key), getColorByValueType(val, op.Theme).Render(val))
 	}
 }

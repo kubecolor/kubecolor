@@ -3,7 +3,7 @@ package printer
 import (
 	"strings"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 )
 
 // toSpaces returns repeated spaces whose length is n.
@@ -13,32 +13,32 @@ func toSpaces(n int) string {
 
 // getColorByKeyIndent returns a color based on the given indent.
 // When you want to change key color based on indent depth (e.g. Json, Yaml), use this function
-func getColorByKeyIndent(indent int, basicIndentWidth int, theme *color.Theme) color.Color {
+func getColorByKeyIndent(indent int, basicIndentWidth int, theme *config.Theme) config.Color {
 	switch indent / basicIndentWidth % 2 {
 	case 1:
-		return theme.StringColor
+		return theme.String
 	default:
-		return theme.DefaultColor
+		return theme.Default
 	}
 }
 
 // getColorByValueType returns a color by value.
 // This is intended to be used to colorize any structured data e.g. Json, Yaml.
-func getColorByValueType(val string, theme *color.Theme) color.Color {
+func getColorByValueType(val string, theme *config.Theme) config.Color {
 	switch val {
 	case "null", "<none>", "<unknown>", "<unset>", "<nil>":
-		return theme.NullColor
+		return theme.Null
 	case "true", "True":
-		return theme.TrueColor
+		return theme.True
 	case "false", "False":
-		return theme.FalseColor
+		return theme.False
 	}
 
 	if isOnlyDigits(val) {
-		return theme.NumberColor
+		return theme.Number
 	}
 
-	return theme.StringColor
+	return theme.String
 }
 
 func isOnlyDigits(s string) bool {

@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/kubectl"
 	"github.com/kubecolor/kubecolor/testutil"
 )
@@ -15,7 +15,7 @@ import (
 func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 	tests := []struct {
 		name              string
-		themePreset       color.Preset
+		themePreset       config.Preset
 		objFreshThreshold time.Duration
 		subcommandInfo    *kubectl.SubcommandInfo
 		input             string
@@ -23,7 +23,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 	}{
 		{
 			name:        "kubectl top pod",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.Top,
 			},
@@ -41,7 +41,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "kubectl top pod --no-headers",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.Top,
 				NoHeader:   true,
@@ -58,7 +58,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "kubectl api-resources",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.APIResources,
 			},
@@ -101,7 +101,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "kubectl api-resources --no-headers",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.APIResources,
 				NoHeader:   true,
@@ -143,7 +143,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "kubectl get pod",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.Get,
 			},
@@ -161,7 +161,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "kubectl get pod with crashloop",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.Get,
 			},
@@ -179,7 +179,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 		},
 		{
 			name:              "kubectl get pod with fresh objects",
-			themePreset:       color.PresetDark,
+			themePreset:       config.PresetDark,
 			objFreshThreshold: 5 * time.Minute,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.Get,
@@ -198,7 +198,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "kubectl get pod --no-headers",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.Get,
 				NoHeader:   true,
@@ -215,7 +215,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "kubectl get pod -o wide",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand:   kubectl.Get,
 				FormatOption: kubectl.Wide,
@@ -234,7 +234,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "kubectl get pod -o json",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand:   kubectl.Get,
 				FormatOption: kubectl.Json,
@@ -259,7 +259,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "kubectl get pod -o yaml",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand:   kubectl.Get,
 				FormatOption: kubectl.Yaml,
@@ -282,7 +282,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "kubectl describe pod",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.Describe,
 			},
@@ -308,7 +308,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "kubectl api-versions",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.APIVersions,
 			},
@@ -352,7 +352,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "kubectl version --client",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.Version,
 				Client:     true,
@@ -368,7 +368,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "kubectl options",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand: kubectl.Options,
 			},
@@ -405,7 +405,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "kubectl apply -o json",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand:   kubectl.Apply,
 				FormatOption: kubectl.Json,
@@ -440,7 +440,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "kubectl apply -o yaml",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand:   kubectl.Apply,
 				FormatOption: kubectl.Yaml,
@@ -505,10 +505,10 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name: "kubectl events",
-			themePreset: color.PresetDark,
+			name:        "kubectl events",
+			themePreset: config.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
-				Subcommand:   kubectl.Events,
+				Subcommand: kubectl.Events,
 			},
 			input: testutil.NewHereDoc(`
 				LAST SEEN   TYPE     REASON              OBJECT                       MESSAGE
@@ -554,7 +554,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 			printer := KubectlOutputColoredPrinter{
 				SubcommandInfo:    tt.subcommandInfo,
 				ObjFreshThreshold: tt.objFreshThreshold,
-				Theme:             color.NewTheme(tt.themePreset),
+				Theme:             config.NewTheme(tt.themePreset),
 			}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())

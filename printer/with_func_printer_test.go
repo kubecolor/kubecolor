@@ -5,21 +5,25 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
 func Test_WithFuncPrinter_Print(t *testing.T) {
+	var (
+		colorWhite = config.MustParseColor("white")
+		colorRed   = config.MustParseColor("red")
+	)
 	tests := []struct {
 		name     string
-		fn       func(line string) color.Color
+		fn       func(line string) config.Color
 		input    string
 		expected string
 	}{
 		{
 			name: "colored in white",
-			fn: func(_ string) color.Color {
-				return color.White
+			fn: func(_ string) config.Color {
+				return colorWhite
 			},
 			input: testutil.NewHereDoc(`
 				test
@@ -29,15 +33,15 @@ func Test_WithFuncPrinter_Print(t *testing.T) {
 				%s
 				%s
 				%s
-				`, color.Apply("test", color.White), color.Apply("test2", color.White), color.Apply("test3", color.White)),
+				`, colorWhite.Render("test"), colorWhite.Render("test2"), colorWhite.Render("test3")),
 		},
 		{
 			name: "color changes by line",
-			fn: func(line string) color.Color {
+			fn: func(line string) config.Color {
 				if line == "test2" {
-					return color.Red
+					return colorRed
 				}
-				return color.White
+				return colorWhite
 			},
 			input: testutil.NewHereDoc(`
 				test
@@ -47,7 +51,7 @@ func Test_WithFuncPrinter_Print(t *testing.T) {
 				%s
 				%s
 				%s
-				`, color.Apply("test", color.White), color.Apply("test2", color.Red), color.Apply("test3", color.White)),
+				`, colorWhite.Render("test"), colorRed.Render("test2"), colorWhite.Render("test3")),
 		},
 	}
 	for _, tt := range tests {

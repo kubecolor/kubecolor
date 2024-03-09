@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
@@ -18,7 +18,7 @@ func Test_DescribePrinter_Print(t *testing.T) {
 	}{
 		{
 			name:         "values can be colored by its type",
-			tablePrinter: NewTablePrinter(true, color.NewTheme(color.PresetDark), nil),
+			tablePrinter: NewTablePrinter(true, config.NewTheme(config.PresetDark), nil),
 			input: testutil.NewHereDoc(`
 				Name:         nginx-lpv5x
 				Namespace:    default
@@ -69,7 +69,7 @@ func Test_DescribePrinter_Print(t *testing.T) {
 		},
 		{
 			name:         "key color changes based on its indentation",
-			tablePrinter: NewTablePrinter(true, color.NewTheme(color.PresetDark), nil),
+			tablePrinter: NewTablePrinter(true, config.NewTheme(config.PresetDark), nil),
 			input: testutil.NewHereDoc(`
 				IP:           172.18.0.7
 				IPs:
@@ -92,7 +92,7 @@ func Test_DescribePrinter_Print(t *testing.T) {
 		},
 		{
 			name:         "table format in kubectl describe can be colored by describe",
-			tablePrinter: NewTablePrinter(false, color.NewTheme(color.PresetDark), nil),
+			tablePrinter: NewTablePrinter(false, config.NewTheme(config.PresetDark), nil),
 			input: testutil.NewHereDoc(`
 				Conditions:
 				  Type             Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message
@@ -163,7 +163,7 @@ func Test_DescribePrinter_Print(t *testing.T) {
 		},
 		{
 			name:         "table format in kubectl describe at the end",
-			tablePrinter: NewTablePrinter(false, color.NewTheme(color.PresetDark), nil),
+			tablePrinter: NewTablePrinter(false, config.NewTheme(config.PresetDark), nil),
 			input: testutil.NewHereDoc(`
 				Name:         cert-manager:leaderelection
 				Labels:       app=cert-manager

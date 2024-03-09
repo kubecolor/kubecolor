@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
@@ -24,7 +24,7 @@ func Test_ResolveConfig(t *testing.T) {
 				ForceColor:        false,
 				KubectlCmd:        "kubectl",
 				ObjFreshThreshold: time.Duration(0),
-				Theme:             color.NewTheme(color.PresetDark),
+				Theme:             config.NewTheme(config.PresetDark),
 				ArgsPassthrough:   []string{"get", "pods"},
 			},
 		},
@@ -36,7 +36,7 @@ func Test_ResolveConfig(t *testing.T) {
 				ForceColor:        true,
 				KubectlCmd:        "kubectl",
 				ObjFreshThreshold: time.Duration(0),
-				Theme:             color.NewTheme(color.PresetLight),
+				Theme:             config.NewTheme(config.PresetLight),
 				ArgsPassthrough:   []string{"get", "pods"},
 			},
 		},
@@ -49,7 +49,7 @@ func Test_ResolveConfig(t *testing.T) {
 				ForceColor:        false,
 				KubectlCmd:        "kubectl.1.19",
 				ObjFreshThreshold: time.Duration(0),
-				Theme:             color.NewTheme(color.PresetDark),
+				Theme:             config.NewTheme(config.PresetDark),
 				ArgsPassthrough:   []string{"get", "pods"},
 			},
 		},
@@ -62,7 +62,7 @@ func Test_ResolveConfig(t *testing.T) {
 				ForceColor:        false,
 				KubectlCmd:        "kubectl",
 				ObjFreshThreshold: time.Minute,
-				Theme:             color.NewTheme(color.PresetDark),
+				Theme:             config.NewTheme(config.PresetDark),
 				ArgsPassthrough:   []string{"get", "pods"},
 			},
 		},
@@ -74,7 +74,7 @@ func Test_ResolveConfig(t *testing.T) {
 				Plain:           false,
 				ForceColor:      false,
 				KubectlCmd:      "kubectl",
-				Theme:           color.NewTheme(color.PresetDefault),
+				Theme:           config.NewTheme(config.PresetDefault),
 				ArgsPassthrough: []string{"get", "pods"},
 			},
 		},
@@ -86,7 +86,7 @@ func Test_ResolveConfig(t *testing.T) {
 				Plain:           false,
 				ForceColor:      true,
 				KubectlCmd:      "kubectl",
-				Theme:           color.NewTheme(color.PresetDefault),
+				Theme:           config.NewTheme(config.PresetDefault),
 				ArgsPassthrough: []string{"get", "pods"},
 			},
 		},
@@ -100,7 +100,7 @@ func Test_ResolveConfig(t *testing.T) {
 			}
 
 			conf, err := ResolveConfig(tt.args)
-			testutil.NoError(t, err, conf)
+			testutil.MustNoError(t, err)
 			testutil.MustEqual(t, tt.expectedConf, conf)
 		})
 	}

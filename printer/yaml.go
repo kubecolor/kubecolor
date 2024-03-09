@@ -6,11 +6,11 @@ import (
 	"io"
 	"strings"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 )
 
 type YamlPrinter struct {
-	Theme    *color.Theme
+	Theme    *config.Theme
 	inString bool
 }
 
@@ -22,7 +22,7 @@ func (yp *YamlPrinter) Print(r io.Reader, w io.Writer) {
 	}
 }
 
-func (yp *YamlPrinter) printLineAsYamlFormat(line string, w io.Writer, theme *color.Theme) {
+func (yp *YamlPrinter) printLineAsYamlFormat(line string, w io.Writer, theme *config.Theme) {
 	indentCnt := findIndent(line) // can be 0
 	indent := toSpaces(indentCnt) // so, can be empty
 	trimmedLine := strings.TrimLeft(line, " ")
@@ -70,7 +70,7 @@ func (yp *YamlPrinter) toColorizedYamlKey(key string, indentCnt, basicWidth int)
 		indentCnt += 2
 	}
 
-	return fmt.Sprintf(format, color.Apply(key, getColorByKeyIndent(indentCnt, basicWidth, yp.Theme)))
+	return fmt.Sprintf(format, getColorByKeyIndent(indentCnt, basicWidth, yp.Theme).Render(key))
 }
 
 func (yp *YamlPrinter) toColorizedYamlValue(value string) string {
@@ -96,7 +96,7 @@ func (yp *YamlPrinter) toColorizedYamlValue(value string) string {
 		format = "%s"
 	}
 
-	return fmt.Sprintf(format, color.Apply(trimmedValue, getColorByValueType(value, yp.Theme)))
+	return fmt.Sprintf(format, getColorByValueType(value, yp.Theme).Render(trimmedValue))
 }
 
 func (yp *YamlPrinter) toColorizedStringValue(value string) string {
@@ -111,7 +111,7 @@ func (yp *YamlPrinter) toColorizedStringValue(value string) string {
 	default:
 		format = "%s"
 	}
-	return fmt.Sprintf(format, color.Apply(trimmedValue, yp.Theme.StringColor))
+	return fmt.Sprintf(format, yp.Theme.String.Render(trimmedValue))
 }
 
 func (yp *YamlPrinter) isStringClosed(line string) bool {

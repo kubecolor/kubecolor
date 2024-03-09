@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/kubectl"
 )
 
@@ -17,10 +17,10 @@ type KubectlOutputColoredPrinter struct {
 	SubcommandInfo    *kubectl.SubcommandInfo
 	Recursive         bool
 	ObjFreshThreshold time.Duration
-	Theme             *color.Theme
+	Theme             *config.Theme
 }
 
-func ColorStatus(status string, theme *color.Theme) (color.Color, bool) {
+func ColorStatus(status string, theme *config.Theme) (config.Color, bool) {
 	switch status {
 	case
 		// from https://github.com/kubernetes/kubernetes/blob/master/pkg/kubelet/events/event.go
@@ -79,7 +79,7 @@ func ColorStatus(status string, theme *color.Theme) (color.Color, bool) {
 		"OOMKilled",
 		// PVC status
 		"Lost":
-		return theme.FalseColor, true
+		return theme.False, true
 	case
 		// from https://github.com/kubernetes/kubernetes/blob/master/pkg/kubelet/events/event.go
 		// Container event reason list
@@ -119,7 +119,7 @@ func ColorStatus(status string, theme *color.Theme) (color.Color, bool) {
 		"Released",
 
 		"ScalingReplicaSet":
-		return theme.NullColor, true
+		return theme.Null, true
 	case
 		"Running",
 		"Completed",
@@ -140,9 +140,9 @@ func ColorStatus(status string, theme *color.Theme) (color.Color, bool) {
 
 		// PVC status
 		"Bound":
-		return theme.TrueColor, true
+		return theme.True, true
 	}
-	return 0, false
+	return config.Color{}, false
 }
 
 // Print reads r then write it to w, its format is based on kubectl subcommand.
@@ -150,7 +150,7 @@ func ColorStatus(status string, theme *color.Theme) (color.Color, bool) {
 func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 	withHeader := !kp.SubcommandInfo.NoHeader
 
-	var printer Printer = &SingleColoredPrinter{Color: kp.Theme.DefaultColor} // default in green
+	var printer Printer = &SingleColoredPrinter{Color: kp.Theme.Default} // default in green
 
 	switch kp.SubcommandInfo.Subcommand {
 	case kubectl.Top, kubectl.APIResources:
@@ -165,7 +165,7 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 			printer = NewTablePrinter(
 				withHeader,
 				kp.Theme,
-				func(_ int, column string) (color.Color, bool) {
+				func(_ int, column string) (config.Color, bool) {
 					// first try to match a status
 					col, matched := ColorStatus(column, kp.Theme)
 					if matched {
@@ -178,7 +178,8 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 							_, e1 := strconv.Atoi(arr[0])
 							_, e2 := strconv.Atoi(arr[1])
 							if e1 == nil && e2 == nil { // check both is number
-								return color.Yellow, true
+								// TODO: Replace with theme color
+								return config.MustParseColor("yellow"), true
 							}
 						}
 
@@ -186,10 +187,10 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 
 					// Object age when fresh then green
 					if checkIfObjFresh(column, kp.ObjFreshThreshold) {
-						return kp.Theme.DurationFreshColor, true
+						return kp.Theme.DurationFresh, true
 					}
 
-					return 0, false
+					return config.Color{}, false
 				},
 			)
 		case kp.SubcommandInfo.FormatOption == kubectl.Json:
@@ -200,7 +201,7 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 
 	case kubectl.Describe:
 		printer = &DescribePrinter{
-			TablePrinter: NewTablePrinter(false, kp.Theme, func(_ int, column string) (color.Color, bool) {
+			TablePrinter: NewTablePrinter(false, kp.Theme, func(_ int, column string) (config.Color, bool) {
 				return ColorStatus(column, kp.Theme)
 			}),
 		}
@@ -240,7 +241,7 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 	}
 
 	if kp.SubcommandInfo.Help {
-		printer = &SingleColoredPrinter{Color: kp.Theme.DefaultColor}
+		printer = &SingleColoredPrinter{Color: kp.Theme.Default}
 	}
 
 	printer.Print(r, w)

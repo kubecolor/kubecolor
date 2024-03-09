@@ -5,21 +5,21 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
 func Test_VersionPrinter_Print(t *testing.T) {
 	tests := []struct {
 		name        string
-		themePreset color.Preset
+		themePreset config.Preset
 		recursive   bool
 		input       string
 		expected    string
 	}{
 		{
 			name:        "go struct dump can be colorized",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			input: testutil.NewHereDoc(`
 				Client Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.3", GitCommit:"1e11e4a2108024935ecfcb2912226cedeafd99df", GitTreeState:"clean", BuildDate:"2020-10-14T18:49:28Z", GoVersion:"go1.15.2", Compiler:"gc", Platform:"darwin/amd64"}
 				Server Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.2", GitCommit:"f5743093fd1c663cb0cbc89748f730662345d44d", GitTreeState:"clean", BuildDate:"2020-09-16T13:32:58Z", GoVersion:"go1.15", Compiler:"gc", Platform:"linux/amd64"}`),
@@ -36,7 +36,7 @@ func Test_VersionPrinter_Print(t *testing.T) {
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
 			printer := VersionPrinter{
-				Theme: color.NewTheme(tt.themePreset),
+				Theme: config.NewTheme(tt.themePreset),
 			}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())
@@ -47,13 +47,13 @@ func Test_VersionPrinter_Print(t *testing.T) {
 func Test_VersionClientPrinter_Print(t *testing.T) {
 	tests := []struct {
 		name        string
-		themePreset color.Preset
+		themePreset config.Preset
 		input       string
 		expected    string
 	}{
 		{
 			name:        "--client can be colorized",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			input: testutil.NewHereDoc(`
 				Client Version: v1.19.3
 				Server Version: v1.19.2`),
@@ -70,7 +70,7 @@ func Test_VersionClientPrinter_Print(t *testing.T) {
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
 			printer := VersionClientPrinter{
-				Theme: color.NewTheme(tt.themePreset),
+				Theme: config.NewTheme(tt.themePreset),
 			}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())

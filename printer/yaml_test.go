@@ -5,20 +5,20 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
 func Test_YamlPrinter_Print(t *testing.T) {
 	tests := []struct {
 		name        string
-		themePreset color.Preset
+		themePreset config.Preset
 		input       string
 		expected    string
 	}{
 		{
 			name:        "values can be colored by its type",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			input: testutil.NewHereDoc(`
 				apiVersion: v1
 				kind: "Pod"
@@ -37,7 +37,7 @@ func Test_YamlPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "key color changes based on its indentation",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			input: testutil.NewHereDoc(`
 				apiVersion: v1
 				items:
@@ -60,7 +60,7 @@ func Test_YamlPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "elements in an array can be colored",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			input: testutil.NewHereDoc(`
 				lifecycle:
 				  preStop:
@@ -81,7 +81,7 @@ func Test_YamlPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "a value contains dash",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			input: testutil.NewHereDoc(`
 				apiVersion: v1
 				items:
@@ -104,7 +104,7 @@ func Test_YamlPrinter_Print(t *testing.T) {
 		},
 		{
 			name:        "a long string which is broken into several lines can be colored",
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			input: testutil.NewHereDoc(`
 				- apiVersion: v1
 				  kind: Pod
@@ -137,7 +137,7 @@ func Test_YamlPrinter_Print(t *testing.T) {
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
 			printer := YamlPrinter{
-				Theme: color.NewTheme(tt.themePreset),
+				Theme: config.NewTheme(tt.themePreset),
 			}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())

@@ -6,11 +6,11 @@ import (
 	"io"
 	"strings"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 )
 
 type JsonPrinter struct {
-	Theme *color.Theme
+	Theme *config.Theme
 }
 
 func (jp *JsonPrinter) Print(r io.Reader, w io.Writer) {
@@ -21,7 +21,7 @@ func (jp *JsonPrinter) Print(r io.Reader, w io.Writer) {
 	}
 }
 
-func printLineAsJsonFormat(line string, w io.Writer, theme *color.Theme) {
+func printLineAsJsonFormat(line string, w io.Writer, theme *config.Theme) {
 	indentCnt := findIndent(line)
 	indent := toSpaces(indentCnt)
 	trimmedLine := strings.TrimLeft(line, " ")
@@ -66,7 +66,7 @@ func printLineAsJsonFormat(line string, w io.Writer, theme *color.Theme) {
 }
 
 // toColorizedJsonKey returns colored json key
-func toColorizedJsonKey(key string, indentCnt, basicWidth int, theme *color.Theme) string {
+func toColorizedJsonKey(key string, indentCnt, basicWidth int, theme *config.Theme) string {
 	hasColon := strings.HasSuffix(key, ":")
 	// remove colon and double quotations although they might not exist actually
 	key = strings.TrimRight(key, ":")
@@ -77,13 +77,13 @@ func toColorizedJsonKey(key string, indentCnt, basicWidth int, theme *color.Them
 		format += ":"
 	}
 
-	return fmt.Sprintf(format, color.Apply(doubleQuoteTrimmed, getColorByKeyIndent(indentCnt, basicWidth, theme)))
+	return fmt.Sprintf(format, getColorByKeyIndent(indentCnt, basicWidth, theme).Render(doubleQuoteTrimmed))
 }
 
 // toColorizedJsonValue returns colored json value.
 // This function checks it trailing comma and double quotation exist
 // then colorize the given value considering them.
-func toColorizedJsonValue(value string, theme *color.Theme) string {
+func toColorizedJsonValue(value string, theme *config.Theme) string {
 	if value == "{" {
 		return "{"
 	}
@@ -119,5 +119,5 @@ func toColorizedJsonValue(value string, theme *color.Theme) string {
 		format = `%s`
 	}
 
-	return fmt.Sprintf(format, color.Apply(doubleQuoteTrimmedValue, getColorByValueType(value, theme)))
+	return fmt.Sprintf(format, getColorByValueType(value, theme).Render(doubleQuoteTrimmedValue))
 }

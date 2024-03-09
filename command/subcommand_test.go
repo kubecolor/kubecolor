@@ -3,7 +3,7 @@ package command
 import (
 	"testing"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/kubectl"
 	"github.com/kubecolor/kubecolor/testutil"
 )
@@ -25,7 +25,7 @@ func Test_ResolveSubcommand(t *testing.T) {
 				Plain:      false,
 				ForceColor: false,
 				KubectlCmd: "kubectl",
-				Theme:      color.NewTheme(color.PresetDark),
+				Theme:      config.NewTheme(config.PresetDark),
 			},
 			expectedShouldColorize: true,
 			expectedInfo:           &kubectl.SubcommandInfo{Subcommand: kubectl.Get},
@@ -38,7 +38,7 @@ func Test_ResolveSubcommand(t *testing.T) {
 				Plain:      true,
 				ForceColor: false,
 				KubectlCmd: "kubectl",
-				Theme:      color.NewTheme(color.PresetDark),
+				Theme:      config.NewTheme(config.PresetDark),
 			},
 			expectedShouldColorize: false,
 			expectedInfo:           nil,
@@ -51,7 +51,7 @@ func Test_ResolveSubcommand(t *testing.T) {
 				Plain:      false,
 				ForceColor: false,
 				KubectlCmd: "kubectl",
-				Theme:      color.NewTheme(color.PresetDark),
+				Theme:      config.NewTheme(config.PresetDark),
 			},
 			expectedShouldColorize: true,
 			expectedInfo:           &kubectl.SubcommandInfo{Subcommand: kubectl.Get, Help: true},
@@ -64,7 +64,7 @@ func Test_ResolveSubcommand(t *testing.T) {
 				Plain:      true,
 				ForceColor: true,
 				KubectlCmd: "kubectl",
-				Theme:      color.NewTheme(color.PresetDark),
+				Theme:      config.NewTheme(config.PresetDark),
 			},
 			expectedShouldColorize: false,
 			expectedInfo:           nil,
@@ -77,7 +77,7 @@ func Test_ResolveSubcommand(t *testing.T) {
 				Plain:      false,
 				ForceColor: false,
 				KubectlCmd: "kubectl",
-				Theme:      color.NewTheme(color.PresetDark),
+				Theme:      config.NewTheme(config.PresetDark),
 			},
 			expectedShouldColorize: true,
 			expectedInfo:           &kubectl.SubcommandInfo{Help: true},
@@ -90,7 +90,7 @@ func Test_ResolveSubcommand(t *testing.T) {
 				Plain:      false,
 				ForceColor: false,
 				KubectlCmd: "kubectl",
-				Theme:      color.NewTheme(color.PresetDark),
+				Theme:      config.NewTheme(config.PresetDark),
 			},
 			expectedShouldColorize: false,
 			expectedInfo:           &kubectl.SubcommandInfo{Subcommand: kubectl.Get},
@@ -103,7 +103,7 @@ func Test_ResolveSubcommand(t *testing.T) {
 				Plain:      false,
 				ForceColor: true,
 				KubectlCmd: "kubectl",
-				Theme:      color.NewTheme(color.PresetDark),
+				Theme:      config.NewTheme(config.PresetDark),
 			},
 			expectedShouldColorize: true,
 			expectedInfo:           &kubectl.SubcommandInfo{Subcommand: kubectl.Get},
@@ -116,7 +116,7 @@ func Test_ResolveSubcommand(t *testing.T) {
 				Plain:      false,
 				ForceColor: false,
 				KubectlCmd: "kubectl",
-				Theme:      color.NewTheme(color.PresetDark),
+				Theme:      config.NewTheme(config.PresetDark),
 			},
 			expectedShouldColorize: true,
 			expectedInfo:           &kubectl.SubcommandInfo{Help: true},

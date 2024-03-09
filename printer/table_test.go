@@ -6,16 +6,20 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
 func Test_TablePrinter_Print(t *testing.T) {
+	var (
+		colorRed    = config.MustParseColor("red")
+		colorYellow = config.MustParseColor("yellow")
+	)
 	tests := []struct {
 		name           string
-		colorDeciderFn func(index int, column string) (color.Color, bool)
+		colorDeciderFn func(index int, column string) (config.Color, bool)
 		withHeader     bool
-		themePreset    color.Preset
+		themePreset    config.Preset
 		input          string
 		expected       string
 	}{
@@ -23,7 +27,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			name:           "header is not colored - dark",
 			colorDeciderFn: nil,
 			withHeader:     true,
-			themePreset:    color.PresetDark,
+			themePreset:    config.PresetDark,
 			input: testutil.NewHereDoc(`
 				NAME          READY   STATUS    RESTARTS   AGE
 				nginx-dnmv5   1/1     Running   0          6d6h
@@ -40,7 +44,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			name:           "multiple headers",
 			colorDeciderFn: nil,
 			withHeader:     true,
-			themePreset:    color.PresetDark,
+			themePreset:    config.PresetDark,
 			input: testutil.NewHereDoc(`
 				NAME                         READY   STATUS    RESTARTS   AGE
 				pod/nginx-8spn9              1/1     Running   1          19d
@@ -66,7 +70,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			name:           "withheader=false, 1st line is not colored in header color but colored as a content of table",
 			colorDeciderFn: nil,
 			withHeader:     false,
-			themePreset:    color.PresetDark,
+			themePreset:    config.PresetDark,
 			input: testutil.NewHereDoc(`
 				nginx-dnmv5   1/1     Running   0          6d6h
 				nginx-m8pbc   1/1     Running   0          6d6h
@@ -81,7 +85,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			name:           "when darkBackground=false, color preset for light is used",
 			colorDeciderFn: nil,
 			withHeader:     true,
-			themePreset:    color.PresetLight,
+			themePreset:    config.PresetLight,
 			input: testutil.NewHereDoc(`
 				NAME          READY   STATUS    RESTARTS   AGE
 				nginx-dnmv5   1/1     Running   0          6d6h
@@ -96,9 +100,9 @@ func Test_TablePrinter_Print(t *testing.T) {
 		},
 		{
 			name: "colorDeciderFn works",
-			colorDeciderFn: func(_ int, column string) (color.Color, bool) {
+			colorDeciderFn: func(_ int, column string) (config.Color, bool) {
 				if column == "CrashLoopBackOff" {
-					return color.Red, true
+					return colorRed, true
 				}
 
 				// When Readiness is "n/m" then yellow
@@ -107,16 +111,16 @@ func Test_TablePrinter_Print(t *testing.T) {
 						_, e1 := strconv.Atoi(arr[0])
 						_, e2 := strconv.Atoi(arr[1])
 						if e1 == nil && e2 == nil { // check both is number
-							return color.Yellow, true
+							return colorYellow, true
 						}
 					}
 
 				}
 
-				return 0, false
+				return config.Color{}, false
 			},
 			withHeader:  true,
-			themePreset: color.PresetDark,
+			themePreset: config.PresetDark,
 			// "CrashLoopBackOff" will be red, "0/1" will be yellow
 			input: testutil.NewHereDoc(`
 				NAME          READY   STATUS             RESTARTS   AGE
@@ -134,7 +138,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			name:           "a table whose some parts are missing can be handled",
 			colorDeciderFn: nil,
 			withHeader:     true,
-			themePreset:    color.PresetDark,
+			themePreset:    config.PresetDark,
 			input: testutil.NewHereDoc(`
 				NAME                              SHORTNAMES   APIGROUP                       NAMESPACED   KIND
 				bindings                                                                      true         Binding
@@ -179,7 +183,7 @@ func Test_TablePrinter_Print(t *testing.T) {
 			t.Parallel()
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
-			printer := NewTablePrinter(tt.withHeader, color.NewTheme(tt.themePreset), tt.colorDeciderFn)
+			printer := NewTablePrinter(tt.withHeader, config.NewTheme(tt.themePreset), tt.colorDeciderFn)
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())
 		})
