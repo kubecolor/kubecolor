@@ -506,7 +506,7 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 		},
 		{
 			name: "kubectl events",
-			darkBackground: true,
+			themePreset: color.PresetDark,
 			subcommandInfo: &kubectl.SubcommandInfo{
 				Subcommand:   kubectl.Events,
 			},
