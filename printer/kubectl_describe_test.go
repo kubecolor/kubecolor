@@ -128,8 +128,8 @@ func Test_DescribePrinter_Print(t *testing.T) {
 				Events:              <none>`),
 			expected: testutil.NewHereDoc(`
 				\e[33mConditions\e[0m:
-				  \e[37mType\e[0m             \e[36mStatus\e[0m  \e[37mLastHeartbeatTime\e[0m                 \e[36mLastTransitionTime\e[0m                \e[37mReason\e[0m                       \e[36mMessage\e[0m
-				  \e[37m----\e[0m             \e[36m------\e[0m  \e[37m-----------------\e[0m                 \e[36m------------------\e[0m                \e[37m------\e[0m                       \e[36m-------\e[0m
+				  \e[37mType             Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message\e[0m
+				  \e[37m----             ------  -----------------                 ------------------                ------                       -------\e[0m
 				  \e[37mMemoryPressure\e[0m   \e[36mFalse\e[0m   \e[37mSun, 18 Oct 2020 12:00:54 +0900\e[0m   \e[36mWed, 14 Oct 2020 09:28:18 +0900\e[0m   \e[37mKubeletHasSufficientMemory\e[0m   \e[36mkubelet has sufficient memory available\e[0m
 				  \e[37mDiskPressure\e[0m     \e[36mFalse\e[0m   \e[37mSun, 18 Oct 2020 12:00:54 +0900\e[0m   \e[36mWed, 14 Oct 2020 09:28:18 +0900\e[0m   \e[37mKubeletHasNoDiskPressure\e[0m     \e[36mkubelet has no disk pressure\e[0m
 				\e[33mAddresses\e[0m:
@@ -147,17 +147,17 @@ func Test_DescribePrinter_Print(t *testing.T) {
 				  \e[37mMachine ID\e[0m:                 \e[37m55d2ccaefc9847c9a69356e7f3bd23f4\e[0m
 				  \e[37mSystem UUID\e[0m:                \e[37mfe312784-2364-4bba-a55e-f56051539c21\e[0m
 				\e[33mNon-terminated Pods\e[0m:          \e[37m(14 in total)\e[0m
-				  \e[37mNamespace\e[0m                   \e[36mName\e[0m                                \e[37mCPU Requests\e[0m  \e[36mCPU Limits\e[0m  \e[37mMemory Requests\e[0m  \e[36mMemory Limits\e[0m  \e[37mAGE\e[0m
-				  \e[37m---------\e[0m                   \e[36m----\e[0m                                \e[37m------------\e[0m  \e[36m----------\e[0m  \e[37m---------------\e[0m  \e[36m-------------\e[0m  \e[37m---\e[0m
-				  \e[37mdefault\e[0m                     \e[36mnginx-6799fc88d8-dnmv5\e[0m              \e[37m0 (0%)\e[0m        \e[36m0 (0%)\e[0m      \e[37m0 (0%)\e[0m           \e[36m0 (0%)\e[0m         \e[37m7d21h\e[0m
-				  \e[37mdefault\e[0m                     \e[36mnginx-6799fc88d8-m8pbc\e[0m              \e[37m0 (0%)\e[0m        \e[36m0 (0%)\e[0m      \e[37m0 (0%)\e[0m           \e[36m0 (0%)\e[0m         \e[37m7d21h\e[0m
-				  \e[37mdefault\e[0m                     \e[36mnginx-6799fc88d8-qdf9b\e[0m              \e[37m0 (0%)\e[0m        \e[36m0 (0%)\e[0m      \e[37m0 (0%)\e[0m           \e[36m0 (0%)\e[0m         \e[37m7d21h\e[0m
+				  \e[37mNamespace                   Name                                CPU Requests  CPU Limits  Memory Requests  Memory Limits  AGE\e[0m
+				  \e[37m---------                   ----                                ------------  ----------  ---------------  -------------  ---\e[0m
+				  \e[36mdefault\e[0m                     \e[37mnginx-6799fc88d8-dnmv5\e[0m              \e[36m0 (0%)\e[0m        \e[37m0 (0%)\e[0m      \e[36m0 (0%)\e[0m           \e[37m0 (0%)\e[0m         \e[36m7d21h\e[0m
+				  \e[36mdefault\e[0m                     \e[37mnginx-6799fc88d8-m8pbc\e[0m              \e[36m0 (0%)\e[0m        \e[37m0 (0%)\e[0m      \e[36m0 (0%)\e[0m           \e[37m0 (0%)\e[0m         \e[36m7d21h\e[0m
+				  \e[36mdefault\e[0m                     \e[37mnginx-6799fc88d8-qdf9b\e[0m              \e[36m0 (0%)\e[0m        \e[37m0 (0%)\e[0m      \e[36m0 (0%)\e[0m           \e[37m0 (0%)\e[0m         \e[36m7d21h\e[0m
 				\e[33mAllocated resources\e[0m:
 				  \e[37m(Total limits may be over 100 percent, i.e., overcommitted.)\e[0m
-				  \e[37mResource\e[0m           \e[36mRequests\e[0m    \e[37mLimits\e[0m
-				  \e[37m--------\e[0m           \e[36m--------\e[0m    \e[37m------\e[0m
-				  \e[37mcpu\e[0m                \e[36m650m (10%)\e[0m  \e[37m0 (0%)\e[0m
-				  \e[37mmemory\e[0m             \e[36m70Mi (3%)\e[0m   \e[37m170Mi (8%)\e[0m
+				  \e[37mResource           Requests    Limits\e[0m
+				  \e[37m--------           --------    ------\e[0m
+				  \e[36mcpu\e[0m                \e[37m650m (10%)\e[0m  \e[36m0 (0%)\e[0m
+				  \e[36mmemory\e[0m             \e[37m70Mi (3%)\e[0m   \e[36m170Mi (8%)\e[0m
 				\e[33mEvents\e[0m:              \e[33m<none>\e[0m
 			`),
 		},
@@ -186,8 +186,8 @@ func Test_DescribePrinter_Print(t *testing.T) {
 											meta.helm.sh/release-namespace: \e[37mnais-system\e[0m
 											some-annotation: \e[32mtrue\e[0m
 				\e[33mPolicyRule\e[0m:
-					\e[37mResources\e[0m                   \e[36mNon-Resource URLs\e[0m  \e[37mResource Names\e[0m             \e[36mVerbs\e[0m
-					\e[37m---------\e[0m                   \e[36m-----------------\e[0m  \e[37m--------------\e[0m             \e[36m-----\e[0m
+					\e[37mResources                   Non-Resource URLs  Resource Names             Verbs\e[0m
+					\e[37m---------                   -----------------  --------------             -----\e[0m
 					\e[37mleases.coordination.k8s.io\e[0m  \e[36m[]\e[0m                 \e[37m[]\e[0m                         \e[36m[create]\e[0m
 					\e[37mleases.coordination.k8s.io\e[0m  \e[36m[]\e[0m                 \e[37m[cert-manager-controller]\e[0m  \e[36m[get update patch]\e[0m
 			`),

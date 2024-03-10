@@ -37,9 +37,15 @@ func (tp *TablePrinter) Print(r io.Reader, w io.Writer) {
 			continue
 		}
 		peekNextLine, hasNextLine := scanner.PeekText()
-		if (tp.WithHeader && isFirstLine) || isAllUpper(scanner.Text()) || (hasNextLine && isOnlySymbols(peekNextLine)) {
+		if (tp.WithHeader && isFirstLine) ||
+			isAllUpper(scanner.Text()) ||
+			(hasNextLine && isOnlySymbols(peekNextLine)) ||
+			isOnlySymbols(scanner.Text()) {
+
 			isFirstLine = false
-			fmt.Fprintf(w, "%s\n", tp.Theme.Header.Render(scanner.Text()))
+			leadingSpaces := scanner.LeadingSpaces()
+			withoutSpaces := scanner.Text()[len(leadingSpaces):]
+			fmt.Fprintf(w, "%s%s\n", leadingSpaces, tp.Theme.Header.Render(withoutSpaces))
 
 			if strings.EqualFold(cells[0].Trimmed, "namespace") {
 				tp.hasLeadingNamespaceColumn = true
