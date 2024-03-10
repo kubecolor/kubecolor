@@ -18,11 +18,11 @@ func (yp *YamlPrinter) Print(r io.Reader, w io.Writer) {
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
 		line := scanner.Text()
-		yp.printLineAsYamlFormat(line, w, yp.Theme)
+		yp.printLineAsYamlFormat(line, w)
 	}
 }
 
-func (yp *YamlPrinter) printLineAsYamlFormat(line string, w io.Writer, theme *config.Theme) {
+func (yp *YamlPrinter) printLineAsYamlFormat(line string, w io.Writer) {
 	indentCnt := findIndent(line) // can be 0
 	indent := toSpaces(indentCnt) // so, can be empty
 	trimmedLine := strings.TrimLeft(line, " ")
