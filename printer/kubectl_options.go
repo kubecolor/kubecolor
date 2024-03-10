@@ -3,6 +3,7 @@ package printer
 import (
 	"fmt"
 	"io"
+	"slices"
 
 	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/scanner/describe"
@@ -33,6 +34,9 @@ func (op *OptionsPrinter) Print(r io.Reader, w io.Writer) {
 			continue
 		}
 
-		fmt.Fprintln(w, op.Theme.Data.String.Render(line.String()))
+		fmt.Fprintf(w, "%s%s%s\n",
+			line.Indent,
+			op.Theme.Data.String.Render(string(slices.Concat(line.Key, line.Spacing, line.Value))),
+			line.Trailing)
 	}
 }
