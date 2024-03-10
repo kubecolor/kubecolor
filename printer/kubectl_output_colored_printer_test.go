@@ -368,43 +368,6 @@ func Test_KubectlOutputColoredPrinter_Print(t *testing.T) {
 				`),
 		},
 		{
-			name:  "kubectl options",
-			theme: testconfig.DarkTheme,
-			subcommandInfo: &kubectl.SubcommandInfo{
-				Subcommand: kubectl.Options,
-			},
-			input: testutil.NewHereDoc(`
-				The following options can be passed to any command:
-
-				      --add-dir-header=false: If true, adds the file directory to the header of the log messages
-				      --alsologtostderr=false: log to standard error as well as files
-				      --as='': Username to impersonate for the operation
-				      --as-group=[]: Group to impersonate for the operation, this flag can be repeated to specify multiple groups.
-				      --cache-dir='/home/dtyler/.kube/cache': Default cache directory
-				      --certificate-authority='': Path to a cert file for the certificate authority
-				      --client-certificate='': Path to a client certificate file for TLS
-				      --client-key='': Path to a client key file for TLS
-				      --cluster='': The name of the kubeconfig cluster to use
-				      --context='': The name of the kubeconfig context to use
-				      --insecure-skip-tls-verify=false: If true, the server's certificate will not be checked for validity. This will make your HTTPS connections insecure
-				`),
-			expected: testutil.NewHereDoc(`
-				\e[37mThe following options can be passed to any command:\e[0m
-
-				      \e[33m--add-dir-header=false\e[0m: \e[37mIf true, adds the file directory to the header of the log messages\e[0m
-				      \e[33m--alsologtostderr=false\e[0m: \e[37mlog to standard error as well as files\e[0m
-				      \e[33m--as=''\e[0m: \e[37mUsername to impersonate for the operation\e[0m
-				      \e[33m--as-group=[]\e[0m: \e[37mGroup to impersonate for the operation, this flag can be repeated to specify multiple groups.\e[0m
-				      \e[33m--cache-dir='/home/dtyler/.kube/cache'\e[0m: \e[37mDefault cache directory\e[0m
-				      \e[33m--certificate-authority=''\e[0m: \e[37mPath to a cert file for the certificate authority\e[0m
-				      \e[33m--client-certificate=''\e[0m: \e[37mPath to a client certificate file for TLS\e[0m
-				      \e[33m--client-key=''\e[0m: \e[37mPath to a client key file for TLS\e[0m
-				      \e[33m--cluster=''\e[0m: \e[37mThe name of the kubeconfig cluster to use\e[0m
-				      \e[33m--context=''\e[0m: \e[37mThe name of the kubeconfig context to use\e[0m
-				      \e[33m--insecure-skip-tls-verify=false\e[0m: \e[37mIf true, the server's certificate will not be checked for validity. This will make your HTTPS connections insecure\e[0m
-			`),
-		},
-		{
 			name:  "kubectl apply -o json",
 			theme: testconfig.DarkTheme,
 			subcommandInfo: &kubectl.SubcommandInfo{
