@@ -38,37 +38,43 @@ func ResolveConfig(inputArgs []string) (*Config, error) {
 		}
 	}
 
+	if b, ok, err := parseBoolEnv("KUBECOLOR_FORCE_COLORS"); err != nil {
+		return nil, err
+	} else if ok {
+		cfg.ForceColor = b
+	}
+
 	for _, s := range inputArgs {
 		flag, value, _ := strings.Cut(s, "=")
 		switch flag {
 		case "--plain":
-			if b, err := parseBoolFlag(flag, value); err != nil {
+			b, err := parseBoolFlag(flag, value)
+			if err != nil {
 				return nil, err
-			} else {
-				cfg.Plain = b
 			}
+			cfg.Plain = b
 		case "--light-background":
-			if b, err := parseBoolFlag(flag, value); err != nil {
+			b, err := parseBoolFlag(flag, value)
+			if err != nil {
 				return nil, err
+			}
+			if b {
+				v.Set("preset", "light")
 			} else {
-				if b {
-					v.Set("preset", "light")
-				} else {
-					v.Set("preset", "dark")
-				}
+				v.Set("preset", "dark")
 			}
 		case "--force-colors":
-			if b, err := parseBoolFlag(flag, value); err != nil {
+			b, err := parseBoolFlag(flag, value)
+			if err != nil {
 				return nil, err
-			} else {
-				cfg.ForceColor = b
 			}
+			cfg.ForceColor = b
 		case "--kubecolor-version":
-			if b, err := parseBoolFlag(flag, value); err != nil {
+			b, err := parseBoolFlag(flag, value)
+			if err != nil {
 				return nil, err
-			} else {
-				cfg.ShowKubecolorVersion = b
 			}
+			cfg.ShowKubecolorVersion = b
 		case "--kubecolor-theme":
 			v.Set("preset", value)
 		default:
@@ -84,29 +90,20 @@ func ResolveConfig(inputArgs []string) (*Config, error) {
 	cfg.ObjFreshThreshold = newCfg.ObjFreshThreshold
 	cfg.Theme = &newCfg.Theme
 
-	if b, ok, err := parseBoolEnv("KUBECOLOR_FORCE_COLORS"); err != nil {
-		return nil, err
-	} else if ok {
-		cfg.ForceColor = b
-	}
-
 	return cfg, nil
 }
 
 func parseBool(value string) (result bool, ok bool, err error) {
-	if value == "" {
-		return false, false, nil
-	}
-	ok = true
 	switch strings.ToLower(value) {
+	case "":
+		return false, false, nil
 	case "true":
-		result = true
+		return true, true, nil
 	case "false":
-		result = false
+		return false, true, nil
 	default:
 		return false, false, fmt.Errorf(`must be either "true" or "false"`)
 	}
-	return result, ok, err
 }
 
 func parseBoolFlag(flag, value string) (result bool, err error) {
@@ -127,23 +124,4 @@ func parseBoolEnv(env string) (result bool, ok bool, err error) {
 		return false, false, fmt.Errorf("parse env %s: %w", env, err)
 	}
 	return result, ok, err
-}
-
-func parseDuration(value string) (time.Duration, bool, error) {
-	if value == "" {
-		return 0, false, nil
-	}
-	result, err := time.ParseDuration(value)
-	if err != nil {
-		return 0, false, err
-	}
-	return result, true, nil
-}
-
-func parseDurationEnv(env string) (time.Duration, bool, error) {
-	result, ok, err := parseDuration(os.Getenv(env))
-	if err != nil {
-		return 0, false, fmt.Errorf("parse env %s: %w", env, err)
-	}
-	return result, ok, nil
 }
