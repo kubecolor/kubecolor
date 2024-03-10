@@ -17,7 +17,7 @@ type Color struct {
 }
 
 var (
-	_ encoding.TextMarshaler   = &Color{}
+	_ encoding.TextMarshaler   = Color{}
 	_ encoding.TextUnmarshaler = &Color{}
 )
 
@@ -405,6 +405,6 @@ func (c *Color) UnmarshalText(text []byte) error {
 }
 
 // MarshalText implements [encoding.TextMarshaler].
-func (c *Color) MarshalText() (text []byte, err error) {
+func (c Color) MarshalText() (text []byte, err error) {
 	return []byte(c.String()), nil
 }
