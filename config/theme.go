@@ -50,9 +50,8 @@ type Theme struct {
 	// TODO: Move to Theme.Table
 	DurationFresh Color // color used when the time value is under a certain delay
 
-	Header Color // used to print headers
-	// TODO: Parse color slice
-	ColumnCycle []Color // used to display multiple colons, cycle between colors
+	Header  Color      // used to print headers
+	Columns ColorSlice // used to display multiple colons, cycle between colors
 
 	Base   ThemeBase   // base colors for themes
 	Data   ThemeData   // colors for representing data
@@ -68,7 +67,7 @@ func (t Theme) ApplyViperDefaults(v *viper.Viper) {
 	viperSetDefaultColorOrKey(v, "theme.error", t.Error, baseDanger)
 	viperSetDefaultColorOrKey(v, "theme.durationfresh", t.DurationFresh, baseSuccess)
 	viperSetDefaultColorOrKey(v, "theme.header", t.Header, baseInfo)
-	viperSetDefaultColorSliceOrKeys(v, "theme.columncycle", t.ColumnCycle, baseInfo, baseSecondary)
+	viperSetDefaultColorSliceOrKeys(v, "theme.columns", t.Columns, baseInfo, baseSecondary)
 
 	t.Data.ApplyViperDefaults(v)
 	t.Status.ApplyViperDefaults(v)

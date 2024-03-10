@@ -54,7 +54,7 @@ func (tp *TablePrinter) Print(r io.Reader, w io.Writer) {
 		}
 
 		fmt.Fprintf(w, "%s", scanner.LeadingSpaces())
-		tp.printLineAsTableFormat(w, cells, tp.Theme.ColumnCycle)
+		tp.printLineAsTableFormat(w, cells, tp.Theme.Columns)
 	}
 }
 
