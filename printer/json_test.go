@@ -6,19 +6,20 @@ import (
 	"testing"
 
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/config/testconfig"
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
 func Test_JsonPrinter_Print(t *testing.T) {
 	tests := []struct {
-		name        string
-		themePreset config.Preset
-		input       string
-		expected    string
+		name     string
+		theme    *config.Theme
+		input    string
+		expected string
 	}{
 		{
-			name:        "values can be colored by its type",
-			themePreset: config.PresetDark,
+			name:  "values can be colored by its type",
+			theme: testconfig.DarkTheme,
 			input: testutil.NewHereDoc(`
 				{
 				    "apiVersion": "v1",
@@ -38,8 +39,8 @@ func Test_JsonPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:        "keys can be colored by its indentation level",
-			themePreset: config.PresetDark,
+			name:  "keys can be colored by its indentation level",
+			theme: testconfig.DarkTheme,
 			input: testutil.NewHereDoc(`
 				{
 				    "k1": "v1",
@@ -65,8 +66,8 @@ func Test_JsonPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:        "{} and [] are not colorized",
-			themePreset: config.PresetDark,
+			name:  "{} and [] are not colorized",
+			theme: testconfig.DarkTheme,
 			input: testutil.NewHereDoc(`
 				{
 				    "apiVersion": "v1",
@@ -106,7 +107,7 @@ func Test_JsonPrinter_Print(t *testing.T) {
 			t.Parallel()
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
-			printer := JsonPrinter{Theme: config.NewTheme(tt.themePreset)}
+			printer := JsonPrinter{Theme: tt.theme}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())
 		})

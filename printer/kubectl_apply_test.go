@@ -6,19 +6,20 @@ import (
 	"testing"
 
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/config/testconfig"
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
 func Test_ApplyPrinter_Print(t *testing.T) {
 	tests := []struct {
-		name        string
-		themePreset config.Preset
-		input       string
-		expected    string
+		name     string
+		theme    *config.Theme
+		input    string
+		expected string
 	}{
 		{
-			name:        "created",
-			themePreset: config.PresetDark,
+			name:  "created",
+			theme: testconfig.DarkTheme,
 			input: testutil.NewHereDoc(`
 				deployment.apps/foo created`),
 			expected: testutil.NewHereDoc(`
@@ -26,8 +27,8 @@ func Test_ApplyPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:        "configured",
-			themePreset: config.PresetDark,
+			name:  "configured",
+			theme: testconfig.DarkTheme,
 			input: testutil.NewHereDoc(`
 				deployment.apps/foo configured`),
 			expected: testutil.NewHereDoc(`
@@ -35,8 +36,8 @@ func Test_ApplyPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:        "unchanged",
-			themePreset: config.PresetDark,
+			name:  "unchanged",
+			theme: testconfig.DarkTheme,
 			input: testutil.NewHereDoc(`
 				deployment.apps/foo unchanged`),
 			expected: testutil.NewHereDoc(`
@@ -44,8 +45,8 @@ func Test_ApplyPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:        "client dry run",
-			themePreset: config.PresetDark,
+			name:  "client dry run",
+			theme: testconfig.DarkTheme,
 			input: testutil.NewHereDoc(`
 				deployment.apps/foo unchanged (dry run)`),
 			expected: testutil.NewHereDoc(`
@@ -53,8 +54,8 @@ func Test_ApplyPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:        "server dry run",
-			themePreset: config.PresetDark,
+			name:  "server dry run",
+			theme: testconfig.DarkTheme,
 			input: testutil.NewHereDoc(`
 				deployment.apps/foo unchanged (server dry run)`),
 			expected: testutil.NewHereDoc(`
@@ -62,8 +63,8 @@ func Test_ApplyPrinter_Print(t *testing.T) {
 			`),
 		},
 		{
-			name:        "something else. This likely won't happen but fallbacks here just in case.",
-			themePreset: config.PresetDark,
+			name:  "something else. This likely won't happen but fallbacks here just in case.",
+			theme: testconfig.DarkTheme,
 			input: testutil.NewHereDoc(`
 				deployment.apps/foo bar`),
 			expected: testutil.NewHereDoc(`
@@ -77,7 +78,7 @@ func Test_ApplyPrinter_Print(t *testing.T) {
 			t.Parallel()
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
-			printer := ApplyPrinter{Theme: config.NewTheme(tt.themePreset)}
+			printer := ApplyPrinter{Theme: tt.theme}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())
 		})

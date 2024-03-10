@@ -6,19 +6,20 @@ import (
 	"testing"
 
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/config/testconfig"
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
 func Test_OptionsPrinter_Print(t *testing.T) {
 	tests := []struct {
-		name        string
-		themePreset config.Preset
-		input       string
-		expected    string
+		name     string
+		theme    *config.Theme
+		input    string
+		expected string
 	}{
 		{
-			name:        "successful",
-			themePreset: config.PresetDark,
+			name:  "successful",
+			theme: testconfig.DarkTheme,
 			input: testutil.NewHereDoc(`
 				The following options can be passed to any command:
 
@@ -57,7 +58,7 @@ func Test_OptionsPrinter_Print(t *testing.T) {
 			t.Parallel()
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
-			printer := OptionsPrinter{Theme: config.NewTheme(tt.themePreset)}
+			printer := OptionsPrinter{Theme: tt.theme}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())
 		})

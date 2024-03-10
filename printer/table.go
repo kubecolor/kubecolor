@@ -99,6 +99,9 @@ func (tp *TablePrinter) printLineAsTableFormat(w io.Writer, cells []tablescan.Ce
 }
 
 func (tp *TablePrinter) getColumnBaseColor(index int, colorsPreset []config.Color) config.Color {
+	if len(colorsPreset) == 0 {
+		return config.Color{}
+	}
 	if tp.hasLeadingNamespaceColumn {
 		index++
 	}

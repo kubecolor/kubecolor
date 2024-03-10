@@ -6,8 +6,8 @@ import (
 	"github.com/spf13/viper"
 )
 
-// NewTheme returns the base color schema depending on the dark/light setting
-func NewTheme(preset Preset) *Theme {
+// NewBaseTheme returns the base color schema depending on the dark/light setting
+func NewBaseTheme(preset Preset) *Theme {
 	switch preset {
 	case PresetDark:
 		return &Theme{

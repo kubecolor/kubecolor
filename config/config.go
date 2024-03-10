@@ -12,6 +12,9 @@ import (
 	"github.com/spf13/viper"
 )
 
+// PresetKey is the Viper config key to use in [viper.Viper.Set].
+const PresetKey = "preset"
+
 type Config struct {
 	Debug             bool
 	Kubectl           string
@@ -35,7 +38,7 @@ func NewViper() *viper.Viper {
 	v.MustBindEnv("objfreshthreshold", "KUBECOLOR_OBJ_FRESH")
 
 	v.SetDefault("kubectl", "kubectl")
-	v.SetDefault("preset", "dark")
+	v.SetDefault(PresetKey, "dark")
 
 	return v
 }
@@ -91,18 +94,18 @@ func Unmarshal(v *viper.Viper) (*Config, error) {
 
 func applyThemePreset(v *viper.Viper) error {
 	if env, ok := os.LookupEnv("KUBECOLOR_THEME"); ok {
-		v.Set("preset", env)
+		v.Set(PresetKey, env)
 	}
 
-	preset, err := ParsePreset(v.GetString("preset"))
+	preset, err := ParsePreset(v.GetString(PresetKey))
 	if err != nil {
 		return fmt.Errorf("parse preset: %w", err)
 	}
 	if v.GetBool("debug") {
 		fmt.Fprintf(os.Stderr, "[kubecolor] [debug] applying preset: %s\n", preset)
 	}
-	v.Set("preset", preset) // to skip parsing it twice
-	theme := NewTheme(preset)
+	v.Set(PresetKey, preset) // to skip parsing it twice
+	theme := NewBaseTheme(preset)
 	theme.ApplyViperDefaults(v)
 	return nil
 }

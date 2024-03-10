@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/config/testconfig"
 )
 
 func Test_toSpaces(t *testing.T) {
@@ -15,21 +16,21 @@ func Test_toSpaces(t *testing.T) {
 func Test_getColorByKeyIndent(t *testing.T) {
 	tests := []struct {
 		name             string
-		themePreset      config.Preset
+		theme            *config.Theme
 		indent           int
 		basicIndentWidth int
 		expected         string
 	}{
-		{"dark depth: 1", config.PresetDark, 2, 2, "white"},
-		{"light depth: 1", config.PresetLight, 2, 2, "black"},
-		{"dark depth: 2", config.PresetDark, 4, 2, "yellow"},
-		{"light depth: 2", config.PresetLight, 4, 2, "yellow"},
+		{"dark depth: 1", testconfig.DarkTheme, 2, 2, "white"},
+		{"light depth: 1", testconfig.LightTheme, 2, 2, "black"},
+		{"dark depth: 2", testconfig.DarkTheme, 4, 2, "yellow"},
+		{"light depth: 2", testconfig.LightTheme, 4, 2, "yellow"},
 	}
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got := getColorByKeyIndent(tt.indent, tt.basicIndentWidth, config.NewTheme(tt.themePreset))
+			got := getColorByKeyIndent(tt.indent, tt.basicIndentWidth, tt.theme)
 			if got.String() != tt.expected {
 				t.Errorf("fail: got: %v, expected: %v", got, tt.expected)
 			}
@@ -39,31 +40,31 @@ func Test_getColorByKeyIndent(t *testing.T) {
 
 func Test_getColorByValueType(t *testing.T) {
 	tests := []struct {
-		name        string
-		themePreset config.Preset
-		val         string
-		expected    string
+		name     string
+		theme    *config.Theme
+		val      string
+		expected string
 	}{
-		{"dark null", config.PresetDark, "null", "yellow"},
-		{"light null", config.PresetLight, "<none>", "yellow"},
+		{"dark null", testconfig.DarkTheme, "null", "yellow"},
+		{"light null", testconfig.LightTheme, "<none>", "yellow"},
 
-		{"dark true", config.PresetDark, "true", "green"},
-		{"light true", config.PresetLight, "true", "green"},
+		{"dark true", testconfig.DarkTheme, "true", "green"},
+		{"light true", testconfig.LightTheme, "true", "green"},
 
-		{"dark false", config.PresetDark, "false", "red"},
-		{"light false", config.PresetLight, "false", "red"},
+		{"dark false", testconfig.DarkTheme, "false", "red"},
+		{"light false", testconfig.LightTheme, "false", "red"},
 
-		{"dark number", config.PresetDark, "123", "magenta"},
-		{"light number", config.PresetLight, "456", "magenta"},
+		{"dark number", testconfig.DarkTheme, "123", "magenta"},
+		{"light number", testconfig.LightTheme, "456", "magenta"},
 
-		{"dark string", config.PresetDark, "aaa", "white"},
-		{"light string", config.PresetLight, "12345a", "black"},
+		{"dark string", testconfig.DarkTheme, "aaa", "white"},
+		{"light string", testconfig.LightTheme, "12345a", "black"},
 	}
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got := getColorByValueType(tt.val, config.NewTheme(tt.themePreset))
+			got := getColorByValueType(tt.val, tt.theme)
 			if got.String() != tt.expected {
 				t.Errorf("fail: got: %v, expected: %v", got, tt.expected)
 			}

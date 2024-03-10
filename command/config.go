@@ -32,9 +32,9 @@ func ResolveConfig(inputArgs []string) (*Config, error) {
 		return nil, err
 	} else if ok {
 		if lightThemeEnv {
-			v.Set("preset", "dark")
+			v.Set(config.PresetKey, "dark")
 		} else {
-			v.Set("preset", "light")
+			v.Set(config.PresetKey, "light")
 		}
 	}
 
@@ -59,9 +59,9 @@ func ResolveConfig(inputArgs []string) (*Config, error) {
 				return nil, err
 			}
 			if b {
-				v.Set("preset", "light")
+				v.Set(config.PresetKey, "light")
 			} else {
-				v.Set("preset", "dark")
+				v.Set(config.PresetKey, "dark")
 			}
 		case "--force-colors":
 			b, err := parseBoolFlag(flag, value)
@@ -76,7 +76,7 @@ func ResolveConfig(inputArgs []string) (*Config, error) {
 			}
 			cfg.ShowKubecolorVersion = b
 		case "--kubecolor-theme":
-			v.Set("preset", value)
+			v.Set(config.PresetKey, value)
 		default:
 			cfg.ArgsPassthrough = append(cfg.ArgsPassthrough, s)
 		}
