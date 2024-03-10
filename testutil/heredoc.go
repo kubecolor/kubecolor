@@ -1,11 +1,22 @@
 package testutil
 
-import "github.com/MakeNowJust/heredoc"
+import (
+	"strings"
+
+	"github.com/MakeNowJust/heredoc"
+)
+
+var heredocReplacer = strings.NewReplacer(
+	`\n`, "\n",
+	`\r`, "\r",
+	`\t`, "\t",
+	`\e`, "\033", // ANSI escape character
+)
 
 func NewHereDoc(s string) string {
-	return heredoc.Doc(s)
+	return heredocReplacer.Replace(heredoc.Doc(s))
 }
 
 func NewHereDocf(s string, args ...interface{}) string {
-	return heredoc.Docf(s, args...)
+	return heredocReplacer.Replace(heredoc.Docf(s, args...))
 }

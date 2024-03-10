@@ -28,12 +28,12 @@ func Test_YamlPrinter_Print(t *testing.T) {
 				none: <none>
 				bool: true`),
 			expected: testutil.NewHereDoc(`
-				[33mapiVersion[0m: [37mv1[0m
-				[33mkind[0m: "[37mPod[0m"
-				[33mnum[0m: [35m415[0m
-				[33munknown[0m: [33m<unknown>[0m
-				[33mnone[0m: [33m<none>[0m
-				[33mbool[0m: [32mtrue[0m
+				\e[33mapiVersion\e[0m: \e[37mv1\e[0m
+				\e[33mkind\e[0m: "\e[37mPod\e[0m"
+				\e[33mnum\e[0m: \e[35m415\e[0m
+				\e[33munknown\e[0m: \e[33m<unknown>\e[0m
+				\e[33mnone\e[0m: \e[33m<none>\e[0m
+				\e[33mbool\e[0m: \e[32mtrue\e[0m
 			`),
 		},
 		{
@@ -49,14 +49,14 @@ func Test_YamlPrinter_Print(t *testing.T) {
 				  key4:
 				    key: val`),
 			expected: testutil.NewHereDoc(`
-				[33mapiVersion[0m: [37mv1[0m
-				[33mitems[0m:
-				- [37mapiVersion[0m: [37mv1[0m
-				  [37mkey[0m:
-				  - [33mkey2[0m: [35m415[0m
-				    [33mkey3[0m: [32mtrue[0m
-				  [37mkey4[0m:
-				    [33mkey[0m: [37mval[0m
+				\e[33mapiVersion\e[0m: \e[37mv1\e[0m
+				\e[33mitems\e[0m:
+				- \e[37mapiVersion\e[0m: \e[37mv1\e[0m
+				  \e[37mkey\e[0m:
+				  - \e[33mkey2\e[0m: \e[35m415\e[0m
+				    \e[33mkey3\e[0m: \e[32mtrue\e[0m
+				  \e[37mkey4\e[0m:
+				    \e[33mkey\e[0m: \e[37mval\e[0m
 			`),
 		},
 		{
@@ -71,13 +71,13 @@ func Test_YamlPrinter_Print(t *testing.T) {
 				      - c
 				      - sleep 30`),
 			expected: testutil.NewHereDoc(`
-				[33mlifecycle[0m:
-				  [37mpreStop[0m:
-				    [33mexec[0m:
-				      [37mcommand[0m:
-				      - [37msh[0m
-				      - [37mc[0m
-				      - [37msleep 30[0m
+				\e[33mlifecycle\e[0m:
+				  \e[37mpreStop\e[0m:
+				    \e[33mexec\e[0m:
+				      \e[37mcommand\e[0m:
+				      - \e[37msh\e[0m
+				      - \e[37mc\e[0m
+				      - \e[37msleep 30\e[0m
 			`),
 		},
 		{
@@ -93,14 +93,14 @@ func Test_YamlPrinter_Print(t *testing.T) {
 				  key4:
 				    key: -val`),
 			expected: testutil.NewHereDoc(`
-				[33mapiVersion[0m: [37mv1[0m
-				[33mitems[0m:
-				- [37mapiVersion[0m: [37mv1[0m
-				  [37mkey[0m:
-				  - [33mkey2[0m: [35m415[0m
-				    [33mkey3[0m: [32mtrue[0m
-				  [37mkey4[0m:
-				    [33mkey[0m: [37m-val[0m
+				\e[33mapiVersion\e[0m: \e[37mv1\e[0m
+				\e[33mitems\e[0m:
+				- \e[37mapiVersion\e[0m: \e[37mv1\e[0m
+				  \e[37mkey\e[0m:
+				  - \e[33mkey2\e[0m: \e[35m415\e[0m
+				    \e[33mkey3\e[0m: \e[32mtrue\e[0m
+				  \e[37mkey4\e[0m:
+				    \e[33mkey\e[0m: \e[37m-val\e[0m
 			`),
 		},
 		{
@@ -118,16 +118,16 @@ func Test_YamlPrinter_Print(t *testing.T) {
 				        complete alternative of kubectl
 				      annotation.short.1: normal length annotation`),
 			expected: testutil.NewHereDoc(`
-				- [37mapiVersion[0m: [37mv1[0m
-				  [37mkind[0m: [37mPod[0m
-				  [37mmetadata[0m:
-				    [33mannotations[0m:
-				      [37mannotation.long.1[0m: [37m'Sometimes, you may want to specify what to command to use as kubectl.[0m
-				        [37mFor example, when you want to use a versioned-kubectl kubectl.1.17, you can do that by an environment variable.'[0m
-				      [37mannotation.long.2[0m: [37mkubecolor colorizes your kubectl command output and does nothing else.[0m
-				        [37mkubecolor internally calls kubectl command and try to colorizes the output so you can use kubecolor as a[0m
-				        [37mcomplete alternative of kubectl[0m
-				      [37mannotation.short.1[0m: [37mnormal length annotation[0m
+				- \e[37mapiVersion\e[0m: \e[37mv1\e[0m
+				  \e[37mkind\e[0m: \e[37mPod\e[0m
+				  \e[37mmetadata\e[0m:
+				    \e[33mannotations\e[0m:
+				      \e[37mannotation.long.1\e[0m: \e[37m'Sometimes, you may want to specify what to command to use as kubectl.\e[0m
+				        \e[37mFor example, when you want to use a versioned-kubectl kubectl.1.17, you can do that by an environment variable.'\e[0m
+				      \e[37mannotation.long.2\e[0m: \e[37mkubecolor colorizes your kubectl command output and does nothing else.\e[0m
+				        \e[37mkubecolor internally calls kubectl command and try to colorizes the output so you can use kubecolor as a\e[0m
+				        \e[37mcomplete alternative of kubectl\e[0m
+				      \e[37mannotation.short.1\e[0m: \e[37mnormal length annotation\e[0m
 			`),
 		},
 	}

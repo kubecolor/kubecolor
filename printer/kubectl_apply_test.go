@@ -23,7 +23,7 @@ func Test_ApplyPrinter_Print(t *testing.T) {
 			input: testutil.NewHereDoc(`
 				deployment.apps/foo created`),
 			expected: testutil.NewHereDoc(`
-				deployment.apps/foo [32mcreated[0m
+				deployment.apps/foo \e[32mcreated\e[0m
 			`),
 		},
 		{
@@ -32,7 +32,7 @@ func Test_ApplyPrinter_Print(t *testing.T) {
 			input: testutil.NewHereDoc(`
 				deployment.apps/foo configured`),
 			expected: testutil.NewHereDoc(`
-				deployment.apps/foo [33mconfigured[0m
+				deployment.apps/foo \e[33mconfigured\e[0m
 			`),
 		},
 		{
@@ -41,7 +41,7 @@ func Test_ApplyPrinter_Print(t *testing.T) {
 			input: testutil.NewHereDoc(`
 				deployment.apps/foo unchanged`),
 			expected: testutil.NewHereDoc(`
-				deployment.apps/foo [35munchanged[0m
+				deployment.apps/foo \e[35munchanged\e[0m
 			`),
 		},
 		{
@@ -50,7 +50,7 @@ func Test_ApplyPrinter_Print(t *testing.T) {
 			input: testutil.NewHereDoc(`
 				deployment.apps/foo unchanged (dry run)`),
 			expected: testutil.NewHereDoc(`
-				deployment.apps/foo [35munchanged[0m [36m(dry run)[0m
+				deployment.apps/foo \e[35munchanged\e[0m \e[36m(dry run)\e[0m
 			`),
 		},
 		{
@@ -59,7 +59,7 @@ func Test_ApplyPrinter_Print(t *testing.T) {
 			input: testutil.NewHereDoc(`
 				deployment.apps/foo unchanged (server dry run)`),
 			expected: testutil.NewHereDoc(`
-				deployment.apps/foo [35munchanged[0m [36m(server dry run)[0m
+				deployment.apps/foo \e[35munchanged\e[0m \e[36m(server dry run)\e[0m
 			`),
 		},
 		{
@@ -68,7 +68,7 @@ func Test_ApplyPrinter_Print(t *testing.T) {
 			input: testutil.NewHereDoc(`
 				deployment.apps/foo bar`),
 			expected: testutil.NewHereDoc(`
-				[32mdeployment.apps/foo bar[0m
+				\e[32mdeployment.apps/foo bar\e[0m
 			`),
 		},
 	}

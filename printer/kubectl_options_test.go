@@ -31,14 +31,14 @@ func Test_OptionsPrinter_Print(t *testing.T) {
 					Username to impersonate for the operation
 				`),
 			expected: testutil.NewHereDoc(`
-				[37mThe following options can be passed to any command:[0m
+				\e[37mThe following options can be passed to any command:\e[0m
 
-				    [33m--add-dir-header[0m=[31mfalse[0m:
-					[37mIf true, adds the file directory to the header of the log messages[0m
-				    [33m--alsologtostderr[0m=[32mtrue[0m:
-					[37mlog to standard error as well as files[0m
-				    [33m--as[0m=[37m''[0m:
-					[37mUsername to impersonate for the operation[0m
+				    \e[33m--add-dir-header\e[0m=\e[31mfalse\e[0m:
+					\e[37mIf true, adds the file directory to the header of the log messages\e[0m
+				    \e[33m--alsologtostderr\e[0m=\e[32mtrue\e[0m:
+					\e[37mlog to standard error as well as files\e[0m
+				    \e[33m--as\e[0m=\e[37m''\e[0m:
+					\e[37mUsername to impersonate for the operation\e[0m
 			`),
 		},
 	}
