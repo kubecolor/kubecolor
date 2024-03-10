@@ -111,14 +111,16 @@ const (
 // ThemeData holds colors for when representing parsed data.
 // Such as in YAML, JSON, and even some "kubectl describe" values
 type ThemeData struct {
-	String Color // default color for strings
-	True   Color // used when value is true
-	False  Color // used when value is false
-	Number Color // used when the value is a number
-	Null   Color // used when the value is null, nil, or none
+	Key    ColorSlice // used for the key
+	String Color      // used when value is a string
+	True   Color      // used when value is true
+	False  Color      // used when value is false
+	Number Color      // used when the value is a number
+	Null   Color      // used when the value is null, nil, or none
 }
 
 func (t ThemeData) ApplyViperDefaults(v *viper.Viper) {
+	viperSetDefaultColorSliceOrKeys(v, "theme.data.key", t.Key, baseWarning, baseInfo)
 	viperSetDefaultColorOrKey(v, "theme.data.string", t.String, baseInfo)
 	viperSetDefaultColorOrKey(v, "theme.data.true", t.True, baseSuccess)
 	viperSetDefaultColorOrKey(v, "theme.data.false", t.False, baseDanger)

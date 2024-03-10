@@ -14,13 +14,10 @@ func toSpaces(n int) string {
 // getColorByKeyIndent returns a color based on the given indent.
 // When you want to change key color based on indent depth (e.g. Json, Yaml), use this function
 func getColorByKeyIndent(indent int, basicIndentWidth int, theme *config.Theme) config.Color {
-	switch indent / basicIndentWidth % 2 {
-	case 1:
-		// TODO: Change to something more appropriate
-		return theme.Data.String
-	default:
-		return theme.Default
+	if len(theme.Data.Key) == 0 {
+		return config.Color{}
 	}
+	return theme.Data.Key[indent/basicIndentWidth%len(theme.Data.Key)]
 }
 
 // getColorByValueType returns a color by value.
