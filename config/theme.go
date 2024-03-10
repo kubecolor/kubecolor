@@ -124,7 +124,7 @@ func (t ThemeData) ApplyViperDefaults(v *viper.Viper) {
 	viperSetDefaultColorOrKey(v, "theme.data.true", t.True, baseSuccess)
 	viperSetDefaultColorOrKey(v, "theme.data.false", t.False, baseDanger)
 	viperSetDefaultColorOrKey(v, "theme.data.number", t.Number, basePrimary)
-	viperSetDefaultColorOrKey(v, "theme.data.null", t.Null, baseSecondary)
+	viperSetDefaultColorOrKey(v, "theme.data.null", t.Null, baseWarning)
 }
 
 // ThemeApply holds colors for the "kubectl apply" output.
@@ -141,6 +141,7 @@ func (t ThemeApply) ApplyViperDefaults(v *viper.Viper) {
 	viperSetDefaultColorOrKey(v, "theme.apply.configured", t.Configured, baseWarning)
 	viperSetDefaultColorOrKey(v, "theme.apply.unchanged", t.Unchanged, basePrimary)
 	viperSetDefaultColorOrKey(v, "theme.apply.dryrun", t.DryRun, baseSecondary)
+	viperSetDefaultColorOrKey(v, "theme.apply.fallback", t.Fallback, baseSuccess)
 }
 
 // ThemeStatus holds colors for status texts, used in for example
