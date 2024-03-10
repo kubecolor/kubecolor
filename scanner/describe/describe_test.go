@@ -12,6 +12,27 @@ import (
 //go:embed testdata
 var testdataFS embed.FS
 
+func TestScanner_treatTabAs8Spaces(t *testing.T) {
+	const input = "" +
+		"Args:\n" +
+		"    --first-flag='':\n" +
+		"\tDescription of first flag\n" +
+		"    --second-flag=with single spaces in value:\n" +
+		"\tDescription of second flag\n"
+
+	s := NewScanner(strings.NewReader(input))
+
+	mustScanLine(t, s, "~Args:~~~", "Args")
+	mustScanLine(t, s, "    ~--first-flag~=~''~:", "Args/--first-flag")
+	mustScanLine(t, s, "\t~Description of first flag~~~", "Args/--first-flag/Description of first flag")
+	mustScanLine(t, s, "    ~--second-flag~=~with single spaces in value~:", "Args/--second-flag")
+	mustScanLine(t, s, "\t~Description of second flag~~~", "Args/--second-flag/Description of second flag")
+
+	if s.Scan() {
+		t.Fatalf("Expected no more scans, but got: %#v", s.Line())
+	}
+}
+
 func TestScanner_noKeyIndent(t *testing.T) {
 	const input = "" +
 		"    \n" +

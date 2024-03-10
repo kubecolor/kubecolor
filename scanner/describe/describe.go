@@ -11,6 +11,7 @@ import (
 
 var spaceCharset = " \t"
 var doubleSpace = []byte{' ', ' '}
+var tabBytes = []byte{'\t'}
 
 type Line struct {
 	Indent   []byte
@@ -20,12 +21,21 @@ type Line struct {
 	Trailing []byte
 }
 
+func (line Line) IsZero() bool {
+	return len(line.Indent) == 0 &&
+		len(line.Key) == 0 &&
+		len(line.Spacing) == 0 &&
+		len(line.Value) == 0 &&
+		len(line.Trailing) == 0
+}
+
 func (line Line) KeyIndent() int {
-	return len(line.Indent)
+	// Treat tabs as 8 characters long
+	return len(line.Indent) + bytes.Count(line.Indent, tabBytes)*7
 }
 
 func (line Line) ValueIndent() int {
-	return len(line.Indent) + len(line.Key) + len(line.Spacing)
+	return line.KeyIndent() + len(line.Key) + len(line.Spacing)
 }
 
 func (line Line) String() string {
@@ -172,12 +182,34 @@ func (s *Scanner) parseLine(b []byte) Line {
 		return line
 	}
 
+	// "--flag='':"
+	//        ^endOfKey
+	endOfKey := bytes.IndexRune(leftTrimmed, '=')
+	if endOfKey > 0 && leftTrimmed[len(leftTrimmed)-1] == ':' {
+		// "--flag='':"
+		//  ^^^^^^
+		line.Key = leftTrimmed[:endOfKey]
+		// "--flag='':"
+		//        ^
+		line.Spacing = leftTrimmed[endOfKey : endOfKey+1]
+
+		// "--flag='':"
+		//         ^^
+		line.Value = leftTrimmed[endOfKey+1 : len(leftTrimmed)-1]
+
+		// "--flag='':"
+		//           ^
+		line.Trailing = leftTrimmed[len(leftTrimmed)-1:]
+
+		return line
+	}
+
 	// "IP:           10.0.0.1"
 	//     ^endOfKey
 	// Looking for double space, as some keys have spaces in them, e.g:
 	// "QoS Class:                   Burstable"
 	//            ^endOfKey
-	endOfKey := bytesutil.IndexOfDoubleSpace(leftTrimmed)
+	endOfKey = bytesutil.IndexOfDoubleSpace(leftTrimmed)
 	if endOfKey < 0 {
 		// No end of key, so there's no value here
 
