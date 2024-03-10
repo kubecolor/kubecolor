@@ -12,7 +12,6 @@ func TestEnvVars_preset(t *testing.T) {
 	testutil.Setenv(t, "KUBECOLOR_PRESET", "light")
 
 	v := NewViper()
-	testutil.MustNoError(t, ApplyThemePreset(v))
 	cfg, err := Unmarshal(v)
 	testutil.MustNoError(t, err)
 
@@ -25,7 +24,6 @@ func TestEnvVars_theme(t *testing.T) {
 	testutil.Setenv(t, "KUBECOLOR_THEME_HEADER", "red")
 
 	v := NewViper()
-	testutil.MustNoError(t, ApplyThemePreset(v))
 	cfg, err := Unmarshal(v)
 	testutil.MustNoError(t, err)
 

@@ -76,10 +76,6 @@ func ResolveConfig(inputArgs []string) (*Config, error) {
 		}
 	}
 
-	if err := config.ApplyThemePreset(v); err != nil {
-		return nil, err
-	}
-
 	newCfg, err := config.Unmarshal(v)
 	if err != nil {
 		return nil, err

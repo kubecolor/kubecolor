@@ -73,7 +73,23 @@ func LoadViper() (*viper.Viper, error) {
 	return v, nil
 }
 
-func ApplyThemePreset(v *viper.Viper) error {
+func Unmarshal(v *viper.Viper) (*Config, error) {
+	if err := applyThemePreset(v); err != nil {
+		return nil, err
+	}
+
+	cfg := &Config{}
+	if err := v.Unmarshal(cfg, viper.DecodeHook(
+		mapstructure.ComposeDecodeHookFunc(
+			mapstructure.StringToTimeDurationHookFunc(),
+			mapstructure.TextUnmarshallerHookFunc(),
+		))); err != nil {
+		return nil, err
+	}
+	return cfg, nil
+}
+
+func applyThemePreset(v *viper.Viper) error {
 	if env, ok := os.LookupEnv("KUBECOLOR_THEME"); ok {
 		v.Set("preset", env)
 	}
@@ -89,16 +105,4 @@ func ApplyThemePreset(v *viper.Viper) error {
 	theme := NewTheme(preset)
 	theme.ApplyViperDefaults(v)
 	return nil
-}
-
-func Unmarshal(v *viper.Viper) (*Config, error) {
-	cfg := &Config{}
-	if err := v.Unmarshal(cfg, viper.DecodeHook(
-		mapstructure.ComposeDecodeHookFunc(
-			mapstructure.StringToTimeDurationHookFunc(),
-			mapstructure.TextUnmarshallerHookFunc(),
-		))); err != nil {
-		return nil, err
-	}
-	return cfg, nil
 }
