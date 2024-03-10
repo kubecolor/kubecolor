@@ -1,6 +1,10 @@
 package config
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/kubecolor/kubecolor/testutil"
+)
 
 func TestParseColor(t *testing.T) {
 	tests := []struct {
@@ -9,9 +13,14 @@ func TestParseColor(t *testing.T) {
 		wantCode string
 	}{
 		{
-			name:     "named color",
+			name:     "fg/named color",
 			input:    "yellow",
 			wantCode: "33",
+		},
+		{
+			name:     "bg/named color",
+			input:    "bg=yellow",
+			wantCode: "43",
 		},
 		{
 			name:     "op",
@@ -19,44 +28,92 @@ func TestParseColor(t *testing.T) {
 			wantCode: "4",
 		},
 		{
-			name:     "hex without hash",
+			name:     "fg/long hex without hash",
+			input:    "ffff22",
+			wantCode: "38;2;255;255;34",
+		},
+		{
+			name:     "fg/long hex with hash",
+			input:    "#ffff22",
+			wantCode: "38;2;255;255;34",
+		},
+		{
+			name:     "fg/short hex without hash",
 			input:    "ff2",
 			wantCode: "38;2;255;255;34",
 		},
 		{
-			name:     "hex with hash",
+			name:     "fg/short hex with hash",
 			input:    "#ff2",
 			wantCode: "38;2;255;255;34",
 		},
 		{
-			name:     "rgb without prefix",
+			name:     "bg/long hex without hash",
+			input:    "bg=ffff22",
+			wantCode: "48;2;255;255;34",
+		},
+		{
+			name:     "bg/long hex with hash",
+			input:    "bg=#ffff22",
+			wantCode: "48;2;255;255;34",
+		},
+		{
+			name:     "bg/short hex without hash",
+			input:    "bg=ff2",
+			wantCode: "48;2;255;255;34",
+		},
+		{
+			name:     "bg/short hex with hash",
+			input:    "bg=#ff2",
+			wantCode: "48;2;255;255;34",
+		},
+		{
+			name:     "fg/rgb without prefix",
 			input:    "255, 255, 34",
 			wantCode: "38;2;255;255;34",
 		},
 		{
-			name:     "rgb with prefix",
+			name:     "fg/rgb with prefix",
 			input:    "rgb(255, 255, 34)",
 			wantCode: "38;2;255;255;34",
 		},
 		{
-			name:     "hsl",
+			name:     "bg/rgb without prefix",
+			input:    "bg=255, 255, 34",
+			wantCode: "48;2;255;255;34",
+		},
+		{
+			name:     "bg/rgb with prefix",
+			input:    "bg=rgb(255, 255, 34)",
+			wantCode: "48;2;255;255;34",
+		},
+		{
+			name:     "fg/hsl",
 			input:    "hsl(0.1, 0.8, 0.4)",
 			wantCode: "38;2;184;118;20",
+		},
+		{
+			name:     "bg/hsl",
+			input:    "bg=hsl(0.1, 0.8, 0.4)",
+			wantCode: "48;2;184;118;20",
+		},
+		{
+			name:     "fg/256bit",
+			input:    "33",
+			wantCode: "38;5;33",
+		},
+		{
+			name:     "bg/256bit",
+			input:    "bg=33",
+			wantCode: "48;5;33",
 		},
 	}
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			got, err := ParseColor(tc.input)
-			if err != nil {
-				t.Fatal(err)
-			}
-			if got.Source != tc.input {
-				t.Errorf("wrong source\nwant %q\ngot  %q", tc.input, got.Source)
-			}
-			if got.Code != tc.wantCode {
-				t.Errorf("wrong code\nwant %q\ngot  %q", tc.wantCode, got.Code)
-			}
+			testutil.MustNoError(t, err)
+			testutil.Equal(t, Color{Source: tc.input, Code: tc.wantCode}, got)
 		})
 	}
 }
