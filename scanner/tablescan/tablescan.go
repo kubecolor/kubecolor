@@ -71,6 +71,13 @@ func (s *Scanner) Text() string {
 	return s.currentLine
 }
 
+func (s *Scanner) PeekText() (string, bool) {
+	if len(s.bufferedLines) == 0 {
+		return "", false
+	}
+	return s.bufferedLines[0], true
+}
+
 func (s *Scanner) Err() error {
 	return s.lineScanner.Err()
 }

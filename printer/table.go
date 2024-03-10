@@ -36,7 +36,8 @@ func (tp *TablePrinter) Print(r io.Reader, w io.Writer) {
 			fmt.Fprint(w, "\n")
 			continue
 		}
-		if (tp.WithHeader && isFirstLine) || isAllCellsUpper(cells) {
+		peekNextLine, hasNextLine := scanner.PeekText()
+		if (tp.WithHeader && isFirstLine) || isAllUpper(scanner.Text()) || (hasNextLine && isOnlySymbols(peekNextLine)) {
 			isFirstLine = false
 			fmt.Fprintf(w, "%s\n", tp.Theme.Header.Render(scanner.Text()))
 
@@ -51,15 +52,11 @@ func (tp *TablePrinter) Print(r io.Reader, w io.Writer) {
 	}
 }
 
-func isAllCellsUpper(cells []tablescan.Cell) bool {
-	for _, c := range cells {
-		if !isAllUpper(c.Trimmed) {
-			return false
-		}
-	}
-	return true
-}
-
+// isAllUpper is used to identity header lines like this:
+//
+//	NAME  READY  STATUS  RESTARTS  AGE
+//
+// Commonly found in "kubectl get" output
 func isAllUpper(s string) bool {
 	for _, r := range s {
 		if unicode.IsLetter(r) && !unicode.IsUpper(r) {
@@ -67,6 +64,25 @@ func isAllUpper(s string) bool {
 		}
 	}
 	return true
+}
+
+// isOnlySymbols is used to identity header underline like this:
+//
+//	Resources  Non-Resource URLs  Resource Names  Verbs
+//	---------  -----------------  --------------  -----
+//
+// Commonly found in "kubectl describe" output
+func isOnlySymbols(s string) bool {
+	anyPuncts := false
+	for _, r := range s {
+		if unicode.IsLetter(r) || unicode.IsNumber(r) {
+			return false
+		}
+		if unicode.IsPunct(r) {
+			anyPuncts = true
+		}
+	}
+	return anyPuncts
 }
 
 // printTableFormat prints a line to w in kubectl "table" Format.
