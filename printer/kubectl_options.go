@@ -1,12 +1,11 @@
 package printer
 
 import (
-	"bufio"
 	"fmt"
 	"io"
-	"strings"
 
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/scanner/describe"
 )
 
 type OptionsPrinter struct {
@@ -14,29 +13,26 @@ type OptionsPrinter struct {
 }
 
 func (op *OptionsPrinter) Print(r io.Reader, w io.Writer) {
-	scanner := bufio.NewScanner(r)
-	isFirstLine := true
+	scanner := describe.NewScanner(r)
 	for scanner.Scan() {
-		line := scanner.Text()
+		line := scanner.Line()
 
-		if line == "" {
+		if line.IsZero() {
 			fmt.Fprintln(w)
 			continue
 		}
 
-		if isFirstLine {
-			fmt.Fprintf(w, "%s\n", op.Theme.String.Render(line))
-			isFirstLine = false
+		if len(scanner.Path()) == 2 {
+			val := string(line.Value)
+			fmt.Fprintf(w, "%s%s%s%s%s\n",
+				line.Indent,
+				getColorByKeyIndent(0, 2, op.Theme).Render(string(line.Key)),
+				line.Spacing,
+				getColorByValueType(val, op.Theme).Render(val),
+				line.Trailing)
 			continue
 		}
 
-		indentCnt := findIndent(line)
-		indent := toSpaces(indentCnt)
-		trimmedLine := strings.TrimLeft(line, " ")
-
-		splitted := strings.SplitN(trimmedLine, ": ", 2)
-		key, val := splitted[0], splitted[1]
-
-		fmt.Fprintf(w, "%s%s: %s\n", indent, getColorByKeyIndent(0, 2, op.Theme).Render(key), getColorByValueType(val, op.Theme).Render(val))
+		fmt.Fprintln(w, op.Theme.Data.String.Render(line.String()))
 	}
 }

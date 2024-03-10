@@ -111,7 +111,7 @@ func (yp *YamlPrinter) toColorizedStringValue(value string) string {
 	default:
 		format = "%s"
 	}
-	return fmt.Sprintf(format, yp.Theme.String.Render(trimmedValue))
+	return fmt.Sprintf(format, yp.Theme.Data.String.Render(trimmedValue))
 }
 
 func (yp *YamlPrinter) isStringClosed(line string) bool {

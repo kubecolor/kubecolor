@@ -79,7 +79,7 @@ func ColorStatus(status string, theme *config.Theme) (config.Color, bool) {
 		"OOMKilled",
 		// PVC status
 		"Lost":
-		return theme.False, true
+		return theme.Status.Error, true
 	case
 		// from https://github.com/kubernetes/kubernetes/blob/master/pkg/kubelet/events/event.go
 		// Container event reason list
@@ -119,7 +119,7 @@ func ColorStatus(status string, theme *config.Theme) (config.Color, bool) {
 		"Released",
 
 		"ScalingReplicaSet":
-		return theme.Null, true
+		return theme.Status.Warning, true
 	case
 		"Running",
 		"Completed",
@@ -140,7 +140,7 @@ func ColorStatus(status string, theme *config.Theme) (config.Color, bool) {
 
 		// PVC status
 		"Bound":
-		return theme.True, true
+		return theme.Status.Success, true
 	}
 	return config.Color{}, false
 }

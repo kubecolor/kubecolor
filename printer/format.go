@@ -16,7 +16,8 @@ func toSpaces(n int) string {
 func getColorByKeyIndent(indent int, basicIndentWidth int, theme *config.Theme) config.Color {
 	switch indent / basicIndentWidth % 2 {
 	case 1:
-		return theme.String
+		// TODO: Change to something more appropriate
+		return theme.Data.String
 	default:
 		return theme.Default
 	}
@@ -27,18 +28,18 @@ func getColorByKeyIndent(indent int, basicIndentWidth int, theme *config.Theme) 
 func getColorByValueType(val string, theme *config.Theme) config.Color {
 	switch val {
 	case "null", "<none>", "<unknown>", "<unset>", "<nil>":
-		return theme.Null
+		return theme.Data.Null
 	case "true", "True":
-		return theme.True
+		return theme.Data.True
 	case "false", "False":
-		return theme.False
+		return theme.Data.False
 	}
 
 	if isOnlyDigits(val) {
-		return theme.Number
+		return theme.Data.Number
 	}
 
-	return theme.String
+	return theme.Data.String
 }
 
 func isOnlyDigits(s string) bool {

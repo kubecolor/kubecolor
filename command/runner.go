@@ -41,7 +41,8 @@ var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, objFreshThreshold
 					return theme.Error
 				}
 
-				return theme.String
+				// TODO: Change to something more appropriate
+				return theme.Data.String
 			},
 		},
 	}
@@ -108,7 +109,8 @@ func Run(args []string, version string) error {
 		defer wg.Done()
 		defer func() {
 			if r := recover(); r != nil {
-				fmt.Fprintf(os.Stdout, buff.String())
+				fmt.Fprintf(os.Stderr, "[kubecolor] [ERROR] Recovered from panic: %v\n", r)
+				fmt.Fprint(os.Stdout, buff.String())
 			}
 		}()
 
