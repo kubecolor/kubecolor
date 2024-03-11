@@ -117,6 +117,8 @@ type ThemeData struct {
 	False  Color      // used when value is false
 	Number Color      // used when the value is a number
 	Null   Color      // used when the value is null, nil, or none
+
+	Ratio ThemeDataRatio
 }
 
 func (t ThemeData) ApplyViperDefaults(v *viper.Viper) {
@@ -126,6 +128,20 @@ func (t ThemeData) ApplyViperDefaults(v *viper.Viper) {
 	viperSetDefaultColorOrKey(v, "theme.data.false", t.False, baseDanger)
 	viperSetDefaultColorOrKey(v, "theme.data.number", t.Number, basePrimary)
 	viperSetDefaultColorOrKey(v, "theme.data.null", t.Null, baseWarning)
+
+	t.Ratio.ApplyViperDefaults(v)
+}
+
+type ThemeDataRatio struct {
+	Zero    Color // used for "0/0"
+	Equal   Color // used for "n/n", e.g "1/1"
+	Unequal Color // used for "n/m", e.g "0/1"
+}
+
+func (t ThemeDataRatio) ApplyViperDefaults(v *viper.Viper) {
+	viperSetDefaultColor(v, "theme.data.ratio.zero", t.Zero)
+	viperSetDefaultColor(v, "theme.data.ratio.equal", t.Zero)
+	viperSetDefaultColorOrKey(v, "theme.data.ratio.unequal", t.Zero, baseWarning)
 }
 
 // ThemeApply holds colors for the "kubectl apply" output.

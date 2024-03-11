@@ -1,13 +1,11 @@
 package printer
 
 import (
-	"fmt"
 	"io"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/internal/stringutil"
 	"github.com/kubecolor/kubecolor/kubectl"
 )
 
@@ -173,21 +171,22 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 					}
 
 					// When Readiness is "n/m" then yellow
-					if strings.Count(column, "/") == 1 {
-						if arr := strings.Split(column, "/"); arr[0] != arr[1] {
-							_, e1 := strconv.Atoi(arr[0])
-							_, e2 := strconv.Atoi(arr[1])
-							if e1 == nil && e2 == nil { // check both is number
-								// TODO: Replace with theme color
-								return config.MustParseColor("yellow"), true
-							}
+					if left, right, ok := stringutil.ParseRatio(column); ok {
+						switch {
+						case column == "0/0":
+							return kp.Theme.Data.Ratio.Zero , true
+						case left != right:
+							return kp.Theme.Data.Ratio.Unequal, true
+						default:
+							return kp.Theme.Data.Ratio.Equal, true
 						}
-
 					}
 
 					// Object age when fresh then green
-					if checkIfObjFresh(column, kp.ObjFreshThreshold) {
-						return kp.Theme.DurationFresh, true
+					if age, ok := stringutil.ParseHumanDuration(column); ok {
+						if age < kp.ObjFreshThreshold {
+							return kp.Theme.DurationFresh, true
+						}
 					}
 
 					return config.Color{}, false
@@ -245,36 +244,4 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 	}
 
 	printer.Print(r, w)
-}
-
-func checkIfObjFresh(ageString string, threshold time.Duration) bool {
-	// decode HumanDuration from [k8s.io/apimachinery/pkg/util/duration]
-	var objAgeDuration time.Duration
-	rest := ageString
-
-	for range 5 {
-		var num int64
-		var char rune
-		varsRead, _ := fmt.Sscanf(rest, "%d%c%s", &num, &char, &rest)
-		if varsRead < 2 {
-			break
-		} else if varsRead < 3 {
-			rest = ""
-		}
-
-		switch char {
-		case 'y':
-			objAgeDuration += 365 * 24 * time.Hour * time.Duration(num)
-		case 'd':
-			objAgeDuration += 24 * time.Hour * time.Duration(num)
-		case 'h':
-			objAgeDuration += time.Hour * time.Duration(num)
-		case 'm':
-			objAgeDuration += time.Minute * time.Duration(num)
-		case 's':
-			objAgeDuration += time.Second * time.Duration(num)
-		}
-	}
-
-	return objAgeDuration > 0 && objAgeDuration < threshold
 }

@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/internal/stringutil"
 )
 
 // toSpaces returns repeated spaces whose length is n.
@@ -32,24 +33,19 @@ func getColorByValueType(val string, theme *config.Theme) config.Color {
 		return theme.Data.False
 	}
 
-	if isOnlyDigits(val) {
+	// Ints: 123
+	if stringutil.IsOnlyDigits(val) {
 		return theme.Data.Number
 	}
 
-	return theme.Data.String
-}
-
-func isOnlyDigits(s string) bool {
-	for _, r := range s {
-		if !isDigit(r) {
-			return false
+	// Floats: 123.456
+	if left, right, ok := strings.Cut(val, "."); ok {
+		if stringutil.IsOnlyDigits(left) && stringutil.IsOnlyDigits(right) {
+			return theme.Data.Number
 		}
 	}
-	return true
-}
 
-func isDigit(r rune) bool {
-	return r >= '0' && r <= '9'
+	return theme.Data.String
 }
 
 // findIndent returns a length of indent (spaces at left) in the given line
