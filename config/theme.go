@@ -54,16 +54,16 @@ func NewBaseTheme(preset Preset) *Theme {
 type Theme struct {
 	// TODO: Rename to more specific
 	Default Color // default when no specific mapping is found for the command
-	// TODO: Remove in favor of sub-command specific
-	Error Color // used when the value is required or is an error
 
 	Header  Color      // used to print headers
 	Columns ColorSlice // used to display multiple colons, cycle between colors
 
-	Base     ThemeBase     // base colors for themes
-	Data     ThemeData     // colors for representing data
+	Base   ThemeBase   // base colors for themes
+	Data   ThemeData   // colors for representing data
+	Status ThemeStatus // generic status coloring (e.g "Ready", "Terminating")
+	Stderr ThemeStderr // used in kubectl's stderr output
+
 	Describe ThemeDescribe // used in "kubectl describe"
-	Status   ThemeStatus   // generic status coloring (e.g "Ready", "Terminating")
 	Apply    ThemeApply    // used in "kubectl apply"
 	Explain  ThemeExplain  // used in "kubectl explain"
 	Options  ThemeOptions  // used in "kubectl options"
@@ -75,13 +75,14 @@ func (t Theme) ApplyViperDefaults(v *viper.Viper) {
 	t.Base.ApplyViperDefaults(v)
 
 	viperSetDefaultColor(v, "theme.default", t.Default)
-	viperSetDefaultColorOrKey(v, "theme.error", t.Error, baseDanger)
 	viperSetDefaultColorOrKey(v, "theme.header", t.Header, baseInfo)
 	viperSetDefaultColorSliceOrMultipleKeys(v, "theme.columns", t.Columns, baseInfo, baseSecondary)
 
 	t.Data.ApplyViperDefaults(v)
-	t.Describe.ApplyViperDefaults(v)
 	t.Status.ApplyViperDefaults(v)
+	t.Stderr.ApplyViperDefaults(v)
+
+	t.Describe.ApplyViperDefaults(v)
 	t.Apply.ApplyViperDefaults(v)
 	t.Explain.ApplyViperDefaults(v)
 	t.Options.ApplyViperDefaults(v)
@@ -168,6 +169,31 @@ func (t ThemeDataRatio) ApplyViperDefaults(v *viper.Viper) {
 	viperSetDefaultColorOrKey(v, "theme.data.ratio.unequal", t.Zero, baseWarning)
 }
 
+// ThemeStatus holds colors for status texts, used in for example
+// the "kubectl get" status column
+type ThemeStatus struct {
+	Success Color // e.g "Running", "Ready"
+	Warning Color // e.g "Terminating"
+	Error   Color // e.g "Failed", "Unhealthy"
+}
+
+func (t ThemeStatus) ApplyViperDefaults(v *viper.Viper) {
+	viperSetDefaultColorOrKey(v, "theme.status.success", t.Success, baseSuccess)
+	viperSetDefaultColorOrKey(v, "theme.status.warning", t.Warning, baseWarning)
+	viperSetDefaultColorOrKey(v, "theme.status.error", t.Error, baseDanger)
+}
+
+// ThemeStderr holds generic colors for kubectl's stderr output.
+type ThemeStderr struct {
+	Default Color // default when no specific mapping is found for the output line
+	Error   Color // e.g when text contains "error"
+}
+
+func (t ThemeStderr) ApplyViperDefaults(v *viper.Viper) {
+	viperSetDefaultColorOrKey(v, "theme.stderr.default", t.Error, baseInfo)
+	viperSetDefaultColorOrKey(v, "theme.stderr.error", t.Error, baseDanger)
+}
+
 // ThemeApply holds colors for the "kubectl apply" output.
 type ThemeDescribe struct {
 	Key ColorSlice
@@ -192,20 +218,6 @@ func (t ThemeApply) ApplyViperDefaults(v *viper.Viper) {
 	viperSetDefaultColorOrKey(v, "theme.apply.unchanged", t.Unchanged, basePrimary)
 	viperSetDefaultColorOrKey(v, "theme.apply.dryrun", t.DryRun, baseSecondary)
 	viperSetDefaultColorOrKey(v, "theme.apply.fallback", t.Fallback, baseSuccess)
-}
-
-// ThemeStatus holds colors for status texts, used in for example
-// the "kubectl get" status column
-type ThemeStatus struct {
-	Success Color // e.g "Running", "Ready"
-	Warning Color // e.g "Terminating"
-	Error   Color // e.g "Failed", "Unhealthy"
-}
-
-func (t ThemeStatus) ApplyViperDefaults(v *viper.Viper) {
-	viperSetDefaultColorOrKey(v, "theme.status.success", t.Success, baseSuccess)
-	viperSetDefaultColorOrKey(v, "theme.status.warning", t.Warning, baseWarning)
-	viperSetDefaultColorOrKey(v, "theme.status.error", t.Error, baseDanger)
 }
 
 // ThemeExplain holds colors for the "kubectl explain" output.

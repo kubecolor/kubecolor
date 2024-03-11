@@ -38,11 +38,10 @@ var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, objFreshThreshold
 		ErrorPrinter: &printer.WithFuncPrinter{
 			Fn: func(line string) config.Color {
 				if strings.HasPrefix(strings.ToLower(line), "error") {
-					return theme.Error
+					return theme.Stderr.Error
 				}
 
-				// TODO: Change to something more appropriate
-				return theme.Data.String
+				return theme.Stderr.Default
 			},
 		},
 	}
