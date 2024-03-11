@@ -1,7 +1,7 @@
 package stringutil
 
 import (
-	"fmt"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -37,6 +37,22 @@ func IsDigit(r rune) bool {
 	return r >= '0' && r <= '9'
 }
 
+func CutNumber(s string) (num string, after string, found bool) {
+	if s == "" {
+		return "", s, false
+	}
+	for i, r := range s {
+		if IsDigit(r) {
+			continue
+		}
+		if i == 0 {
+			return "", s, false
+		}
+		return s[:i], s[i:], true
+	}
+	return s, "", true
+}
+
 // ParseHumanDuration decodes HumanDuration from [k8s.io/apimachinery/pkg/util/duration]
 func ParseHumanDuration(ageString string) (time.Duration, bool) {
 	if ageString == "" {
@@ -47,13 +63,16 @@ func ParseHumanDuration(ageString string) (time.Duration, bool) {
 	rest := ageString
 
 	for range 5 {
-		var num int64
-		var char rune
-		varsRead, _ := fmt.Sscanf(rest, "%d%c%s", &num, &char, &rest)
-		if varsRead < 2 {
+		numStr, after, ok := CutNumber(rest)
+		if !ok || after == "" {
 			return 0, false
-		} else if varsRead < 3 {
-			rest = ""
+		}
+		char := after[0]
+		rest = after[1:]
+
+		num, err := strconv.ParseUint(numStr, 10, 64)
+		if err != nil {
+			return 0, false
 		}
 
 		switch char {
@@ -70,7 +89,13 @@ func ParseHumanDuration(ageString string) (time.Duration, bool) {
 		default:
 			return 0, false
 		}
+
+		if rest == "" {
+			return objAgeDuration, true
+		}
 	}
 
-	return objAgeDuration, true
+	// should've returned from the end of the loop
+	// this means the string contains too many duration elements
+	return 0, false
 }
