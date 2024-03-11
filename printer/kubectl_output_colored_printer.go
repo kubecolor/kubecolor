@@ -160,8 +160,8 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 		printer = NewTablePrinter(false, kp.Theme, nil) // api-versions always doesn't have header
 
 	case kubectl.Get, kubectl.Events:
-		switch {
-		case kp.SubcommandInfo.FormatOption == kubectl.None, kp.SubcommandInfo.FormatOption == kubectl.Wide:
+		switch kp.SubcommandInfo.FormatOption {
+		case kubectl.None, kubectl.Wide:
 			printer = NewTablePrinter(
 				withHeader,
 				kp.Theme,
@@ -193,9 +193,9 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 					return config.Color{}, false
 				},
 			)
-		case kp.SubcommandInfo.FormatOption == kubectl.Json:
+		case kubectl.Json:
 			printer = &JsonPrinter{Theme: kp.Theme}
-		case kp.SubcommandInfo.FormatOption == kubectl.Yaml:
+		case kubectl.Yaml:
 			printer = &YamlPrinter{Theme: kp.Theme}
 		}
 
@@ -230,10 +230,10 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 			Theme: kp.Theme,
 		}
 	case kubectl.Apply:
-		switch {
-		case kp.SubcommandInfo.FormatOption == kubectl.Json:
+		switch kp.SubcommandInfo.FormatOption {
+		case kubectl.Json:
 			printer = &JsonPrinter{Theme: kp.Theme}
-		case kp.SubcommandInfo.FormatOption == kubectl.Yaml:
+		case kubectl.Yaml:
 			printer = &YamlPrinter{Theme: kp.Theme}
 		default:
 			printer = &ApplyPrinter{Theme: kp.Theme}
