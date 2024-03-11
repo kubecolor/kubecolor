@@ -77,7 +77,7 @@ func toColorizedJsonKey(key string, indentCnt, basicWidth int, theme *config.The
 		format += ":"
 	}
 
-	return fmt.Sprintf(format, getColorByKeyIndent(indentCnt, basicWidth, theme).Render(doubleQuoteTrimmed))
+	return fmt.Sprintf(format, getColorByKeyIndent(indentCnt, basicWidth, theme.Data.Key).Render(doubleQuoteTrimmed))
 }
 
 // toColorizedJsonValue returns colored json value.

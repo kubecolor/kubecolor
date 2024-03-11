@@ -43,17 +43,17 @@ func (ep *ExplainPrinter) Print(r io.Reader, w io.Writer) {
 
 func (ep *ExplainPrinter) keyColor(line describe.Line, isFields bool) config.Color {
 	if ep.Recursive && isFields {
-		return getColorByKeyIndent(line.KeyIndent(), 2, ep.Theme)
+		return getColorByKeyIndent(line.KeyIndent(), 2, ep.Theme.Explain.Key)
 	}
 
-	return getColorByKeyIndent(0, 2, ep.Theme)
+	return getColorByKeyIndent(0, 2, ep.Theme.Explain.Key)
 }
 
 func (ep *ExplainPrinter) printVal(w io.Writer, val string) {
 	const suffix = "-required-"
 	if withoutSuffix, ok := strings.CutSuffix(val, suffix); ok {
 		fmt.Fprint(w, withoutSuffix)
-		fmt.Fprint(w, ep.Theme.Error.Render(suffix))
+		fmt.Fprint(w, ep.Theme.Explain.Required.Render(suffix))
 		return
 	}
 	fmt.Fprint(w, val)

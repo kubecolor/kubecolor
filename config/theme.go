@@ -20,6 +20,11 @@ func NewBaseTheme(preset Preset) *Theme {
 				Warning:   MustParseColor("yellow"),
 				Danger:    MustParseColor("red"),
 			},
+			Options: ThemeOptions{
+				// Overriding here because having it default to "warning" is a bit weird.
+				// TODO: Remove this, and add a "legacy" theme preset that uses yellow here
+				Flag: MustParseColor("yellow"),
+			},
 		}
 
 	case PresetLight:
@@ -32,6 +37,11 @@ func NewBaseTheme(preset Preset) *Theme {
 				Success:   MustParseColor("green"),
 				Warning:   MustParseColor("yellow"),
 				Danger:    MustParseColor("red"),
+			},
+			Options: ThemeOptions{
+				// Overriding here because having it default to "warning" is a bit weird.
+				// TODO: Remove this, and add a "legacy" theme preset that uses yellow here
+				Flag: MustParseColor("yellow"),
 			},
 		}
 
@@ -50,10 +60,14 @@ type Theme struct {
 	Header  Color      // used to print headers
 	Columns ColorSlice // used to display multiple colons, cycle between colors
 
-	Base   ThemeBase   // base colors for themes
-	Data   ThemeData   // colors for representing data
-	Status ThemeStatus // generic status coloring (e.g "Ready", "Terminating")
-	Apply  ThemeApply  // used in "kubectl apply"
+	Base     ThemeBase     // base colors for themes
+	Data     ThemeData     // colors for representing data
+	Describe ThemeDescribe // used in "kubectl describe"
+	Status   ThemeStatus   // generic status coloring (e.g "Ready", "Terminating")
+	Apply    ThemeApply    // used in "kubectl apply"
+	Explain  ThemeExplain  // used in "kubectl explain"
+	Options  ThemeOptions  // used in "kubectl options"
+	Version  ThemeVersion  // used in "kubectl version"
 }
 
 func (t Theme) ApplyViperDefaults(v *viper.Viper) {
@@ -63,11 +77,15 @@ func (t Theme) ApplyViperDefaults(v *viper.Viper) {
 	viperSetDefaultColor(v, "theme.default", t.Default)
 	viperSetDefaultColorOrKey(v, "theme.error", t.Error, baseDanger)
 	viperSetDefaultColorOrKey(v, "theme.header", t.Header, baseInfo)
-	viperSetDefaultColorSliceOrKeys(v, "theme.columns", t.Columns, baseInfo, baseSecondary)
+	viperSetDefaultColorSliceOrMultipleKeys(v, "theme.columns", t.Columns, baseInfo, baseSecondary)
 
 	t.Data.ApplyViperDefaults(v)
+	t.Describe.ApplyViperDefaults(v)
 	t.Status.ApplyViperDefaults(v)
 	t.Apply.ApplyViperDefaults(v)
+	t.Explain.ApplyViperDefaults(v)
+	t.Options.ApplyViperDefaults(v)
+	t.Version.ApplyViperDefaults(v)
 }
 
 // ThemeBase contains base colors that other theme fields can default to,
@@ -76,12 +94,13 @@ func (t Theme) ApplyViperDefaults(v *viper.Viper) {
 // These fields should never be referenced in the printers.
 // Instead, they should use the more specific fields, such as [ThemeApply.Created]
 type ThemeBase struct {
-	Info      Color // general color for when things are informational
-	Primary   Color // general color for when things are focus
-	Secondary Color // general color for when things are secondary focus
-	Success   Color // general color for when things are good
-	Warning   Color // general color for when things are wrong
-	Danger    Color // general color for when things are bad
+	Key       ColorSlice // general color for keys
+	Info      Color      // general color for when things are informational
+	Primary   Color      // general color for when things are focus
+	Secondary Color      // general color for when things are secondary focus
+	Success   Color      // general color for when things are good
+	Warning   Color      // general color for when things are wrong
+	Danger    Color      // general color for when things are bad
 }
 
 func (t ThemeBase) ApplyViperDefaults(v *viper.Viper) {
@@ -91,11 +110,14 @@ func (t ThemeBase) ApplyViperDefaults(v *viper.Viper) {
 	viperSetDefaultColor(v, baseSuccess, t.Success)
 	viperSetDefaultColor(v, baseWarning, t.Warning)
 	viperSetDefaultColor(v, baseDanger, t.Danger)
+
+	viperSetDefaultColorSliceOrMultipleKeys(v, baseKey, t.Key, baseWarning, baseInfo)
 }
 
 // baseKey are utility strings for referencing the viper keys for the
 // base theme colors.
 const (
+	baseKey       = "theme.base.key"
 	baseInfo      = "theme.base.info"
 	basePrimary   = "theme.base.primary"
 	baseSecondary = "theme.base.secondary"
@@ -121,7 +143,7 @@ type ThemeData struct {
 }
 
 func (t ThemeData) ApplyViperDefaults(v *viper.Viper) {
-	viperSetDefaultColorSliceOrKeys(v, "theme.data.key", t.Key, baseWarning, baseInfo)
+	viperSetDefaultColorSliceOrKey(v, "theme.data.key", t.Key, baseKey)
 	viperSetDefaultColorOrKey(v, "theme.data.string", t.String, baseInfo)
 	viperSetDefaultColorOrKey(v, "theme.data.true", t.True, baseSuccess)
 	viperSetDefaultColorOrKey(v, "theme.data.false", t.False, baseDanger)
@@ -144,6 +166,15 @@ func (t ThemeDataRatio) ApplyViperDefaults(v *viper.Viper) {
 	viperSetDefaultColor(v, "theme.data.ratio.zero", t.Zero)
 	viperSetDefaultColor(v, "theme.data.ratio.equal", t.Zero)
 	viperSetDefaultColorOrKey(v, "theme.data.ratio.unequal", t.Zero, baseWarning)
+}
+
+// ThemeApply holds colors for the "kubectl apply" output.
+type ThemeDescribe struct {
+	Key ColorSlice
+}
+
+func (t ThemeDescribe) ApplyViperDefaults(v *viper.Viper) {
+	viperSetDefaultColorSliceOrKey(v, "theme.describe.key", t.Key, baseKey)
 }
 
 // ThemeApply holds colors for the "kubectl apply" output.
@@ -177,6 +208,35 @@ func (t ThemeStatus) ApplyViperDefaults(v *viper.Viper) {
 	viperSetDefaultColorOrKey(v, "theme.status.error", t.Error, baseDanger)
 }
 
+// ThemeExplain holds colors for the "kubectl explain" output.
+type ThemeExplain struct {
+	Key      ColorSlice // used on keys
+	Required Color      // used on the trailing "-required-" string
+}
+
+func (t ThemeExplain) ApplyViperDefaults(v *viper.Viper) {
+	viperSetDefaultColorSliceOrKey(v, "theme.explain.key", t.Key, "theme.data.key")
+	viperSetDefaultColorOrKey(v, "theme.explain.required", t.Required, baseDanger)
+}
+
+// ThemeOptions holds colors for the "kubectl options" output.
+type ThemeOptions struct {
+	Flag Color // e.g "--kubeconfig"
+}
+
+func (t ThemeOptions) ApplyViperDefaults(v *viper.Viper) {
+	viperSetDefaultColorOrKey(v, "theme.options.flag", t.Flag, baseSecondary)
+}
+
+// ThemeVersion holds colors for the "kubectl version" output.
+type ThemeVersion struct {
+	Key ColorSlice
+}
+
+func (t ThemeVersion) ApplyViperDefaults(v *viper.Viper) {
+	viperSetDefaultColorSliceOrKey(v, "theme.version.key", t.Key, baseKey)
+}
+
 func viperSetDefaultColorOrKey(v *viper.Viper, key string, value Color, otherKey string) {
 	if viperSetDefaultColor(v, key, value) {
 		return
@@ -197,7 +257,14 @@ func viperSetDefaultColor(v *viper.Viper, key string, value Color) bool {
 	return true
 }
 
-func viperSetDefaultColorSliceOrKeys(v *viper.Viper, key string, value []Color, otherKeys ...string) {
+func viperSetDefaultColorSliceOrKey(v *viper.Viper, key string, value []Color, otherKey string) {
+	if viperSetDefaultColorSlice(v, key, value) {
+		return
+	}
+	v.SetDefault(key, v.Get(otherKey))
+}
+
+func viperSetDefaultColorSliceOrMultipleKeys(v *viper.Viper, key string, value []Color, otherKeys ...string) {
 	if viperSetDefaultColorSlice(v, key, value) {
 		return
 	}

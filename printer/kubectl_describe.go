@@ -44,7 +44,7 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 
 		fmt.Fprintf(w, "%s", line.Indent)
 		if len(line.Key) > 0 {
-			keyColor := getColorByKeyIndent(line.KeyIndent(), basicIndentWidth, dp.TablePrinter.Theme)
+			keyColor := getColorByKeyIndent(line.KeyIndent(), basicIndentWidth, dp.TablePrinter.Theme.Describe.Key)
 			key := string(line.Key)
 			if withoutColon, ok := strings.CutSuffix(key, ":"); ok {
 				fmt.Fprint(w, keyColor.Render(withoutColon), ":")

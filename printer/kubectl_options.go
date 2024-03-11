@@ -27,7 +27,7 @@ func (op *OptionsPrinter) Print(r io.Reader, w io.Writer) {
 			val := string(line.Value)
 			fmt.Fprintf(w, "%s%s%s%s%s\n",
 				line.Indent,
-				getColorByKeyIndent(0, 2, op.Theme).Render(string(line.Key)),
+				op.Theme.Options.Flag.Render(string(line.Key)),
 				line.Spacing,
 				getColorByValueType(val, op.Theme).Render(val),
 				line.Trailing)

@@ -70,7 +70,7 @@ func (yp *YamlPrinter) toColorizedYamlKey(key string, indentCnt, basicWidth int)
 		indentCnt += 2
 	}
 
-	return fmt.Sprintf(format, getColorByKeyIndent(indentCnt, basicWidth, yp.Theme).Render(key))
+	return fmt.Sprintf(format, getColorByKeyIndent(indentCnt, basicWidth, yp.Theme.Data.Key).Render(key))
 }
 
 func (yp *YamlPrinter) toColorizedYamlValue(value string) string {

@@ -26,7 +26,7 @@ func (vsp *VersionClientPrinter) Print(r io.Reader, w io.Writer) {
 			continue
 		}
 		fmt.Fprintf(w, "%s: %s\n",
-			getColorByKeyIndent(0, 2, vsp.Theme).Render(key),
+			getColorByKeyIndent(0, 2, vsp.Theme.Version.Key).Render(key),
 			getColorByValueType(val, vsp.Theme).Render(val),
 		)
 	}
@@ -46,7 +46,7 @@ func (vp *VersionPrinter) Print(r io.Reader, w io.Writer) {
 		line := scanner.Text()
 		splitted := strings.SplitN(line, ": ", 2)
 		key, val := splitted[0], splitted[1]
-		key = getColorByKeyIndent(0, 2, vp.Theme).Render(key)
+		key = getColorByKeyIndent(0, 2, vp.Theme.Version.Key).Render(key)
 
 		// val is go struct like
 		// version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.2", GitCommit:"f5743093fd1c663cb0cbc89748f730662345d44d", GitTreeState:"clean", BuildDate:"2020-09-16T13:32:58Z", GoVersion:"go1.15", Compiler:"gc", Platform:"linux/amd64"}
@@ -58,10 +58,10 @@ func (vp *VersionPrinter) Print(r io.Reader, w io.Writer) {
 		values := strings.Split(pkgAndValues[1], ", ")
 		coloredValues := make([]string, len(values))
 
-		fmt.Fprintf(w, "%s: %s{", key, getColorByKeyIndent(2, 2, vp.Theme).Render(packageName))
+		fmt.Fprintf(w, "%s: %s{", key, getColorByKeyIndent(2, 2, vp.Theme.Version.Key).Render(packageName))
 		for i, value := range values {
 			kv := strings.SplitN(value, ":", 2)
-			coloredKey := getColorByKeyIndent(0, 2, vp.Theme).Render(kv[0])
+			coloredKey := getColorByKeyIndent(0, 2, vp.Theme.Version.Key).Render(kv[0])
 
 			isValDoubleQuotationSurrounded := strings.HasPrefix(kv[1], `"`) && strings.HasSuffix(kv[1], `"`)
 			val := strings.TrimRight(strings.TrimLeft(kv[1], `"`), `"`)
