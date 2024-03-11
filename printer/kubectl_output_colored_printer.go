@@ -174,19 +174,20 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 					if left, right, ok := stringutil.ParseRatio(column); ok {
 						switch {
 						case column == "0/0":
-							return kp.Theme.Data.Ratio.Zero , true
-						case left != right:
-							return kp.Theme.Data.Ratio.Unequal, true
-						default:
+							return kp.Theme.Data.Ratio.Zero, true
+						case left == right:
 							return kp.Theme.Data.Ratio.Equal, true
+						default:
+							return kp.Theme.Data.Ratio.Unequal, true
 						}
 					}
 
 					// Object age when fresh then green
 					if age, ok := stringutil.ParseHumanDuration(column); ok {
 						if age < kp.ObjFreshThreshold {
-							return kp.Theme.DurationFresh, true
+							return kp.Theme.Data.DurationFresh, true
 						}
+						return kp.Theme.Data.Duration, true
 					}
 
 					return config.Color{}, false

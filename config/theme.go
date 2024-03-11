@@ -47,9 +47,6 @@ type Theme struct {
 	// TODO: Remove in favor of sub-command specific
 	Error Color // used when the value is required or is an error
 
-	// TODO: Move to Theme.Table
-	DurationFresh Color // color used when the time value is under a certain delay
-
 	Header  Color      // used to print headers
 	Columns ColorSlice // used to display multiple colons, cycle between colors
 
@@ -65,7 +62,6 @@ func (t Theme) ApplyViperDefaults(v *viper.Viper) {
 
 	viperSetDefaultColor(v, "theme.default", t.Default)
 	viperSetDefaultColorOrKey(v, "theme.error", t.Error, baseDanger)
-	viperSetDefaultColorOrKey(v, "theme.durationfresh", t.DurationFresh, baseSuccess)
 	viperSetDefaultColorOrKey(v, "theme.header", t.Header, baseInfo)
 	viperSetDefaultColorSliceOrKeys(v, "theme.columns", t.Columns, baseInfo, baseSecondary)
 
@@ -118,6 +114,9 @@ type ThemeData struct {
 	Number Color      // used when the value is a number
 	Null   Color      // used when the value is null, nil, or none
 
+	Duration      Color // used when the value is a duration
+	DurationFresh Color // color used when the time value is under a certain delay
+
 	Ratio ThemeDataRatio
 }
 
@@ -128,6 +127,9 @@ func (t ThemeData) ApplyViperDefaults(v *viper.Viper) {
 	viperSetDefaultColorOrKey(v, "theme.data.false", t.False, baseDanger)
 	viperSetDefaultColorOrKey(v, "theme.data.number", t.Number, basePrimary)
 	viperSetDefaultColorOrKey(v, "theme.data.null", t.Null, baseWarning)
+
+	viperSetDefaultColor(v, "theme.data.duration", t.DurationFresh)
+	viperSetDefaultColorOrKey(v, "theme.data.durationfresh", t.DurationFresh, baseSuccess)
 
 	t.Ratio.ApplyViperDefaults(v)
 }
@@ -188,6 +190,7 @@ func viperSetDefaultColorOrKey(v *viper.Viper, key string, value Color, otherKey
 
 func viperSetDefaultColor(v *viper.Viper, key string, value Color) bool {
 	if value == (Color{}) {
+		v.SetDefault(key, Color{})
 		return false
 	}
 	v.SetDefault(key, value)
@@ -213,6 +216,7 @@ func viperSetDefaultColorSliceOrKeys(v *viper.Viper, key string, value []Color, 
 
 func viperSetDefaultColorSlice(v *viper.Viper, key string, value []Color) bool {
 	if len(value) == 0 {
+		v.SetDefault(key, []Color{})
 		return false
 	}
 	v.SetDefault(key, value)
