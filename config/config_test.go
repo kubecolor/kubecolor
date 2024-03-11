@@ -21,12 +21,12 @@ func TestEnvVars_preset(t *testing.T) {
 
 func TestEnvVars_theme(t *testing.T) {
 	os.Clearenv()
-	testutil.Setenv(t, "KUBECOLOR_THEME_HEADER", "red")
+	testutil.Setenv(t, "KUBECOLOR_THEME_TABLE_HEADER", "red")
 
 	v := NewViper()
 	cfg, err := Unmarshal(v)
 	testutil.MustNoError(t, err)
 
-	testutil.Equal(t, Color{Source: "red", Code: "31"}, cfg.Theme.Header, "Read from cfg.Theme.Header")
-	testutil.Equal(t, "red", v.Get("theme.header"), "Read from v.Get(...)")
+	testutil.Equal(t, Color{Source: "red", Code: "31"}, cfg.Theme.Table.Header, "Read from cfg.Theme.Table.Header")
+	testutil.Equal(t, "red", v.Get("theme.table.header"), "Read from v.Get(...)")
 }

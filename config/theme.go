@@ -52,15 +52,12 @@ func NewBaseTheme(preset Preset) *Theme {
 
 // Theme is the root theme config.
 type Theme struct {
-	// TODO: Rename to more specific
 	Default Color // default when no specific mapping is found for the command
-
-	Header  Color      // used to print headers
-	Columns ColorSlice // used to display multiple colons, cycle between colors
 
 	Base   ThemeBase   // base colors for themes
 	Data   ThemeData   // colors for representing data
 	Status ThemeStatus // generic status coloring (e.g "Ready", "Terminating")
+	Table  ThemeTable  // used in table output, e.g "kubectl get" and parts of "kubectl describe"
 	Stderr ThemeStderr // used in kubectl's stderr output
 
 	Describe ThemeDescribe // used in "kubectl describe"
@@ -75,11 +72,10 @@ func (t Theme) ApplyViperDefaults(v *viper.Viper) {
 	t.Base.ApplyViperDefaults(v)
 
 	viperSetDefaultColor(v, "theme.default", t.Default)
-	viperSetDefaultColorOrKey(v, "theme.header", t.Header, baseInfo)
-	viperSetDefaultColorSliceOrMultipleKeys(v, "theme.columns", t.Columns, baseInfo, baseSecondary)
 
 	t.Data.ApplyViperDefaults(v)
 	t.Status.ApplyViperDefaults(v)
+	t.Table.ApplyViperDefaults(v)
 	t.Stderr.ApplyViperDefaults(v)
 
 	t.Describe.ApplyViperDefaults(v)
@@ -181,6 +177,17 @@ func (t ThemeStatus) ApplyViperDefaults(v *viper.Viper) {
 	viperSetDefaultColorOrKey(v, "theme.status.success", t.Success, baseSuccess)
 	viperSetDefaultColorOrKey(v, "theme.status.warning", t.Warning, baseWarning)
 	viperSetDefaultColorOrKey(v, "theme.status.error", t.Error, baseDanger)
+}
+
+// ThemeTable holds colors for table output
+type ThemeTable struct {
+	Header  Color      // used to print headers
+	Columns ColorSlice // used to display multiple colons, cycle between colors
+}
+
+func (t ThemeTable) ApplyViperDefaults(v *viper.Viper) {
+	viperSetDefaultColorOrKey(v, "theme.table.header", t.Header, baseInfo)
+	viperSetDefaultColorSliceOrMultipleKeys(v, "theme.table.columns", t.Columns, baseInfo, baseSecondary)
 }
 
 // ThemeStderr holds generic colors for kubectl's stderr output.

@@ -148,7 +148,7 @@ func ColorStatus(status string, theme *config.Theme) (config.Color, bool) {
 func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 	withHeader := !kp.SubcommandInfo.NoHeader
 
-	var printer Printer = &SingleColoredPrinter{Color: kp.Theme.Default} // default in green
+	var printer Printer = &SingleColoredPrinter{Color: kp.Theme.Default}
 
 	switch kp.SubcommandInfo.Subcommand {
 	case kubectl.Top, kubectl.APIResources:

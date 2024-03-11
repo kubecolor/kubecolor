@@ -45,7 +45,7 @@ func (tp *TablePrinter) Print(r io.Reader, w io.Writer) {
 			isFirstLine = false
 			leadingSpaces := scanner.LeadingSpaces()
 			withoutSpaces := scanner.Text()[len(leadingSpaces):]
-			fmt.Fprintf(w, "%s%s\n", leadingSpaces, tp.Theme.Header.Render(withoutSpaces))
+			fmt.Fprintf(w, "%s%s\n", leadingSpaces, tp.Theme.Table.Header.Render(withoutSpaces))
 
 			if strings.EqualFold(cells[0].Trimmed, "namespace") {
 				tp.hasLeadingNamespaceColumn = true
@@ -54,7 +54,7 @@ func (tp *TablePrinter) Print(r io.Reader, w io.Writer) {
 		}
 
 		fmt.Fprintf(w, "%s", scanner.LeadingSpaces())
-		tp.printLineAsTableFormat(w, cells, tp.Theme.Columns)
+		tp.printLineAsTableFormat(w, cells, tp.Theme.Table.Columns)
 	}
 }
 
