@@ -105,7 +105,7 @@ type ThemeData struct {
 	Number Color      `defaultFrom:"theme.base.primary"` // used when the value is a number
 	Null   Color      `defaultFrom:"theme.base.muted"`   // used when the value is null, nil, or none
 
-	Duration      Color ``                                 // used when the value is a duration
+	Duration      Color ``                                 // used when the value is a duration, e.g "12m"
 	DurationFresh Color `defaultFrom:"theme.base.success"` // color used when the time value is under a certain delay
 
 	Ratio ThemeDataRatio
@@ -120,15 +120,15 @@ type ThemeDataRatio struct {
 // ThemeStatus holds colors for status texts, used in for example
 // the "kubectl get" status column
 type ThemeStatus struct {
-	Success Color `defaultFrom:"theme.base.success"` // e.g "Running", "Ready"
-	Warning Color `defaultFrom:"theme.base.warning"` // e.g "Terminating"
-	Error   Color `defaultFrom:"theme.base.danger"`  // e.g "Failed", "Unhealthy"
+	Success Color `defaultFrom:"theme.base.success"` // used in status keywords, e.g "Running", "Ready"
+	Warning Color `defaultFrom:"theme.base.warning"` // used in status keywords, e.g "Terminating"
+	Error   Color `defaultFrom:"theme.base.danger"`  // used in status keywords, e.g "Failed", "Unhealthy"
 }
 
 // ThemeTable holds colors for table output
 type ThemeTable struct {
-	Header  Color      `defaultFrom:"theme.base.info"`                          // used to print headers
-	Columns ColorSlice `defaultFromMany:"theme.base.info,theme.base.secondary"` // used to display multiple colons, cycle between colors
+	Header  Color      `defaultFrom:"theme.base.info"`                          // used on table headers
+	Columns ColorSlice `defaultFromMany:"theme.base.info,theme.base.secondary"` // used on table columns when no other coloring applies such as status or duration coloring. The multiple colors are cycled based on column ID, from left to right.
 }
 
 // ThemeStderr holds generic colors for kubectl's stderr output.
@@ -139,21 +139,21 @@ type ThemeStderr struct {
 
 // ThemeApply holds colors for the "kubectl apply" output.
 type ThemeDescribe struct {
-	Key ColorSlice `defaultFrom:"theme.base.key"`
+	Key ColorSlice `defaultFrom:"theme.base.key"` // used on keys. The multiple colors are cycled based on indentation.
 }
 
 // ThemeApply holds colors for the "kubectl apply" output.
 type ThemeApply struct {
-	Created    Color `defaultFrom:"theme.base.success"`
-	Configured Color `defaultFrom:"theme.base.warning"`
-	Unchanged  Color `defaultFrom:"theme.base.primary"`
-	DryRun     Color `defaultFrom:"theme.base.secondary"`
-	Fallback   Color `defaultFrom:"theme.base.success"`
+	Created    Color `defaultFrom:"theme.base.success"`   // used on `deployment.apps/foo created`
+	Configured Color `defaultFrom:"theme.base.warning"`   // used on `deployment.apps/bar configured`
+	Unchanged  Color `defaultFrom:"theme.base.primary"`   // used on `deployment.apps/quux unchanged`
+	DryRun     Color `defaultFrom:"theme.base.secondary"` // used on `deployment.apps/quux created (dry-run)`
+	Fallback   Color `defaultFrom:"theme.base.success"`   // used when `kubectl apply` outputs unknown format
 }
 
 // ThemeExplain holds colors for the "kubectl explain" output.
 type ThemeExplain struct {
-	Key      ColorSlice `defaultFrom:"theme.base.key"`    // used on keys
+	Key      ColorSlice `defaultFrom:"theme.base.key"`    // used on keys. The multiple colors are cycled based on indentation.
 	Required Color      `defaultFrom:"theme.base.danger"` // used on the trailing "-required-" string
 }
 
@@ -164,7 +164,7 @@ type ThemeOptions struct {
 
 // ThemeVersion holds colors for the "kubectl version" output.
 type ThemeVersion struct {
-	Key ColorSlice `defaultFrom:"theme.base.key"`
+	Key ColorSlice `defaultFrom:"theme.base.key"` // used on the key
 }
 
 func applyViperDefaults(theme *Theme, v *viper.Viper) {
