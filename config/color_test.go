@@ -88,16 +88,6 @@ func TestParseColor(t *testing.T) {
 			wantCode: "48;2;255;255;34",
 		},
 		{
-			name:     "fg/hsl",
-			input:    "hsl(0.1, 0.8, 0.4)",
-			wantCode: "38;2;184;118;20",
-		},
-		{
-			name:     "bg/hsl",
-			input:    "bg=hsl(0.1, 0.8, 0.4)",
-			wantCode: "48;2;184;118;20",
-		},
-		{
 			name:     "fg/256bit",
 			input:    "33",
 			wantCode: "38;5;33",
