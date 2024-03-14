@@ -23,11 +23,12 @@ func NewBaseTheme(preset Preset) *Theme {
 				Success:   MustParseColor("green"),
 				Warning:   MustParseColor("yellow"),
 				Danger:    MustParseColor("red"),
-				Muted:     MustParseColor("yellow"),
+				// TODO: Only set this to "yellow" in "legacy" theme, and instead use "gray:italic" here
+				Muted: MustParseColor("yellow"),
 			},
 			Options: ThemeOptions{
-				// Overriding here because having it default to "warning" is a bit weird.
-				// TODO: Remove this, and add a "legacy" theme preset that uses yellow here
+				// Overriding here to make tests happy
+				// TODO: Only set this to "yellow" in "legacy" theme, and instead rely on defaultFrom
 				Flag: MustParseColor("yellow"),
 			},
 		}
@@ -43,11 +44,12 @@ func NewBaseTheme(preset Preset) *Theme {
 				Success:   MustParseColor("green"),
 				Warning:   MustParseColor("yellow"),
 				Danger:    MustParseColor("red"),
-				Muted:     MustParseColor("yellow"),
+				// TODO: Only set this to "yellow" in "legacy" theme, and instead use "gray:italic" here
+				Muted: MustParseColor("yellow"),
 			},
 			Options: ThemeOptions{
-				// Overriding here because having it default to "warning" is a bit weird.
-				// TODO: Remove this, and add a "legacy" theme preset that uses yellow here
+				// Overriding here to make tests happy
+				// TODO: Only set this to "yellow" in "legacy" theme, and instead rely on defaultFrom
 				Flag: MustParseColor("yellow"),
 			},
 		}
