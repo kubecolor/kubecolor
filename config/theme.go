@@ -144,11 +144,11 @@ type ThemeDescribe struct {
 
 // ThemeApply holds colors for the "kubectl apply" output.
 type ThemeApply struct {
-	Created    Color `defaultFrom:"theme.base.success"`   // used on `deployment.apps/foo created`
-	Configured Color `defaultFrom:"theme.base.warning"`   // used on `deployment.apps/bar configured`
-	Unchanged  Color `defaultFrom:"theme.base.primary"`   // used on `deployment.apps/quux unchanged`
-	DryRun     Color `defaultFrom:"theme.base.secondary"` // used on `deployment.apps/quux created (dry-run)`
-	Fallback   Color `defaultFrom:"theme.base.success"`   // used when `kubectl apply` outputs unknown format
+	Created    Color `defaultFrom:"theme.base.success"`   // used on "deployment.apps/foo created"
+	Configured Color `defaultFrom:"theme.base.warning"`   // used on "deployment.apps/bar configured"
+	Unchanged  Color `defaultFrom:"theme.base.primary"`   // used on "deployment.apps/quux unchanged"
+	DryRun     Color `defaultFrom:"theme.base.secondary"` // used on "deployment.apps/quux created (dry-run)"
+	Fallback   Color `defaultFrom:"theme.base.success"`   // used when "kubectl apply" outputs unknown format
 }
 
 // ThemeExplain holds colors for the "kubectl explain" output.
