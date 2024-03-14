@@ -2,6 +2,7 @@ package config
 
 import (
 	"encoding"
+	"fmt"
 	"strings"
 )
 
@@ -12,11 +13,19 @@ var (
 	_ encoding.TextUnmarshaler = &ColorSlice{}
 )
 
+func MustParseColorSlice(s string) ColorSlice {
+	c, err := ParseColorSlice(s)
+	if err != nil {
+		panic(fmt.Errorf("parse color slice: %w", err))
+	}
+	return c
+}
+
 func ParseColorSlice(s string) (ColorSlice, error) {
 	split := strings.Split(s, "/")
 	slice := make(ColorSlice, len(split))
 	for i, sub := range split {
-		col, err := ParseColor(sub)
+		col, err := ParseColor(strings.TrimSpace(sub))
 		if err != nil {
 			return nil, err
 		}

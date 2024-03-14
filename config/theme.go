@@ -16,12 +16,14 @@ func NewBaseTheme(preset Preset) *Theme {
 		return &Theme{
 			Default: MustParseColor("yellow"),
 			Base: ThemeBase{
+				Key:       MustParseColorSlice("yellow / white"),
 				Info:      MustParseColor("white"),
 				Primary:   MustParseColor("magenta"),
 				Secondary: MustParseColor("cyan"),
 				Success:   MustParseColor("green"),
 				Warning:   MustParseColor("yellow"),
 				Danger:    MustParseColor("red"),
+				Muted:     MustParseColor("yellow"),
 			},
 			Options: ThemeOptions{
 				// Overriding here because having it default to "warning" is a bit weird.
@@ -34,12 +36,14 @@ func NewBaseTheme(preset Preset) *Theme {
 		return &Theme{
 			Default: MustParseColor("yellow"),
 			Base: ThemeBase{
+				Key:       MustParseColorSlice("yellow / black"),
 				Info:      MustParseColor("black"),
 				Primary:   MustParseColor("magenta"),
 				Secondary: MustParseColor("blue"),
 				Success:   MustParseColor("green"),
 				Warning:   MustParseColor("yellow"),
 				Danger:    MustParseColor("red"),
+				Muted:     MustParseColor("yellow"),
 			},
 			Options: ThemeOptions{
 				// Overriding here because having it default to "warning" is a bit weird.
@@ -84,8 +88,9 @@ type ThemeBase struct {
 	Success   Color // general color for when things are good
 	Warning   Color // general color for when things are wrong
 	Danger    Color // general color for when things are bad
+	Muted     Color // general color for when things are less relevant
 
-	Key ColorSlice `defaultFromMany:"theme.base.warning, theme.base.info"` // general color for keys
+	Key ColorSlice `defaultFromMany:"theme.base.secondary"` // general color for keys
 }
 
 // ThemeData holds colors for when representing parsed data.
@@ -96,20 +101,17 @@ type ThemeData struct {
 	True   Color      `defaultFrom:"theme.base.success"` // used when value is true
 	False  Color      `defaultFrom:"theme.base.danger"`  // used when value is false
 	Number Color      `defaultFrom:"theme.base.primary"` // used when the value is a number
-	Null   Color      `defaultFrom:"theme.base.warning"` // used when the value is null, nil, or none
+	Null   Color      `defaultFrom:"theme.base.muted"`   // used when the value is null, nil, or none
 
-	Duration      Color // used when the value is a duration
+	Duration      Color ``                                 // used when the value is a duration
 	DurationFresh Color `defaultFrom:"theme.base.success"` // color used when the time value is under a certain delay
 
 	Ratio ThemeDataRatio
 }
 
 type ThemeDataRatio struct {
-	// TODO: Reevaluate if we should keep these defaults
-	// - Maybe we want a "grayed out"/muted base value to use on 0/0
-	// - Maybe we want success coloring on equal?
-	Zero    Color // used for "0/0"
-	Equal   Color // used for "n/n", e.g "1/1"
+	Zero    Color `defaultFrom:"theme.base.muted"`   // used for "0/0"
+	Equal   Color ``                                 // used for "n/n", e.g "1/1"
 	Unequal Color `defaultFrom:"theme.base.warning"` // used for "n/m", e.g "0/1"
 }
 
@@ -165,16 +167,16 @@ type ThemeVersion struct {
 
 func applyViperDefaults(theme *Theme, v *viper.Viper) {
 	themeVal := reflect.ValueOf(theme).Elem()
-	themeViperApplier{
+	themeViperVisitor{
 		viper: v,
 	}.walkFields(themeVal, "theme")
 }
 
-type themeViperApplier struct {
+type themeViperVisitor struct {
 	viper *viper.Viper
 }
 
-func (t themeViperApplier) walkFields(val reflect.Value, viperKey string) {
+func (t themeViperVisitor) walkFields(val reflect.Value, viperKey string) {
 	typ := val.Type()
 	for i := range val.NumField() {
 		fieldTyp := typ.Field(i)
@@ -182,6 +184,7 @@ func (t themeViperApplier) walkFields(val reflect.Value, viperKey string) {
 			continue
 		}
 		fieldVal := val.Field(i)
+		// e.g "theme" + field "Default" => "theme.default"
 		newViperKey := fmt.Sprintf("%s.%s", viperKey, strings.ToLower(fieldTyp.Name))
 		// Only dig deeper if its a theme struct, e.g ThemeApply
 		if strings.HasPrefix(fieldTyp.Type.Name(), "Theme") {
@@ -189,13 +192,16 @@ func (t themeViperApplier) walkFields(val reflect.Value, viperKey string) {
 			continue
 		}
 		fieldValInterface := fieldVal.Interface()
-		t.applyDefaultsOnField(newViperKey, fieldValInterface, fieldTyp.Tag)
+		t.visitField(newViperKey, fieldValInterface, fieldTyp.Tag)
 	}
 }
 
-func (t themeViperApplier) applyDefaultsOnField(viperKey string, value any, tags reflect.StructTag) {
+func (t themeViperVisitor) visitField(viperKey string, value any, tags reflect.StructTag) {
 	switch value := value.(type) {
 	case Color:
+		if _, ok := tags.Lookup("defaultFromMany"); ok {
+			panic(fmt.Errorf("%s: cannot use defaultFromMany tag on a Color field", viperKey))
+		}
 		if defaultFrom, ok := tags.Lookup("defaultFrom"); ok {
 			t.setColorOrKey(viperKey, value, defaultFrom)
 		} else {
@@ -215,14 +221,14 @@ func (t themeViperApplier) applyDefaultsOnField(viperKey string, value any, tags
 	}
 }
 
-func (t themeViperApplier) setColorOrKey(key string, value Color, otherKey string) {
+func (t themeViperVisitor) setColorOrKey(key string, value Color, otherKey string) {
 	if t.setColor(key, value) {
 		return
 	}
 	t.viper.SetDefault(key, t.viper.Get(otherKey))
 }
 
-func (t themeViperApplier) setColor(key string, value Color) bool {
+func (t themeViperVisitor) setColor(key string, value Color) bool {
 	if value == (Color{}) {
 		t.viper.SetDefault(key, Color{})
 		return false
@@ -231,14 +237,14 @@ func (t themeViperApplier) setColor(key string, value Color) bool {
 	return true
 }
 
-func (t themeViperApplier) setColorSliceOrKey(key string, value []Color, otherKey string) {
+func (t themeViperVisitor) setColorSliceOrKey(key string, value []Color, otherKey string) {
 	if t.setColorSlice(key, value) {
 		return
 	}
 	t.viper.SetDefault(key, t.viper.Get(otherKey))
 }
 
-func (t themeViperApplier) setColorSliceOrManyKeys(key string, value []Color, otherKeys []string) {
+func (t themeViperVisitor) setColorSliceOrManyKeys(key string, value []Color, otherKeys []string) {
 	if t.setColorSlice(key, value) {
 		return
 	}
@@ -254,7 +260,7 @@ func (t themeViperApplier) setColorSliceOrManyKeys(key string, value []Color, ot
 	}
 }
 
-func (t themeViperApplier) setColorSlice(key string, value []Color) bool {
+func (t themeViperVisitor) setColorSlice(key string, value []Color) bool {
 	if len(value) == 0 {
 		t.viper.SetDefault(key, []Color{})
 		return false
