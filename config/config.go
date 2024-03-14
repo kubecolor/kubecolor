@@ -106,6 +106,6 @@ func applyThemePreset(v *viper.Viper) error {
 	}
 	v.Set(PresetKey, preset) // to skip parsing it twice
 	theme := NewBaseTheme(preset)
-	theme.ApplyViperDefaults(v)
+	applyViperDefaults(theme, v)
 	return nil
 }

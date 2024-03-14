@@ -99,3 +99,11 @@ func ParseHumanDuration(ageString string) (time.Duration, bool) {
 	// this means the string contains too many duration elements
 	return 0, false
 }
+
+func SplitAndTrimSpace(s, sep string) []string {
+	split := strings.Split(s, sep)
+	for i := range split {
+		split[i] = strings.TrimSpace(split[i])
+	}
+	return split
+}
