@@ -239,22 +239,26 @@ func (t themeViperVisitor) setColor(key string, value Color) bool {
 	return true
 }
 
-func (t themeViperVisitor) setColorSliceOrKey(key string, value []Color, otherKey string) {
+func (t themeViperVisitor) setColorSliceOrKey(key string, value ColorSlice, otherKey string) {
 	if t.setColorSlice(key, value) {
 		return
 	}
 	t.viper.SetDefault(key, t.viper.Get(otherKey))
 }
 
-func (t themeViperVisitor) setColorSliceOrManyKeys(key string, value []Color, otherKeys []string) {
+func (t themeViperVisitor) setColorSliceOrManyKeys(key string, value ColorSlice, otherKeys []string) {
 	if t.setColorSlice(key, value) {
 		return
 	}
-	values := make([]any, 0, len(otherKeys))
+	values := make(ColorSlice, 0, len(otherKeys))
 	for _, k := range otherKeys {
 		val := t.viper.Get(k)
+		col, ok := val.(Color)
+		if !ok {
+			col = MustParseColor(fmt.Sprint(val))
+		}
 		if val != nil {
-			values = append(values, val)
+			values = append(values, col)
 		}
 	}
 	if len(values) > 0 {
@@ -262,9 +266,9 @@ func (t themeViperVisitor) setColorSliceOrManyKeys(key string, value []Color, ot
 	}
 }
 
-func (t themeViperVisitor) setColorSlice(key string, value []Color) bool {
+func (t themeViperVisitor) setColorSlice(key string, value ColorSlice) bool {
 	if len(value) == 0 {
-		t.viper.SetDefault(key, []Color{})
+		t.viper.SetDefault(key, ColorSlice{})
 		return false
 	}
 	t.viper.SetDefault(key, value)

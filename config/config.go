@@ -77,7 +77,7 @@ func LoadViper() (*viper.Viper, error) {
 }
 
 func Unmarshal(v *viper.Viper) (*Config, error) {
-	if err := applyThemePreset(v); err != nil {
+	if err := ApplyThemePreset(v); err != nil {
 		return nil, err
 	}
 
@@ -92,7 +92,7 @@ func Unmarshal(v *viper.Viper) (*Config, error) {
 	return cfg, nil
 }
 
-func applyThemePreset(v *viper.Viper) error {
+func ApplyThemePreset(v *viper.Viper) error {
 	if env, ok := os.LookupEnv("KUBECOLOR_THEME"); ok {
 		v.Set(PresetKey, env)
 	}

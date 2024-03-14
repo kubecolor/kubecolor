@@ -128,11 +128,11 @@ func parseColorOp(s string) color.Color {
 		return color.OpBlink
 	case "fastblink":
 		return color.OpFastBlink
-	case "reverse", "inverted":
+	case "reverse", "invert", "inverted":
 		return color.OpReverse
 	case "concealed", "hidden", "invisible":
 		return color.OpConcealed
-	case "strikethrough":
+	case "strikethrough", "strike":
 		return color.OpStrikethrough
 	default:
 		return 0
@@ -282,24 +282,12 @@ var (
 // parseColorSyntax is derived from [github.com/gookit/color] package:
 // [https://github.com/gookit/color/blob/9027b9d2a5168ea482a8a8b46711191450514aa3/color_tag.go#L453-L471]
 func parseColorSyntax(s string, isBg bool) (string, error) {
-	if isHexRegex.MatchString(s) { // hex: "#fc1cac"
-		return color.HEX(s, isBg).String(), nil
-	}
-
 	rgb, err := parseColorFunctionRGB(s, isBg)
 	if err != nil {
 		return "", fmt.Errorf("parse rgb(...): %w", err)
 	}
 	if rgb != "" {
 		return rgb, nil
-	}
-
-	hsl, err := parseColorFunctionHSL(s, isBg)
-	if err != nil {
-		return "", fmt.Errorf("parse hsl(...): %w", err)
-	}
-	if hsl != "" {
-		return hsl, nil
 	}
 
 	if strings.Count(s, ",") == 2 {
@@ -317,6 +305,11 @@ func parseColorSyntax(s string, isBg bool) (string, error) {
 			return color.Fg256Pfx + s, nil
 		}
 	}
+
+	if isHexRegex.MatchString(s) { // hex: "#fc1cac"
+		return color.HEX(s, isBg).String(), nil
+	}
+
 	return "", nil
 }
 
@@ -346,29 +339,6 @@ func parseColorFunction(s, name string) ([3]string, bool, error) {
 		strings.TrimSpace(split[1]),
 		strings.TrimSpace(split[2]),
 	}, true, nil
-}
-
-func parseColorFunctionHSL(s string, isBg bool) (string, error) {
-	hsl, ok, err := parseColorFunction(s, "hsl")
-	if err != nil {
-		return "", err
-	}
-	if !ok {
-		return "", nil
-	}
-	hue, err := strconv.ParseFloat(hsl[0], 32)
-	if err != nil {
-		return "", fmt.Errorf("hsl.h: %w", err)
-	}
-	saturation, err := strconv.ParseFloat(hsl[1], 32)
-	if err != nil {
-		return "", fmt.Errorf("hsl.s: %w", err)
-	}
-	lightness, err := strconv.ParseFloat(hsl[2], 32)
-	if err != nil {
-		return "", fmt.Errorf("hsl.l: %w", err)
-	}
-	return color.HSL(hue, saturation, lightness, isBg).FullCode(), nil
 }
 
 func parseColorFunctionRGB(s string, isBg bool) (string, error) {
