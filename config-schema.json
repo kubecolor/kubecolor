@@ -1,0 +1,348 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kubecolor/kubecolor/raw/main/config-schema.json",
+  "$ref": "#/$defs/config",
+  "$defs": {
+    "color": {
+      "type": "string",
+      "title": "Color",
+      "description": "A single color style, optionally setting foreground (text) color, background color, and/or modifier such as 'bold'.",
+      "default": "none",
+      "examples": [
+        "none",
+        "red",
+        "green",
+        "yellow",
+        "blue",
+        "magenta",
+        "cyan",
+        "white",
+        "black",
+        "240",
+        "aaff00",
+        "#aaff00",
+        "rgb(192, 255, 238)",
+        "raw(4;53)",
+        "gray:italic",
+        "fg=white:bold:underline",
+        "fg=yellow:bg=red:bold"
+      ]
+    },
+    "colorSlice": {
+      "type": "string",
+      "title": "Multiple colors",
+      "description": "Allows multiple separate colors to be applied, separated by slash.",
+      "examples": [
+        "red/green/blue",
+        "bg=red:underline/bg=green:italic/bg=blue:bold"
+      ]
+    },
+    "config": {
+      "properties": {
+        "debug": {
+          "type": "boolean"
+        },
+        "kubectl": {
+          "type": "string"
+        },
+        "objFreshThreshold": {
+          "type": "integer"
+        },
+        "preset": {
+          "$ref": "#/$defs/preset"
+        },
+        "theme": {
+          "$ref": "#/$defs/theme"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "preset": {
+      "type": "string",
+      "enum": [
+        "dark",
+        "light",
+        "pre-0.0.21-dark",
+        "pre-0.0.21-light"
+      ],
+      "title": "Color theme preset",
+      "description": "Preset is a set of defaults for the color theme.",
+      "default": "dark"
+    },
+    "theme": {
+      "properties": {
+        "base": {
+          "$ref": "#/$defs/themeBase",
+          "description": "Base colors must be first so they're applied first"
+        },
+        "default": {
+          "$ref": "#/$defs/color",
+          "description": "default when no specific mapping is found for the command"
+        },
+        "data": {
+          "$ref": "#/$defs/themeData",
+          "description": "colors for representing data"
+        },
+        "status": {
+          "$ref": "#/$defs/themeStatus",
+          "description": "generic status coloring (e.g \"Ready\", \"Terminating\")"
+        },
+        "table": {
+          "$ref": "#/$defs/themeTable",
+          "description": "used in table output, e.g \"kubectl get\" and parts of \"kubectl describe\""
+        },
+        "stderr": {
+          "$ref": "#/$defs/themeStderr",
+          "description": "used in kubectl's stderr output"
+        },
+        "describe": {
+          "$ref": "#/$defs/themeDescribe",
+          "description": "used in \"kubectl describe\""
+        },
+        "apply": {
+          "$ref": "#/$defs/themeApply",
+          "description": "used in \"kubectl apply\""
+        },
+        "explain": {
+          "$ref": "#/$defs/themeExplain",
+          "description": "used in \"kubectl explain\""
+        },
+        "options": {
+          "$ref": "#/$defs/themeOptions",
+          "description": "used in \"kubectl options\""
+        },
+        "version": {
+          "$ref": "#/$defs/themeVersion",
+          "description": "used in \"kubectl version\""
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "Theme is the root theme config."
+    },
+    "themeApply": {
+      "properties": {
+        "created": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"deployment.apps/foo created\""
+        },
+        "configured": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"deployment.apps/bar configured\""
+        },
+        "unchanged": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"deployment.apps/quux unchanged\""
+        },
+        "dryRun": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"deployment.apps/quux created (dry-run)\""
+        },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when \"kubectl apply\" outputs unknown format"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeApply holds colors for the \"kubectl apply\" output."
+    },
+    "themeBase": {
+      "properties": {
+        "info": {
+          "$ref": "#/$defs/color",
+          "description": "general color for when things are informational"
+        },
+        "primary": {
+          "$ref": "#/$defs/color",
+          "description": "general color for when things are focus"
+        },
+        "secondary": {
+          "$ref": "#/$defs/color",
+          "description": "general color for when things are secondary focus"
+        },
+        "success": {
+          "$ref": "#/$defs/color",
+          "description": "general color for when things are good"
+        },
+        "warning": {
+          "$ref": "#/$defs/color",
+          "description": "general color for when things are wrong"
+        },
+        "danger": {
+          "$ref": "#/$defs/color",
+          "description": "general color for when things are bad"
+        },
+        "muted": {
+          "$ref": "#/$defs/color",
+          "description": "general color for when things are less relevant"
+        },
+        "key": {
+          "$ref": "#/$defs/colorSlice",
+          "description": "general color for keys"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeBase contains base colors that other theme fields can default to, just to make overriding themes easier."
+    },
+    "themeData": {
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/colorSlice",
+          "description": "used for the key"
+        },
+        "string": {
+          "$ref": "#/$defs/color",
+          "description": "used when value is a string"
+        },
+        "true": {
+          "$ref": "#/$defs/color",
+          "description": "used when value is true"
+        },
+        "false": {
+          "$ref": "#/$defs/color",
+          "description": "used when value is false"
+        },
+        "number": {
+          "$ref": "#/$defs/color",
+          "description": "used when the value is a number"
+        },
+        "null": {
+          "$ref": "#/$defs/color",
+          "description": "used when the value is null, nil, or none"
+        },
+        "duration": {
+          "$ref": "#/$defs/color",
+          "description": "used when the value is a duration, e.g \"12m\""
+        },
+        "durationFresh": {
+          "$ref": "#/$defs/color",
+          "description": "color used when the time value is under a certain delay"
+        },
+        "ratio": {
+          "$ref": "#/$defs/themeDataRatio"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeData holds colors for when representing parsed data."
+    },
+    "themeDataRatio": {
+      "properties": {
+        "zero": {
+          "$ref": "#/$defs/color",
+          "description": "used for \"0/0\""
+        },
+        "equal": {
+          "$ref": "#/$defs/color",
+          "description": "used for \"n/n\", e.g \"1/1\""
+        },
+        "unequal": {
+          "$ref": "#/$defs/color",
+          "description": "used for \"n/m\", e.g \"0/1\""
+        }
+      },
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "themeDescribe": {
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/colorSlice",
+          "description": "used on keys. The multiple colors are cycled based on indentation."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeApply holds colors for the \"kubectl apply\" output."
+    },
+    "themeExplain": {
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/colorSlice",
+          "description": "used on keys. The multiple colors are cycled based on indentation."
+        },
+        "required": {
+          "$ref": "#/$defs/color",
+          "description": "used on the trailing \"-required-\" string"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeExplain holds colors for the \"kubectl explain\" output."
+    },
+    "themeOptions": {
+      "properties": {
+        "flag": {
+          "$ref": "#/$defs/color",
+          "description": "e.g \"--kubeconfig\""
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeOptions holds colors for the \"kubectl options\" output."
+    },
+    "themeStatus": {
+      "properties": {
+        "success": {
+          "$ref": "#/$defs/color",
+          "description": "used in status keywords, e.g \"Running\", \"Ready\""
+        },
+        "warning": {
+          "$ref": "#/$defs/color",
+          "description": "used in status keywords, e.g \"Terminating\""
+        },
+        "error": {
+          "$ref": "#/$defs/color",
+          "description": "used in status keywords, e.g \"Failed\", \"Unhealthy\""
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeStatus holds colors for status texts, used in for example the \"kubectl get\" status column"
+    },
+    "themeStderr": {
+      "properties": {
+        "default": {
+          "$ref": "#/$defs/color",
+          "description": "default when no specific mapping is found for the output line"
+        },
+        "error": {
+          "$ref": "#/$defs/color",
+          "description": "e.g when text contains \"error\""
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeStderr holds generic colors for kubectl's stderr output."
+    },
+    "themeTable": {
+      "properties": {
+        "header": {
+          "$ref": "#/$defs/color",
+          "description": "used on table headers"
+        },
+        "columns": {
+          "$ref": "#/$defs/colorSlice",
+          "description": "used on table columns when no other coloring applies such as status or duration coloring. The multiple colors are cycled based on column ID, from left to right."
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeTable holds colors for table output"
+    },
+    "themeVersion": {
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/colorSlice",
+          "description": "used on the key"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeVersion holds colors for the \"kubectl version\" output."
+    }
+  }
+}
