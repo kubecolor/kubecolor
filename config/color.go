@@ -24,6 +24,9 @@ var (
 
 // String returns the display name of this color.
 func (c Color) String() string {
+	if c.Code == "" {
+		return "none"
+	}
 	return cmp.Or(c.Source, c.Code)
 }
 
@@ -72,6 +75,10 @@ func ParseColor(s string) (Color, error) {
 		field = strings.TrimSpace(field)
 		if field == "" {
 			continue
+		}
+
+		if field == "none" {
+			return Color{}, nil
 		}
 
 		c, err := parseColorField(field)
@@ -244,7 +251,7 @@ func parseColorBgName(s string) color.Color {
 		return color.BgCyan
 	case "white":
 		return color.BgWhite
-	case "default", "normal", "transparent", "none":
+	case "default", "normal", "transparent":
 		return color.BgDefault // no color
 
 	// Light/high colors

@@ -106,7 +106,7 @@ func (tp *TablePrinter) printLineAsTableFormat(w io.Writer, cells []tablescan.Ce
 		c := tp.getColumnBaseColor(i, colorsPreset)
 
 		if tp.ColorDeciderFn != nil {
-			if cc, ok := tp.ColorDeciderFn(i, cell.Trimmed); ok && cc != (config.Color{}) {
+			if cc, ok := tp.ColorDeciderFn(i, cell.Trimmed); ok && cc.Code != "" {
 				c = cc // prior injected deciderFn result
 			}
 		}
