@@ -54,6 +54,60 @@ func NewBaseTheme(preset Preset) *Theme {
 			},
 		}
 
+	case PresetPre0021Dark:
+		return &Theme{
+			Default: MustParseColor("green"),
+			Base: ThemeBase{
+				Key:       MustParseColorSlice("yellow / white"),
+				Info:      MustParseColor("white"),
+				Primary:   MustParseColor("magenta"),
+				Secondary: MustParseColor("cyan"),
+				Success:   MustParseColor("green"),
+				Warning:   MustParseColor("yellow"),
+				Danger:    MustParseColor("red"),
+				Muted:     MustParseColor("yellow"),
+			},
+			Data: ThemeData{
+				String: MustParseColor("cyan"),
+			},
+			Table: ThemeTable{
+				Columns: MustParseColorSlice("cyan / green / magenta / white / yellow"),
+			},
+			Status: ThemeStatus{
+				Success: MustParseColor("none"),
+			},
+			Options: ThemeOptions{
+				Flag: MustParseColor("yellow"),
+			},
+		}
+
+	case PresetPre0021Light:
+		return &Theme{
+			Default: MustParseColor("green"),
+			Base: ThemeBase{
+				Key:       MustParseColorSlice("yellow / black"),
+				Info:      MustParseColor("white"),
+				Primary:   MustParseColor("magenta"),
+				Secondary: MustParseColor("cyan"),
+				Success:   MustParseColor("green"),
+				Warning:   MustParseColor("yellow"),
+				Danger:    MustParseColor("red"),
+				Muted:     MustParseColor("yellow"),
+			},
+			Data: ThemeData{
+				String: MustParseColor("blue"),
+			},
+			Table: ThemeTable{
+				Columns: MustParseColorSlice("cyan / green / magenta / black / yellow / blue"),
+			},
+			Status: ThemeStatus{
+				Success: MustParseColor("none"),
+			},
+			Options: ThemeOptions{
+				Flag: MustParseColor("yellow"),
+			},
+		}
+
 	default:
 		panic(fmt.Sprintf("invalid theme preset: %s", preset))
 	}

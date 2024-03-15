@@ -12,6 +12,9 @@ const (
 	PresetUnknown Preset = iota
 	PresetDark
 	PresetLight
+
+	PresetPre0021Dark
+	PresetPre0021Light
 )
 
 var (
@@ -29,6 +32,10 @@ func (p Preset) String() string {
 		return "dark"
 	case PresetLight:
 		return "light"
+	case PresetPre0021Dark:
+		return "pre-0.0.21-dark"
+	case PresetPre0021Light:
+		return "pre-0.0.21-light"
 	default:
 		return fmt.Sprintf("%[1]T(%[1]d)", p)
 	}
@@ -41,6 +48,10 @@ func ParsePreset(s string) (Preset, error) {
 		return PresetDark, nil
 	case "light":
 		return PresetLight, nil
+	case "pre-0.0.21-dark":
+		return PresetPre0021Dark, nil
+	case "pre-0.0.21-light":
+		return PresetPre0021Light, nil
 	default:
 		return Preset(0), fmt.Errorf("invalid theme preset: %q", s)
 	}
