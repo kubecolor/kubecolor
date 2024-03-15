@@ -25,7 +25,7 @@ type Config struct {
 
 func NewViper() *viper.Viper {
 	v := viper.New()
-	v.SetConfigName("kubecolor")
+	v.SetConfigName("color")
 	v.SetConfigType("yaml")
 
 	v.AutomaticEnv()
@@ -51,7 +51,7 @@ func LoadViper() (*viper.Viper, error) {
 	}
 	if homeDir, err := os.UserHomeDir(); err == nil {
 		// ~/.kube/color.yaml
-		v.AddConfigPath(filepath.Join(homeDir, ".kube", "color"))
+		v.AddConfigPath(filepath.Join(homeDir, ".kube"))
 	}
 
 	if err := v.ReadInConfig(); err != nil {
@@ -88,10 +88,6 @@ func Unmarshal(v *viper.Viper) (*Config, error) {
 }
 
 func ApplyThemePreset(v *viper.Viper) error {
-	if env, ok := os.LookupEnv("KUBECOLOR_THEME"); ok {
-		v.Set(PresetKey, env)
-	}
-
 	preset, err := ParsePreset(v.GetString(PresetKey))
 	if err != nil {
 		return fmt.Errorf("parse preset: %w", err)
