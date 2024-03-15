@@ -39,6 +39,7 @@ func main() {
 			return Namer(t.Name())
 		},
 		RequiredFromJSONSchemaTags: true,
+		ExpandedStruct:             true,
 	}
 
 	r.AddGoComments("github.com/kubecolor/kubecolor", flags.repo)

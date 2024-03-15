@@ -1,7 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/kubecolor/kubecolor/raw/main/config-schema.json",
-  "$ref": "#/$defs/config",
   "$defs": {
     "color": {
       "type": "string",
@@ -36,27 +35,6 @@
         "red/green/blue",
         "bg=red:underline/bg=green:italic/bg=blue:bold"
       ]
-    },
-    "config": {
-      "properties": {
-        "debug": {
-          "type": "boolean"
-        },
-        "kubectl": {
-          "type": "string"
-        },
-        "objFreshThreshold": {
-          "type": "integer"
-        },
-        "preset": {
-          "$ref": "#/$defs/preset"
-        },
-        "theme": {
-          "$ref": "#/$defs/theme"
-        }
-      },
-      "additionalProperties": false,
-      "type": "object"
     },
     "preset": {
       "type": "string",
@@ -344,5 +322,29 @@
       "type": "object",
       "description": "ThemeVersion holds colors for the \"kubectl version\" output."
     }
-  }
+  },
+  "properties": {
+    "kubectl": {
+      "type": "string",
+      "description": "Which kubectl executable to use",
+      "default": "kubectl",
+      "examples": [
+        "kubectl1.19",
+        "oc"
+      ]
+    },
+    "objFreshThreshold": {
+      "type": "integer",
+      "description": "Ages below this uses theme.data.durationfresh coloring"
+    },
+    "preset": {
+      "$ref": "#/$defs/preset",
+      "description": "Color theme preset"
+    },
+    "theme": {
+      "$ref": "#/$defs/theme"
+    }
+  },
+  "additionalProperties": false,
+  "type": "object"
 }
