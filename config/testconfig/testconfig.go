@@ -2,12 +2,23 @@ package testconfig
 
 import (
 	"fmt"
+	"os"
 
+	"github.com/gookit/color"
 	"github.com/kubecolor/kubecolor/config"
 )
 
-var DarkTheme *config.Theme = NewTheme(config.PresetDark)
-var LightTheme *config.Theme = NewTheme(config.PresetLight)
+var DarkTheme *config.Theme
+var LightTheme *config.Theme
+
+func init() {
+	os.Clearenv()
+	color.ForceColor()
+	color.Enable = true
+
+	DarkTheme = NewTheme(config.PresetDark)
+	LightTheme = NewTheme(config.PresetLight)
+}
 
 // NewTheme returns a theme from a preset that's meant to be used in testing.
 func NewTheme(preset config.Preset) *config.Theme {
