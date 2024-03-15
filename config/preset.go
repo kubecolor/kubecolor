@@ -20,6 +20,16 @@ const (
 var (
 	PresetDefault = PresetDark
 
+	// AllPresets is used in places like the internal/cmd/configschema package
+	// to show all available options.
+	AllPresets = []Preset{
+		PresetDark,
+		PresetLight,
+
+		PresetPre0021Dark,
+		PresetPre0021Light,
+	}
+
 	_ encoding.TextMarshaler   = &PresetDefault
 	_ encoding.TextUnmarshaler = &PresetDefault
 )
