@@ -46,17 +46,12 @@ func NewViper() *viper.Viper {
 func LoadViper() (*viper.Viper, error) {
 	v := NewViper()
 
-	// /etc/kubecolor/kubecolor.yaml
-	v.AddConfigPath("/etc/kubecolor/")
+	if path := os.Getenv("KUBECOLOR_CONFIG"); path != "" {
+		v.AddConfigPath(path)
+	}
 	if homeDir, err := os.UserHomeDir(); err == nil {
-		// ~/.kubecolor.yaml
-		v.AddConfigPath(filepath.Join(homeDir, ".kubecolor"))
 		// ~/.kube/color.yaml
 		v.AddConfigPath(filepath.Join(homeDir, ".kube", "color"))
-	}
-	if cfgDir, err := os.UserConfigDir(); err == nil {
-		// ~/.config/kubecolor.yaml
-		v.AddConfigPath(cfgDir + string(os.PathSeparator))
 	}
 
 	if err := v.ReadInConfig(); err != nil {
