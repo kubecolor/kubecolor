@@ -396,6 +396,8 @@ We have some presets that come shipped with kubecolor:
 | ------             | -----------
 | `dark` *(default)* | For when your terminal's background is dark.
 | `light`            | For when your terminal's background is light/bright.
+| `pre-0.0.21-dark`  | Original dark color scheme used before v0.0.21, as well as in the predecessor's ([hidetatz/kubecolor](https://github.com/hidetatz/kubecolor)) version.
+| `pre-0.0.21-light` | Original light color scheme used before v0.0.21, as well as in the predecessor's ([hidetatz/kubecolor](https://github.com/hidetatz/kubecolor)) version.
 
 Selecting preset can be done via the `KUBECOLOR_PRESET` environment variable,
 like so:
