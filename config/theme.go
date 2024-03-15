@@ -14,7 +14,7 @@ func NewBaseTheme(preset Preset) *Theme {
 	switch preset {
 	case PresetDark:
 		return &Theme{
-			Default: MustParseColor("yellow"),
+			Default: MustParseColor("green"),
 			Base: ThemeBase{
 				Key:       MustParseColorSlice("yellow / white"),
 				Info:      MustParseColor("white"),
@@ -35,7 +35,7 @@ func NewBaseTheme(preset Preset) *Theme {
 
 	case PresetLight:
 		return &Theme{
-			Default: MustParseColor("yellow"),
+			Default: MustParseColor("green"),
 			Base: ThemeBase{
 				Key:       MustParseColorSlice("yellow / black"),
 				Info:      MustParseColor("black"),

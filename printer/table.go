@@ -125,7 +125,10 @@ func (tp *TablePrinter) getColumnBaseColor(index int, colorsPreset []config.Colo
 		return config.Color{}
 	}
 	if tp.hasLeadingNamespaceColumn {
-		index++
+		index--
+		if index < 0 {
+			index += len(colorsPreset)
+		}
 	}
 	return colorsPreset[index%len(colorsPreset)]
 }

@@ -26,7 +26,12 @@ you can use kubecolor as a complete alternative of kubectl. It means you can wri
 
 ```sh
 alias kubectl="kubecolor"
+
+# Also works for OpenShift CLI
+export KUBECTL_COMMAND="oc"
+alias oc="kubecolor"
 ```
+
 If you use your .bash_profile on more than one computer (e.g. synced via git) that might not all have `kubecolor`
 installed, you can avoid breaking `kubectl` like so:
 
@@ -164,7 +169,7 @@ Please also refer to [kubectl official doc for kubectl autocomplete](https://kub
 
 #### Bash
 
-For Bash, configuring autocompletion requires adding following line in your shell config file.
+For Bash, configuring autocompletion requires adding following line in your shell config file (e.g `~/.bashrc`).
 
 ```shell
 # autocomplete for kubecolor
@@ -179,7 +184,7 @@ complete -o default -F __start_kubectl k
 
 #### Zsh
 
-For zsh make sure these lines are present in your zsh config file:
+For zsh make sure these lines are present in your zsh config file (e.g `~/.zshrc`):
 
 ```shell
 # get zsh complete kubectl
@@ -198,21 +203,44 @@ However, there are 2 ways we can make them work. Please keep in mind these are a
 1. Use [evanlucas/fish-kubectl-completions](https://github.com/evanlucas/fish-kubectl-completions) with `kubecolor`:
 
    * Install `kubectl` completions (https://github.com/evanlucas/fish-kubectl-completions):
-      ```
+
+      ```fish
       fisher install evanlucas/fish-kubectl-completions
       ```
-   * Add the following function to your `config.fish` file:
-      ```
+
+   * Add the following function to your `~/.config/fish/config.fish` file:
+
+      ```fish
       function kubectl
         kubecolor $argv
       end
       ```
+
 2. Use [awinecki/fish-kubecolor-completions](https://github.com/awinecki/fish-kubecolor-completions)
 
    The first way will override `kubectl` command. If you wish to preserve both `kubectl` and `kubecolor` with completions, you need to copy [evanlucas/fish-kubectl-completions](https://github.com/evanlucas/fish-kubectl-completions) for the `kubecolor` command.
 
    For this purpose, you can use [awinecki/fish-kubecolor-completions](https://github.com/awinecki/fish-kubecolor-completions).
 
+#### PowerShell
+
+For PowerShell (pwsh) add the following lines to your profile
+(`$PROFILE`, e.g `C:\Users\yourusername\Documents\PowerShell\Microsoft.PowerShell_profile.ps1`):
+
+```powershell
+# Completion for kubectl
+if (Get-Command kubectl -ErrorAction SilentlyContinue) {
+  # This also registers the $__kubectlCompleterBlock variable
+  kubectl completion powershell | Out-String | Invoke-Expression
+}
+
+# Set aliases
+Set-Alias -Name k -Value kubectl
+Set-Alias -Name kubectl -Value kubecolor
+
+# Reuse the kubectl completion on kubecolor and the aliases
+Register-ArgumentCompleter -CommandName 'k','kubectl','kubecolor' -ScriptBlock $__kubectlCompleterBlock
+```
 
 ### Specify what command to execute as kubectl
 
