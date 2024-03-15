@@ -346,15 +346,15 @@ a colon `:`, like so: `fg=red:bg=blue`
 
 In addition, you can also apply style modifiers:
 
-- `bold`, or `b`: Bold text styling, **such as this**
-- `fuzzy`: Faint text style (inverse of bold)
-- `italic`, `i`: Italic text, *such as this*
-- `underline`, or `u`: Underlined text, <ins>such as this</ins>
-- `blink`: Blinking text. Not widely supported by terminals.
-- `fastblink`: Rapid blinking text. Not widely supported by terminals.
-- `reverse`, `invert`: Swaps foreground and background colors
-- `concealed`, `hidden`, `invisible`: Hidden text. Not widely supported.
-- `strikethrough`: Crossed out text, <del>such as this</del>
+* `bold`, or `b`: Bold text styling, **such as this**
+* `fuzzy`: Faint text style (inverse of bold)
+* `italic`, `i`: Italic text, *such as this*
+* `underline`, or `u`: Underlined text, <ins>such as this</ins>
+* `blink`: Blinking text. Not widely supported by terminals.
+* `fastblink`: Rapid blinking text. Not widely supported by terminals.
+* `reverse`, `invert`: Swaps foreground and background colors
+* `concealed`, `hidden`, `invisible`: Hidden text. Not widely supported.
+* `strikethrough`: Crossed out text, <del>such as this</del>
 
 Here are some examples of settings colors as environment variables:
 
@@ -386,6 +386,26 @@ background color with some style modifiers instead:
 
 ```bash
 export KUBECOLOR_THEME_TABLE_COLUMNS=bg=red:underline/bg=green:italic/bg=blue:bold
+```
+
+#### Color theme presets
+
+We have some presets that come shipped with kubecolor:
+
+| Preset             | Description
+| ------             | -----------
+| `dark` *(default)* | For when your terminal's background is dark.
+| `light`            | For when your terminal's background is light/bright.
+
+Selecting preset can be done via the `KUBECOLOR_PRESET` environment variable,
+like so:
+
+```bash
+# Set color theme to dark
+export KUBECOLOR_PRESET=dark
+
+# Set color theme to light
+export KUBECOLOR_PRESET=light
 ```
 
 ## Supported kubectl version
