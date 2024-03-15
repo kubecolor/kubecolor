@@ -1,0 +1,24 @@
+name: lint
+on:
+  push:
+    branches:
+      - "main"
+  pull_request: {}
+
+jobs:
+  config-schema:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: make schema
+        run: make config-schema.json
+
+      - name: Git diff
+        run: git diff --exit-code
