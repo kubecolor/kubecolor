@@ -359,9 +359,9 @@ In addition, you can also apply style modifiers:
 Here are some examples of settings colors as environment variables:
 
 ```bash
-export KUBECOLOR_THEME_DATA_NULL=gray:italic
-export KUBECOLOR_THEME_TABLE_HEADER=fg=white:bold:underline
-export KUBECOLOR_THEME_STDERR_ERROR=fg=yellow:bg=red:bold
+export KUBECOLOR_THEME_DATA_NULL="gray:italic"
+export KUBECOLOR_THEME_TABLE_HEADER="fg=white:bold:underline"
+export KUBECOLOR_THEME_STDERR_ERROR="fg=yellow:bg=red:bold"
 export KUBECOLOR_THEME_STDERR_ERROR="#c0ffee"
 ```
 
@@ -375,7 +375,7 @@ The colors are separated by a slash `/`.
 Example:
 
 ```bash
-export KUBECOLOR_THEME_TABLE_COLUMNS=red/green/blue
+export KUBECOLOR_THEME_TABLE_COLUMNS="red/green/blue"
 ```
 
 Above represents a `color[]` value of 3 colors, where your columns'
@@ -385,7 +385,7 @@ You can of course use any color syntax, to for example have it cycle on
 background color with some style modifiers instead:
 
 ```bash
-export KUBECOLOR_THEME_TABLE_COLUMNS=bg=red:underline/bg=green:italic/bg=blue:bold
+export KUBECOLOR_THEME_TABLE_COLUMNS="bg=red:underline/bg=green:italic/bg=blue:bold"
 ```
 
 ### Color theme presets
@@ -402,10 +402,10 @@ like so:
 
 ```bash
 # Set color theme to dark
-export KUBECOLOR_PRESET=dark
+export KUBECOLOR_PRESET="dark"
 
 # Set color theme to light
-export KUBECOLOR_PRESET=light
+export KUBECOLOR_PRESET="light"
 ```
 
 ## Supported kubectl version
