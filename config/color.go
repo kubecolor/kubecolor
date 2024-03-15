@@ -291,6 +291,14 @@ func parseColorSyntax(s string, isBg bool) (string, error) {
 		return rgb, nil
 	}
 
+	raw, err := parseColorFunction(s, "raw")
+	if err != nil {
+		return "", fmt.Errorf("parse raw(...): %w", err)
+	}
+	if raw != "" {
+		return raw, nil
+	}
+
 	if strings.Count(s, ",") == 2 {
 		// parse again as rgb, but treat "255, 200, 100" as "rgb(255, 200, 100)"
 		// but discard errors, as this is not a precise syntax
@@ -315,12 +323,9 @@ func parseColorSyntax(s string, isBg bool) (string, error) {
 }
 
 func parseColorFunctionRGB(s string, isBg bool) (string, error) {
-	rgbStr, ok, err := parseColorFunction(s, "rgb")
-	if err != nil {
+	rgbStr, err := parseColorFunction(s, "rgb")
+	if err != nil || rgbStr == "" {
 		return "", err
-	}
-	if !ok {
-		return "", nil
 	}
 	rgb, err := parse3Uints(rgbStr, 8)
 	if err != nil {
@@ -333,20 +338,23 @@ func parseColorFunctionRGB(s string, isBg bool) (string, error) {
 //
 //	rgb(255, 222, 100) => "255, 222, 100"
 //	hsl(0.5, 0.5, 0.5) => "0.5, 0.5, 0.5"
-func parseColorFunction(s, name string) (string, bool, error) {
+func parseColorFunction(s, name string) (string, error) {
 	withoutName, ok := strings.CutPrefix(s, name)
 	if !ok {
-		return "", false, nil
+		return "", nil
 	}
 	withoutStart, ok := strings.CutPrefix(withoutName, "(")
 	if !ok {
-		return "", true, fmt.Errorf(`missing opening parentheses "(": got %q`, s)
+		return "", fmt.Errorf(`missing opening parentheses "(": got %q`, s)
 	}
 	onlyValues, ok := strings.CutSuffix(withoutStart, ")")
 	if !ok {
-		return "", true, fmt.Errorf(`missing closing parentheses ")": got %q`, s)
+		return "", fmt.Errorf(`missing closing parentheses ")": got %q`, s)
 	}
-	return onlyValues, true, nil
+	if strings.TrimSpace(onlyValues) == "" {
+		return "", fmt.Errorf("color function must not be empty")
+	}
+	return onlyValues, nil
 }
 
 func parse3Uints(s string, bitSize int) ([3]uint64, error) {

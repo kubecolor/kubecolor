@@ -332,6 +332,11 @@ you specify one of:
   * `192, 255, 238`
   * `rgb(192, 255, 238)`
 
+* Raw escape data, in case you know what escape code you're looking for.
+
+  * `raw(53)` (overlined)
+  * `raw(4;53)` (underlined & overlined)
+
 By default the value refers to the foreground color (text color).
 The full syntax would be `fg=red`
 But you can also set the background color by adding in `bg=`, such as `bg=blue`.
