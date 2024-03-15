@@ -1,50 +1,42 @@
 package printer
 
 import (
-	"bufio"
 	"fmt"
 	"io"
-	"strings"
+	"slices"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/scanner/describe"
 )
 
 type OptionsPrinter struct {
-	DarkBackground bool
+	Theme *config.Theme
 }
 
 func (op *OptionsPrinter) Print(r io.Reader, w io.Writer) {
-	scanner := bufio.NewScanner(r)
-	isFirstLine := true
+	scanner := describe.NewScanner(r)
 	for scanner.Scan() {
-		line := scanner.Text()
+		line := scanner.Line()
 
-		if line == "" {
+		if line.IsZero() {
 			fmt.Fprintln(w)
 			continue
 		}
 
-		if isFirstLine {
-			fmt.Fprintf(w, "%s\n", color.Apply(line, op.firstLineColor()))
-			isFirstLine = false
+		if len(scanner.Path()) == 2 {
+			val := string(line.Value)
+			fmt.Fprintf(w, "%s%s%s%s%s\n",
+				line.Indent,
+				op.Theme.Options.Flag.Render(string(line.Key)),
+				line.Spacing,
+				getColorByValueType(val, op.Theme).Render(val),
+				line.Trailing)
 			continue
 		}
 
-		indentCnt := findIndent(line)
-		indent := toSpaces(indentCnt)
-		trimmedLine := strings.TrimLeft(line, " ")
-
-		splitted := strings.SplitN(trimmedLine, ": ", 2)
-		key, val := splitted[0], splitted[1]
-
-		fmt.Fprintf(w, "%s%s: %s\n", indent, color.Apply(key, getColorByKeyIndent(0, 2, op.DarkBackground)), color.Apply(val, getColorByValueType(val, op.DarkBackground)))
+		fmt.Fprintf(w, "%s%s%s\n",
+			line.Indent,
+			op.Theme.Data.String.Render(string(slices.Concat(line.Key, line.Spacing, line.Value))),
+			line.Trailing)
 	}
-}
-
-func (op *OptionsPrinter) firstLineColor() color.Color {
-	if op.DarkBackground {
-		return StringColorForDark
-	}
-
-	return StringColorForLight
 }

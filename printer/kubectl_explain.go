@@ -6,13 +6,14 @@ import (
 	"io"
 	"strings"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/scanner/describe"
 )
 
 // ExplainPrinter is a specific printer to print kubectl explain format.
 type ExplainPrinter struct {
 	DarkBackground bool
+	Theme          *config.Theme
 	Recursive      bool
 }
 
@@ -29,9 +30,9 @@ func (ep *ExplainPrinter) Print(r io.Reader, w io.Writer) {
 			keyColor := ep.keyColor(line, isFields)
 			key := string(line.Key)
 			if withoutColon, ok := strings.CutSuffix(key, ":"); ok {
-				fmt.Fprint(w, color.Apply(withoutColon, keyColor), ":")
+				fmt.Fprint(w, keyColor.Render(withoutColon), ":")
 			} else {
-				fmt.Fprint(w, color.Apply(key, keyColor))
+				fmt.Fprint(w, keyColor.Render(key))
 			}
 		}
 		fmt.Fprintf(w, "%s", line.Spacing)
@@ -40,23 +41,19 @@ func (ep *ExplainPrinter) Print(r io.Reader, w io.Writer) {
 	}
 }
 
-func (ep *ExplainPrinter) keyColor(line describe.Line, isFields bool) color.Color {
+func (ep *ExplainPrinter) keyColor(line describe.Line, isFields bool) config.Color {
 	if ep.Recursive && isFields {
-		return getColorByKeyIndent(line.KeyIndent(), 2, ep.DarkBackground)
+		return getColorByKeyIndent(line.KeyIndent(), 2, ep.Theme.Explain.Key)
 	}
 
-	return getColorByKeyIndent(0, 2, ep.DarkBackground)
+	return getColorByKeyIndent(0, 2, ep.Theme.Explain.Key)
 }
 
 func (ep *ExplainPrinter) printVal(w io.Writer, val string) {
 	const suffix = "-required-"
 	if withoutSuffix, ok := strings.CutSuffix(val, suffix); ok {
 		fmt.Fprint(w, withoutSuffix)
-		if ep.DarkBackground {
-			fmt.Fprint(w, color.Apply(suffix, RequiredColorForDark))
-		} else {
-			fmt.Fprint(w, color.Apply(suffix, RequiredColorForLight))
-		}
+		fmt.Fprint(w, ep.Theme.Explain.Required.Render(suffix))
 		return
 	}
 	fmt.Fprint(w, val)

@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 )
 
 // WithFuncPrinter is a printer to print something based on injected logic.
 type WithFuncPrinter struct {
-	Fn func(line string) color.Color
+	Fn func(line string) config.Color
 }
 
 // Print reads r then writes it in w but its color is decided by
@@ -21,6 +21,6 @@ func (wp *WithFuncPrinter) Print(r io.Reader, w io.Writer) {
 	for scanner.Scan() {
 		line := scanner.Text()
 		c := wp.Fn(line)
-		fmt.Fprintf(w, "%s\n", color.Apply(line, c))
+		fmt.Fprintf(w, "%s\n", c.Render(line))
 	}
 }

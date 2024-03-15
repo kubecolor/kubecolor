@@ -6,35 +6,11 @@ import (
 	"io"
 	"strings"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 )
 
 type ApplyPrinter struct {
-	DarkBackground bool
-}
-
-const (
-	applyActionCreatedStr    = "created"
-	applyActionConfiguredStr = "configured"
-	applyActionUnchangedStr  = "unchanged"
-
-	applyDryRunStr       = "(dry run)"
-	applyDryRunServerStr = "(server dry run)"
-)
-
-var applyDarkColors = map[string]color.Color{
-	applyActionCreatedStr:    color.Green,
-	applyActionConfiguredStr: color.Yellow,
-	applyActionUnchangedStr:  color.Magenta,
-	applyDryRunStr:           color.Cyan,
-	applyDryRunServerStr:     color.Cyan,
-}
-var applyLightColors = map[string]color.Color{
-	applyActionCreatedStr:    color.Green,
-	applyActionConfiguredStr: color.Yellow,
-	applyActionUnchangedStr:  color.Magenta,
-	applyDryRunStr:           color.Blue,
-	applyDryRunServerStr:     color.Cyan,
+	Theme *config.Theme
 }
 
 // kubectl apply
@@ -52,7 +28,7 @@ func (ap *ApplyPrinter) Print(r io.Reader, w io.Writer) {
 
 		formatted := ap.formatColoredLine(line)
 		if formatted == "" {
-			fmt.Fprintln(w, color.Apply(line, color.Green))
+			fmt.Fprintln(w, ap.Theme.Apply.Fallback.Render(line))
 			continue
 		}
 
@@ -71,21 +47,27 @@ func (ap *ApplyPrinter) formatColoredLine(line string) string {
 		return ""
 	}
 	if !hasDryRun {
-		return fmt.Sprintf("%s %s", resource, color.Apply(action, actionColor))
+		return fmt.Sprintf("%s %s", resource, actionColor.Render(action))
 	}
 	dryRun := strings.TrimPrefix(after, " ")
 	dryRunColor, dryRunOk := ap.getColorFor(dryRun)
 	if !dryRunOk {
 		return ""
 	}
-	return fmt.Sprintf("%s %s %s", resource, color.Apply(action, actionColor), color.Apply(dryRun, dryRunColor))
+	return fmt.Sprintf("%s %s %s", resource, actionColor.Render(action), dryRunColor.Render(dryRun))
 }
 
-func (ap *ApplyPrinter) getColorFor(action string) (color.Color, bool) {
-	if ap.DarkBackground {
-		c, ok := applyDarkColors[action]
-		return c, ok
+func (ap *ApplyPrinter) getColorFor(action string) (config.Color, bool) {
+	switch action {
+	case "created":
+		return ap.Theme.Apply.Created, true
+	case "configured":
+		return ap.Theme.Apply.Configured, true
+	case "unchanged":
+		return ap.Theme.Apply.Unchanged, true
+	case "(dry run)", "(server dry run)":
+		return ap.Theme.Apply.DryRun, true
+	default:
+		return config.Color{}, false
 	}
-	c, ok := applyLightColors[action]
-	return c, ok
 }

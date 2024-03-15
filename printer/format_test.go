@@ -3,8 +3,8 @@ package printer
 import (
 	"testing"
 
-	"github.com/google/go-cmp/cmp"
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/config/testconfig"
 )
 
 func Test_toSpaces(t *testing.T) {
@@ -16,23 +16,23 @@ func Test_toSpaces(t *testing.T) {
 func Test_getColorByKeyIndent(t *testing.T) {
 	tests := []struct {
 		name             string
-		dark             bool
+		theme            *config.Theme
 		indent           int
 		basicIndentWidth int
-		expected         color.Color
+		expected         string
 	}{
-		{"dark depth: 1", true, 2, 2, color.White},
-		{"light depth: 1", false, 2, 2, color.Black},
-		{"dark depth: 2", true, 4, 2, color.Yellow},
-		{"light depth: 2", false, 4, 2, color.Yellow},
+		{"dark depth: 1", testconfig.DarkTheme, 2, 2, "white"},
+		{"light depth: 1", testconfig.LightTheme, 2, 2, "black"},
+		{"dark depth: 2", testconfig.DarkTheme, 4, 2, "yellow"},
+		{"light depth: 2", testconfig.LightTheme, 4, 2, "yellow"},
 	}
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got := getColorByKeyIndent(tt.indent, tt.basicIndentWidth, tt.dark)
-			if got != tt.expected {
-				t.Errorf("fail: got: %v, expected: %v", got, tt.expected)
+			got := getColorByKeyIndent(tt.indent, tt.basicIndentWidth, tt.theme.Base.Key)
+			if got.String() != tt.expected {
+				t.Errorf("fail: got: %q, expected: %q", got, tt.expected)
 			}
 		})
 	}
@@ -41,73 +41,31 @@ func Test_getColorByKeyIndent(t *testing.T) {
 func Test_getColorByValueType(t *testing.T) {
 	tests := []struct {
 		name     string
-		dark     bool
+		theme    *config.Theme
 		val      string
-		expected color.Color
+		expected string
 	}{
-		{"dark null", true, "null", NullColorForDark},
-		{"light null", false, "<none>", NullColorForLight},
+		{"dark null", testconfig.DarkTheme, "null", "yellow"},
+		{"light null", testconfig.LightTheme, "<none>", "yellow"},
 
-		{"dark true", true, "true", TrueColorForDark},
-		{"light true", false, "true", TrueColorForLight},
+		{"dark true", testconfig.DarkTheme, "true", "green"},
+		{"light true", testconfig.LightTheme, "true", "green"},
 
-		{"dark false", true, "false", FalseColorForDark},
-		{"light false", false, "false", FalseColorForLight},
+		{"dark false", testconfig.DarkTheme, "false", "red"},
+		{"light false", testconfig.LightTheme, "false", "red"},
 
-		{"dark number", true, "123", NumberColorForDark},
-		{"light number", false, "456", NumberColorForLight},
+		{"dark number", testconfig.DarkTheme, "123", "magenta"},
+		{"light number", testconfig.LightTheme, "456", "magenta"},
 
-		{"dark string", true, "aaa", StringColorForDark},
-		{"light string", false, "12345a", StringColorForLight},
+		{"dark string", testconfig.DarkTheme, "aaa", "white"},
+		{"light string", testconfig.LightTheme, "12345a", "black"},
 	}
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got := getColorByValueType(tt.val, tt.dark)
-			if got != tt.expected {
-				t.Errorf("fail: got: %v, expected: %v", got, tt.expected)
-			}
-		})
-	}
-}
-
-func Test_getColorsByBackground(t *testing.T) {
-	tests := []struct {
-		name     string
-		dark     bool
-		expected []color.Color
-	}{
-		{"dark", true, colorsForDarkBackground},
-		{"light", false, colorsForLightBackground},
-	}
-	for _, tt := range tests {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			got := getColorsByBackground(tt.dark)
-			if diff := cmp.Diff(got, tt.expected); diff != "" {
-				t.Errorf("fail: %v", diff)
-			}
-		})
-	}
-}
-
-func Test_getHeaderColorByBackground(t *testing.T) {
-	tests := []struct {
-		name     string
-		dark     bool
-		expected color.Color
-	}{
-		{"dark", true, HeaderColorForDark},
-		{"light", false, HeaderColorForLight},
-	}
-	for _, tt := range tests {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			got := getHeaderColorByBackground(tt.dark)
-			if got != tt.expected {
+			got := getColorByValueType(tt.val, tt.theme)
+			if got.String() != tt.expected {
 				t.Errorf("fail: got: %v, expected: %v", got, tt.expected)
 			}
 		})

@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/kubectl"
 	"github.com/kubecolor/kubecolor/printer"
 	"github.com/mattn/go-colorable"
@@ -27,34 +27,39 @@ type Printers struct {
 }
 
 // This is defined here to be replaced in test
-var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, darkBackground bool, objFreshThreshold time.Duration) *Printers {
+var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, objFreshThreshold time.Duration, theme *config.Theme) *Printers {
 	return &Printers{
 		FullColoredPrinter: &printer.KubectlOutputColoredPrinter{
 			SubcommandInfo:    subcommandInfo,
-			DarkBackground:    darkBackground,
 			Recursive:         subcommandInfo.Recursive,
 			ObjFreshThreshold: objFreshThreshold,
+			Theme:             theme,
 		},
 		ErrorPrinter: &printer.WithFuncPrinter{
-			Fn: func(line string) color.Color {
+			Fn: func(line string) config.Color {
 				if strings.HasPrefix(strings.ToLower(line), "error") {
-					return color.Red
+					return theme.Stderr.Error
 				}
 
-				return color.Yellow
+				return theme.Stderr.Default
 			},
 		},
 	}
 }
 
 func Run(args []string, version string) error {
-	args, config := ResolveConfig(args)
-	shouldColorize, subcommandInfo := ResolveSubcommand(args, config)
+	config, err := ResolveConfig(args)
+	if err != nil {
+		return fmt.Errorf("resolve config: %w", err)
+	}
+	args = config.ArgsPassthrough
 
 	if config.ShowKubecolorVersion {
 		fmt.Fprintf(os.Stdout, "%s\n", version)
 		return nil
 	}
+
+	shouldColorize, subcommandInfo := ResolveSubcommand(args, config)
 
 	cmd := exec.Command(config.KubectlCmd, args...)
 	cmd.Stdin = os.Stdin
@@ -94,7 +99,7 @@ func Run(args []string, version string) error {
 		return err
 	}
 
-	printers := getPrinters(subcommandInfo, config.DarkBackground, config.ObjFreshThreshold)
+	printers := getPrinters(subcommandInfo, config.ObjFreshThreshold, config.Theme)
 
 	wg := &sync.WaitGroup{}
 
@@ -103,7 +108,8 @@ func Run(args []string, version string) error {
 		defer wg.Done()
 		defer func() {
 			if r := recover(); r != nil {
-				fmt.Fprintf(os.Stdout, buff.String())
+				fmt.Fprintf(os.Stderr, "[kubecolor] [ERROR] Recovered from panic: %v\n", r)
+				fmt.Fprint(os.Stdout, buff.String())
 			}
 		}()
 
@@ -122,7 +128,7 @@ func Run(args []string, version string) error {
 
 	// inherit the kubectl exit code
 	if err := cmd.Wait(); err != nil {
-		return fmt.Errorf("%w", &KubectlError{ExitCode: cmd.ProcessState.ExitCode()})
+		return &KubectlError{ExitCode: cmd.ProcessState.ExitCode()}
 	}
 
 	return nil

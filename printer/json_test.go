@@ -5,19 +5,21 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/config/testconfig"
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
 func Test_JsonPrinter_Print(t *testing.T) {
 	tests := []struct {
-		name           string
-		darkBackground bool
-		input          string
-		expected       string
+		name     string
+		theme    *config.Theme
+		input    string
+		expected string
 	}{
 		{
-			name:           "values can be colored by its type",
-			darkBackground: true,
+			name:  "values can be colored by its type",
+			theme: testconfig.DarkTheme,
 			input: testutil.NewHereDoc(`
 				{
 				    "apiVersion": "v1",
@@ -28,17 +30,17 @@ func Test_JsonPrinter_Print(t *testing.T) {
 				}`),
 			expected: testutil.NewHereDoc(`
 				{
-				    "[37mapiVersion[0m": "[37mv1[0m",
-				    "[37mkind[0m": "[37mPod[0m",
-				    "[37mnum[0m": [35m598[0m,
-				    "[37mbool[0m": [32mtrue[0m,
-				    "[37mnull[0m": [33mnull[0m
+				    "\e[37mapiVersion\e[0m": "\e[37mv1\e[0m",
+				    "\e[37mkind\e[0m": "\e[37mPod\e[0m",
+				    "\e[37mnum\e[0m": \e[35m598\e[0m,
+				    "\e[37mbool\e[0m": \e[32mtrue\e[0m,
+				    "\e[37mnull\e[0m": \e[33mnull\e[0m
 				}
 			`),
 		},
 		{
-			name:           "keys can be colored by its indentation level",
-			darkBackground: true,
+			name:  "keys can be colored by its indentation level",
+			theme: testconfig.DarkTheme,
 			input: testutil.NewHereDoc(`
 				{
 				    "k1": "v1",
@@ -52,20 +54,20 @@ func Test_JsonPrinter_Print(t *testing.T) {
 				}`),
 			expected: testutil.NewHereDoc(`
 				{
-				    "[37mk1[0m": "[37mv1[0m",
-				    "[37mk2[0m": {
-				        "[33mk3[0m": "[37mv3[0m",
-				        "[33mk4[0m": {
-				            "[37mk5[0m": "[37mv5[0m"
+				    "\e[37mk1\e[0m": "\e[37mv1\e[0m",
+				    "\e[37mk2\e[0m": {
+				        "\e[33mk3\e[0m": "\e[37mv3\e[0m",
+				        "\e[33mk4\e[0m": {
+				            "\e[37mk5\e[0m": "\e[37mv5\e[0m"
 				        },
-				        "[33mk6[0m": "[37mv6[0m"
+				        "\e[33mk6\e[0m": "\e[37mv6\e[0m"
 				    }
 				}
 			`),
 		},
 		{
-			name:           "{} and [] are not colorized",
-			darkBackground: true,
+			name:  "{} and [] are not colorized",
+			theme: testconfig.DarkTheme,
 			input: testutil.NewHereDoc(`
 				{
 				    "apiVersion": "v1",
@@ -83,17 +85,17 @@ func Test_JsonPrinter_Print(t *testing.T) {
 				}`),
 			expected: testutil.NewHereDoc(`
 				{
-				    "[37mapiVersion[0m": "[37mv1[0m",
-				    "[37mkind[0m": {
-				        "[33mk2[0m": [
-				            "[37ma[0m",
-				            "[37mb[0m",
-				            "[37mc[0m"
+				    "\e[37mapiVersion\e[0m": "\e[37mv1\e[0m",
+				    "\e[37mkind\e[0m": {
+				        "\e[33mk2\e[0m": [
+				            "\e[37ma\e[0m",
+				            "\e[37mb\e[0m",
+				            "\e[37mc\e[0m"
 				        ],
-				        "[33mk3[0m": {
-				            "[37mk4[0m": "[37mval[0m"
+				        "\e[33mk3\e[0m": {
+				            "\e[37mk4\e[0m": "\e[37mval\e[0m"
 				        },
-				        "[33mk5[0m": {}
+				        "\e[33mk5\e[0m": {}
 				    }
 				}
 			`),
@@ -105,7 +107,7 @@ func Test_JsonPrinter_Print(t *testing.T) {
 			t.Parallel()
 			r := strings.NewReader(tt.input)
 			var w bytes.Buffer
-			printer := JsonPrinter{DarkBackground: tt.darkBackground}
+			printer := JsonPrinter{Theme: tt.theme}
 			printer.Print(r, &w)
 			testutil.MustEqual(t, tt.expected, w.String())
 		})

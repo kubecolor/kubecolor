@@ -6,22 +6,23 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/kubecolor/kubecolor/color"
+	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/scanner/tablescan"
 )
 
 type TablePrinter struct {
 	WithHeader     bool
 	DarkBackground bool
-	ColorDeciderFn func(index int, column string) (color.Color, bool)
+	Theme          *config.Theme
+	ColorDeciderFn func(index int, column string) (config.Color, bool)
 
 	hasLeadingNamespaceColumn bool
 }
 
-func NewTablePrinter(withHeader, darkBackground bool, colorDeciderFn func(index int, column string) (color.Color, bool)) *TablePrinter {
+func NewTablePrinter(withHeader bool, theme *config.Theme, colorDeciderFn func(index int, column string) (config.Color, bool)) *TablePrinter {
 	return &TablePrinter{
 		WithHeader:     withHeader,
-		DarkBackground: darkBackground,
+		Theme:          theme,
 		ColorDeciderFn: colorDeciderFn,
 	}
 }
@@ -35,9 +36,16 @@ func (tp *TablePrinter) Print(r io.Reader, w io.Writer) {
 			fmt.Fprint(w, "\n")
 			continue
 		}
-		if (tp.WithHeader && isFirstLine) || isAllCellsUpper(cells) {
+		peekNextLine, hasNextLine := scanner.PeekText()
+		if (tp.WithHeader && isFirstLine) ||
+			isAllUpper(scanner.Text()) ||
+			(hasNextLine && isOnlySymbols(peekNextLine)) ||
+			isOnlySymbols(scanner.Text()) {
+
 			isFirstLine = false
-			fmt.Fprintf(w, "%s\n", color.Apply(scanner.Text(), getHeaderColorByBackground(tp.DarkBackground)))
+			leadingSpaces := scanner.LeadingSpaces()
+			withoutSpaces := scanner.Text()[len(leadingSpaces):]
+			fmt.Fprintf(w, "%s%s\n", leadingSpaces, tp.Theme.Table.Header.Render(withoutSpaces))
 
 			if strings.EqualFold(cells[0].Trimmed, "namespace") {
 				tp.hasLeadingNamespaceColumn = true
@@ -46,26 +54,41 @@ func (tp *TablePrinter) Print(r io.Reader, w io.Writer) {
 		}
 
 		fmt.Fprintf(w, "%s", scanner.LeadingSpaces())
-		tp.printLineAsTableFormat(w, cells, getColorsByBackground(tp.DarkBackground))
+		tp.printLineAsTableFormat(w, cells, tp.Theme.Table.Columns)
 	}
 }
 
-func isAllCellsUpper(cells []tablescan.Cell) bool {
-	for _, c := range cells {
-		if !isAllUpper(c.Trimmed) {
-			return false
-		}
-	}
-	return true
-}
-
+// isAllUpper is used to identity header lines like this:
+//
+//	NAME  READY  STATUS  RESTARTS  AGE
+//
+// Commonly found in "kubectl get" output
 func isAllUpper(s string) bool {
 	for _, r := range s {
-		if !unicode.IsUpper(r) {
+		if unicode.IsLetter(r) && !unicode.IsUpper(r) {
 			return false
 		}
 	}
 	return true
+}
+
+// isOnlySymbols is used to identity header underline like this:
+//
+//	Resources  Non-Resource URLs  Resource Names  Verbs
+//	---------  -----------------  --------------  -----
+//
+// Commonly found in "kubectl describe" output
+func isOnlySymbols(s string) bool {
+	anyPuncts := false
+	for _, r := range s {
+		if unicode.IsLetter(r) || unicode.IsNumber(r) {
+			return false
+		}
+		if unicode.IsPunct(r) {
+			anyPuncts = true
+		}
+	}
+	return anyPuncts
 }
 
 // printTableFormat prints a line to w in kubectl "table" Format.
@@ -78,18 +101,18 @@ func isAllUpper(s string) bool {
 //	nginx-8spn9              1/1     Running   0          31h
 //	nginx-dplns              1/1     Running   0          31h
 //	nginx-lpv5x              1/1     Running   0          31h
-func (tp *TablePrinter) printLineAsTableFormat(w io.Writer, cells []tablescan.Cell, colorsPreset []color.Color) {
+func (tp *TablePrinter) printLineAsTableFormat(w io.Writer, cells []tablescan.Cell, colorsPreset []config.Color) {
 	for i, cell := range cells {
 		c := tp.getColumnBaseColor(i, colorsPreset)
 
 		if tp.ColorDeciderFn != nil {
-			if cc, ok := tp.ColorDeciderFn(i, cell.Trimmed); ok {
+			if cc, ok := tp.ColorDeciderFn(i, cell.Trimmed); ok && cc.Code != "" {
 				c = cc // prior injected deciderFn result
 			}
 		}
 		// Write colored column
 		if cell.Trimmed != "" {
-			fmt.Fprint(w, color.Apply(cell.Trimmed, c))
+			fmt.Fprint(w, c.Render(cell.Trimmed))
 		}
 		fmt.Fprint(w, cell.TrailingSpaces)
 	}
@@ -97,7 +120,10 @@ func (tp *TablePrinter) printLineAsTableFormat(w io.Writer, cells []tablescan.Ce
 	fmt.Fprintf(w, "\n")
 }
 
-func (tp *TablePrinter) getColumnBaseColor(index int, colorsPreset []color.Color) color.Color {
+func (tp *TablePrinter) getColumnBaseColor(index int, colorsPreset []config.Color) config.Color {
+	if len(colorsPreset) == 0 {
+		return config.Color{}
+	}
 	if tp.hasLeadingNamespaceColumn {
 		index++
 	}

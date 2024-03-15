@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/kubecolor/kubecolor/config/testconfig"
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
@@ -13,81 +14,80 @@ func Test_ResolveConfig(t *testing.T) {
 		name         string
 		args         []string
 		env          map[string]string
-		expectedArgs []string
-		expectedConf *KubecolorConfig
+		expectedConf *Config
 	}{
 		{
-			name:         "no config",
-			args:         []string{"get", "pods"},
-			expectedArgs: []string{"get", "pods"},
-			expectedConf: &KubecolorConfig{
+			name: "no config",
+			args: []string{"get", "pods"},
+			expectedConf: &Config{
 				Plain:             false,
-				DarkBackground:    true,
 				ForceColor:        false,
 				KubectlCmd:        "kubectl",
 				ObjFreshThreshold: time.Duration(0),
+				Theme:             testconfig.DarkTheme,
+				ArgsPassthrough:   []string{"get", "pods"},
 			},
 		},
 		{
-			name:         "plain, light, force",
-			args:         []string{"get", "pods", "--plain", "--light-background", "--force-colors"},
-			expectedArgs: []string{"get", "pods"},
-			expectedConf: &KubecolorConfig{
+			name: "plain, light, force",
+			args: []string{"get", "pods", "--plain", "--light-background", "--force-colors"},
+			expectedConf: &Config{
 				Plain:             true,
-				DarkBackground:    false,
 				ForceColor:        true,
 				KubectlCmd:        "kubectl",
 				ObjFreshThreshold: time.Duration(0),
+				Theme:             testconfig.LightTheme,
+				ArgsPassthrough:   []string{"get", "pods"},
 			},
 		},
 		{
-			name:         "KUBECTL_COMMAND exists",
-			args:         []string{"get", "pods", "--plain"},
-			env:          map[string]string{"KUBECTL_COMMAND": "kubectl.1.19"},
-			expectedArgs: []string{"get", "pods"},
-			expectedConf: &KubecolorConfig{
+			name: "KUBECTL_COMMAND exists",
+			args: []string{"get", "pods", "--plain"},
+			env:  map[string]string{"KUBECTL_COMMAND": "kubectl.1.19"},
+			expectedConf: &Config{
 				Plain:             true,
-				DarkBackground:    true,
 				ForceColor:        false,
 				KubectlCmd:        "kubectl.1.19",
 				ObjFreshThreshold: time.Duration(0),
+				Theme:             testconfig.DarkTheme,
+				ArgsPassthrough:   []string{"get", "pods"},
 			},
 		},
 		{
-			name:         "KUBECOLOR_OBJ_FRESH exists",
-			args:         []string{"get", "pods"},
-			expectedArgs: []string{"get", "pods"},
-			env:          map[string]string{"KUBECOLOR_OBJ_FRESH": "1m"},
-			expectedConf: &KubecolorConfig{
+			name: "KUBECOLOR_OBJ_FRESH exists",
+			args: []string{"get", "pods"},
+			env:  map[string]string{"KUBECOLOR_OBJ_FRESH": "1m"},
+			expectedConf: &Config{
 				Plain:             false,
-				DarkBackground:    true,
 				ForceColor:        false,
 				KubectlCmd:        "kubectl",
 				ObjFreshThreshold: time.Minute,
+				Theme:             testconfig.DarkTheme,
+				ArgsPassthrough:   []string{"get", "pods"},
 			},
 		},
 		{
-			name:         "KUBECOLOR_LIGHT_BACKGROUND via env",
-			args:         []string{"get", "pods"},
-			expectedArgs: []string{"get", "pods"},
-			env:          map[string]string{"KUBECOLOR_LIGHT_BACKGROUND": "true"},
-			expectedConf: &KubecolorConfig{
-				Plain:          false,
-				DarkBackground: false,
-				ForceColor:     false,
-				KubectlCmd:     "kubectl",
+			name: "KUBECOLOR_LIGHT_BACKGROUND via env",
+			args: []string{"get", "pods"},
+			env:  map[string]string{"KUBECOLOR_LIGHT_BACKGROUND": "true"},
+			expectedConf: &Config{
+				Plain:           false,
+				ForceColor:      false,
+				KubectlCmd:      "kubectl",
+				Theme:           testconfig.DarkTheme,
+				ArgsPassthrough: []string{"get", "pods"},
 			},
 		},
 		{
-			name:         "KUBECOLOR_FORCE_COLORS env var",
-			args:         []string{"get", "pods"},
-			env:          map[string]string{"KUBECOLOR_FORCE_COLORS": "true"},
-			expectedArgs: []string{"get", "pods"},
-			expectedConf: &KubecolorConfig{
-				Plain:          false,
-				DarkBackground: true,
-				ForceColor:     true,
-				KubectlCmd:     "kubectl",
+			name: "KUBECOLOR_FORCE_COLORS env var",
+			args: []string{"get", "pods"},
+			env:  map[string]string{"KUBECOLOR_FORCE_COLORS": "true"},
+			expectedConf: &Config{
+				Plain:           false,
+				ForceColor:      true,
+				KubectlCmd:      "kubectl",
+				Theme:           testconfig.DarkTheme,
+				ArgsPassthrough: []string{"get", "pods"},
 			},
 		},
 	}
@@ -99,8 +99,8 @@ func Test_ResolveConfig(t *testing.T) {
 				testutil.Setenv(t, k, v)
 			}
 
-			args, conf := ResolveConfig(tt.args)
-			testutil.MustEqual(t, tt.expectedArgs, args)
+			conf, err := ResolveConfig(tt.args)
+			testutil.MustNoError(t, err)
 			testutil.MustEqual(t, tt.expectedConf, conf)
 		})
 	}
