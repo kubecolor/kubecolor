@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/gookit/color"
+	"github.com/kubecolor/kubecolor/internal/stringutil"
 )
 
 type Color struct {
@@ -293,7 +294,7 @@ func parseColorSyntax(s string, isBg bool) (string, error) {
 	if strings.Count(s, ",") == 2 {
 		// parse again as rgb, but treat "255, 200, 100" as "rgb(255, 200, 100)"
 		// but discard errors, as this is not a precise syntax
-		if rgb, err := parseColorFunctionRGB("rgb("+s+")", isBg); err == nil && rgb != "" {
+		if rgb, err := parseColorFunctionRGB(fmt.Sprintf("rgb(%s)", s), isBg); err == nil && rgb != "" {
 			return rgb, nil
 		}
 	}
@@ -313,55 +314,59 @@ func parseColorSyntax(s string, isBg bool) (string, error) {
 	return "", nil
 }
 
-// parseColorFunction parses a function syntax, such as:
-//
-//	rgb(255, 222, 100)
-//	hsl(0.5, 0.5, 0.5)
-func parseColorFunction(s, name string) ([3]string, bool, error) {
-	withoutName, ok := strings.CutPrefix(s, name)
-	if !ok {
-		return [3]string{}, false, nil
-	}
-	withoutStart, ok := strings.CutPrefix(withoutName, "(")
-	if !ok {
-		return [3]string{}, true, fmt.Errorf(`missing opening parentheses "(": got %q`, s)
-	}
-	onlyValues, ok := strings.CutSuffix(withoutStart, ")")
-	if !ok {
-		return [3]string{}, true, fmt.Errorf(`missing closing parentheses ")": got %q`, s)
-	}
-	split := strings.Split(onlyValues, ",")
-	if len(split) != 3 {
-		return [3]string{}, true, fmt.Errorf(`invalid number of args; want 3, got: %d`, len(split))
-	}
-	return [3]string{
-		strings.TrimSpace(split[0]),
-		strings.TrimSpace(split[1]),
-		strings.TrimSpace(split[2]),
-	}, true, nil
-}
-
 func parseColorFunctionRGB(s string, isBg bool) (string, error) {
-	rgb, ok, err := parseColorFunction(s, "rgb")
+	rgbStr, ok, err := parseColorFunction(s, "rgb")
 	if err != nil {
 		return "", err
 	}
 	if !ok {
 		return "", nil
 	}
-	r, err := strconv.ParseUint(rgb[0], 10, 8)
+	rgb, err := parse3Uints(rgbStr, 8)
 	if err != nil {
-		return "", fmt.Errorf("rgb.r: %w", err)
+		return "", err
 	}
-	g, err := strconv.ParseUint(rgb[1], 10, 8)
+	return color.RGB(uint8(rgb[0]), uint8(rgb[1]), uint8(rgb[2]), isBg).FullCode(), nil
+}
+
+// parseColorFunction parses a function syntax, such as:
+//
+//	rgb(255, 222, 100) => "255, 222, 100"
+//	hsl(0.5, 0.5, 0.5) => "0.5, 0.5, 0.5"
+func parseColorFunction(s, name string) (string, bool, error) {
+	withoutName, ok := strings.CutPrefix(s, name)
+	if !ok {
+		return "", false, nil
+	}
+	withoutStart, ok := strings.CutPrefix(withoutName, "(")
+	if !ok {
+		return "", true, fmt.Errorf(`missing opening parentheses "(": got %q`, s)
+	}
+	onlyValues, ok := strings.CutSuffix(withoutStart, ")")
+	if !ok {
+		return "", true, fmt.Errorf(`missing closing parentheses ")": got %q`, s)
+	}
+	return onlyValues, true, nil
+}
+
+func parse3Uints(s string, bitSize int) ([3]uint64, error) {
+	split := stringutil.SplitAndTrimSpace(s, ",")
+	if len(split) != 3 {
+		return [3]uint64{}, fmt.Errorf(`invalid number of args; want 3, got: %d`, len(split))
+	}
+	i1, err := strconv.ParseUint(split[0], 10, bitSize)
 	if err != nil {
-		return "", fmt.Errorf("rgb.g: %w", err)
+		return [3]uint64{}, fmt.Errorf("arg 1/3: %w", err)
 	}
-	b, err := strconv.ParseUint(rgb[2], 10, 8)
+	i2, err := strconv.ParseUint(split[1], 10, bitSize)
 	if err != nil {
-		return "", fmt.Errorf("rgb.b: %w", err)
+		return [3]uint64{}, fmt.Errorf("arg 2/3: %w", err)
 	}
-	return color.RGB(uint8(r), uint8(g), uint8(b), isBg).FullCode(), nil
+	i3, err := strconv.ParseUint(split[2], 10, bitSize)
+	if err != nil {
+		return [3]uint64{}, fmt.Errorf("arg 3/3: %w", err)
+	}
+	return [3]uint64{i1, i2, i3}, nil
 }
 
 // UnmarshalText implements [encoding.TextUnmarshaler].
