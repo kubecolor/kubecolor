@@ -243,7 +243,7 @@ Default value is `0s`, it means is disabled.
 With a lot of config options, kubecolor allows you to precisely tailor the
 colors of your output.
 
-<!-- To regenerate this part, run `go run ./internal/cmd/configdoc` -->
+<!-- To regenerate the theme part, run `go run ./internal/cmd/configdoc` and copy paste the result -->
 
 | Environment variable                 | Type    | Description                                                                                                                                                                                                                                         | Dark theme
 | --------------------                 | ----    | -----------                                                                                                                                                                                                                                         | ----------
@@ -414,6 +414,8 @@ In addition to environment variables, you can configure kubecolor via
 a dedicated config file: `~/.kube/color.yaml`
 
 Example file (the values shows the default values):
+
+<!-- To regenerate the theme part, run `go run ./internal/cmd/configdoc` and copy paste the result -->
 
 ```yaml
 kubectl: kubectl # path to kubectl executable
