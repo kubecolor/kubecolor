@@ -448,6 +448,8 @@ Example file (the values shows the default values):
 <!-- To regenerate the theme part, run `go run ./internal/cmd/configdoc` and copy paste the result -->
 
 ```yaml
+# yaml-language-server: $schema=https://github.com/kubecolor/kubecolor/raw/main/config-schema.json
+
 kubectl: kubectl # path to kubectl executable
 preset: dark # color theme preset
 objFreshThreshold: 0 # ages below this uses theme.data.durationfresh coloring
