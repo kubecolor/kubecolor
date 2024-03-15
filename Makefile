@@ -21,5 +21,7 @@ fmt: ## format code
 
 lint: ## lint code
 	staticcheck ./...
-
 .PHONY: lint
+
+config-schema.json: $(wildcard **/*.go)
+	go run ./internal/cmd/configschema -out config-schema.json
