@@ -9,6 +9,20 @@ import (
 	"strings"
 )
 
+type Category struct {
+	Type   string
+	Fields []Field
+}
+
+type Field struct {
+	Name    string
+	Type    string
+	Comment string
+
+	DefaultFrom     string
+	DefaultFromMany string
+}
+
 func ParseCategories() ([]Category, error) {
 	b, err := os.ReadFile(flags.file)
 	if err != nil {
@@ -81,29 +95,6 @@ func visitGenDecl(decl *ast.GenDecl) (Category, bool) {
 		})
 	}
 	return category, true
-}
-
-func (p *Program) findCategory(typeName string) (Category, bool) {
-	for _, c := range p.categories {
-		if c.Type == typeName {
-			return c, true
-		}
-	}
-	return Category{}, false
-}
-
-type Category struct {
-	Type   string
-	Fields []Field
-}
-
-type Field struct {
-	Name    string
-	Type    string
-	Comment string
-
-	DefaultFrom     string
-	DefaultFromMany string
 }
 
 func trimComment(s string) string {

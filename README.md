@@ -408,6 +408,76 @@ export KUBECOLOR_PRESET="dark"
 export KUBECOLOR_PRESET="light"
 ```
 
+## Config file
+
+In addition to environment variables, you can configure kubecolor via
+a dedicated config file: `~/.kube/color.yaml`
+
+Example file (the values shows the default values):
+
+```yaml
+kubectl: kubectl # path to kubectl executable
+preset: dark # color theme preset
+objFreshThreshold: 0 # ages below this uses theme.data.durationfresh coloring
+
+# Color theme options
+theme:
+  base:
+    info: white # (color) general color for when things are informational
+    primary: magenta # (color) general color for when things are focus
+    secondary: cyan # (color) general color for when things are secondary focus
+    success: green # (color) general color for when things are good
+    warning: yellow # (color) general color for when things are wrong
+    danger: red # (color) general color for when things are bad
+    muted: yellow # (color) general color for when things are less relevant
+    key: yellow / white # (color[]) general color for keys (fallback to [theme.base.secondary])
+  default: yellow # (color) default when no specific mapping is found for the command
+  data:
+    key: yellow / white # (color[]) used for the key (fallback to theme.base.key)
+    string: white # (color) used when value is a string (fallback to theme.base.info)
+    "true": green # (color) used when value is true (fallback to theme.base.success)
+    "false": red # (color) used when value is false (fallback to theme.base.danger)
+    number: magenta # (color) used when the value is a number (fallback to theme.base.primary)
+    "null": yellow # (color) used when the value is null, nil, or none (fallback to theme.base.muted)
+    duration: none # (color) used when the value is a duration, e.g "12m"
+    durationfresh: green # (color) color used when the time value is under a certain delay (fallback to theme.base.success)
+    ratio:
+      zero: yellow # (color) used for "0/0" (fallback to theme.base.muted)
+      equal: none # (color) used for "n/n", e.g "1/1"
+      unequal: yellow # (color) used for "n/m", e.g "0/1" (fallback to theme.base.warning)
+  status:
+    success: green # (color) used in status keywords, e.g "Running", "Ready" (fallback to theme.base.success)
+    warning: yellow # (color) used in status keywords, e.g "Terminating" (fallback to theme.base.warning)
+    error: red # (color) used in status keywords, e.g "Failed", "Unhealthy" (fallback to theme.base.danger)
+  table:
+    header: white # (color) used on table headers (fallback to theme.base.info)
+    columns: white / cyan # (color[]) used on table columns when no other coloring applies such as status or duration coloring. The multiple colors are cycled based on column ID, from left to right. (fallback to [theme.base.info / theme.base.secondary])
+  stderr:
+    default: white # (color) default when no specific mapping is found for the output line (fallback to theme.base.info)
+    error: red # (color) e.g when text contains "error" (fallback to theme.base.danger)
+  describe:
+    key: yellow / white # (color[]) used on keys. The multiple colors are cycled based on indentation. (fallback to theme.base.key)
+  apply:
+    created: green # (color) used on "deployment.apps/foo created" (fallback to theme.base.success)
+    configured: yellow # (color) used on "deployment.apps/bar configured" (fallback to theme.base.warning)
+    unchanged: magenta # (color) used on "deployment.apps/quux unchanged" (fallback to theme.base.primary)
+    dryrun: cyan # (color) used on "deployment.apps/quux created (dry-run)" (fallback to theme.base.secondary)
+    fallback: green # (color) used when "kubectl apply" outputs unknown format (fallback to theme.base.success)
+  explain:
+    key: yellow / white # (color[]) used on keys. The multiple colors are cycled based on indentation. (fallback to theme.base.key)
+    required: red # (color) used on the trailing "-required-" string (fallback to theme.base.danger)
+  options:
+    flag: yellow # (color) e.g "--kubeconfig" (fallback to theme.base.secondary)
+  version:
+    key: yellow / white # (color[]) used on the key (fallback to theme.base.key)
+```
+
+You can also override this using the `KUBECOLOR_CONFIG` environment variable:
+
+```bash
+export KUBECOLOR_CONFIG="$HOME/.config/kubecolor.yaml"
+```
+
 ## Supported kubectl version
 
 Because kubecolor internally calls `kubectl` command, if you are using unsupported kubectl version, it's also not supported by kubecolor.

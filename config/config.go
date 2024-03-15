@@ -10,6 +10,7 @@ import (
 
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/viper"
+	"gopkg.in/yaml.v3"
 )
 
 // PresetKey is the Viper config key to use in [viper.Viper.Set].
@@ -84,6 +85,9 @@ func Unmarshal(v *viper.Viper) (*Config, error) {
 		))); err != nil {
 		return nil, err
 	}
+
+	x, _ := yaml.Marshal(v.AllSettings())
+	fmt.Println(string(x))
 	return cfg, nil
 }
 
