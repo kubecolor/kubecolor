@@ -78,7 +78,7 @@ func ParseColor(s string) (Color, error) {
 		}
 
 		if field == "none" {
-			return Color{}, nil
+			continue
 		}
 
 		c, err := parseColorField(field)
