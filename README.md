@@ -235,7 +235,7 @@ KUBECOLOR_OBJ_FRESH="1m" kubecolor get po
 
 Default value is `0s`, it means is disabled.
 
-### Change color theme
+## Color theme
 
 > [!NOTE]
 > Feature available since kubecolor v0.3.0
@@ -296,7 +296,7 @@ colors of your output.
 |                                      |         |                                                                                                                                                                                                                                                     |
 | `KUBECOLOR_THEME_VERSION_KEY`        | color[] | used on the key<br/>*(fallback to `KUBECOLOR_THEME_BASE_KEY`)*                                                                                                                                                                                      | `yellow / white`
 
-#### Config type: `color`
+### Config type: `color`
 
 The `color` type supports a variety of formats. In its simplest form,
 you specify one of:
@@ -365,7 +365,7 @@ export KUBECOLOR_THEME_STDERR_ERROR=fg=yellow:bg=red:bold
 export KUBECOLOR_THEME_STDERR_ERROR="#c0ffee"
 ```
 
-#### Config type: `color[]`
+### Config type: `color[]`
 
 Similar to the `color` type, but allows multiple separate colors to be applied.
 Commonly used to allow alternating colors on columns.
@@ -388,7 +388,7 @@ background color with some style modifiers instead:
 export KUBECOLOR_THEME_TABLE_COLUMNS=bg=red:underline/bg=green:italic/bg=blue:bold
 ```
 
-#### Color theme presets
+### Color theme presets
 
 We have some presets that come shipped with kubecolor:
 
