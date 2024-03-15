@@ -26,7 +26,12 @@ you can use kubecolor as a complete alternative of kubectl. It means you can wri
 
 ```sh
 alias kubectl="kubecolor"
+
+# Also works for OpenShift CLI
+export KUBECTL_COMMAND="oc"
+alias oc="kubecolor"
 ```
+
 If you use your .bash_profile on more than one computer (e.g. synced via git) that might not all have `kubecolor`
 installed, you can avoid breaking `kubectl` like so:
 
