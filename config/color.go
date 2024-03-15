@@ -308,15 +308,16 @@ func parseColorSyntax(s string, isBg bool) (string, error) {
 	}
 
 	if len(s) < 4 && is256CodeRegex.MatchString(s) { // single 256 code
-		if isBg {
-			return color.Bg256Pfx + s, nil
-		} else {
-			return color.Fg256Pfx + s, nil
+		num, err := strconv.ParseUint(s, 10, 8)
+		if err == nil {
+			c := color.C256(uint8(num), isBg)
+			return autoConvert256(c), nil
 		}
 	}
 
 	if isHexRegex.MatchString(s) { // hex: "#fc1cac"
-		return color.HEX(s, isBg).String(), nil
+		hex := color.HEX(s, isBg)
+		return autoConvertRGB(hex), nil
 	}
 
 	return "", nil
@@ -331,7 +332,8 @@ func parseColorFunctionRGB(s string, isBg bool) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return color.RGB(uint8(rgb[0]), uint8(rgb[1]), uint8(rgb[2]), isBg).FullCode(), nil
+	c := color.RGB(uint8(rgb[0]), uint8(rgb[1]), uint8(rgb[2]), isBg)
+	return autoConvertRGB(c), nil
 }
 
 // parseColorFunction parses a function syntax, such as:
@@ -375,6 +377,35 @@ func parse3Uints(s string, bitSize int) ([3]uint64, error) {
 		return [3]uint64{}, fmt.Errorf("arg 3/3: %w", err)
 	}
 	return [3]uint64{i1, i2, i3}, nil
+}
+
+func autoConvertRGB(rgb color.RGBColor) string {
+	if color.SupportTrueColor() {
+		return rgb.FullCode()
+	}
+	if color.Support256Color() {
+		c256 := color.RgbTo256(rgb[0], rgb[1], rgb[2])
+		return color.C256(c256, rgb[3] == 1).FullCode()
+	}
+	if color.SupportColor() {
+		ansi := color.Rgb2basic(rgb[0], rgb[1], rgb[2], rgb[3] == 1)
+		return color.Color(ansi).Code()
+	}
+	return ""
+}
+
+func autoConvert256(c256 color.Color256) string {
+	if color.Support256Color() {
+		return c256.FullCode()
+	}
+	if color.SupportColor() {
+		// [color.Color256] does have a .Basic() function,
+		// but its implementation does nothing and has a comment with "// TODO"
+		rgb := c256.RGB()
+		ansi := color.Rgb2basic(rgb[0], rgb[1], rgb[2], rgb[3] == 1)
+		return color.Color(ansi).Code()
+	}
+	return ""
 }
 
 // UnmarshalText implements [encoding.TextUnmarshaler].
