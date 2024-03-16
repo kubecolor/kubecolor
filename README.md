@@ -49,6 +49,31 @@ Additionally, if `kubectl` resulted an error, kubecolor just shows the error mes
 
 ## Installation
 
+### Docker
+
+Running it via Docker can be nice for just trying out kubecolor:
+
+```bash
+docker run --rm -it -v $HOME/.kube:/home/nonroot/.kube:ro ghcr.io/kubecolor/kubecolor get pods
+```
+
+<details>
+<summary>If you're getting the following error <code>permission denied</code> (click to expand)</summary>
+
+> In case you are getting the following error (common in environments like WSL):
+>
+> ```log
+> error: error loading config file "/home/nonroot/.kube/config": open /home/nonroot/.kube/config: permission denied
+> ```
+>
+> then try changing the permission of your `~/.kube/config` file:
+>
+> ```bash
+> chmod 644 ~/.kube/config
+> ```
+
+</details>
+
 ### Homebrew
 
 ![GitHub Release](https://img.shields.io/github/v/release/kubecolor/kubecolor?display_name=tag&label=Homebrew&color=4cc61f)
