@@ -16,10 +16,10 @@ import (
 const PresetKey = "preset"
 
 type Config struct {
-	Debug             bool
-	Kubectl           string
-	ObjFreshThreshold time.Duration
-	Preset            Preset
+	Debug             bool          `jsonschema:"-"`
+	Kubectl           string        `jsonschema:"default=kubectl,example=kubectl1.19,example=oc"` // Which kubectl executable to use
+	ObjFreshThreshold time.Duration // Ages below this uses theme.data.durationfresh coloring
+	Preset            Preset        // Color theme preset
 	Theme             Theme
 }
 
