@@ -9,7 +9,7 @@ metadata:
   name: working-pods
   namespace: kubecolor
 spec:
-  progressDeadlineSeconds: 600
+  progressDeadlineSeconds: 6
   replicas: 2
   revisionHistoryLimit: 10
   selector:

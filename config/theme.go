@@ -109,7 +109,109 @@ func NewBaseTheme(preset Preset) *Theme {
 		}
 
 	// Special Preset for Protanopias
-	case PresetProt:
+	case PresetProtDark:
+		return &Theme{
+			Default: MustParseColor("white"),
+			Base: ThemeBase{
+				Key:       MustParseColorSlice("#feb927 / white"),
+				Info:      MustParseColor("white"),
+				Primary:   MustParseColor("#4860e6"),             // magenta
+				Secondary: MustParseColor("#2aabee"),             // cyan
+				Success:   MustParseColor("#6afd6a:bold"),        // bold green
+				Warning:   MustParseColor("#feb927:italic"),      // yellow
+				Danger:    MustParseColor("fg=white:bg=#c2270a"), // red background
+				Muted:     MustParseColor("#feb927"),             // yellow
+			},
+			Data: ThemeData{
+				String: MustParseColor("#2aabee"),
+			},
+			Table: ThemeTable{
+				Header:  MustParseColor("white:bold"),
+				Columns: MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / white / #feb927"),
+			},
+			Options: ThemeOptions{
+				Flag: MustParseColor("#feb927"),
+			},
+		}
+
+	case PresetProtLight:
+		return &Theme{
+			Default: MustParseColor("black"),
+			Base: ThemeBase{
+				Key:       MustParseColorSlice("#feb927 / black"),
+				Info:      MustParseColor("black"),
+				Primary:   MustParseColor("#4860e6"),             // magenta
+				Secondary: MustParseColor("#2aabee"),             // cyan
+				Success:   MustParseColor("#6afd6a:bold"),        // bold green
+				Warning:   MustParseColor("#feb927:italic"),      // yellow
+				Danger:    MustParseColor("fg=black:bg=#c2270a"), // red background
+				Muted:     MustParseColor("#feb927"),             // yellow
+			},
+			Data: ThemeData{
+				String: MustParseColor("#2aabee"),
+			},
+			Table: ThemeTable{
+				Header:  MustParseColor("black:bold"),
+				Columns: MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / black / #feb927"),
+			},
+			Options: ThemeOptions{
+				Flag: MustParseColor("#feb927"),
+			},
+		}
+
+	// Special Preset for Deuteranopia
+	case PresetDeutDark:
+		return &Theme{
+			Default: MustParseColor("white"),
+			Base: ThemeBase{
+				Key:       MustParseColorSlice("#feb927 / white"),
+				Info:      MustParseColor("white"),
+				Primary:   MustParseColor("#4860e6"),             // magenta
+				Secondary: MustParseColor("#2aabee"),             // cyan
+				Success:   MustParseColor("#6afd6a:bold"),        // bold green
+				Warning:   MustParseColor("#feb927:italic"),      // yellow
+				Danger:    MustParseColor("fg=white:bg=#c2270a"), // red background
+				Muted:     MustParseColor("#feb927"),             // yellow
+			},
+			Data: ThemeData{
+				String: MustParseColor("#2aabee"),
+			},
+			Table: ThemeTable{
+				Header:  MustParseColor("white:bold"),
+				Columns: MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / white / #feb927"),
+			},
+			Options: ThemeOptions{
+				Flag: MustParseColor("#feb927"),
+			},
+		}
+
+	case PresetDeutLight:
+		return &Theme{
+			Default: MustParseColor("black"),
+			Base: ThemeBase{
+				Key:       MustParseColorSlice("#feb927 / black"),
+				Info:      MustParseColor("black"),
+				Primary:   MustParseColor("#4860e6"),             // magenta
+				Secondary: MustParseColor("#2aabee"),             // cyan
+				Success:   MustParseColor("#6afd6a:bold"),        // bold green
+				Warning:   MustParseColor("#feb927:italic"),      // yellow
+				Danger:    MustParseColor("fg=black:bg=#c2270a"), // red background
+				Muted:     MustParseColor("#feb927"),             // yellow
+			},
+			Data: ThemeData{
+				String: MustParseColor("#2aabee"),
+			},
+			Table: ThemeTable{
+				Header:  MustParseColor("black:bold"),
+				Columns: MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / black / #feb927"),
+			},
+			Options: ThemeOptions{
+				Flag: MustParseColor("#feb927"),
+			},
+		}
+
+	// Special Preset for Tritanopia
+	case PresetTritDark:
 		return &Theme{
 			Default: MustParseColor("white"),
 			Base: ThemeBase{
@@ -136,61 +238,31 @@ func NewBaseTheme(preset Preset) *Theme {
 			},
 		}
 
-		// Special Preset for Deuteranopia
-	case PresetDeut:
+	case PresetTritLight:
 		return &Theme{
-			Default: MustParseColor("white"),
+			Default: MustParseColor("black"),
 			Base: ThemeBase{
-				Key:       MustParseColorSlice("yellow / white"),
-				Info:      MustParseColor("white"),
-				Primary:   MustParseColor("magenta"),
-				Secondary: MustParseColor("cyan"),
-				Success:   MustParseColor("green"),
-				Warning:   MustParseColor("yellow"),
-				Danger:    MustParseColor("red"),
-				Muted:     MustParseColor("yellow"),
+				Key:       MustParseColorSlice("#feb927 / black"),
+				Info:      MustParseColor("black"),
+				Primary:   MustParseColor("#4860e6"),             // magenta
+				Secondary: MustParseColor("#2aabee"),             // cyan
+				Success:   MustParseColor("#6afd6a:bold"),        // bold green
+				Warning:   MustParseColor("#feb927:italic"),      // yellow
+				Danger:    MustParseColor("fg=black:bg=#c2270a"), // red background
+				Muted:     MustParseColor("#feb927"),             // yellow
 			},
 			Data: ThemeData{
-				String: MustParseColor("cyan"),
+				String: MustParseColor("#2aabee"),
 			},
 			Table: ThemeTable{
-				Columns: MustParseColorSlice("cyan / green / magenta / white / yellow"),
-			},
-			Status: ThemeStatus{
-				Success: MustParseColor("none"),
+				Header:  MustParseColor("black:bold"),
+				Columns: MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / black / #feb927"),
 			},
 			Options: ThemeOptions{
-				Flag: MustParseColor("yellow"),
+				Flag: MustParseColor("#feb927"),
 			},
 		}
 
-		// Special Preset for Tritanopia
-	case PresetTrit:
-		return &Theme{
-			Default: MustParseColor("white"),
-			Base: ThemeBase{
-				Key:       MustParseColorSlice("yellow / white"),
-				Info:      MustParseColor("white"),
-				Primary:   MustParseColor("magenta"),
-				Secondary: MustParseColor("cyan"),
-				Success:   MustParseColor("green"),
-				Warning:   MustParseColor("yellow"),
-				Danger:    MustParseColor("red"),
-				Muted:     MustParseColor("yellow"),
-			},
-			Data: ThemeData{
-				String: MustParseColor("cyan"),
-			},
-			Table: ThemeTable{
-				Columns: MustParseColorSlice("cyan / green / magenta / white / yellow"),
-			},
-			Status: ThemeStatus{
-				Success: MustParseColor("none"),
-			},
-			Options: ThemeOptions{
-				Flag: MustParseColor("yellow"),
-			},
-		}
 	default:
 		panic(fmt.Sprintf("invalid theme preset: %s", preset))
 	}

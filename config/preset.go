@@ -15,9 +15,15 @@ const (
 
 	PresetPre0021Dark
 	PresetPre0021Light
-	PresetProt
-	PresetDeut
-	PresetTrit
+
+	PresetProtDark
+	PresetProtLight
+
+	PresetDeutDark
+	PresetDeutLight
+
+	PresetTritDark
+	PresetTritLight
 )
 
 var (
@@ -49,12 +55,18 @@ func (p Preset) String() string {
 		return "pre-0.0.21-dark"
 	case PresetPre0021Light:
 		return "pre-0.0.21-light"
-	case PresetProt:
-		return "protanopia"
-	case PresetDeut:
-		return "deuteranopia"
-	case PresetTrit:
-		return "tritanopia"
+	case PresetProtDark:
+		return "protanopia-dark"
+	case PresetProtLight:
+		return "protanopia-light"
+	case PresetDeutDark:
+		return "deuteranopia-dark"
+	case PresetDeutLight:
+		return "deuteranopia-light"
+	case PresetTritDark:
+		return "tritanopia-dark"
+	case PresetTritLight:
+		return "tritanopia-light"
 	default:
 		return fmt.Sprintf("%[1]T(%[1]d)", p)
 	}
@@ -71,12 +83,18 @@ func ParsePreset(s string) (Preset, error) {
 		return PresetPre0021Dark, nil
 	case "pre-0.0.21-light":
 		return PresetPre0021Light, nil
-	case "protanopia":
-		return PresetProt, nil
-	case "deuteranopia":
-		return PresetDeut, nil
-	case "tritanopia":
-		return PresetTrit, nil
+	case "protanopia-dark":
+		return PresetProtDark, nil
+	case "protanopia-light":
+		return PresetProtLight, nil
+	case "deuteranopia-dark":
+		return PresetDeutDark, nil
+	case "deuteranopia-light":
+		return PresetDeutLight, nil
+	case "tritanopia-dark":
+		return PresetTritDark, nil
+	case "tritanopia-light":
+		return PresetTritLight, nil
 	default:
 		return Preset(0), fmt.Errorf("invalid theme preset: %q", s)
 	}
