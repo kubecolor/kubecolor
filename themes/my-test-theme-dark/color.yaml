@@ -1,58 +1,25 @@
 # This is a sample theme used for demo
 # author: Prune <prune@lecentre.net>
-# last update: 20240324
+# last update: 2024-03-24
 
-kubectl: kubectl # path to kubectl executable
-preset: dark # color theme preset
-objFreshThreshold: 1m # ages below this uses theme.data.durationfresh coloring
-
-# Override any of the values to customize them
+objFreshThreshold: 1m
 theme:
   base:
-    info: white # (color) general color for when things are informational
-    primary: fg=#4860e6 # (color) general color for when things are focus
-    secondary: fg=#2aabee # (color) general color for when things are secondary focus
-    success: fg=#6afd6a:bold # (color) general color for when things are good
-    warning: fg=#feb927:italic # (color) general color for when things are wrong
-    danger: fg=white:bg=#c2270a # (color) general color for when things are bad
-    muted: fg=#feb927 # (color) general color for when things are less relevant
-    key: yellow / cyan # (color[]) general color for keys (fallback to [theme.base.secondary])
-  default: white # (color) default when no specific mapping is found for the command
+    info: white
+    primary: fg=#4860e6
+    secondary: fg=#2aabee
+    success: fg=#6afd6a:bold
+    warning: fg=#feb927:italic
+    danger: fg=white:bg=#c2270a
+    muted: fg=#feb927
+    key: yellow / cyan
+  default: white
   data:
-#    key: yellow / white # (color[]) used for the key (fallback to theme.base.key)
-#    string: white # (color) used when value is a string (fallback to theme.base.info)
-#    "true": green # (color) used when value is true (fallback to theme.base.success)
-#    "false": red # (color) used when value is false (fallback to theme.base.danger)
-#    number: magenta # (color) used when the value is a number (fallback to theme.base.primary)
-#    "null": yellow # (color) used when the value is null, nil, or none (fallback to theme.base.muted)
-    duration: red # (color) used when the value is a duration, e.g "12m"
-    durationfresh: green # (color) color used when the time value is under a certain delay (fallback to theme.base.success)
+    duration: red
+    durationfresh: green
     ratio:
-      zero: yellow # (color) used for "0/0" (fallback to theme.base.muted)
-      equal: green # (color) used for "n/n", e.g "1/1"
-      unequal: yellow:italic # (color) used for "n/m", e.g "0/1" (fallback to theme.base.warning)
-#  status:
-#    success: green # (color) used in status keywords, e.g "Running", "Ready" (fallback to theme.base.success)
-#    warning: yellow # (color) used in status keywords, e.g "Terminating" (fallback to theme.base.warning)
-#    error: red # (color) used in status keywords, e.g "Failed", "Unhealthy" (fallback to theme.base.danger)
+      zero: yellow
+      equal: green
+      unequal: yellow:italic
   table:
-    header: white:bold # (color) used on table headers (fallback to theme.base.info)
-#    columns: white / cyan # (color[]) used on table columns when no other coloring applies such as status or duration coloring. The multiple colors are cycled based on column ID, from left to right. (fallback to [theme.base.info / theme.base.secondary])
-#  stderr:
-#    default: white # (color) default when no specific mapping is found for the output line (fallback to theme.base.info)
-#    error: red # (color) e.g when text contains "error" (fallback to theme.base.danger)
-#  describe:
-#    key: yellow / white # (color[]) used on keys. The multiple colors are cycled based on indentation. (fallback to theme.base.key)
-#  apply:
-#    created: green # (color) used on "deployment.apps/foo created" (fallback to theme.base.success)
-#    configured: yellow # (color) used on "deployment.apps/bar configured" (fallback to theme.base.warning)
-#    unchanged: magenta # (color) used on "deployment.apps/quux unchanged" (fallback to theme.base.primary)
-#    dryrun: cyan # (color) used on "deployment.apps/quux created (dry-run)" (fallback to theme.base.secondary)
-#    fallback: green # (color) used when "kubectl apply" outputs unknown format (fallback to theme.base.success)
-#  explain:
-#    key: yellow / white # (color[]) used on keys. The multiple colors are cycled based on indentation. (fallback to theme.base.key)
-#    required: red # (color) used on the trailing "-required-" string (fallback to theme.base.danger)
-#  options:
-#    flag: yellow # (color) e.g "--kubeconfig" (fallback to theme.base.secondary)
-#  version:
-#    key: yellow / white # (color[]) used on the key (fallback to theme.base.key)
+    header: white:bold
