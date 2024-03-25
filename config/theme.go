@@ -129,9 +129,6 @@ func NewBaseTheme(preset Preset) *Theme {
 				Header:  MustParseColor("white:bold"),
 				Columns: MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / white / #feb927"),
 			},
-			Options: ThemeOptions{
-				Flag: MustParseColor("#2aabee"),
-			},
 		}
 
 	case PresetProtLight:
@@ -153,9 +150,6 @@ func NewBaseTheme(preset Preset) *Theme {
 			Table: ThemeTable{
 				Header:  MustParseColor("black:bold"),
 				Columns: MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / black / #feb927"),
-			},
-			Options: ThemeOptions{
-				Flag: MustParseColor("#2aabee"),
 			},
 		}
 
@@ -180,9 +174,6 @@ func NewBaseTheme(preset Preset) *Theme {
 				Header:  MustParseColor("white:bold"),
 				Columns: MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / white / #feb927"),
 			},
-			Options: ThemeOptions{
-				Flag: MustParseColor("#2aabee"),
-			},
 		}
 
 	case PresetDeutLight:
@@ -204,9 +195,6 @@ func NewBaseTheme(preset Preset) *Theme {
 			Table: ThemeTable{
 				Header:  MustParseColor("black:bold"),
 				Columns: MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / black / #feb927"),
-			},
-			Options: ThemeOptions{
-				Flag: MustParseColor("#2aabee"),
 			},
 		}
 
@@ -231,9 +219,6 @@ func NewBaseTheme(preset Preset) *Theme {
 				Header:  MustParseColor("white:bold"),
 				Columns: MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / white / #feb927"),
 			},
-			Options: ThemeOptions{
-				Flag: MustParseColor("#2aabee"),
-			},
 		}
 
 	case PresetTritLight:
@@ -255,9 +240,6 @@ func NewBaseTheme(preset Preset) *Theme {
 			Table: ThemeTable{
 				Header:  MustParseColor("black:bold"),
 				Columns: MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / black / #feb927"),
-			},
-			Options: ThemeOptions{
-				Flag: MustParseColor("#2aabee"),
 			},
 		}
 

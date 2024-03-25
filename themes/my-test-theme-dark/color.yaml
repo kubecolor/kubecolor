@@ -1,8 +1,10 @@
+# yaml-language-server: $schema=https://github.com/kubecolor/kubecolor/raw/main/config-schema.json
+
 # This is a sample theme used for demo
 # author: Prune <prune@lecentre.net>
 # last update: 2024-03-24
 
-objFreshThreshold: 1m
+objFreshThreshold: 10m
 theme:
   base:
     info: white
@@ -16,7 +18,7 @@ theme:
   default: white
   data:
     duration: red
-    durationfresh: green
+    durationFresh: green
     ratio:
       zero: yellow
       equal: green
