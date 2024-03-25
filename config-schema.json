@@ -334,7 +334,7 @@
       ]
     },
     "objFreshThreshold": {
-      "type": "string",
+      "type": "integer",
       "description": "Ages below this uses theme.data.durationfresh coloring"
     },
     "preset": {
