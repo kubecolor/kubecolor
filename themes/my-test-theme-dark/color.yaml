@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=https://github.com/kubecolor/kubecolor/raw/main/config-schema.json
+
+# This is a sample theme used for demo
+# author: Prune <prune@lecentre.net>
+# last update: 2024-03-24
+
+objFreshThreshold: 10m
+theme:
+  base:
+    info: white
+    primary: fg=#4860e6
+    secondary: fg=#2aabee
+    success: fg=#6afd6a:bold
+    warning: fg=#feb927:italic
+    danger: fg=white:bg=#c2270a
+    muted: fg=#feb927
+    key: yellow / cyan
+  default: white
+  data:
+    duration: red
+    durationFresh: green
+    ratio:
+      zero: yellow
+      equal: green
+      unequal: yellow:italic
+  table:
+    header: white:bold

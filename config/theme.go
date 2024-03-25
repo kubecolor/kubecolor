@@ -108,6 +108,141 @@ func NewBaseTheme(preset Preset) *Theme {
 			},
 		}
 
+	// Special Preset for Protanopias
+	case PresetProtDark:
+		return &Theme{
+			Default: MustParseColor("white"),
+			Base: ThemeBase{
+				Key:       MustParseColorSlice("#feb927 / #fe6e1a"),
+				Info:      MustParseColor("white"),
+				Primary:   MustParseColor("#4860e6"),             // magenta
+				Secondary: MustParseColor("#2aabee"),             // cyan
+				Success:   MustParseColor("#6afd6a:bold"),        // bold green
+				Warning:   MustParseColor("#feb927:italic"),      // yellow
+				Danger:    MustParseColor("fg=white:bg=#c2270a"), // red background
+				Muted:     MustParseColor("#2ee5ae:italic"),      // white-ish
+			},
+			Data: ThemeData{
+				String: MustParseColor("#2aabee"),
+			},
+			Table: ThemeTable{
+				Header:  MustParseColor("white:bold"),
+				Columns: MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / white / #feb927"),
+			},
+		}
+
+	case PresetProtLight:
+		return &Theme{
+			Default: MustParseColor("black"),
+			Base: ThemeBase{
+				Key:       MustParseColorSlice("#feb927 / #fe6e1a"),
+				Info:      MustParseColor("black"),
+				Primary:   MustParseColor("#4860e6"),
+				Secondary: MustParseColor("#2aabee"),
+				Success:   MustParseColor("#6afd6a:bold"),
+				Warning:   MustParseColor("#feb927:italic"),
+				Danger:    MustParseColor("fg=black:bg=#c2270a"),
+				Muted:     MustParseColor("#2ee5ae:italic"),
+			},
+			Data: ThemeData{
+				String: MustParseColor("#2aabee"),
+			},
+			Table: ThemeTable{
+				Header:  MustParseColor("black:bold"),
+				Columns: MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / black / #feb927"),
+			},
+		}
+
+	// Special Preset for Deuteranopia
+	case PresetDeutDark:
+		return &Theme{
+			Default: MustParseColor("white"),
+			Base: ThemeBase{
+				Key:       MustParseColorSlice("#feb927 / #fe6e1a"),
+				Info:      MustParseColor("white"),
+				Primary:   MustParseColor("#4860e6"),
+				Secondary: MustParseColor("#2aabee"),
+				Success:   MustParseColor("#6afd6a:bold"),
+				Warning:   MustParseColor("#feb927:italic"),
+				Danger:    MustParseColor("fg=white:bg=#c2270a"),
+				Muted:     MustParseColor("#2ee5ae"),
+			},
+			Data: ThemeData{
+				String: MustParseColor("#2aabee"),
+			},
+			Table: ThemeTable{
+				Header:  MustParseColor("white:bold"),
+				Columns: MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / white / #feb927"),
+			},
+		}
+
+	case PresetDeutLight:
+		return &Theme{
+			Default: MustParseColor("black"),
+			Base: ThemeBase{
+				Key:       MustParseColorSlice("#feb927 / #fe6e1a"),
+				Info:      MustParseColor("black"),
+				Primary:   MustParseColor("#4860e6"),
+				Secondary: MustParseColor("#2aabee"),
+				Success:   MustParseColor("#6afd6a:bold"),
+				Warning:   MustParseColor("#feb927:italic"),
+				Danger:    MustParseColor("fg=black:bg=#c2270a"),
+				Muted:     MustParseColor("#2ee5ae:italic"),
+			},
+			Data: ThemeData{
+				String: MustParseColor("#2aabee"),
+			},
+			Table: ThemeTable{
+				Header:  MustParseColor("black:bold"),
+				Columns: MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / black / #feb927"),
+			},
+		}
+
+	// Special Preset for Tritanopia
+	case PresetTritDark:
+		return &Theme{
+			Default: MustParseColor("white"),
+			Base: ThemeBase{
+				Key:       MustParseColorSlice("#feb927 / #fe6e1a"),
+				Info:      MustParseColor("white"),
+				Primary:   MustParseColor("#4860e6"),
+				Secondary: MustParseColor("#2aabee"),
+				Success:   MustParseColor("#6afd6a:bold"),
+				Warning:   MustParseColor("#feb927:italic"),
+				Danger:    MustParseColor("fg=white:bg=#c2270a"),
+				Muted:     MustParseColor("#2ee5ae"),
+			},
+			Data: ThemeData{
+				String: MustParseColor("#2aabee"),
+			},
+			Table: ThemeTable{
+				Header:  MustParseColor("white:bold"),
+				Columns: MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / white / #feb927"),
+			},
+		}
+
+	case PresetTritLight:
+		return &Theme{
+			Default: MustParseColor("black"),
+			Base: ThemeBase{
+				Key:       MustParseColorSlice("#feb927 / #fe6e1a"),
+				Info:      MustParseColor("black"),
+				Primary:   MustParseColor("#4860e6"),
+				Secondary: MustParseColor("#2aabee"),
+				Success:   MustParseColor("#6afd6a:bold"),
+				Warning:   MustParseColor("#feb927:italic"),
+				Danger:    MustParseColor("fg=black:bg=#c2270a"),
+				Muted:     MustParseColor("#2ee5ae:italic"),
+			},
+			Data: ThemeData{
+				String: MustParseColor("#2aabee"),
+			},
+			Table: ThemeTable{
+				Header:  MustParseColor("black:bold"),
+				Columns: MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / black / #feb927"),
+			},
+		}
+
 	default:
 		panic(fmt.Sprintf("invalid theme preset: %s", preset))
 	}

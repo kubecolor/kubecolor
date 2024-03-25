@@ -445,12 +445,21 @@ export KUBECOLOR_THEME_TABLE_COLUMNS="bg=red:underline/bg=green:italic/bg=blue:b
 
 We have some presets that come shipped with kubecolor:
 
-| Preset             | Description
-| ------             | -----------
-| `dark` *(default)* | For when your terminal's background is dark.
-| `light`            | For when your terminal's background is light/bright.
-| `pre-0.0.21-dark`  | Original dark color scheme used before v0.0.21, as well as in the predecessor's ([hidetatz/kubecolor](https://github.com/hidetatz/kubecolor)) version.
-| `pre-0.0.21-light` | Original light color scheme used before v0.0.21, as well as in the predecessor's ([hidetatz/kubecolor](https://github.com/hidetatz/kubecolor)) version.
+| Preset                  | Description
+| ------                  | -----------
+| `dark` *(default)*      | For when your terminal's background is dark.
+| `light`                 | For when your terminal's background is light/bright.
+| `pre-0.0.21-dark`       | Original dark color scheme used before v0.0.21, as well as in the predecessor's ([hidetatz/kubecolor](https://github.com/hidetatz/kubecolor)) version.
+| `pre-0.0.21-light`      | Original light color scheme used before v0.0.21, as well as in the predecessor's ([hidetatz/kubecolor](https://github.com/hidetatz/kubecolor)) version.
+| `protanopia-dark`       | Color theme for [Protanopia color blindness](https://www.color-blindness.com/protanopia-red-green-color-blindness/). For when your terminal's background is dark.
+| `protanopia-light`      | Color theme for [Protanopia color blindness](https://www.color-blindness.com/protanopia-red-green-color-blindness/). For when your terminal's background is light/bright.
+| `deuteranopia-dark`(*)  | Color theme for [Deuteranopia color blindness](https://www.color-blindness.com/deuteranopia-red-green-color-blindness/). For when your terminal's background is dark.
+| `deuteranopia-light`(*) | Color theme for [Deuteranopia color blindness](https://www.color-blindness.com/deuteranopia-red-green-color-blindness/). For when your terminal's background is light/bright.
+| `tritanopia-dark`(*)    | Color theme for [Tritanopia color blindness](https://www.color-blindness.com/tritanopia-blue-yellow-color-blindness/). For when your terminal's background is dark.
+| `tritanopia-light`(*)   | Color theme for [Tritanopia color blindness](https://www.color-blindness.com/tritanopia-blue-yellow-color-blindness/). For when your terminal's background is light/bright.
+
+> [!NOTE]
+> (*) As of version `v0.3.0`, both `deuteranopia` and `tritanopia` themes are the same as `protanopia`. They may differ in future versions when we better tune them. Set your configuration to match your color-blindness type so you will benefit of the futur changes.
 
 Selecting preset can be done via the `KUBECOLOR_PRESET` environment variable,
 like so:
