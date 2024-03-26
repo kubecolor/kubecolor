@@ -76,7 +76,7 @@ docker run --rm -it -v $HOME/.kube:/home/nonroot/.kube:ro ghcr.io/kubecolor/kube
 
 ### Homebrew
 
-![GitHub Release](https://img.shields.io/github/v/release/kubecolor/kubecolor?display_name=tag&label=Homebrew&color=4cc61f)
+[![GitHub Release](https://img.shields.io/github/v/release/kubecolor/kubecolor?display_name=tag&label=Homebrew&color=4cc61f)](https://github.com/kubecolor/homebrew-tap)
 
 ```sh
 brew install kubecolor/tap/kubecolor
@@ -84,7 +84,7 @@ brew install kubecolor/tap/kubecolor
 
 ### Scoop
 
-![Scoop Version](https://img.shields.io/scoop/v/kubecolor?label=Scoop%2FMain&color=4cc61f)
+[![Scoop version](https://repology.org/badge/version-for-repo/scoop/kubecolor.svg)](https://repology.org/project/kubecolor/versions)
 
 ```sh
 scoop install kubecolor
@@ -92,7 +92,7 @@ scoop install kubecolor
 
 ### Nix
 
-[![nixpkgs unstable package](https://repology.org/badge/version-for-repo/nix_unstable/kubecolor.svg)](https://repology.org/project/kubecolor/versions)
+[![nixpkgs unstable version](https://repology.org/badge/version-for-repo/nix_unstable/kubecolor.svg)](https://repology.org/project/kubecolor/versions)
 
 ```sh
 nix-shell -p kubecolor
@@ -100,7 +100,7 @@ nix-shell -p kubecolor
 
 ### AUR (Arch User Repositories)
 
-[![AUR package](https://repology.org/badge/version-for-repo/aur/kubecolor.svg)](https://repology.org/project/kubecolor/versions)
+[![AUR version](https://repology.org/badge/version-for-repo/aur/kubecolor.svg)](https://repology.org/project/kubecolor/versions)
 
 ```sh
 yay -Syu kubecolor
@@ -108,7 +108,7 @@ yay -Syu kubecolor
 
 ### Termux (Android)
 
-[![Termux package](https://repology.org/badge/version-for-repo/termux/kubecolor.svg)](https://repology.org/project/kubecolor/versions)
+[![Termux version](https://repology.org/badge/version-for-repo/termux/kubecolor.svg)](https://repology.org/project/kubecolor/versions)
 
 ```sh
 pkg install kubecolor
