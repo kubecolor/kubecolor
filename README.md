@@ -106,6 +106,14 @@ nix-shell -p kubecolor
 yay -Syu kubecolor
 ```
 
+### Termux (Android)
+
+[![Termux package](https://repology.org/badge/version-for-repo/termux/kubecolor.svg)](https://repology.org/project/kubecolor/versions)
+
+```sh
+pkg install kubecolor
+```
+
 ### Download binary via GitHub release
 
 Go to [Release page](https://github.com/kubecolor/kubecolor/releases) then download the binary which fits your environment.
