@@ -30,7 +30,7 @@ var (
 // This is intended to be used to colorize any structured data e.g. Json, Yaml.
 func getColorByValueType(val string, theme *config.Theme) config.Color {
 	switch val {
-	case "null", "<none>", "<unknown>", "<unset>", "<nil>":
+	case "null", "<none>", "<unknown>", "<unset>", "<nil>", "<invalid>":
 		return theme.Data.Null
 	case "true", "True":
 		return theme.Data.True
