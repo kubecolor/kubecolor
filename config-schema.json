@@ -191,9 +191,13 @@
           "$ref": "#/$defs/color",
           "description": "used when the value is null, nil, or none"
         },
+        "quantity": {
+          "$ref": "#/$defs/color",
+          "description": "used when the value is a quantity, e.g \"100m\" or \"5Gi\""
+        },
         "duration": {
           "$ref": "#/$defs/color",
-          "description": "used when the value is a duration, e.g \"12m\""
+          "description": "used when the value is a duration, e.g \"12m\" or \"1d12h\""
         },
         "durationFresh": {
           "$ref": "#/$defs/color",
