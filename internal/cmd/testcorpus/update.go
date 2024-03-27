@@ -17,19 +17,18 @@ var (
 func UpdateTests(files []File) {
 	anyErr := false
 	for _, file := range files {
-		fmt.Printf("  %s:\n", colorHeader.Render(file.Name))
 		if len(file.Tests) == 0 {
-			fmt.Printf("    %s\n", colorMuted.Render("no tests found"))
+			fmt.Printf("    %s %s\n", colorHeader.Render(file.Name+":"), colorMuted.Render(file.Name+": no tests found"))
 			continue
 		}
 		changed, err := updateFile(file)
 		if err != nil {
-			fmt.Printf("    %s %s\n", colorErrorPrefix.Render("error:"), colorErrorText.Render(err.Error()))
+			fmt.Printf("    %s %s %s\n", colorHeader.Render(file.Name+":"), colorErrorPrefix.Render("error:"), colorErrorText.Render(err.Error()))
 			anyErr = true
 		} else if changed {
-			fmt.Printf("    %s\n", colorSuccess.Render("updated"))
+			fmt.Printf("    %s %s\n", colorHeader.Render(file.Name+":"), colorSuccess.Render("updated"))
 		} else {
-			fmt.Printf("    %s\n", colorMuted.Render("unchanged"))
+			fmt.Printf("    %s %s\n", colorHeader.Render(file.Name+":"), colorMuted.Render("unchanged"))
 		}
 	}
 	if anyErr {
