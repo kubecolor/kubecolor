@@ -22,3 +22,20 @@ jobs:
 
       - name: Git diff
         run: git diff --exit-code
+
+  corpus:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: setup go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: make corpus-update
+        run: make corpus-update
+
+      - name: Git diff
+        run: git diff --exit-code
