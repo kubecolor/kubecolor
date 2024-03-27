@@ -16,7 +16,7 @@ func TestEnvVars_preset(t *testing.T) {
 	testutil.MustNoError(t, err)
 
 	testutil.Equal(t, PresetLight, cfg.Preset, "Read from cfg.Preset")
-	testutil.Equal(t, PresetLight, v.Get(PresetKey), "Read from v.Get(...)")
+	testutil.Equal(t, string(PresetLight), v.Get(PresetKey), "Read from v.Get(...)")
 }
 
 func TestEnvVars_theme(t *testing.T) {

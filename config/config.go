@@ -38,7 +38,8 @@ func NewViper() *viper.Viper {
 	v.MustBindEnv("objfreshthreshold", "KUBECOLOR_OBJ_FRESH")
 
 	v.SetDefault("kubectl", "kubectl")
-	v.SetDefault(PresetKey, "dark")
+	// mapstructure doesn't like "type X string" values, so we have to convert it via string(...)
+	v.SetDefault(PresetKey, string(PresetDefault))
 
 	return v
 }
@@ -95,7 +96,6 @@ func ApplyThemePreset(v *viper.Viper) error {
 	if v.GetBool("debug") {
 		fmt.Fprintf(os.Stderr, "[kubecolor] [debug] applying preset: %s\n", preset)
 	}
-	v.Set(PresetKey, preset) // to skip parsing it twice
 	theme := NewBaseTheme(preset)
 	applyViperDefaults(theme, v)
 	return nil
