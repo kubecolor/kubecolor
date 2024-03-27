@@ -294,7 +294,8 @@ type ThemeData struct {
 	Number Color      `defaultFrom:"theme.base.primary"` // used when the value is a number
 	Null   Color      `defaultFrom:"theme.base.muted"`   // used when the value is null, nil, or none
 
-	Duration      Color ``                                 // used when the value is a duration, e.g "12m"
+	Quantity      Color `defaultFrom:"theme.data.number"`  // used when the value is a quantity, e.g "100m" or "5Gi"
+	Duration      Color ``                                 // used when the value is a duration, e.g "12m" or "1d12h"
 	DurationFresh Color `defaultFrom:"theme.base.success"` // color used when the time value is under a certain delay
 
 	Ratio ThemeDataRatio
