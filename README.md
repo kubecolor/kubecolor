@@ -574,7 +574,7 @@ Note that some files are generated in this repo. To run them, use `make`:
 # Regenerate ./config-schema.json
 make config-schema.json
 
-# Run integration test corpus
+# Run integration test corpus, found in ./test/corpus/*.txt
 make corpus
 
 # Regenerate test results in integration test corpus
