@@ -1,28 +1,37 @@
-===
+================================================================================
 $ kubectl top pod
-===
+================================================================================
+
 NAME        CPU(cores)   MEMORY(bytes)
 app-29twd   779m         221Mi
 app-2hhr6   1036m        220Mi
 app-52mbv   881m         137Mi
----
+
+--------------------------------------------------------------------------------
+
 [37mNAME        CPU(cores)   MEMORY(bytes)[0m
 [37mapp-29twd[0m   [36m779m[0m         [37m221Mi[0m
 [37mapp-2hhr6[0m   [36m1036m[0m        [37m220Mi[0m
 [37mapp-52mbv[0m   [36m881m[0m         [37m137Mi[0m
-===
+
+================================================================================
 $ kubectl top pod --no-headers
-===
+================================================================================
+
 app-29twd   779m         221Mi
 app-2hhr6   1036m        220Mi
 app-52mbv   881m         137Mi
----
+
+--------------------------------------------------------------------------------
+
 [37mapp-29twd[0m   [36m779m[0m         [37m221Mi[0m
 [37mapp-2hhr6[0m   [36m1036m[0m        [37m220Mi[0m
 [37mapp-52mbv[0m   [36m881m[0m         [37m137Mi[0m
-===
+
+================================================================================
 $ kubectl api-resources
-===
+================================================================================
+
 NAME                              SHORTNAMES   APIGROUP                       NAMESPACED   KIND
 bindings                                                                      true         Binding
 componentstatuses                 cs                                          false        ComponentStatus
@@ -40,7 +49,7 @@ daemonsets                        ds           apps                           tr
 statefulsets                      sts          apps                           true         StatefulSet
 tokenreviews                                   authentication.k8s.io          false        TokenReview
 
----
+--------------------------------------------------------------------------------
 
 [37mNAME                              SHORTNAMES   APIGROUP                       NAMESPACED   KIND[0m
 [37mbindings[0m                                                                      [36mtrue[0m         [37mBinding[0m
@@ -58,9 +67,11 @@ tokenreviews                                   authentication.k8s.io          fa
 [37mdaemonsets[0m                        [36mds[0m           [37mapps[0m                           [36mtrue[0m         [37mDaemonSet[0m
 [37mstatefulsets[0m                      [36msts[0m          [37mapps[0m                           [36mtrue[0m         [37mStatefulSet[0m
 [37mtokenreviews[0m                                   [37mauthentication.k8s.io[0m          [36mfalse[0m        [37mTokenReview[0m
-===
+
+================================================================================
 $ kubectl api-resources --no-headers
-===
+================================================================================
+
 bindings                                                                      true         Binding
 componentstatuses                 cs                                          false        ComponentStatus
 pods                              po                                          true         Pod
@@ -77,7 +88,7 @@ daemonsets                        ds           apps                           tr
 statefulsets                      sts          apps                           true         StatefulSet
 tokenreviews                                   authentication.k8s.io          false        TokenReview
 
----
+--------------------------------------------------------------------------------
 
 [37mbindings[0m                                                                      [36mtrue[0m         [37mBinding[0m
 [37mcomponentstatuses[0m                 [36mcs[0m                                          [36mfalse[0m        [37mComponentStatus[0m
@@ -94,83 +105,92 @@ tokenreviews                                   authentication.k8s.io          fa
 [37mdaemonsets[0m                        [36mds[0m           [37mapps[0m                           [36mtrue[0m         [37mDaemonSet[0m
 [37mstatefulsets[0m                      [36msts[0m          [37mapps[0m                           [36mtrue[0m         [37mStatefulSet[0m
 [37mtokenreviews[0m                                   [37mauthentication.k8s.io[0m          [36mfalse[0m        [37mTokenReview[0m
-===
+
+================================================================================
 $ kubectl get pod
-===
+================================================================================
+
 NAME          READY   STATUS    RESTARTS   AGE
 nginx-dnmv5   1/1     Running   0          6d6h
 nginx-m8pbc   1/1     Running   0          6d6h
 nginx-qdf9b   1/1     Running   0          6d6h
 
----
+--------------------------------------------------------------------------------
 
 [37mNAME          READY   STATUS    RESTARTS   AGE[0m
 [37mnginx-dnmv5[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
 [37mnginx-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
 [37mnginx-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
 
-===
+================================================================================
 # kubectl get pod with crashloop
 $ kubectl get pod
-===
+================================================================================
+
 NAME          READY   STATUS             RESTARTS   AGE
 nginx-dnmv4   1/1     CrashLoopBackOff   0          6d6h
 nginx-m8pbc   1/1     Running            0          6d6h
 nginx-qdf9b   0/1     Running            0          6d6h
 
----
+--------------------------------------------------------------------------------
 
 [37mNAME          READY   STATUS             RESTARTS   AGE[0m
 [37mnginx-dnmv4[0m   [36m1/1[0m     [31mCrashLoopBackOff[0m   [36m0[0m          [37m6d6h[0m
 [37mnginx-m8pbc[0m   [36m1/1[0m     [32mRunning[0m            [36m0[0m          [37m6d6h[0m
 [37mnginx-qdf9b[0m   [33m0/1[0m     [32mRunning[0m            [36m0[0m          [37m6d6h[0m
 
-===
+================================================================================
 # kubectl get pod with fresh objects
-KUBECOLOR_OBJ_FRESH=5m
+KUBECOLOR_OBJ_FRESH="5m"
 $ kubectl get pod
-===
+================================================================================
+
 NAME          READY   STATUS    RESTARTS   AGE
 nginx-dnmv6   1/1     Running   0          6d6h
 nginx-m8pbc   1/1     Running   0          5m
 nginx-qdf9b   1/1     Running   0          4m59s
 
----
+--------------------------------------------------------------------------------
 
 [37mNAME          READY   STATUS    RESTARTS   AGE[0m
 [37mnginx-dnmv6[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
 [37mnginx-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m5m[0m
 [37mnginx-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [32m4m59s[0m
-===
+
+================================================================================
 $ kubectl get pod --no-headers
-===
+================================================================================
+
 nginx-dnmv5   1/1     Running   0          6d6h
 nginx-m8pbc   1/1     Running   0          6d6h
 nginx-qdf9b   1/1     Running   0          6d6h
 
----
+--------------------------------------------------------------------------------
 
 [37mnginx-dnmv5[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
 [37mnginx-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
 [37mnginx-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
 
-===
+================================================================================
 $ kubectl get pod -o wide
-===
+================================================================================
+
 NAME                     READY   STATUS    RESTARTS   AGE     IP           NODE       NOMINATED NODE   READINESS GATES
 nginx-6799fc88d8-dnmv7   1/1     Running   0          7d10h   172.18.0.5   minikube   <none>           <none>
 nginx-6799fc88d8-m8pbc   1/1     Running   0          7d10h   172.18.0.4   minikube   <none>           <none>
 nginx-6799fc88d8-qdf9b   1/1     Running   0          7d10h   172.18.0.3   minikube   <none>           <none>
 
----
+--------------------------------------------------------------------------------
 
 [37mNAME                     READY   STATUS    RESTARTS   AGE     IP           NODE       NOMINATED NODE   READINESS GATES[0m
 [37mnginx-6799fc88d8-dnmv7[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m7d10h[0m   [36m172.18.0.5[0m   [37mminikube[0m   [36m<none>[0m           [37m<none>[0m
 [37mnginx-6799fc88d8-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m7d10h[0m   [36m172.18.0.4[0m   [37mminikube[0m   [36m<none>[0m           [37m<none>[0m
 [37mnginx-6799fc88d8-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m7d10h[0m   [36m172.18.0.3[0m   [37mminikube[0m   [36m<none>[0m           [37m<none>[0m
-===
+
+================================================================================
 $ kubectl get pod -o json
-===
+================================================================================
+
 {
     "apiVersion": "v1",
     "kind": "Pod",
@@ -179,7 +199,7 @@ $ kubectl get pod -o json
     "null": null
 }
 
----
+--------------------------------------------------------------------------------
 
 {
     "[37mapiVersion[0m": "[37mv1[0m",
@@ -189,9 +209,9 @@ $ kubectl get pod -o json
     "[37mnull[0m": [33mnull[0m
 }
 
-===
+================================================================================
 $ kubectl get pod -o yaml
-===
+================================================================================
 
 apiVersion: v1
 kind: "Pod"
@@ -200,7 +220,7 @@ unknown: <unknown>
 none: <none>
 bool: true
 
----
+--------------------------------------------------------------------------------
 
 [33mapiVersion[0m: [37mv1[0m
 [33mkind[0m: "[37mPod[0m"
@@ -209,9 +229,9 @@ bool: true
 [33mnone[0m: [33m<none>[0m
 [33mbool[0m: [32mtrue[0m
 
-===
+================================================================================
 $ kubectl describe pod
-===
+================================================================================
 
 Name:         nginx-lpv5x
 Namespace:    default
@@ -222,7 +242,7 @@ Start Time:   Sat, 10 Oct 2020 14:07:17 +0900
 Labels:       app=nginx
 Annotations:  <none>
 
----
+--------------------------------------------------------------------------------
 
 [33mName[0m:         [37mnginx-lpv5x[0m
 [33mNamespace[0m:    [37mdefault[0m
@@ -233,9 +253,10 @@ Annotations:  <none>
 [33mLabels[0m:       app=[37mnginx[0m
 [33mAnnotations[0m:  [33m<none>[0m
 
-===
+================================================================================
 $ kubectl api-versions
-===
+================================================================================
+
 acme.cert-manager.io/v1alpha2
 admissionregistration.k8s.io/v1beta1
 apiextensions.k8s.io/v1beta1
@@ -254,7 +275,7 @@ autoscaling/v2beta2
 batch/v1
 batch/v1beta1
 
----
+--------------------------------------------------------------------------------
 
 [37macme.cert-manager.io/v1alpha2[0m
 [37madmissionregistration.k8s.io/v1beta1[0m
@@ -274,21 +295,21 @@ batch/v1beta1
 [37mbatch/v1[0m
 [37mbatch/v1beta1[0m
 
-===
+================================================================================
 $ kubectl version --client
-===
+================================================================================
 
 Client Version: v1.29.0
 Kustomize Version: v5.0.4-0.20230601165947-6ce0bf390ce3
 
----
+--------------------------------------------------------------------------------
 
 [33mClient Version[0m: [37mv1.29.0[0m
 [33mKustomize Version[0m: [37mv5.0.4-0.20230601165947-6ce0bf390ce3[0m
 
-===
+================================================================================
 $ kubectl apply -o json
-===
+================================================================================
 
 {
     "apiVersion": "apps/v1",
@@ -303,7 +324,7 @@ $ kubectl apply -o json
     }
 }
 
----
+--------------------------------------------------------------------------------
 
 {
     "[37mapiVersion[0m": "[37mapps/v1[0m",
@@ -317,9 +338,11 @@ $ kubectl apply -o json
         "[33mgeneration[0m": [35m3[0m
     }
 }
-===
+
+================================================================================
 $ kubectl apply -o yaml
-===
+================================================================================
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -348,7 +371,7 @@ status:
   replicas: 3
   updatedReplicas: 3
 
----
+--------------------------------------------------------------------------------
 
 [33mapiVersion[0m: [37mapps/v1[0m
 [33mkind[0m: [37mDeployment[0m
@@ -377,9 +400,11 @@ status:
   [37mreadyReplicas[0m: [35m3[0m
   [37mreplicas[0m: [35m3[0m
   [37mupdatedReplicas[0m: [35m3[0m
-===
+
+================================================================================
 $ kubectl events
-===
+================================================================================
+
 LAST SEEN   TYPE     REASON              OBJECT                       MESSAGE
 13s         Normal   SuccessfulCreate    ReplicaSet/nginx-76d6c9b8c   Created pod: nginx-76d6c9b8c-fmshc
 13s         Normal   SuccessfulCreate    ReplicaSet/nginx-76d6c9b8c   Created pod: nginx-76d6c9b8c-bkmwp
@@ -395,7 +420,7 @@ LAST SEEN   TYPE     REASON              OBJECT                       MESSAGE
 9s          Normal   Created             Pod/nginx-76d6c9b8c-fmshc    Created container nginx
 9s          Normal   Started             Pod/nginx-76d6c9b8c-fmshc    Started container nginx
 
----
+--------------------------------------------------------------------------------
 
 [37mLAST SEEN   TYPE     REASON              OBJECT                       MESSAGE[0m
 [37m13s[0m         [32mNormal[0m   [32mSuccessfulCreate[0m    [36mReplicaSet/nginx-76d6c9b8c[0m   [37mCreated pod: nginx-76d6c9b8c-fmshc[0m
