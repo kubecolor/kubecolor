@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/spf13/viper"
 )
 
 type Config struct {
@@ -21,12 +22,15 @@ type Config struct {
 }
 
 func ResolveConfig(inputArgs []string) (*Config, error) {
-	cfg := &Config{}
-
 	v, err := config.LoadViper()
 	if err != nil {
 		return nil, err
 	}
+	return ResolveConfigViper(inputArgs, v)
+}
+
+func ResolveConfigViper(inputArgs []string, v *viper.Viper) (*Config, error) {
+	cfg := &Config{}
 
 	if lightThemeEnv, ok, err := parseBoolEnv("KUBECOLOR_LIGHT_BACKGROUND"); err != nil {
 		return nil, err

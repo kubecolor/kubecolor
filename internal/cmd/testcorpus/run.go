@@ -8,6 +8,9 @@ import (
 	"strings"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/kubecolor/kubecolor/command"
+	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/printer"
 )
 
 func RunTests(files []File) {
@@ -74,13 +77,43 @@ func ExecuteTest(test Test) error {
 		return fmt.Errorf(`command must start with "kubectl", but got %q`, cmd)
 	}
 
-	gotOutput := printCommand(args, test.Input)
+	gotOutput := printCommand(args, test.Input, test.Env)
 	gotOutput = strings.TrimSpace(gotOutput)
 
 	if test.Output != gotOutput {
 		return fmt.Errorf("input does not match output:\n%s", createColoredDiff(test.Output, gotOutput))
 	}
 	return nil
+}
+
+func printCommand(args []string, input string, env []EnvVar) string {
+	os.Clearenv()
+	for _, e := range env {
+		if err := os.Setenv(e.Key, e.Value); err != nil {
+			return fmt.Sprintf("config error: set env %s=%q: %s", e.Key, e.Value, err)
+		}
+	}
+
+	v := config.NewViper()
+	cfg, err := command.ResolveConfigViper(args, v)
+	if err != nil {
+		return fmt.Sprintf("config error: %s", err)
+	}
+	cfg.ForceColor = true
+
+	shouldColorize, subcommandInfo := command.ResolveSubcommand(args, cfg)
+	if !shouldColorize {
+		return input
+	}
+	p := &printer.KubectlOutputColoredPrinter{
+		SubcommandInfo:    subcommandInfo,
+		Recursive:         subcommandInfo.Recursive,
+		ObjFreshThreshold: cfg.ObjFreshThreshold,
+		Theme:             cfg.Theme,
+	}
+	var buf bytes.Buffer
+	p.Print(strings.NewReader(input), &buf)
+	return buf.String()
 }
 
 func createColoredDiff(want, got string) string {

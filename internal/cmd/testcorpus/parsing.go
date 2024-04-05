@@ -19,6 +19,12 @@ type Test struct {
 	Command string
 	Input   string
 	Output  string
+	Env     []EnvVar
+}
+
+type EnvVar struct {
+	Key   string
+	Value string
 }
 
 func ParseGlobFS(fsys fs.FS, glob string) ([]File, error) {

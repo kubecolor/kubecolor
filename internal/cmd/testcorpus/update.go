@@ -2,10 +2,12 @@ package main
 
 import (
 	"bytes"
+	"cmp"
 	"crypto/sha512"
 	"fmt"
 	"io"
 	"os"
+	"slices"
 	"strings"
 )
 
@@ -91,6 +93,12 @@ func writeTest(w io.Writer, test Test) error {
 	if test.Name != test.Command {
 		fmt.Fprintf(w, "# %s\n", test.Name)
 	}
+	slices.SortFunc(test.Env, func(a, b EnvVar) int {
+		return cmp.Compare(a.Key, b.Key)
+	})
+	for _, env := range test.Env {
+		fmt.Fprintf(w, "%s=%q\n", env.Key, env.Value)
+	}
 	fmt.Fprintf(w, "$ %s\n", test.Command)
 	fmt.Fprintln(w, testHeaderSeparator)
 	fmt.Fprintln(w)
@@ -98,6 +106,6 @@ func writeTest(w io.Writer, test Test) error {
 	fmt.Fprintln(w)
 	fmt.Fprintln(w, testOutputSeparator)
 	fmt.Fprintln(w)
-	fmt.Fprintln(w, strings.TrimSpace(printCommand(args, test.Input)))
+	fmt.Fprintln(w, strings.TrimSpace(printCommand(args, test.Input, test.Env)))
 	return nil
 }

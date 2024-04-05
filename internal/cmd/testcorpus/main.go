@@ -1,17 +1,12 @@
 package main
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/gookit/color"
-	"github.com/kubecolor/kubecolor/command"
 	"github.com/kubecolor/kubecolor/config"
-	"github.com/kubecolor/kubecolor/config/testconfig"
-	"github.com/kubecolor/kubecolor/printer"
 )
 
 var (
@@ -60,23 +55,6 @@ func main() {
 	} else {
 		RunTests(files)
 	}
-}
-
-func printCommand(args []string, input string) string {
-	cfg := &command.Config{ForceColor: true, Theme: testconfig.DarkTheme}
-	shouldColorize, subcommandInfo := command.ResolveSubcommand(args, cfg)
-	if !shouldColorize {
-		return input
-	}
-	p := &printer.KubectlOutputColoredPrinter{
-		SubcommandInfo:    subcommandInfo,
-		Recursive:         subcommandInfo.Recursive,
-		ObjFreshThreshold: cfg.ObjFreshThreshold,
-		Theme:             cfg.Theme,
-	}
-	var buf bytes.Buffer
-	p.Print(strings.NewReader(input), &buf)
-	return buf.String()
 }
 
 func logErrorf(format string, args ...any) {

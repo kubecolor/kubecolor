@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"slices"
 	"strings"
 	"unicode/utf8"
 )
@@ -90,15 +91,40 @@ func (s *TestScanner) readHeaderLine(line string) error {
 	switch firstChar {
 	case '#':
 		s.test.Name = rest
+		return nil
 	case '$':
+		if s.test.Command != "" {
+			return fmt.Errorf("test %q: found multiple command lines (starting with '$') in header", s.test.Name)
+		}
 		s.test.Command = rest
 		if s.test.Name == "" {
 			s.test.Name = rest
 		}
-	default:
-		return fmt.Errorf("test %q: invalid test header first char %q", s.test.Name, firstChar)
+		return nil
 	}
-	return nil
+
+	if key, value, ok := strings.Cut(trimmed, "="); ok {
+		key = strings.TrimSpace(key)
+		value = strings.TrimSpace(value)
+		if strings.HasPrefix(value, `"`) && strings.HasSuffix(value, `"`) {
+			if _, err := fmt.Sscanf(value, "%q", &value); err != nil {
+				return fmt.Errorf("test %q: env %q: failed to parse value as quoted string: %w", s.test.Name, key, err)
+			}
+		}
+		if slices.ContainsFunc(s.test.Env, func(e EnvVar) bool {
+			return e.Key == key
+		}) {
+			return fmt.Errorf("test %q: env %q: key specified multiple times", s.test.Name, key)
+		}
+
+		s.test.Env = append(s.test.Env, EnvVar{
+			Key:   key,
+			Value: value,
+		})
+		return nil
+	}
+
+	return fmt.Errorf("test %q: invalid test header line %q", s.test.Name, trimmed)
 }
 
 func (s *TestScanner) scanInput() error {
