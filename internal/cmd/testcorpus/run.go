@@ -124,7 +124,6 @@ func printCommand(args []string, input string, env []EnvVar) string {
 
 func createColoredDiff(path, want, got string) string {
 	edits := myers.ComputeEdits(span.URIFromPath(path), want, got)
-	edits = gotextdiff.LineEdits(want, edits)
 	unified := gotextdiff.ToUnified("want", "got", want, edits)
 	lines := splitHunksIntoLines(unified.Hunks)
 

@@ -34,7 +34,7 @@ secrets                                                                       tr
 serviceaccounts                   sa                                          true         ServiceAccount
 services                          svc                                         true         Service
 mutatingwebhookconfigurations                  admissionregistration.k8s.io   false        MutatingWebhookConfiguration
-customresourcedefinitions         crd,crds     apiextensions.k8s.io           fals        CustomResourceDefinition
+customresourcedefinitions         crd,crds     apiextensions.k8s.io           false        CustomResourceDefinition
 controllerrevisions                            apps                           true         ControllerRevision
 daemonsets                        ds           apps                           true         DaemonSet
 statefulsets                      sts          apps                           true         StatefulSet
