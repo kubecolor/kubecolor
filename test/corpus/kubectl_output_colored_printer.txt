@@ -21,7 +21,6 @@ app-52mbv   881m         137Mi
 [37mapp-2hhr6[0m   [36m1036m[0m        [37m220Mi[0m
 [37mapp-52mbv[0m   [36m881m[0m         [37m137Mi[0m
 ===
-KUBECOLOR_PRESET=light
 $ kubectl api-resources
 ===
 NAME                              SHORTNAMES   APIGROUP                       NAMESPACED   KIND
@@ -35,7 +34,7 @@ secrets                                                                       tr
 serviceaccounts                   sa                                          true         ServiceAccount
 services                          svc                                         true         Service
 mutatingwebhookconfigurations                  admissionregistration.k8s.io   false        MutatingWebhookConfiguration
-customresourcedefinitions         crd,crds     apiextensions.k8s.io           false        CustomResourceDefinition
+customresourcedefinitions         crd,crds     apiextensions.k8s.io           fals        CustomResourceDefinition
 controllerrevisions                            apps                           true         ControllerRevision
 daemonsets                        ds           apps                           true         DaemonSet
 statefulsets                      sts          apps                           true         StatefulSet
