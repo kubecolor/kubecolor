@@ -28,7 +28,9 @@ jobs:
           go-version-file: go.mod
 
       - name: test
-        run: make test
+        env:
+          FORCE_COLOR: "true"
+        run: make test corpus
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4

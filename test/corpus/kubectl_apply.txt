@@ -1,0 +1,19 @@
+================================================================================
+$ kubectl apply
+================================================================================
+
+deployment.apps/foo created
+deployment.apps/foo configured
+deployment.apps/foo unchanged
+deployment.apps/foo unchanged (dry run)
+deployment.apps/foo unchanged (server dry run)
+deployment.apps/foo bar
+
+--------------------------------------------------------------------------------
+
+deployment.apps/foo [32mcreated[0m
+deployment.apps/foo [33mconfigured[0m
+deployment.apps/foo [35munchanged[0m
+deployment.apps/foo [35munchanged[0m [36m(dry run)[0m
+deployment.apps/foo [35munchanged[0m [36m(server dry run)[0m
+[32mdeployment.apps/foo bar[0m
