@@ -160,10 +160,7 @@ func parseColorFg(s string) (string, error) {
 	}
 	code, err := parseColorSyntax(s, false)
 	if err != nil {
-		return "", err
-	}
-	if code == "" {
-		return "", fmt.Errorf("invalid fg color: %q", s)
+		return "", fmt.Errorf("bg: %w", err)
 	}
 	return code, nil
 }
@@ -224,10 +221,7 @@ func parseColorBg(s string) (string, error) {
 	}
 	code, err := parseColorSyntax(s, true)
 	if err != nil {
-		return "", err
-	}
-	if code == "" {
-		return "", fmt.Errorf("invalid bg color: %q", s)
+		return "", fmt.Errorf("bg: %w", err)
 	}
 	return code, nil
 }
@@ -327,7 +321,7 @@ func parseColorSyntax(s string, isBg bool) (string, error) {
 		return autoConvertRGB(hex), nil
 	}
 
-	return "", nil
+	return "", fmt.Errorf("invalid color format: %q", s)
 }
 
 func parseColorFunctionRGB(s string, isBg bool) (string, error) {
