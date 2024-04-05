@@ -181,3 +181,178 @@ PolicyRule:
 	[1m---------                   -----------------  --------------             -----[0m
 	[37mleases.coordination.k8s.io[0m  [36m[][0m                 [37m[][0m                         [36m[create][0m
 	[37mleases.coordination.k8s.io[0m  [36m[][0m                 [37m[cert-manager-controller][0m  [36m[get update patch][0m
+
+================================================================================
+# kubectl describe with container args
+$ kubectl describe pod
+================================================================================
+
+Name:             traefik-6b445777bf-vxb6v
+Namespace:        traefik
+Priority:         0
+Service Account:  traefik
+Node:             minikube-123/192.168.1.2
+Start Time:       Tue, 26 Mar 2024 21:07:39 +0100
+Labels:           app.kubernetes.io/instance=traefik-traefik
+                  app.kubernetes.io/managed-by=Helm
+                  app.kubernetes.io/name=traefik
+                  helm.sh/chart=traefik-26.1.0
+                  pod-template-hash=6b445777bf
+Annotations:      cni.projectcalico.org/containerID: 45fb53247b8633bc6c7de3c68f808a2177ddb7f34bb0974e98f1dc4608f5295e
+                  cni.projectcalico.org/podIP: 10.1.2.34/32
+                  cni.projectcalico.org/podIPs: 10.1.2.34/32
+Status:           Running
+IP:               10.1.2.34
+IPs:
+  IP:           10.1.2.34
+Controlled By:  ReplicaSet/traefik-6b445777bf
+Containers:
+  traefik:
+    Container ID:  containerd://ec2e1e3f61ac02472c42e0766d3ad2f8fb9a6c29f165a323a355a12dda878386
+    Image:         docker.io/traefik:v2.11.0
+    Image ID:      docker.io/library/traefik@sha256:4be302e188b5be7637a3404033e8088c005059fd29e05b7ff04a403fac3d13ea
+    Ports:         9100/TCP, 9000/TCP, 8000/TCP, 8443/TCP
+    Host Ports:    0/TCP, 0/TCP, 80/TCP, 443/TCP
+    Args:
+      --global.checknewversion
+      --global.sendanonymoususage
+      --entrypoints.metrics.address=:9100/tcp
+      --entrypoints.traefik.address=:9000/tcp
+      --entrypoints.web.address=:8000/tcp
+      --entrypoints.websecure.address=:8443/tcp
+      --api.dashboard=true
+      --providers.kubernetescrd
+      --providers.kubernetesingress
+      --entrypoints.web.http.redirections.entryPoint.to=:443
+      --entrypoints.web.http.redirections.entryPoint.scheme=https
+      --entrypoints.websecure.http.tls=true
+    State:          Running
+      Started:      Tue, 26 Mar 2024 21:07:40 +0100
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      memory:  150Mi
+    Requests:
+      cpu:      10m
+      memory:   80Mi
+    Liveness:   http-get http://:9000/ping delay=2s timeout=2s period=10s #success=1 #failure=3
+    Readiness:  http-get http://:9000/ping delay=2s timeout=2s period=10s #success=1 #failure=1
+    Environment:
+      POD_NAME:       traefik-6b445777bf-vxb6v (v1:metadata.name)
+      POD_NAMESPACE:  traefik (v1:metadata.namespace)
+    Mounts:
+      /data from data (rw)
+      /tmp from tmp (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-fmzll (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
+Volumes:
+  data:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:
+    SizeLimit:  <unset>
+  tmp:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:
+    SizeLimit:  <unset>
+  kube-api-access-fmzll:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:                      <none>
+
+--------------------------------------------------------------------------------
+
+[96mName[0m:             [93mtraefik-6b445777bf-vxb6v[0m
+[96mNamespace[0m:        [93mtraefik[0m
+[96mPriority[0m:         [35m0[0m
+[96mService Account[0m:  [93mtraefik[0m
+[96mNode[0m:             [93mminikube-123/192.168.1.2[0m
+[96mStart Time[0m:       [93mTue, 26 Mar 2024 21:07:39 +0100[0m
+[96mLabels[0m:           app.kubernetes.io/instance=[93mtraefik-traefik[0m
+                  app.kubernetes.io/managed-by=[93mHelm[0m
+                  app.kubernetes.io/name=[93mtraefik[0m
+                  helm.sh/chart=[93mtraefik-26.1.0[0m
+                  pod-template-hash=[93m6b445777bf[0m
+[96mAnnotations[0m:      cni.projectcalico.org/containerID: [93m45fb53247b8633bc6c7de3c68f808a2177ddb7f34bb0974e98f1dc4608f5295e[0m
+                  cni.projectcalico.org/podIP: [93m10.1.2.34/32[0m
+                  cni.projectcalico.org/podIPs: [93m10.1.2.34/32[0m
+[96mStatus[0m:           [32mRunning[0m
+[96mIP[0m:               [93m10.1.2.34[0m
+[96mIPs[0m:
+  [36mIP[0m:           [93m10.1.2.34[0m
+[96mControlled By[0m:  [93mReplicaSet/traefik-6b445777bf[0m
+[96mContainers[0m:
+  [36mtraefik[0m:
+    [96mContainer ID[0m:  [93mcontainerd://ec2e1e3f61ac02472c42e0766d3ad2f8fb9a6c29f165a323a355a12dda878386[0m
+    [96mImage[0m:         [93mdocker.io/traefik:v2.11.0[0m
+    [96mImage ID[0m:      [93mdocker.io/library/traefik@sha256:4be302e188b5be7637a3404033e8088c005059fd29e05b7ff04a403fac3d13ea[0m
+    [96mPorts[0m:         [93m9100/TCP, 9000/TCP, 8000/TCP, 8443/TCP[0m
+    [96mHost Ports[0m:    [93m0/TCP, 0/TCP, 80/TCP, 443/TCP[0m
+    [96mArgs[0m:
+      --global.checknewversion
+      --global.sendanonymoususage
+      --entrypoints.metrics.address=[93m:9100/tcp[0m
+      --entrypoints.traefik.address=[93m:9000/tcp[0m
+      --entrypoints.web.address=[93m:8000/tcp[0m
+      --entrypoints.websecure.address=[93m:8443/tcp[0m
+      --api.dashboard=[32mtrue[0m
+      --providers.kubernetescrd
+      --providers.kubernetesingress
+      --entrypoints.web.http.redirections.entryPoint.to=[93m:443[0m
+      --entrypoints.web.http.redirections.entryPoint.scheme=[93mhttps[0m
+      --entrypoints.websecure.http.tls=[32mtrue[0m
+    [96mState[0m:          [32mRunning[0m
+      [36mStarted[0m:      [93mTue, 26 Mar 2024 21:07:40 +0100[0m
+    [96mReady[0m:          [32mTrue[0m
+    [96mRestart Count[0m:  [35m0[0m
+    [96mLimits[0m:
+      [36mmemory[0m:  [35m150Mi[0m
+    [96mRequests[0m:
+      [36mcpu[0m:      [35m10m[0m
+      [36mmemory[0m:   [35m80Mi[0m
+    [96mLiveness[0m:   http-get http://:9000/ping delay=[93m2s timeout=2s period=10s #success=1 #failure=3[0m
+    [96mReadiness[0m:  http-get http://:9000/ping delay=[93m2s timeout=2s period=10s #success=1 #failure=1[0m
+    [96mEnvironment[0m:
+      [36mPOD_NAME[0m:       [93mtraefik-6b445777bf-vxb6v (v1:metadata.name)[0m
+      [36mPOD_NAMESPACE[0m:  [93mtraefik (v1:metadata.namespace)[0m
+    [96mMounts[0m:
+      [93m/data from data (rw)[0m
+      [93m/tmp from tmp (rw)[0m
+      [93m/var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-fmzll (ro)[0m
+[96mConditions[0m:
+  [36mType[0m              [93mStatus[0m
+  [36mInitialized[0m       [32mTrue[0m
+  [36mReady[0m             [32mTrue[0m
+  [36mContainersReady[0m   [32mTrue[0m
+  [36mPodScheduled[0m      [32mTrue[0m
+[96mVolumes[0m:
+  [36mdata[0m:
+    [96mType[0m:       [93mEmptyDir (a temporary directory that shares a pod's lifetime)[0m
+    [96mMedium[0m:
+    [96mSizeLimit[0m:  [90;3m<unset>[0m
+  [36mtmp[0m:
+    [96mType[0m:       [93mEmptyDir (a temporary directory that shares a pod's lifetime)[0m
+    [96mMedium[0m:
+    [96mSizeLimit[0m:  [90;3m<unset>[0m
+  [36mkube-api-access-fmzll[0m:
+    [96mType[0m:                    [93mProjected (a volume that contains injected data from multiple sources)[0m
+    [96mTokenExpirationSeconds[0m:  [35m3607[0m
+    [96mConfigMapName[0m:           [93mkube-root-ca.crt[0m
+    [96mConfigMapOptional[0m:       [90;3m<nil>[0m
+    [96mDownwardAPI[0m:             [32mtrue[0m
+[96mQoS Class[0m:                   [93mBurstable[0m
+[96mNode-Selectors[0m:              [90;3m<none>[0m
+[96mTolerations[0m:                 node.kubernetes.io/not-ready:NoExecute op=[93mExists for 300s[0m
+                             node.kubernetes.io/unreachable:NoExecute op=[93mExists for 300s[0m
+[96mEvents[0m:                      [90;3m<none>[0m
