@@ -76,7 +76,7 @@ docker run --rm -it -v $HOME/.kube:/home/nonroot/.kube:ro ghcr.io/kubecolor/kube
 
 ### Homebrew
 
-![GitHub Release](https://img.shields.io/github/v/release/kubecolor/kubecolor?display_name=tag&label=Homebrew&color=4cc61f)
+[![GitHub Release](https://img.shields.io/github/v/release/kubecolor/kubecolor?display_name=tag&label=Homebrew&color=4cc61f)](https://github.com/kubecolor/homebrew-tap)
 
 ```sh
 brew install kubecolor/tap/kubecolor
@@ -84,7 +84,7 @@ brew install kubecolor/tap/kubecolor
 
 ### Scoop
 
-![Scoop Version](https://img.shields.io/scoop/v/kubecolor?label=Scoop%2FMain&color=4cc61f)
+[![Scoop version](https://repology.org/badge/version-for-repo/scoop/kubecolor.svg)](https://repology.org/project/kubecolor/versions)
 
 ```sh
 scoop install kubecolor
@@ -92,7 +92,7 @@ scoop install kubecolor
 
 ### Nix
 
-[![nixpkgs unstable package](https://repology.org/badge/version-for-repo/nix_unstable/kubecolor.svg)](https://repology.org/project/kubecolor/versions)
+[![nixpkgs unstable version](https://repology.org/badge/version-for-repo/nix_unstable/kubecolor.svg)](https://repology.org/project/kubecolor/versions)
 
 ```sh
 nix-shell -p kubecolor
@@ -100,10 +100,18 @@ nix-shell -p kubecolor
 
 ### AUR (Arch User Repositories)
 
-[![AUR package](https://repology.org/badge/version-for-repo/aur/kubecolor.svg)](https://repology.org/project/kubecolor/versions)
+[![AUR version](https://repology.org/badge/version-for-repo/aur/kubecolor.svg)](https://repology.org/project/kubecolor/versions)
 
 ```sh
 yay -Syu kubecolor
+```
+
+### Termux (Android)
+
+[![Termux version](https://repology.org/badge/version-for-repo/termux/kubecolor.svg)](https://repology.org/project/kubecolor/versions)
+
+```sh
+pkg install kubecolor
 ```
 
 ### Download binary via GitHub release
@@ -309,7 +317,7 @@ colors of your output.
 | `KUBECOLOR_THEME_BASE_MUTED`         | color   | general color for when things are less relevant                                                                                                                                                                                                     | `yellow`
 | `KUBECOLOR_THEME_BASE_KEY`           | color[] | general color for keys<br/>*(fallback to `[KUBECOLOR_THEME_BASE_SECONDARY]`)*                                                                                                                                                                       | `yellow / white`
 |                                      |         |                                                                                                                                                                                                                                                     |
-| `KUBECOLOR_THEME_DEFAULT`            | color   | default when no specific mapping is found for the command                                                                                                                                                                                           | `yellow`
+| `KUBECOLOR_THEME_DEFAULT`            | color   | default when no specific mapping is found for the command                                                                                                                                                                                           | `green`
 |                                      |         |                                                                                                                                                                                                                                                     |
 | `KUBECOLOR_THEME_DATA_KEY`           | color[] | used for the key<br/>*(fallback to `KUBECOLOR_THEME_BASE_KEY`)*                                                                                                                                                                                     | `yellow / white`
 | `KUBECOLOR_THEME_DATA_STRING`        | color   | used when value is a string<br/>*(fallback to `KUBECOLOR_THEME_BASE_INFO`)*                                                                                                                                                                         | `white`
@@ -317,11 +325,12 @@ colors of your output.
 | `KUBECOLOR_THEME_DATA_FALSE`         | color   | used when value is false<br/>*(fallback to `KUBECOLOR_THEME_BASE_DANGER`)*                                                                                                                                                                          | `red`
 | `KUBECOLOR_THEME_DATA_NUMBER`        | color   | used when the value is a number<br/>*(fallback to `KUBECOLOR_THEME_BASE_PRIMARY`)*                                                                                                                                                                  | `magenta`
 | `KUBECOLOR_THEME_DATA_NULL`          | color   | used when the value is null, nil, or none<br/>*(fallback to `KUBECOLOR_THEME_BASE_MUTED`)*                                                                                                                                                          | `yellow`
-| `KUBECOLOR_THEME_DATA_DURATION`      | color   | used when the value is a duration, e.g "12m"                                                                                                                                                                                                        |
+| `KUBECOLOR_THEME_DATA_QUANTITY`      | color   | used when the value is a quantity, e.g "100m" or "5Gi"<br/>*(fallback to `KUBECOLOR_THEME_DATA_NUMBER`)*                                                                                                                                            | `magenta`
+| `KUBECOLOR_THEME_DATA_DURATION`      | color   | used when the value is a duration, e.g "12m" or "1d12h"                                                                                                                                                                                             | `none`
 | `KUBECOLOR_THEME_DATA_DURATIONFRESH` | color   | color used when the time value is under a certain delay<br/>*(fallback to `KUBECOLOR_THEME_BASE_SUCCESS`)*                                                                                                                                          | `green`
 |                                      |         |                                                                                                                                                                                                                                                     |
 | `KUBECOLOR_THEME_DATA_RATIO_ZERO`    | color   | used for "0/0"<br/>*(fallback to `KUBECOLOR_THEME_BASE_MUTED`)*                                                                                                                                                                                     | `yellow`
-| `KUBECOLOR_THEME_DATA_RATIO_EQUAL`   | color   | used for "n/n", e.g "1/1"                                                                                                                                                                                                                           |
+| `KUBECOLOR_THEME_DATA_RATIO_EQUAL`   | color   | used for "n/n", e.g "1/1"                                                                                                                                                                                                                           | `none`
 | `KUBECOLOR_THEME_DATA_RATIO_UNEQUAL` | color   | used for "n/m", e.g "0/1"<br/>*(fallback to `KUBECOLOR_THEME_BASE_WARNING`)*                                                                                                                                                                        | `yellow`
 |                                      |         |                                                                                                                                                                                                                                                     |
 | `KUBECOLOR_THEME_STATUS_SUCCESS`     | color   | used in status keywords, e.g "Running", "Ready"<br/>*(fallback to `KUBECOLOR_THEME_BASE_SUCCESS`)*                                                                                                                                                  | `green`
@@ -499,7 +508,7 @@ theme:
     danger: red # (color) general color for when things are bad
     muted: yellow # (color) general color for when things are less relevant
     key: yellow / white # (color[]) general color for keys (fallback to [theme.base.secondary])
-  default: yellow # (color) default when no specific mapping is found for the command
+  default: green # (color) default when no specific mapping is found for the command
   data:
     key: yellow / white # (color[]) used for the key (fallback to theme.base.key)
     string: white # (color) used when value is a string (fallback to theme.base.info)
@@ -507,7 +516,8 @@ theme:
     "false": red # (color) used when value is false (fallback to theme.base.danger)
     number: magenta # (color) used when the value is a number (fallback to theme.base.primary)
     "null": yellow # (color) used when the value is null, nil, or none (fallback to theme.base.muted)
-    duration: none # (color) used when the value is a duration, e.g "12m"
+    quantity: magenta # (color) used when the value is a quantity, e.g "100m" or "5Gi" (fallback to theme.data.number)
+    duration: none # (color) used when the value is a duration, e.g "12m" or "1d12h"
     durationfresh: green # (color) color used when the time value is under a certain delay (fallback to theme.base.success)
     ratio:
       zero: yellow # (color) used for "0/0" (fallback to theme.base.muted)
@@ -559,6 +569,22 @@ It means you can use plugins from kubecolor (e.g. you can do `kubecolor plugin_n
 ## Contributions
 
 Always welcome. Just opening an issue should be also grateful.
+
+Note that some files are generated in this repo. To run them, use `make`:
+
+```bash
+# Regenerate ./config-schema.json
+make config-schema.json
+
+# Run integration test corpus, found in ./test/corpus/*.txt
+make corpus
+
+# Regenerate test results in integration test corpus
+make corpus-update
+
+# Generate configs (you currently have to copy-paste the results)
+go run ./internal/cmd/configdoc
+```
 
 ## Versioning
 

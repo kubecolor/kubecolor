@@ -36,6 +36,19 @@
         "bg=red:underline/bg=green:italic/bg=blue:bold"
       ]
     },
+    "duration": {
+      "type": "string",
+      "title": "Time duration",
+      "description": "A string value representing a time span, formatted as a Go time duration.",
+      "default": "0",
+      "examples": [
+        "30s",
+        "5m",
+        "10m",
+        "1h30m",
+        "5h"
+      ]
+    },
     "preset": {
       "type": "string",
       "enum": [
@@ -191,9 +204,13 @@
           "$ref": "#/$defs/color",
           "description": "used when the value is null, nil, or none"
         },
+        "quantity": {
+          "$ref": "#/$defs/color",
+          "description": "used when the value is a quantity, e.g \"100m\" or \"5Gi\""
+        },
         "duration": {
           "$ref": "#/$defs/color",
-          "description": "used when the value is a duration, e.g \"12m\""
+          "description": "used when the value is a duration, e.g \"12m\" or \"1d12h\""
         },
         "durationFresh": {
           "$ref": "#/$defs/color",
@@ -334,7 +351,7 @@
       ]
     },
     "objFreshThreshold": {
-      "type": "integer",
+      "$ref": "#/$defs/duration",
       "description": "Ages below this uses theme.data.durationfresh coloring"
     },
     "preset": {

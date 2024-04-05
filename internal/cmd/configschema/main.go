@@ -91,6 +91,20 @@ func main() {
 		Enum:        allPresets(),
 	}
 
+	s.Definitions["duration"] = &jsonschema.Schema{
+		Type:        "string",
+		Title:       "Time duration",
+		Description: "A string value representing a time span, formatted as a Go time duration.",
+		Default:     "0",
+		Examples: []any{
+			"30s",
+			"5m",
+			"10m",
+			"1h30m",
+			"5h",
+		},
+	}
+
 	b, err := json.MarshalIndent(s, "", "  ")
 	if err != nil {
 		log.Fatal(err)
@@ -124,7 +138,7 @@ func allPresets() []any {
 // types to Schema IDs.
 func Lookup(t reflect.Type) jsonschema.ID {
 	switch t.Name() {
-	case "Color", "ColorSlice", "Preset":
+	case "Color", "ColorSlice", "Preset", "Duration":
 		return jsonschema.ID("#/$defs/" + Namer(t.Name()))
 	default:
 		return ""

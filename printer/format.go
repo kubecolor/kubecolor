@@ -1,6 +1,7 @@
 package printer
 
 import (
+	"regexp"
 	"strings"
 
 	"github.com/kubecolor/kubecolor/config"
@@ -21,11 +22,15 @@ func getColorByKeyIndent(indent int, basicIndentWidth int, colors config.ColorSl
 	return colors[indent/basicIndentWidth%len(colors)]
 }
 
+var (
+	isQuantityRegex = regexp.MustCompile(`^[\+\-]?(?:\d+|\.\d+|\d+\.|\d+\.\d+)?(?:m|[kMGTPE]i?)$`)
+)
+
 // getColorByValueType returns a color by value.
 // This is intended to be used to colorize any structured data e.g. Json, Yaml.
 func getColorByValueType(val string, theme *config.Theme) config.Color {
 	switch val {
-	case "null", "<none>", "<unknown>", "<unset>", "<nil>":
+	case "null", "<none>", "<unknown>", "<unset>", "<nil>", "<invalid>":
 		return theme.Data.Null
 	case "true", "True":
 		return theme.Data.True
@@ -43,6 +48,16 @@ func getColorByValueType(val string, theme *config.Theme) config.Color {
 		if stringutil.IsOnlyDigits(left) && stringutil.IsOnlyDigits(right) {
 			return theme.Data.Number
 		}
+	}
+
+	// Quantity: 100m, 5Gi
+	if isQuantityRegex.MatchString(val) {
+		return theme.Data.Quantity
+	}
+
+	// Duration: 15m10s
+	if _, ok := stringutil.ParseHumanDuration(val); ok {
+		return theme.Data.Duration
 	}
 
 	return theme.Data.String

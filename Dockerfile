@@ -1,4 +1,4 @@
-FROM docker.io/library/golang:1.22.1 as build
+FROM docker.io/library/golang:1.22.2 as build
 
 WORKDIR /go/src/kubecolor
 COPY go.mod go.sum .
@@ -6,9 +6,9 @@ RUN go mod download
 
 COPY . .
 ARG VERSION
-RUN go install -ldflags="-X main.Version=${VERSION}" .
+RUN CGO_ENABLED=0 go install -ldflags="-X main.Version=${VERSION}" .
 
-FROM gcr.io/distroless/base:nonroot
+FROM gcr.io/distroless/static-debian11:nonroot
 COPY --from=build /go/bin/kubecolor /usr/local/bin/
 COPY --from=bitnami/kubectl /opt/bitnami/kubectl/bin/kubectl /usr/local/bin/
 ENTRYPOINT ["kubecolor"]
