@@ -36,6 +36,19 @@
         "bg=red:underline/bg=green:italic/bg=blue:bold"
       ]
     },
+    "duration": {
+      "type": "string",
+      "title": "Time duration",
+      "description": "A string value representing a time span, formatted as a Go time duration.",
+      "default": "0",
+      "examples": [
+        "30s",
+        "5m",
+        "10m",
+        "1h30m",
+        "5h"
+      ]
+    },
     "preset": {
       "type": "string",
       "enum": [
@@ -338,7 +351,7 @@
       ]
     },
     "objFreshThreshold": {
-      "type": "integer",
+      "$ref": "#/$defs/duration",
       "description": "Ages below this uses theme.data.durationfresh coloring"
     },
     "preset": {
