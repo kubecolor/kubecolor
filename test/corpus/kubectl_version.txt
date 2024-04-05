@@ -8,8 +8,8 @@ Server Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.2", GitCom
 
 --------------------------------------------------------------------------------
 
-[33mClient Version[0m: [37mversion.Info{Major:"1", Minor:"19", GitVersion:"v1.19.3", GitCommit:"1e11e4a2108024935ecfcb2912226cedeafd99df", GitTreeState:"clean", BuildDate:"2020-10-14T18:49:28Z", GoVersion:"go1.15.2", Compiler:"gc", Platform:"darwin/amd64"}[0m
-[33mServer Version[0m: [37mversion.Info{Major:"1", Minor:"19", GitVersion:"v1.19.2", GitCommit:"f5743093fd1c663cb0cbc89748f730662345d44d", GitTreeState:"clean", BuildDate:"2020-09-16T13:32:58Z", GoVersion:"go1.15", Compiler:"gc", Platform:"linux/amd64"}`),[0m
+[96mClient Version[0m: [93mversion.Info{Major:"1", Minor:"19", GitVersion:"v1.19.3", GitCommit:"1e11e4a2108024935ecfcb2912226cedeafd99df", GitTreeState:"clean", BuildDate:"2020-10-14T18:49:28Z", GoVersion:"go1.15.2", Compiler:"gc", Platform:"darwin/amd64"}[0m
+[96mServer Version[0m: [93mversion.Info{Major:"1", Minor:"19", GitVersion:"v1.19.2", GitCommit:"f5743093fd1c663cb0cbc89748f730662345d44d", GitTreeState:"clean", BuildDate:"2020-09-16T13:32:58Z", GoVersion:"go1.15", Compiler:"gc", Platform:"linux/amd64"}`),[0m
 
 ================================================================================
 # --client can be colorized
@@ -21,5 +21,5 @@ Server Version: v1.19.2
 
 --------------------------------------------------------------------------------
 
-[33mClient Version[0m: [37mv1.19.3[0m
-[33mServer Version[0m: [37mv1.19.2[0m
+[96mClient Version[0m: [93mv1.19.3[0m
+[96mServer Version[0m: [93mv1.19.2[0m
