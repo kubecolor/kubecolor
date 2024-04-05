@@ -11,7 +11,7 @@ nginx-qdf9b   1/1     Running   0          6d6h
 
 --------------------------------------------------------------------------------
 
-[37mNAME          READY   STATUS    RESTARTS   AGE[0m
+[1mNAME          READY   STATUS    RESTARTS   AGE[0m
 [37mnginx-dnmv5[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
 [37mnginx-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
 [37mnginx-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
@@ -32,12 +32,12 @@ replicaset.apps/nginx-6799fc88d8   3         3         3       19d
 
 --------------------------------------------------------------------------------
 
-[37mNAME                         READY   STATUS    RESTARTS   AGE[0m
+[1mNAME                         READY   STATUS    RESTARTS   AGE[0m
 [37mpod/nginx-8spn9[0m              [36m1/1[0m     [32mRunning[0m   [36m1[0m          [37m19d[0m
 [37mpod/nginx-dplns[0m              [36m1/1[0m     [32mRunning[0m   [36m1[0m          [37m19d[0m
 [37mpod/nginx-lpv5x[0m              [36m1/1[0m     [32mRunning[0m   [36m1[0m          [37m19d[0m
 
-[37mNAME                               DESIRED   CURRENT   READY   AGE[0m
+[1mNAME                               DESIRED   CURRENT   READY   AGE[0m
 [37mreplicaset.apps/nginx[0m              [36m3[0m         [37m3[0m         [36m3[0m       [37m19d[0m
 [37mreplicaset.apps/nginx-6799fc88d8[0m   [36m3[0m         [37m3[0m         [36m3[0m       [37m19d[0m
 
@@ -69,7 +69,7 @@ nginx-qdf9b   1/1     Running   0          6d6h
 
 --------------------------------------------------------------------------------
 
-[30mNAME          READY   STATUS    RESTARTS   AGE[0m
+[1mNAME          READY   STATUS    RESTARTS   AGE[0m
 [30mnginx-dnmv5[0m   [34m1/1[0m     [32mRunning[0m   [34m0[0m          [30m6d6h[0m
 [30mnginx-m8pbc[0m   [34m1/1[0m     [32mRunning[0m   [34m0[0m          [30m6d6h[0m
 [30mnginx-qdf9b[0m   [34m1/1[0m     [32mRunning[0m   [34m0[0m          [30m6d6h[0m
@@ -98,7 +98,7 @@ tokenreviews                                   authentication.k8s.io          fa
 
 --------------------------------------------------------------------------------
 
-[37mNAME                              SHORTNAMES   APIGROUP                       NAMESPACED   KIND[0m
+[1mNAME                              SHORTNAMES   APIGROUP                       NAMESPACED   KIND[0m
 [37mbindings[0m                                                                      [36mtrue[0m         [37mBinding[0m
 [37mcomponentstatuses[0m                 [36mcs[0m                                          [36mfalse[0m        [37mComponentStatus[0m
 [37mpods[0m                              [36mpo[0m                                          [36mtrue[0m         [37mPod[0m

@@ -56,13 +56,13 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 		if len(line.Value) > 0 {
 			val := string(line.Value)
 			if k, v, ok := strings.Cut(val, ": "); ok { // split annotation and env from
-				vColor := dp.valueColor(scanner.Path(), v)
+				vColor := dp.colorize(scanner.Path(), v)
 				fmt.Fprint(w, k, ": ", vColor.Render(v))
 			} else if k, v, ok := strings.Cut(val, "="); ok { // split label
-				vColor := dp.valueColor(scanner.Path(), v)
+				vColor := dp.colorize(scanner.Path(), v)
 				fmt.Fprint(w, k, "=", vColor.Render(v))
 			} else {
-				valColor := dp.valueColor(scanner.Path(), val)
+				valColor := dp.colorize(scanner.Path(), val)
 				fmt.Fprint(w, valColor.Render(val))
 			}
 		}
@@ -75,12 +75,14 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 	}
 }
 
-func (dp *DescribePrinter) valueColor(path describe.Path, value string) config.Color {
+func (dp *DescribePrinter) colorize(path describe.Path, value string) config.Color {
 	value = strings.TrimSpace(value)
-	if describeUseStatusColoring(path) {
-		if col, ok := ColorStatus(value, dp.TablePrinter.Theme); ok {
-			return col
-		}
+	pathStr := path.String()
+	if col, ok := dp.colorizeStatus(value, pathStr); ok {
+		return col
+	}
+	if col, ok := dp.colorizeArgs(value, pathStr); ok {
+		return col
 	}
 	return getColorByValueType(value, dp.TablePrinter.Theme)
 }
@@ -91,14 +93,37 @@ var describePathsToColor = []*regexp.Regexp{
 	regexp.MustCompile(`^Containers/[^/]*/Last State(/Reason)?$`),
 }
 
-func describeUseStatusColoring(path describe.Path) bool {
-	if len(path) == 0 {
-		return false
+func (dp *DescribePrinter) colorizeStatus(value, pathStr string) (config.Color, bool) {
+	if !matchesAnyRegex(pathStr, describePathsToColor) {
+		return config.Color{}, false
 	}
-	str := path.String()
+	col, ok := ColorStatus(value, dp.TablePrinter.Theme)
+	if !ok {
+		return config.Color{}, false
+	}
+	return col, true
+}
 
-	for _, r := range describePathsToColor {
-		if r.MatchString(str) {
+var describePathsToArgs = []*regexp.Regexp{
+	regexp.MustCompile(`^(Init )?Containers/[^/]*/Args$`),
+}
+
+func (dp *DescribePrinter) colorizeArgs(value, pathStr string) (config.Color, bool) {
+	if !matchesAnyRegex(pathStr, describePathsToArgs) {
+		return config.Color{}, false
+	}
+	if !strings.HasPrefix(value, "-") {
+		return config.Color{}, false
+	}
+	// Intentionally empty color, so it gets the same color as keys
+	// where "--my-flag=123" args has no coloring on "--my-flag=",
+	// so "--my-bool-flag" should also not be colored.
+	return config.Color{}, true
+}
+
+func matchesAnyRegex(s string, regexes []*regexp.Regexp) bool {
+	for _, r := range regexes {
+		if r.MatchString(s) {
 			return true
 		}
 	}

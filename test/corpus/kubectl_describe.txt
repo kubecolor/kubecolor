@@ -28,28 +28,28 @@ Volumes:
 
 --------------------------------------------------------------------------------
 
-[33mName[0m:         [37mnginx-lpv5x[0m
-[33mNamespace[0m:    [37mdefault[0m
-[33mPriority[0m:     [35m0[0m
-[33mNode[0m:         [37mminikube/172.17.0.3[0m
-[33mReady[0m:        [32mtrue[0m
-[33mStart Time[0m:   [37mSat, 10 Oct 2020 14:07:17 +0900[0m
-[33mLabels[0m:       app=[37mnginx[0m
-[33mAnnotations[0m:  [33m<none>[0m
-[33mContainers[0m:
-  [37mcontainer-1[0m:
-    [33mEnvironment Variables from[0m:
+[96mName[0m:         [93mnginx-lpv5x[0m
+[96mNamespace[0m:    [93mdefault[0m
+[96mPriority[0m:     [35m0[0m
+[96mNode[0m:         [93mminikube/172.17.0.3[0m
+[96mReady[0m:        [32mtrue[0m
+[96mStart Time[0m:   [93mSat, 10 Oct 2020 14:07:17 +0900[0m
+[96mLabels[0m:       app=[93mnginx[0m
+[96mAnnotations[0m:  [90;3m<none>[0m
+[96mContainers[0m:
+  [36mcontainer-1[0m:
+    [96mEnvironment Variables from[0m:
       anycm	ConfigMap  Optional: [32mtrue[0m
       anysec	Secret     Optional: [31mfalse[0m
-[33mConditions[0m:
-  [37mType[0m              [37mStatus[0m
-  [37mInitialized[0m       [32mTrue[0m
-  [37mReady[0m             [31mFalse[0m
-  [37mContainersReady[0m   [32mTrue[0m
-  [37mPodScheduled[0m      [32mTrue[0m
-[33mVolumes[0m:
-  [37mkube-api-access-7fdrt[0m:
-    [33mConfigMapOptional[0m:
+[96mConditions[0m:
+  [36mType[0m              [93mStatus[0m
+  [36mInitialized[0m       [32mTrue[0m
+  [36mReady[0m             [31mFalse[0m
+  [36mContainersReady[0m   [32mTrue[0m
+  [36mPodScheduled[0m      [32mTrue[0m
+[96mVolumes[0m:
+  [36mkube-api-access-7fdrt[0m:
+    [96mConfigMapOptional[0m:
 
 ================================================================================
 # key color changes based on its indentation
@@ -67,14 +67,14 @@ Containers:
 
 --------------------------------------------------------------------------------
 
-[33mIP[0m:           [37m172.18.0.7[0m
-[33mIPs[0m:
-  [37mIP[0m:           [37m172.18.0.7[0m
-[33mControlled By[0m:  [37mReplicaSet/nginx[0m
-[33mContainers[0m:
-  [37mnginx[0m:
-    [33mContainer ID[0m:   [37mdocker://2885230a30908c8a6bda5a5366619c730b25b994eea61c931bba08ef4a8c8593[0m
-      [37mStarted[0m:      [37mSat, 10 Oct 2020 14:07:44 +0900[0m
+[96mIP[0m:           [93m172.18.0.7[0m
+[96mIPs[0m:
+  [36mIP[0m:           [93m172.18.0.7[0m
+[96mControlled By[0m:  [93mReplicaSet/nginx[0m
+[96mContainers[0m:
+  [36mnginx[0m:
+    [96mContainer ID[0m:   [93mdocker://2885230a30908c8a6bda5a5366619c730b25b994eea61c931bba08ef4a8c8593[0m
+      [36mStarted[0m:      [93mSat, 10 Oct 2020 14:07:44 +0900[0m
 
 ================================================================================
 # table format in kubectl describe can be colored by describe
@@ -116,38 +116,38 @@ Events:              <none>
 
 --------------------------------------------------------------------------------
 
-[33mConditions[0m:
-  [37mType             Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message[0m
-  [37m----             ------  -----------------                 ------------------                ------                       -------[0m
+[96mConditions[0m:
+  [1mType             Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message[0m
+  [1m----             ------  -----------------                 ------------------                ------                       -------[0m
   [37mMemoryPressure[0m   [36mFalse[0m   [37mSun, 18 Oct 2020 12:00:54 +0900[0m   [36mWed, 14 Oct 2020 09:28:18 +0900[0m   [37mKubeletHasSufficientMemory[0m   [36mkubelet has sufficient memory available[0m
   [37mDiskPressure[0m     [36mFalse[0m   [37mSun, 18 Oct 2020 12:00:54 +0900[0m   [36mWed, 14 Oct 2020 09:28:18 +0900[0m   [37mKubeletHasNoDiskPressure[0m     [36mkubelet has no disk pressure[0m
-[33mAddresses[0m:
-  [37mInternalIP[0m:  [37m172.17.0.3[0m
-  [37mHostname[0m:    [37mminikube[0m
-[33mCapacity[0m:
-  [37mcpu[0m:                [35m6[0m
-  [37mmemory[0m:             [37m2036900Ki[0m
-  [37mpods[0m:               [35m110[0m
-[33mAllocatable[0m:
-  [37mcpu[0m:                [35m6[0m
-  [37mmemory[0m:             [37m2036900Ki[0m
-  [37mpods[0m:               [35m110[0m
-[33mSystem Info[0m:
-  [37mMachine ID[0m:                 [37m55d2ccaefc9847c9a69356e7f3bd23f4[0m
-  [37mSystem UUID[0m:                [37mfe312784-2364-4bba-a55e-f56051539c21[0m
-[33mNon-terminated Pods[0m:          [37m(14 in total)[0m
-  [37mNamespace                   Name                                CPU Requests  CPU Limits  Memory Requests  Memory Limits  AGE[0m
-  [37m---------                   ----                                ------------  ----------  ---------------  -------------  ---[0m
+[96mAddresses[0m:
+  [36mInternalIP[0m:  [93m172.17.0.3[0m
+  [36mHostname[0m:    [93mminikube[0m
+[96mCapacity[0m:
+  [36mcpu[0m:                [35m6[0m
+  [36mmemory[0m:             [93m2036900Ki[0m
+  [36mpods[0m:               [35m110[0m
+[96mAllocatable[0m:
+  [36mcpu[0m:                [35m6[0m
+  [36mmemory[0m:             [93m2036900Ki[0m
+  [36mpods[0m:               [35m110[0m
+[96mSystem Info[0m:
+  [36mMachine ID[0m:                 [93m55d2ccaefc9847c9a69356e7f3bd23f4[0m
+  [36mSystem UUID[0m:                [93mfe312784-2364-4bba-a55e-f56051539c21[0m
+[96mNon-terminated Pods[0m:          [93m(14 in total)[0m
+  [1mNamespace                   Name                                CPU Requests  CPU Limits  Memory Requests  Memory Limits  AGE[0m
+  [1m---------                   ----                                ------------  ----------  ---------------  -------------  ---[0m
   [36mdefault[0m                     [37mnginx-6799fc88d8-dnmv5[0m              [36m0 (0%)[0m        [37m0 (0%)[0m      [36m0 (0%)[0m           [37m0 (0%)[0m         [36m7d21h[0m
   [36mdefault[0m                     [37mnginx-6799fc88d8-m8pbc[0m              [36m0 (0%)[0m        [37m0 (0%)[0m      [36m0 (0%)[0m           [37m0 (0%)[0m         [36m7d21h[0m
   [36mdefault[0m                     [37mnginx-6799fc88d8-qdf9b[0m              [36m0 (0%)[0m        [37m0 (0%)[0m      [36m0 (0%)[0m           [37m0 (0%)[0m         [36m7d21h[0m
-[33mAllocated resources[0m:
-  [37m(Total limits may be over 100 percent, i.e., overcommitted.)[0m
-  [37mResource           Requests    Limits[0m
-  [37m--------           --------    ------[0m
+[96mAllocated resources[0m:
+  [93m(Total limits may be over 100 percent, i.e., overcommitted.)[0m
+  [1mResource           Requests    Limits[0m
+  [1m--------           --------    ------[0m
   [36mcpu[0m                [37m650m (10%)[0m  [36m0 (0%)[0m
   [36mmemory[0m             [37m70Mi (3%)[0m   [36m170Mi (8%)[0m
-[33mEvents[0m:              [33m<none>[0m
+[96mEvents[0m:              [90;3m<none>[0m
 
 ================================================================================
 # table format in kubectl describe at the end
@@ -169,15 +169,190 @@ PolicyRule:
 
 --------------------------------------------------------------------------------
 
-[33mName[0m:         [37mcert-manager:leaderelection[0m
-[33mLabels[0m:       app=[37mcert-manager[0m
-							app.kubernetes.io/version=[37mv1.12.3[0m
+[96mName[0m:         [93mcert-manager:leaderelection[0m
+[96mLabels[0m:       app=[93mcert-manager[0m
+							app.kubernetes.io/version=[93mv1.12.3[0m
 							some-label=[31mfalse[0m
-[33mAnnotations[0m:  meta.helm.sh/release-name: [37mcert-manager[0m
-							meta.helm.sh/release-namespace: [37mnais-system[0m
+[96mAnnotations[0m:  meta.helm.sh/release-name: [93mcert-manager[0m
+							meta.helm.sh/release-namespace: [93mnais-system[0m
 							some-annotation: [32mtrue[0m
-[33mPolicyRule[0m:
-	[37mResources                   Non-Resource URLs  Resource Names             Verbs[0m
-	[37m---------                   -----------------  --------------             -----[0m
+[96mPolicyRule[0m:
+	[1mResources                   Non-Resource URLs  Resource Names             Verbs[0m
+	[1m---------                   -----------------  --------------             -----[0m
 	[37mleases.coordination.k8s.io[0m  [36m[][0m                 [37m[][0m                         [36m[create][0m
 	[37mleases.coordination.k8s.io[0m  [36m[][0m                 [37m[cert-manager-controller][0m  [36m[get update patch][0m
+
+================================================================================
+# kubectl describe with container args
+$ kubectl describe pod
+================================================================================
+
+Name:             traefik-6b445777bf-vxb6v
+Namespace:        traefik
+Priority:         0
+Service Account:  traefik
+Node:             minikube-123/192.168.1.2
+Start Time:       Tue, 26 Mar 2024 21:07:39 +0100
+Labels:           app.kubernetes.io/instance=traefik-traefik
+                  app.kubernetes.io/managed-by=Helm
+                  app.kubernetes.io/name=traefik
+                  helm.sh/chart=traefik-26.1.0
+                  pod-template-hash=6b445777bf
+Annotations:      cni.projectcalico.org/containerID: 45fb53247b8633bc6c7de3c68f808a2177ddb7f34bb0974e98f1dc4608f5295e
+                  cni.projectcalico.org/podIP: 10.1.2.34/32
+                  cni.projectcalico.org/podIPs: 10.1.2.34/32
+Status:           Running
+IP:               10.1.2.34
+IPs:
+  IP:           10.1.2.34
+Controlled By:  ReplicaSet/traefik-6b445777bf
+Containers:
+  traefik:
+    Container ID:  containerd://ec2e1e3f61ac02472c42e0766d3ad2f8fb9a6c29f165a323a355a12dda878386
+    Image:         docker.io/traefik:v2.11.0
+    Image ID:      docker.io/library/traefik@sha256:4be302e188b5be7637a3404033e8088c005059fd29e05b7ff04a403fac3d13ea
+    Ports:         9100/TCP, 9000/TCP, 8000/TCP, 8443/TCP
+    Host Ports:    0/TCP, 0/TCP, 80/TCP, 443/TCP
+    Args:
+      --global.checknewversion
+      --global.sendanonymoususage
+      --entrypoints.metrics.address=:9100/tcp
+      --entrypoints.traefik.address=:9000/tcp
+      --entrypoints.web.address=:8000/tcp
+      --entrypoints.websecure.address=:8443/tcp
+      --api.dashboard=true
+      --providers.kubernetescrd
+      --providers.kubernetesingress
+      --entrypoints.web.http.redirections.entryPoint.to=:443
+      --entrypoints.web.http.redirections.entryPoint.scheme=https
+      --entrypoints.websecure.http.tls=true
+    State:          Running
+      Started:      Tue, 26 Mar 2024 21:07:40 +0100
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      memory:  150Mi
+    Requests:
+      cpu:      10m
+      memory:   80Mi
+    Liveness:   http-get http://:9000/ping delay=2s timeout=2s period=10s #success=1 #failure=3
+    Readiness:  http-get http://:9000/ping delay=2s timeout=2s period=10s #success=1 #failure=1
+    Environment:
+      POD_NAME:       traefik-6b445777bf-vxb6v (v1:metadata.name)
+      POD_NAMESPACE:  traefik (v1:metadata.namespace)
+    Mounts:
+      /data from data (rw)
+      /tmp from tmp (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-fmzll (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
+Volumes:
+  data:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:
+    SizeLimit:  <unset>
+  tmp:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:
+    SizeLimit:  <unset>
+  kube-api-access-fmzll:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:                      <none>
+
+--------------------------------------------------------------------------------
+
+[96mName[0m:             [93mtraefik-6b445777bf-vxb6v[0m
+[96mNamespace[0m:        [93mtraefik[0m
+[96mPriority[0m:         [35m0[0m
+[96mService Account[0m:  [93mtraefik[0m
+[96mNode[0m:             [93mminikube-123/192.168.1.2[0m
+[96mStart Time[0m:       [93mTue, 26 Mar 2024 21:07:39 +0100[0m
+[96mLabels[0m:           app.kubernetes.io/instance=[93mtraefik-traefik[0m
+                  app.kubernetes.io/managed-by=[93mHelm[0m
+                  app.kubernetes.io/name=[93mtraefik[0m
+                  helm.sh/chart=[93mtraefik-26.1.0[0m
+                  pod-template-hash=[93m6b445777bf[0m
+[96mAnnotations[0m:      cni.projectcalico.org/containerID: [93m45fb53247b8633bc6c7de3c68f808a2177ddb7f34bb0974e98f1dc4608f5295e[0m
+                  cni.projectcalico.org/podIP: [93m10.1.2.34/32[0m
+                  cni.projectcalico.org/podIPs: [93m10.1.2.34/32[0m
+[96mStatus[0m:           [32mRunning[0m
+[96mIP[0m:               [93m10.1.2.34[0m
+[96mIPs[0m:
+  [36mIP[0m:           [93m10.1.2.34[0m
+[96mControlled By[0m:  [93mReplicaSet/traefik-6b445777bf[0m
+[96mContainers[0m:
+  [36mtraefik[0m:
+    [96mContainer ID[0m:  [93mcontainerd://ec2e1e3f61ac02472c42e0766d3ad2f8fb9a6c29f165a323a355a12dda878386[0m
+    [96mImage[0m:         [93mdocker.io/traefik:v2.11.0[0m
+    [96mImage ID[0m:      [93mdocker.io/library/traefik@sha256:4be302e188b5be7637a3404033e8088c005059fd29e05b7ff04a403fac3d13ea[0m
+    [96mPorts[0m:         [93m9100/TCP, 9000/TCP, 8000/TCP, 8443/TCP[0m
+    [96mHost Ports[0m:    [93m0/TCP, 0/TCP, 80/TCP, 443/TCP[0m
+    [96mArgs[0m:
+      --global.checknewversion
+      --global.sendanonymoususage
+      --entrypoints.metrics.address=[93m:9100/tcp[0m
+      --entrypoints.traefik.address=[93m:9000/tcp[0m
+      --entrypoints.web.address=[93m:8000/tcp[0m
+      --entrypoints.websecure.address=[93m:8443/tcp[0m
+      --api.dashboard=[32mtrue[0m
+      --providers.kubernetescrd
+      --providers.kubernetesingress
+      --entrypoints.web.http.redirections.entryPoint.to=[93m:443[0m
+      --entrypoints.web.http.redirections.entryPoint.scheme=[93mhttps[0m
+      --entrypoints.websecure.http.tls=[32mtrue[0m
+    [96mState[0m:          [32mRunning[0m
+      [36mStarted[0m:      [93mTue, 26 Mar 2024 21:07:40 +0100[0m
+    [96mReady[0m:          [32mTrue[0m
+    [96mRestart Count[0m:  [35m0[0m
+    [96mLimits[0m:
+      [36mmemory[0m:  [35m150Mi[0m
+    [96mRequests[0m:
+      [36mcpu[0m:      [35m10m[0m
+      [36mmemory[0m:   [35m80Mi[0m
+    [96mLiveness[0m:   http-get http://:9000/ping delay=[93m2s timeout=2s period=10s #success=1 #failure=3[0m
+    [96mReadiness[0m:  http-get http://:9000/ping delay=[93m2s timeout=2s period=10s #success=1 #failure=1[0m
+    [96mEnvironment[0m:
+      [36mPOD_NAME[0m:       [93mtraefik-6b445777bf-vxb6v (v1:metadata.name)[0m
+      [36mPOD_NAMESPACE[0m:  [93mtraefik (v1:metadata.namespace)[0m
+    [96mMounts[0m:
+      [93m/data from data (rw)[0m
+      [93m/tmp from tmp (rw)[0m
+      [93m/var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-fmzll (ro)[0m
+[96mConditions[0m:
+  [36mType[0m              [93mStatus[0m
+  [36mInitialized[0m       [32mTrue[0m
+  [36mReady[0m             [32mTrue[0m
+  [36mContainersReady[0m   [32mTrue[0m
+  [36mPodScheduled[0m      [32mTrue[0m
+[96mVolumes[0m:
+  [36mdata[0m:
+    [96mType[0m:       [93mEmptyDir (a temporary directory that shares a pod's lifetime)[0m
+    [96mMedium[0m:
+    [96mSizeLimit[0m:  [90;3m<unset>[0m
+  [36mtmp[0m:
+    [96mType[0m:       [93mEmptyDir (a temporary directory that shares a pod's lifetime)[0m
+    [96mMedium[0m:
+    [96mSizeLimit[0m:  [90;3m<unset>[0m
+  [36mkube-api-access-fmzll[0m:
+    [96mType[0m:                    [93mProjected (a volume that contains injected data from multiple sources)[0m
+    [96mTokenExpirationSeconds[0m:  [35m3607[0m
+    [96mConfigMapName[0m:           [93mkube-root-ca.crt[0m
+    [96mConfigMapOptional[0m:       [90;3m<nil>[0m
+    [96mDownwardAPI[0m:             [32mtrue[0m
+[96mQoS Class[0m:                   [93mBurstable[0m
+[96mNode-Selectors[0m:              [90;3m<none>[0m
+[96mTolerations[0m:                 node.kubernetes.io/not-ready:NoExecute op=[93mExists for 300s[0m
+                             node.kubernetes.io/unreachable:NoExecute op=[93mExists for 300s[0m
+[96mEvents[0m:                      [90;3m<none>[0m

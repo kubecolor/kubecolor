@@ -21,10 +21,10 @@ func Test_getColorByKeyIndent(t *testing.T) {
 		basicIndentWidth int
 		expected         string
 	}{
-		{"dark depth: 1", testconfig.DarkTheme, 2, 2, "white"},
-		{"light depth: 1", testconfig.LightTheme, 2, 2, "black"},
-		{"dark depth: 2", testconfig.DarkTheme, 4, 2, "yellow"},
-		{"light depth: 2", testconfig.LightTheme, 4, 2, "yellow"},
+		{"dark depth: 1", testconfig.DarkTheme, 2, 2, "cyan"},
+		{"light depth: 1", testconfig.LightTheme, 2, 2, "blue"},
+		{"dark depth: 2", testconfig.DarkTheme, 4, 2, "hicyan"},
+		{"light depth: 2", testconfig.LightTheme, 4, 2, "hiblue"},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -45,8 +45,8 @@ func Test_getColorByValueType(t *testing.T) {
 		val      string
 		expected string
 	}{
-		{"dark null", testconfig.DarkTheme, "null", "yellow"},
-		{"light null", testconfig.LightTheme, "<none>", "yellow"},
+		{"dark null", testconfig.DarkTheme, "null", "gray:italic"},
+		{"light null", testconfig.LightTheme, "<none>", "gray:italic"},
 
 		{"dark true", testconfig.DarkTheme, "true", "green"},
 		{"light true", testconfig.LightTheme, "true", "green"},
@@ -57,8 +57,8 @@ func Test_getColorByValueType(t *testing.T) {
 		{"dark number", testconfig.DarkTheme, "123", "magenta"},
 		{"light number", testconfig.LightTheme, "456", "magenta"},
 
-		{"dark string", testconfig.DarkTheme, "aaa", "white"},
-		{"light string", testconfig.LightTheme, "12345a", "black"},
+		{"dark string", testconfig.DarkTheme, "aaa", "hiyellow"},
+		{"light string", testconfig.LightTheme, "12345a", "yellow"},
 	}
 	for _, tt := range tests {
 		tt := tt

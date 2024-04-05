@@ -52,8 +52,17 @@
     "preset": {
       "type": "string",
       "enum": [
+        "none",
         "dark",
         "light",
+        "protanopia-dark",
+        "protanopia-light",
+        "deuteranopia-dark",
+        "deuteranopia-light",
+        "tritanopia-dark",
+        "tritanopia-light",
+        "pre-0.3.0-dark",
+        "pre-0.3.0-light",
         "pre-0.0.21-dark",
         "pre-0.0.21-light"
       ],
