@@ -9,6 +9,8 @@ import (
 	"github.com/kubecolor/kubecolor/command"
 )
 
+//go:generate make config-schema.json
+
 // this is overridden on build time by GoReleaser
 var Version string
 
