@@ -568,6 +568,22 @@ It means you can use plugins from kubecolor (e.g. you can do `kubecolor plugin_n
 
 Always welcome. Just opening an issue should be also grateful.
 
+Note that some files are generated in this repo. To run them, use `make`:
+
+```bash
+# Regenerate ./config-schema.json
+make config-schema.json
+
+# Run integration test corpus
+make corpus
+
+# Regenerate test results in integration test corpus
+make corpus-update
+
+# Generate configs (you currently have to copy-paste the results)
+go run ./internal/cmd/configdoc
+```
+
 ## Versioning
 
 This project tries to follow [SemVer 2.0.0](https://semver.org/)
