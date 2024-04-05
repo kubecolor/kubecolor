@@ -33,7 +33,7 @@ jobs:
 
       - name: Create GitHub issue
         uses: JasonEtco/create-an-issue@v2
-        if: ${{ failure() && steps.govulncheck.conclusion == 'failure' && github.event_name == 'schedule' }}
+        if: ${{ !cancelled() && steps.govulncheck.conclusion == 'failure' && github.event_name == 'schedule' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GOVULNCHECK_OUTPUT: ${{ steps.govulncheck.outputs.govulncheck }}
