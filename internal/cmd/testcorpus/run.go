@@ -31,6 +31,9 @@ func RunTests(files []File) {
 		for _, test := range file.Tests {
 			if err := ExecuteTest(test); err != nil {
 				fmt.Printf("    ❌ %s\n", colorErrorPrefix.Render(test.Name))
+				for _, env := range test.Env {
+					fmt.Printf("     %s %s\n", colorErrorPrefix.Render("│"), colorMuted.Render(fmt.Sprintf("(env %s=%q)", env.Key, env.Value)))
+				}
 				lines := strings.Split(err.Error(), "\n")
 				for i, line := range lines {
 					switch {
