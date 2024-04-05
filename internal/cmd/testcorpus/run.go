@@ -4,13 +4,16 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
+	"text/tabwriter"
 
-	"github.com/google/go-cmp/cmp"
+	"github.com/gookit/color"
 	"github.com/kubecolor/kubecolor/command"
 	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/printer"
+	"github.com/sergi/go-diff/diffmatchpatch"
 )
 
 func RunTests(files []File) {
@@ -28,11 +31,12 @@ func RunTests(files []File) {
 				fmt.Printf("    ❌ %s\n", colorErrorPrefix.Render(test.Name))
 				lines := strings.Split(err.Error(), "\n")
 				for i, line := range lines {
-					if i == 0 {
+					switch {
+					case i == 0:
 						fmt.Printf("     %s %s\n", colorErrorPrefix.Render("│"), colorErrorText.Render(line))
-					} else if i == len(lines)-1 {
+					case i == len(lines)-1:
 						fmt.Printf("     %s%s\n", colorErrorPrefix.Render("└─"), line)
-					} else {
+					default:
 						fmt.Printf("     %s %s\n", colorErrorPrefix.Render("│"), line)
 					}
 				}
@@ -117,20 +121,96 @@ func printCommand(args []string, input string, env []EnvVar) string {
 }
 
 func createColoredDiff(want, got string) string {
-	wantLines := strings.Split(want, "\n")
-	gotLines := strings.Split(got, "\n")
-	diff := cmp.Diff(wantLines, gotLines)
-	diffLines := strings.Split(diff, "\n")
+	dmp := diffmatchpatch.New()
+
+	wSrc, wDst, linesArray := dmp.DiffLinesToRunes(want, got)
+	diffs := dmp.DiffMainRunes(wSrc, wDst, false)
+	diffs = dmp.DiffCharsToLines(diffs, linesArray)
+	diffs = splitDiffsIntoLines(diffs)
 
 	var buf bytes.Buffer
-	for _, line := range diffLines {
-		if strings.HasPrefix(line, "+") {
-			fmt.Fprintln(&buf, colorSuccess.Render(line))
-		} else if strings.HasPrefix(line, "-") {
-			fmt.Fprintln(&buf, colorErrorText.Render(line))
-		} else {
-			fmt.Fprintln(&buf, colorMuted.Render(line))
+	buf.WriteByte('\n')
+
+	for _, diff := range diffs {
+		switch diff.Type {
+		case diffmatchpatch.DiffEqual:
+			fmt.Fprintf(&buf, "  %s\n", colorDiffEqual.Render(color.ClearCode(diff.Text)))
+		case diffmatchpatch.DiffInsert:
+			fmt.Fprintf(&buf, "%s%s\n", colorDiffAddPrefix.Render("+ "), injectColor(diff.Text, colorDiffAdd))
+		case diffmatchpatch.DiffDelete:
+			fmt.Fprintf(&buf, "%s%s\n", colorDiffDelPrefix.Render("- "), injectColor(diff.Text, colorDiffDel))
 		}
 	}
+
+	fmt.Fprintf(&buf, "\n%s\n\n", colorMuted.Render("-----"))
+
+	tabbedDiffs := quoteAndTabWrite(diffs)
+	for _, diff := range tabbedDiffs {
+		switch diff.Type {
+		case diffmatchpatch.DiffEqual:
+			fmt.Fprintf(&buf, "  %s\n", colorDiffEqual.Render(diff.Text))
+		case diffmatchpatch.DiffInsert:
+			text := injectColor(highlightEscapedColorCodes(diff.Text, colorDiffColorHighlight), colorDiffAdd)
+			fmt.Fprintf(&buf, "%s%s\n", colorDiffAddPrefix.Render("+ "), text)
+		case diffmatchpatch.DiffDelete:
+			text := injectColor(highlightEscapedColorCodes(diff.Text, colorDiffColorHighlight), colorDiffDel)
+			fmt.Fprintf(&buf, "%s%s\n", colorDiffDelPrefix.Render("- "), text)
+		}
+	}
+
+	fmt.Fprintf(&buf, "\n%s %s\n", colorSuccess.Render("(+want)"), colorErrorText.Render("(-got)"))
+
 	return buf.String()
+}
+
+func splitDiffsIntoLines(diffs []diffmatchpatch.Diff) []diffmatchpatch.Diff {
+	var result []diffmatchpatch.Diff
+	for _, diff := range diffs {
+		lines := strings.Split(strings.Trim(diff.Text, "\n\r"), "\n")
+		for _, line := range lines {
+			match := strings.Trim(line, "\n\r")
+			result = append(result, diffmatchpatch.Diff{Type: diff.Type, Text: match})
+		}
+	}
+	return result
+}
+
+var tripleSpaceRegex = regexp.MustCompile(` {3,}`)
+
+func quoteAndTabWrite(diffs []diffmatchpatch.Diff) []diffmatchpatch.Diff {
+	var buf bytes.Buffer
+	tw := tabwriter.NewWriter(&buf, 0, 0, 3, ' ', 0)
+	for _, diff := range diffs {
+		quoted := fmt.Sprintf("%q", diff.Text)
+		tabbed := tripleSpaceRegex.ReplaceAllLiteralString(quoted, "\t")
+		fmt.Fprintln(tw, tabbed)
+	}
+	tw.Flush()
+	lines := strings.Split(buf.String(), "\n")
+	newDiffs := make([]diffmatchpatch.Diff, len(diffs))
+	for i, diff := range diffs {
+		newDiffs[i] = diffmatchpatch.Diff{Type: diff.Type, Text: lines[i]}
+	}
+	return newDiffs
+}
+
+var colorRegex = regexp.MustCompile(`\x1b\[[0-9;\.,]+m`)
+
+func injectColor(s string, color config.Color) string {
+	newCode := strings.TrimSuffix(strings.TrimPrefix(color.Code, "\x1b["), "m")
+
+	updatedColors := colorRegex.ReplaceAllStringFunc(s, func(s string) string {
+		originalCode := strings.TrimSuffix(strings.TrimPrefix(s, "\x1b["), "m")
+
+		return fmt.Sprintf("\x1b[%s;%sm", originalCode, newCode)
+	})
+	return color.Render(updatedColors)
+}
+
+var escapedColorRegex = regexp.MustCompile(`\\x1b\[[0-9;\.,]+m`)
+
+func highlightEscapedColorCodes(s string, color config.Color) string {
+	return escapedColorRegex.ReplaceAllStringFunc(s, func(s string) string {
+		return colorDiffColorHighlight.Render(s)
+	})
 }

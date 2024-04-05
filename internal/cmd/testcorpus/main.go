@@ -18,6 +18,13 @@ var (
 	colorHeader  = config.MustParseColor("bold")
 	colorMuted   = config.MustParseColor("gray")
 	colorSuccess = config.MustParseColor("green")
+
+	colorDiffAddPrefix      = config.MustParseColor("fg=green:bg=22:bold")
+	colorDiffAdd            = config.MustParseColor("bg=22") // dark green
+	colorDiffDelPrefix      = config.MustParseColor("fg=red:bg=52:bold")
+	colorDiffDel            = config.MustParseColor("bg=52") // dark red
+	colorDiffEqual          = config.MustParseColor("gray:italic")
+	colorDiffColorHighlight = config.MustParseColor(`magenta`)
 )
 
 var flags = struct {
