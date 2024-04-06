@@ -468,7 +468,7 @@ We have some presets that come shipped with kubecolor:
 | `tritanopia-light`(*)   | Color theme for [Tritanopia color blindness](https://www.color-blindness.com/tritanopia-blue-yellow-color-blindness/). For when your terminal's background is light/bright.
 
 > [!NOTE]
-> (*) As of version `v0.3.0`, both `deuteranopia` and `tritanopia` themes are the same as `protanopia`. They may differ in future versions when we better tune them. Set your configuration to match your color-blindness type so you will benefit of the futur changes.
+> (*) As of version `v0.3.0`, both `deuteranopia` and `tritanopia` themes are the same as `protanopia`. They may differ in future versions when we better tune them. Set your configuration to match your color-blindness type so you will benefit of the future changes.
 
 Selecting preset can be done via the `KUBECOLOR_PRESET` environment variable,
 like so:
