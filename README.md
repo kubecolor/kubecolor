@@ -314,22 +314,22 @@ colors of your output.
 | `KUBECOLOR_THEME_BASE_SUCCESS`       | color   | general color for when things are good                                                                                                                                                                                                              | `green`
 | `KUBECOLOR_THEME_BASE_WARNING`       | color   | general color for when things are wrong                                                                                                                                                                                                             | `yellow`
 | `KUBECOLOR_THEME_BASE_DANGER`        | color   | general color for when things are bad                                                                                                                                                                                                               | `red`
-| `KUBECOLOR_THEME_BASE_MUTED`         | color   | general color for when things are less relevant                                                                                                                                                                                                     | `yellow`
-| `KUBECOLOR_THEME_BASE_KEY`           | color[] | general color for keys<br/>*(fallback to `[KUBECOLOR_THEME_BASE_SECONDARY]`)*                                                                                                                                                                       | `yellow / white`
+| `KUBECOLOR_THEME_BASE_MUTED`         | color   | general color for when things are less relevant                                                                                                                                                                                                     | `gray:italic`
+| `KUBECOLOR_THEME_BASE_KEY`           | color[] | general color for keys<br/>*(fallback to `[KUBECOLOR_THEME_BASE_SECONDARY]`)*                                                                                                                                                                       | `hicyan / cyan`
 |                                      |         |                                                                                                                                                                                                                                                     |
 | `KUBECOLOR_THEME_DEFAULT`            | color   | default when no specific mapping is found for the command                                                                                                                                                                                           | `green`
 |                                      |         |                                                                                                                                                                                                                                                     |
-| `KUBECOLOR_THEME_DATA_KEY`           | color[] | used for the key<br/>*(fallback to `KUBECOLOR_THEME_BASE_KEY`)*                                                                                                                                                                                     | `yellow / white`
-| `KUBECOLOR_THEME_DATA_STRING`        | color   | used when value is a string<br/>*(fallback to `KUBECOLOR_THEME_BASE_INFO`)*                                                                                                                                                                         | `white`
+| `KUBECOLOR_THEME_DATA_KEY`           | color[] | used for the key<br/>*(fallback to `KUBECOLOR_THEME_BASE_KEY`)*                                                                                                                                                                                     | `hicyan / cyan`
+| `KUBECOLOR_THEME_DATA_STRING`        | color   | used when value is a string<br/>*(fallback to `KUBECOLOR_THEME_BASE_INFO`)*                                                                                                                                                                         | `hiyellow`
 | `KUBECOLOR_THEME_DATA_TRUE`          | color   | used when value is true<br/>*(fallback to `KUBECOLOR_THEME_BASE_SUCCESS`)*                                                                                                                                                                          | `green`
 | `KUBECOLOR_THEME_DATA_FALSE`         | color   | used when value is false<br/>*(fallback to `KUBECOLOR_THEME_BASE_DANGER`)*                                                                                                                                                                          | `red`
 | `KUBECOLOR_THEME_DATA_NUMBER`        | color   | used when the value is a number<br/>*(fallback to `KUBECOLOR_THEME_BASE_PRIMARY`)*                                                                                                                                                                  | `magenta`
-| `KUBECOLOR_THEME_DATA_NULL`          | color   | used when the value is null, nil, or none<br/>*(fallback to `KUBECOLOR_THEME_BASE_MUTED`)*                                                                                                                                                          | `yellow`
+| `KUBECOLOR_THEME_DATA_NULL`          | color   | used when the value is null, nil, or none<br/>*(fallback to `KUBECOLOR_THEME_BASE_MUTED`)*                                                                                                                                                          | `gray:italic`
 | `KUBECOLOR_THEME_DATA_QUANTITY`      | color   | used when the value is a quantity, e.g "100m" or "5Gi"<br/>*(fallback to `KUBECOLOR_THEME_DATA_NUMBER`)*                                                                                                                                            | `magenta`
 | `KUBECOLOR_THEME_DATA_DURATION`      | color   | used when the value is a duration, e.g "12m" or "1d12h"                                                                                                                                                                                             | `none`
 | `KUBECOLOR_THEME_DATA_DURATIONFRESH` | color   | color used when the time value is under a certain delay<br/>*(fallback to `KUBECOLOR_THEME_BASE_SUCCESS`)*                                                                                                                                          | `green`
 |                                      |         |                                                                                                                                                                                                                                                     |
-| `KUBECOLOR_THEME_DATA_RATIO_ZERO`    | color   | used for "0/0"<br/>*(fallback to `KUBECOLOR_THEME_BASE_MUTED`)*                                                                                                                                                                                     | `yellow`
+| `KUBECOLOR_THEME_DATA_RATIO_ZERO`    | color   | used for "0/0"<br/>*(fallback to `KUBECOLOR_THEME_BASE_MUTED`)*                                                                                                                                                                                     | `gray:italic`
 | `KUBECOLOR_THEME_DATA_RATIO_EQUAL`   | color   | used for "n/n", e.g "1/1"                                                                                                                                                                                                                           | `none`
 | `KUBECOLOR_THEME_DATA_RATIO_UNEQUAL` | color   | used for "n/m", e.g "0/1"<br/>*(fallback to `KUBECOLOR_THEME_BASE_WARNING`)*                                                                                                                                                                        | `yellow`
 |                                      |         |                                                                                                                                                                                                                                                     |
@@ -337,13 +337,13 @@ colors of your output.
 | `KUBECOLOR_THEME_STATUS_WARNING`     | color   | used in status keywords, e.g "Terminating"<br/>*(fallback to `KUBECOLOR_THEME_BASE_WARNING`)*                                                                                                                                                       | `yellow`
 | `KUBECOLOR_THEME_STATUS_ERROR`       | color   | used in status keywords, e.g "Failed", "Unhealthy"<br/>*(fallback to `KUBECOLOR_THEME_BASE_DANGER`)*                                                                                                                                                | `red`
 |                                      |         |                                                                                                                                                                                                                                                     |
-| `KUBECOLOR_THEME_TABLE_HEADER`       | color   | used on table headers<br/>*(fallback to `KUBECOLOR_THEME_BASE_INFO`)*                                                                                                                                                                               | `white`
+| `KUBECOLOR_THEME_TABLE_HEADER`       | color   | used on table headers<br/>*(fallback to `KUBECOLOR_THEME_BASE_INFO`)*                                                                                                                                                                               | `fg=white:#aaff00`
 | `KUBECOLOR_THEME_TABLE_COLUMNS`      | color[] | used on table columns when no other coloring applies such as status or duration coloring. The multiple colors are cycled based on column ID, from left to right.<br/>*(fallback to `[KUBECOLOR_THEME_BASE_INFO / KUBECOLOR_THEME_BASE_SECONDARY]`)* | `white / cyan`
 |                                      |         |                                                                                                                                                                                                                                                     |
 | `KUBECOLOR_THEME_STDERR_DEFAULT`     | color   | default when no specific mapping is found for the output line<br/>*(fallback to `KUBECOLOR_THEME_BASE_INFO`)*                                                                                                                                       | `white`
-| `KUBECOLOR_THEME_STDERR_ERROR`       | color   | e.g when text contains "error"<br/>*(fallback to `KUBECOLOR_THEME_BASE_DANGER`)*                                                                                                                                                                    | `red`
+| `KUBECOLOR_THEME_STDERR_ERROR`       | color   | e.g when text contains "error"<br/>*(fallback to `KUBECOLOR_THEME_BASE_DANGER`)*                                                                                                                                                                    | `fg=hi-yellow:bg=red:bold`
 |                                      |         |                                                                                                                                                                                                                                                     |
-| `KUBECOLOR_THEME_DESCRIBE_KEY`       | color[] | used on keys. The multiple colors are cycled based on indentation.<br/>*(fallback to `KUBECOLOR_THEME_BASE_KEY`)*                                                                                                                                   | `yellow / white`
+| `KUBECOLOR_THEME_DESCRIBE_KEY`       | color[] | used on keys. The multiple colors are cycled based on indentation.<br/>*(fallback to `KUBECOLOR_THEME_BASE_KEY`)*                                                                                                                                   | `hicyan / cyan`
 |                                      |         |                                                                                                                                                                                                                                                     |
 | `KUBECOLOR_THEME_APPLY_CREATED`      | color   | used on "deployment.apps/foo created"<br/>*(fallback to `KUBECOLOR_THEME_BASE_SUCCESS`)*                                                                                                                                                            | `green`
 | `KUBECOLOR_THEME_APPLY_CONFIGURED`   | color   | used on "deployment.apps/bar configured"<br/>*(fallback to `KUBECOLOR_THEME_BASE_WARNING`)*                                                                                                                                                         | `yellow`
@@ -351,12 +351,12 @@ colors of your output.
 | `KUBECOLOR_THEME_APPLY_DRYRUN`       | color   | used on "deployment.apps/quux created (dry-run)"<br/>*(fallback to `KUBECOLOR_THEME_BASE_SECONDARY`)*                                                                                                                                               | `cyan`
 | `KUBECOLOR_THEME_APPLY_FALLBACK`     | color   | used when "kubectl apply" outputs unknown format<br/>*(fallback to `KUBECOLOR_THEME_BASE_SUCCESS`)*                                                                                                                                                 | `green`
 |                                      |         |                                                                                                                                                                                                                                                     |
-| `KUBECOLOR_THEME_EXPLAIN_KEY`        | color[] | used on keys. The multiple colors are cycled based on indentation.<br/>*(fallback to `KUBECOLOR_THEME_BASE_KEY`)*                                                                                                                                   | `yellow / white`
+| `KUBECOLOR_THEME_EXPLAIN_KEY`        | color[] | used on keys. The multiple colors are cycled based on indentation.<br/>*(fallback to `KUBECOLOR_THEME_BASE_KEY`)*                                                                                                                                   | `hicyan / cyan`
 | `KUBECOLOR_THEME_EXPLAIN_REQUIRED`   | color   | used on the trailing "-required-" string<br/>*(fallback to `KUBECOLOR_THEME_BASE_DANGER`)*                                                                                                                                                          | `red`
 |                                      |         |                                                                                                                                                                                                                                                     |
-| `KUBECOLOR_THEME_OPTIONS_FLAG`       | color   | e.g "--kubeconfig"<br/>*(fallback to `KUBECOLOR_THEME_BASE_SECONDARY`)*                                                                                                                                                                             | `yellow`
+| `KUBECOLOR_THEME_OPTIONS_FLAG`       | color   | e.g "--kubeconfig"<br/>*(fallback to `KUBECOLOR_THEME_BASE_SECONDARY`)*                                                                                                                                                                             | `cyan`
 |                                      |         |                                                                                                                                                                                                                                                     |
-| `KUBECOLOR_THEME_VERSION_KEY`        | color[] | used on the key<br/>*(fallback to `KUBECOLOR_THEME_BASE_KEY`)*                                                                                                                                                                                      | `yellow / white`
+| `KUBECOLOR_THEME_VERSION_KEY`        | color[] | used on the key<br/>*(fallback to `KUBECOLOR_THEME_BASE_KEY`)*                                                                                                                                                                                      | `hicyan / cyan`
 
 ### Config type: `color`
 
@@ -506,21 +506,21 @@ theme:
     success: green # (color) general color for when things are good
     warning: yellow # (color) general color for when things are wrong
     danger: red # (color) general color for when things are bad
-    muted: yellow # (color) general color for when things are less relevant
-    key: yellow / white # (color[]) general color for keys (fallback to [theme.base.secondary])
+    muted: gray:italic # (color) general color for when things are less relevant
+    key: hicyan / cyan # (color[]) general color for keys (fallback to [theme.base.secondary])
   default: green # (color) default when no specific mapping is found for the command
   data:
-    key: yellow / white # (color[]) used for the key (fallback to theme.base.key)
-    string: white # (color) used when value is a string (fallback to theme.base.info)
+    key: hicyan / cyan # (color[]) used for the key (fallback to theme.base.key)
+    string: hiyellow # (color) used when value is a string (fallback to theme.base.info)
     "true": green # (color) used when value is true (fallback to theme.base.success)
     "false": red # (color) used when value is false (fallback to theme.base.danger)
     number: magenta # (color) used when the value is a number (fallback to theme.base.primary)
-    "null": yellow # (color) used when the value is null, nil, or none (fallback to theme.base.muted)
+    "null": gray:italic # (color) used when the value is null, nil, or none (fallback to theme.base.muted)
     quantity: magenta # (color) used when the value is a quantity, e.g "100m" or "5Gi" (fallback to theme.data.number)
     duration: none # (color) used when the value is a duration, e.g "12m" or "1d12h"
     durationfresh: green # (color) color used when the time value is under a certain delay (fallback to theme.base.success)
     ratio:
-      zero: yellow # (color) used for "0/0" (fallback to theme.base.muted)
+      zero: gray:italic # (color) used for "0/0" (fallback to theme.base.muted)
       equal: none # (color) used for "n/n", e.g "1/1"
       unequal: yellow # (color) used for "n/m", e.g "0/1" (fallback to theme.base.warning)
   status:
@@ -528,13 +528,13 @@ theme:
     warning: yellow # (color) used in status keywords, e.g "Terminating" (fallback to theme.base.warning)
     error: red # (color) used in status keywords, e.g "Failed", "Unhealthy" (fallback to theme.base.danger)
   table:
-    header: white # (color) used on table headers (fallback to theme.base.info)
+    header: fg=white:#aaff00 # (color) used on table headers (fallback to theme.base.info)
     columns: white / cyan # (color[]) used on table columns when no other coloring applies such as status or duration coloring. The multiple colors are cycled based on column ID, from left to right. (fallback to [theme.base.info / theme.base.secondary])
   stderr:
     default: white # (color) default when no specific mapping is found for the output line (fallback to theme.base.info)
-    error: red # (color) e.g when text contains "error" (fallback to theme.base.danger)
+    error: fg=hi-yellow:bg=red:bold # (color) e.g when text contains "error" (fallback to theme.base.danger)
   describe:
-    key: yellow / white # (color[]) used on keys. The multiple colors are cycled based on indentation. (fallback to theme.base.key)
+    key: hicyan / cyan # (color[]) used on keys. The multiple colors are cycled based on indentation. (fallback to theme.base.key)
   apply:
     created: green # (color) used on "deployment.apps/foo created" (fallback to theme.base.success)
     configured: yellow # (color) used on "deployment.apps/bar configured" (fallback to theme.base.warning)
@@ -542,12 +542,12 @@ theme:
     dryrun: cyan # (color) used on "deployment.apps/quux created (dry-run)" (fallback to theme.base.secondary)
     fallback: green # (color) used when "kubectl apply" outputs unknown format (fallback to theme.base.success)
   explain:
-    key: yellow / white # (color[]) used on keys. The multiple colors are cycled based on indentation. (fallback to theme.base.key)
+    key: hicyan / cyan # (color[]) used on keys. The multiple colors are cycled based on indentation. (fallback to theme.base.key)
     required: red # (color) used on the trailing "-required-" string (fallback to theme.base.danger)
   options:
-    flag: yellow # (color) e.g "--kubeconfig" (fallback to theme.base.secondary)
+    flag: cyan # (color) e.g "--kubeconfig" (fallback to theme.base.secondary)
   version:
-    key: yellow / white # (color[]) used on the key (fallback to theme.base.key)
+    key: hicyan / cyan # (color[]) used on the key (fallback to theme.base.key)
 ```
 
 You can also override this using the `KUBECOLOR_CONFIG` environment variable:
