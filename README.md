@@ -33,8 +33,8 @@ KubeColor is a `kubectl` replacement used to add colors to your kubectl output.
 > ![screenshot](./docs/kubectl-get-pods-deuteranopia.svg)
 >
 > ![screenshot](./docs/kubectl-get-pods-tritanopia.svg)
-
-> [!NOTE]
+>
+> **Note:**
 > As of version `v0.3.0`, both `deuteranopia` and `tritanopia` themes are the same as `protanopia`. They may differ in future versions when we better tune them. Set your configuration to match your color-blindness type so you will benefit of the future changes. We gladly accept suggestions on how to improve them.
 
 </details>
