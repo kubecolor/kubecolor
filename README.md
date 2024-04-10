@@ -25,6 +25,21 @@ KubeColor is a `kubectl` replacement used to add colors to your kubectl output.
 
 </details>
 
+<details>
+<summary><code>[New!]</code> We also have colorblind-adjusted color themes (click to expand)</summary>
+
+> ![screenshot](./docs/kubectl-get-pods-protanopia.svg)
+>
+> ![screenshot](./docs/kubectl-get-pods-deuteranopia.svg)
+>
+> ![screenshot](./docs/kubectl-get-pods-tritanopia.svg)
+>
+> > [!NOTE]
+> > As of version `v0.3.0`, both `deuteranopia` and `tritanopia` themes are the same as `protanopia`. They may differ in future versions when we better tune them. Set your configuration to match your color-blindness type so you will benefit of the future changes. We gladly accept suggestions on how to improve them.
+
+</details>
+
+
 ## What's this?
 
 kubecolor colorizes your `kubectl` command output and does nothing else.
@@ -475,7 +490,7 @@ We have some presets that come shipped with kubecolor:
 | `tritanopia-light`(*)   | Color theme for [Tritanopia color blindness](https://www.color-blindness.com/tritanopia-blue-yellow-color-blindness/). For when your terminal's background is light/bright.
 
 > [!NOTE]
-> (*) As of version `v0.3.0`, both `deuteranopia` and `tritanopia` themes are the same as `protanopia`. They may differ in future versions when we better tune them. Set your configuration to match your color-blindness type so you will benefit of the future changes.
+> (*) As of version `v0.3.0`, both `deuteranopia` and `tritanopia` themes are the same as `protanopia`. They may differ in future versions when we better tune them. Set your configuration to match your color-blindness type so you will benefit of the future changes. We gladly accept suggestions on how to improve them.
 
 Selecting preset can be done via the `KUBECOLOR_PRESET` environment variable,
 like so:

@@ -34,7 +34,7 @@ lint: ## lint code
 config-schema.json: $(wildcard **/*.go) ## regenerate config-schema.json based on config package
 	go run ./internal/cmd/configschema -out config-schema.json
 
-docs: docs/kubectl-get-pods.svg docs/kubectl-apply.svg docs/kubectl-describe-pod.svg docs/kubectl-get-pods-light.svg docs/kubectl-apply-light.svg docs/kubectl-describe-pod-light.svg ## generate docs images
+docs: docs/*.svg ## generate docs images
 .PHONY: docs
 
 # View available themes in charmbracelet/freeze: https://xyproto.github.io/splash/docs/index.html
