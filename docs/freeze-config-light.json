@@ -3,7 +3,7 @@
   "border": {
     "radius": 8,
     "width": 1,
-    "color": "#515151"
+    "color": "#d0d7deb3"
   },
   "shadow": false,
   "padding": [20, 24, 4, 24],
