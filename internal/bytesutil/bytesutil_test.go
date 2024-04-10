@@ -4,39 +4,39 @@ import "testing"
 
 func TestCountColumns(t *testing.T) {
 	tests := []struct {
-		name string
+		name  string
 		input string
-		want int
+		want  int
 	}{
 		{
-			name: "empty",
+			name:  "empty",
 			input: "",
-			want: 0,
+			want:  0,
 		},
 
 		{
-			name: "only space",
+			name:  "only space",
 			input: "       ",
-			want: 0,
+			want:  0,
 		},
 
 		{
-			name: "single",
+			name:  "single",
 			input: "foo",
-			want: 1,
+			want:  1,
 		},
 
 		{
-			name: "three/narrow spacing",
+			name:  "three/narrow spacing",
 			input: "foo  bar  moo",
-			want: 3,
+			want:  3,
 		},
 
 		{
 			// This is where an implementation using [strings.Count] would fail.
-			name: "three/excessive spacing",
+			name:  "three/excessive spacing",
 			input: "foo                bar             moo",
-			want: 3,
+			want:  3,
 		},
 	}
 
