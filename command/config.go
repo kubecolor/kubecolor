@@ -15,6 +15,7 @@ type Config struct {
 	ForceColor           bool
 	ShowKubecolorVersion bool
 	KubectlCmd           string
+	StdinOverride        string
 	ObjFreshThreshold    time.Duration
 	Theme                *config.Theme
 
@@ -79,6 +80,14 @@ func ResolveConfigViper(inputArgs []string, v *viper.Viper) (*Config, error) {
 				return nil, err
 			}
 			cfg.ShowKubecolorVersion = b
+		case "--kubecolor-stdin":
+			// Value means "read from file"
+			// Dash "-" means "read from stdin"
+			// Empty, as in just "--kubecolor-stdin", means "read from stdin"
+			if value == "" {
+				value = "-"
+			}
+			cfg.StdinOverride = value
 		case "--kubecolor-theme":
 			v.Set(config.PresetKey, value)
 		default:

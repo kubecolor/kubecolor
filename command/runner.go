@@ -61,43 +61,22 @@ func Run(args []string, version string) error {
 
 	shouldColorize, subcommandInfo := ResolveSubcommand(args, config)
 
-	cmd := exec.Command(config.KubectlCmd, args...)
-	cmd.Stdin = os.Stdin
-
 	// when should not colorize, just run command and return
 	if !shouldColorize {
-		cmd.Stdout = Stdout
-		cmd.Stderr = Stderr
-		if err := cmd.Start(); err != nil {
-			return err
-		}
-
-		// inherit the kubectl exit code
-		if err := cmd.Wait(); err != nil {
-			return fmt.Errorf("%w", &KubectlError{ExitCode: cmd.ProcessState.ExitCode()})
-		}
-		return nil
+		return execWithoutColors(config, args)
 	}
 
-	// when colorize, capture stdout and err then colorize it
-	cmdOut, err := cmd.StdoutPipe()
+	stdoutReader, stderrReader, err := execWithReaders(config, args)
 	if err != nil {
 		return err
 	}
-
-	cmdErr, err := cmd.StderrPipe()
-	if err != nil {
-		return err
-	}
+	// in case of panic, at least let kubectl finish executing
+	defer stdoutReader.Close()
+	defer stderrReader.Close()
 
 	// make buffer to be used in defer recover()
-	buff := new(bytes.Buffer)
-	outReader := io.TeeReader(cmdOut, buff)
-	errReader := io.TeeReader(cmdErr, buff)
-
-	if err := cmd.Start(); err != nil {
-		return err
-	}
+	errBuf := new(bytes.Buffer)
+	errBufReader := io.TeeReader(stderrReader, errBuf)
 
 	printers := getPrinters(subcommandInfo, config.ObjFreshThreshold, config.Theme)
 
@@ -109,27 +88,116 @@ func Run(args []string, version string) error {
 		defer func() {
 			if r := recover(); r != nil {
 				fmt.Fprintf(os.Stderr, "[kubecolor] [ERROR] Recovered from panic: %v\n", r)
-				fmt.Fprint(os.Stdout, buff.String())
+				fmt.Fprint(os.Stdout, errBuf.String())
 			}
 		}()
 
 		// This can panic when kubecolor has bug, so recover in defer
-		printers.FullColoredPrinter.Print(outReader, Stdout)
+		printers.FullColoredPrinter.Print(stdoutReader, Stdout)
 	}()
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
 		// This will unlikely panic
-		printers.ErrorPrinter.Print(errReader, Stderr)
+		printers.ErrorPrinter.Print(errBufReader, Stderr)
 	}()
 
 	wg.Wait()
 
-	// inherit the kubectl exit code
-	if err := cmd.Wait(); err != nil {
-		return &KubectlError{ExitCode: cmd.ProcessState.ExitCode()}
+	return stdoutReader.Close()
+}
+
+func execWithoutColors(config *Config, args []string) error {
+	if config.StdinOverride != "" {
+		r, err := getStdinOverrideReader(config.StdinOverride)
+		if err != nil {
+			return err
+		}
+		defer r.Close()
+		_, err = io.Copy(Stdout, r)
+		return err
 	}
 
+	cmd := exec.Command(config.KubectlCmd, args...)
+	cmd.Stdin = os.Stdin
+
+	// when should not colorize, just run command and return
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("%w", &KubectlError{ExitCode: cmd.ProcessState.ExitCode()})
+	}
+
+	return nil
+}
+
+func execWithReaders(config *Config, args []string) (io.ReadCloser, io.ReadCloser, error) {
+	if config.StdinOverride != "" {
+		stdout, err := getStdinOverrideReader(config.StdinOverride)
+		return stdout, nopReadCloser{}, err
+	}
+
+	cmd := exec.Command(config.KubectlCmd, args...)
+	cmd.Stdin = os.Stdin
+
+	// when colorize, capture stdout and err then colorize it
+	cmdOut, err := cmd.StdoutPipe()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	cmdErr, err := cmd.StderrPipe()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if err := cmd.Start(); err != nil {
+		return nil, nil, err
+	}
+
+	return &cmdWaitReadCloser{cmd: cmd, stdout: cmdOut}, cmdErr, nil
+}
+
+func getStdinOverrideReader(stdinOverride string) (io.ReadCloser, error) {
+	if stdinOverride == "-" {
+		return os.Stdin, nil
+	}
+	file, err := os.Open(stdinOverride)
+	if err != nil {
+		return nil, fmt.Errorf("read file specified by --kubecolor-stdin: %w", err)
+	}
+	return file, nil
+}
+
+type nopReadCloser struct{}
+
+func (nopReadCloser) Read(b []byte) (int, error) { return 0, io.EOF }
+
+func (nopReadCloser) Close() error { return nil }
+
+type cmdWaitReadCloser struct {
+	cmd    *exec.Cmd
+	stdout io.ReadCloser
+
+	closed  bool
+	lastErr error
+}
+
+func (r *cmdWaitReadCloser) Read(b []byte) (int, error) {
+	return r.stdout.Read(b)
+}
+
+func (r *cmdWaitReadCloser) Close() error {
+	if r.closed {
+		return r.lastErr
+	}
+	if err := r.stdout.Close(); err != nil {
+		r.lastErr = err
+		return err
+	}
+	if err := r.cmd.Wait(); err != nil {
+		r.lastErr = err
+		return &KubectlError{ExitCode: r.cmd.ProcessState.ExitCode()}
+	}
+	r.closed = true
 	return nil
 }
