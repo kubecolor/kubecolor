@@ -1,0 +1,4 @@
+$ kubectl apply -f resources.yaml --light-background
+deployment.apps/my-deployment configured
+service/my-service unchanged
+configmap/my-config created

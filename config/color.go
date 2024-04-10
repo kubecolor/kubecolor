@@ -409,14 +409,19 @@ func autoConvert256(c256 color.Color256) string {
 	return ""
 }
 
-// UnmarshalText implements [encoding.TextUnmarshaler].
-func (c *Color) UnmarshalText(text []byte) error {
-	newColor, err := ParseColor(string(text))
+// Set implements [flag.Value].
+func (c *Color) Set(text string) error {
+	newColor, err := ParseColor(text)
 	if err != nil {
 		return fmt.Errorf("parse color: %w", err)
 	}
 	*c = newColor
 	return nil
+}
+
+// UnmarshalText implements [encoding.TextUnmarshaler].
+func (c *Color) UnmarshalText(text []byte) error {
+	return c.Set(string(text))
 }
 
 // MarshalText implements [encoding.TextMarshaler].

@@ -1,0 +1,56 @@
+$ kubectl describe pod nginx-7c5ddbdf54-f6wft
+Name:             nginx-7c5ddbdf54-f6wft
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             machine1234/192.168.44.120
+Start Time:       Wed, 10 Apr 2024 17:05:00 +0200
+Labels:           app=nginx
+                  pod-template-hash=7c5ddbdf54
+Annotations:      cni.projectcalico.org/containerID: 08638014c5d8c7f5187075635ac8eb947b4db7d8f521adfbc0d86704237e2846
+                  cni.projectcalico.org/podIP: 172.23.95.3/32
+                  cni.projectcalico.org/podIPs: 172.23.95.3/32
+Status:           Running
+IP:               172.23.95.3
+IPs:
+  IP:           172.23.95.3
+Controlled By:  ReplicaSet/nginx-7c5ddbdf54
+Containers:
+  nginx:
+    Container ID:   containerd://c04d14dc2d678f37cd5a8fbf1659ee99ace9cf5aed0d3ca99b2a9c054afa52ae
+    Image:          nginx
+    Image ID:       docker.io/library/nginx@sha256:6db391d1c0cfb30588ba0bf72ea999404f2764febf0f1f196acd5867ac7efa7e
+    Port:           80/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Wed, 10 Apr 2024 17:05:01 +0200
+    Ready:          True
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-phvsg (ro)
+Conditions:
+  Type              Status
+  Initialized       True
+  Ready             True
+  ContainersReady   True
+  PodScheduled      True
+Volumes:
+  kube-api-access-phvsg:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  82s   default-scheduler  Successfully assigned default/nginx-7c5ddbdf54-f6wft to machine1234
+  Normal  Pulling    82s   kubelet            Pulling image "nginx"
+  Normal  Pulled     82s   kubelet            Successfully pulled image "nginx" in 38ms (38ms including waiting)
+  Normal  Created    82s   kubelet            Created container nginx
+  Normal  Started    82s   kubelet            Started container nginx
