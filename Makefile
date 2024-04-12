@@ -33,3 +33,12 @@ lint: ## lint code
 
 config-schema.json: $(wildcard **/*.go) ## regenerate config-schema.json based on config package
 	go run ./internal/cmd/configschema -out config-schema.json
+
+docs: docs/*.svg ## generate docs images
+.PHONY: docs
+
+# View available themes in charmbracelet/freeze: https://xyproto.github.io/splash/docs/index.html
+docs/%.svg: ./docs/%.txt Makefile ./docs/freeze-config.json $(wildcard **/*.go)
+	go run ./internal/cmd/imagegen $<
+docs/%-light.svg: ./docs/%-light.txt Makefile ./docs/freeze-config-light.json $(wildcard **/*.go)
+	go run ./internal/cmd/imagegen -freeze-config=./docs/freeze-config-light.json -flag-color=blue $<

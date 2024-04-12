@@ -1,0 +1,17 @@
+{
+  "window": false,
+  "border": {
+    "radius": 8,
+    "width": 1,
+    "color": "#d0d7deb3"
+  },
+  "shadow": false,
+  "padding": [20, 24, 4, 24],
+  "margin": "0",
+  "font": {
+    "family": "ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace",
+    "size": 14
+  },
+  "line_height": 1.2,
+  "theme": "github"
+}

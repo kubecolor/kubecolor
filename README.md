@@ -8,15 +8,37 @@ KubeColor is a `kubectl` replacement used to add colors to your kubectl output.
 [![Go Report Card](https://goreportcard.com/badge/github.com/kubecolor/kubecolor)](https://goreportcard.com/report/github.com/kubecolor/kubecolor)
 [![codecov](https://codecov.io/gh/kubecolor/kubecolor/graph/badge.svg)](https://codecov.io/gh/kubecolor/kubecolor)
 
-<picture>
-  <source srcset="./docs/kubectl-combined.png" media="(min-width: 1600px)" />
-  <source srcset="./docs/kubectl-combined-medium.png" media="(min-width: 800px)" />
-  <img alt="Preview screenshots" src="./docs/kubectl-combined-small.png" />
-</picture>
+![screenshot](./docs/kubectl-get-pods.svg)
 
-* You can also change color theme for light-backgrounded environment
+![screenshot](./docs/kubectl-apply.svg)
 
-  ![image](https://user-images.githubusercontent.com/60682957/95733403-0c523b00-0cbd-11eb-9ff9-abc5469e97ca.png)
+![screenshot](./docs/kubectl-describe-pod.svg)
+
+<details>
+<summary>You can also change color theme for light-backgrounded environment (click to expand)</summary>
+
+> ![screenshot](./docs/kubectl-get-pods-light.svg)
+>
+> ![screenshot](./docs/kubectl-apply-light.svg)
+>
+> ![screenshot](./docs/kubectl-describe-pod-light.svg)
+
+</details>
+
+<details>
+<summary><code>[New!]</code> We also have colorblind-adjusted color themes (click to expand)</summary>
+
+> ![screenshot](./docs/kubectl-get-pods-protanopia.svg)
+>
+> ![screenshot](./docs/kubectl-get-pods-deuteranopia.svg)
+>
+> ![screenshot](./docs/kubectl-get-pods-tritanopia.svg)
+>
+> **Note:**
+> As of version `v0.3.0`, both `deuteranopia` and `tritanopia` themes are the same as `protanopia`. They may differ in future versions when we better tune them. Set your configuration to match your color-blindness type so you will benefit of the future changes. We gladly accept suggestions on how to improve them.
+
+</details>
+
 
 ## What's this?
 
@@ -468,7 +490,7 @@ We have some presets that come shipped with kubecolor:
 | `tritanopia-light`(*)   | Color theme for [Tritanopia color blindness](https://www.color-blindness.com/tritanopia-blue-yellow-color-blindness/). For when your terminal's background is light/bright.
 
 > [!NOTE]
-> (*) As of version `v0.3.0`, both `deuteranopia` and `tritanopia` themes are the same as `protanopia`. They may differ in future versions when we better tune them. Set your configuration to match your color-blindness type so you will benefit of the future changes.
+> (*) As of version `v0.3.0`, both `deuteranopia` and `tritanopia` themes are the same as `protanopia`. They may differ in future versions when we better tune them. Set your configuration to match your color-blindness type so you will benefit of the future changes. We gladly accept suggestions on how to improve them.
 
 Selecting preset can be done via the `KUBECOLOR_PRESET` environment variable,
 like so:
@@ -581,6 +603,9 @@ make corpus
 
 # Regenerate test results in integration test corpus
 make corpus-update
+
+# Regenerate screenshots used in README.md
+make docs
 
 # Generate configs (you currently have to copy-paste the results)
 go run ./internal/cmd/configdoc
