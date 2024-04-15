@@ -98,10 +98,10 @@ docker run --rm -it -v $HOME/.kube:/home/nonroot/.kube:ro ghcr.io/kubecolor/kube
 
 ### Homebrew
 
-[![GitHub Release](https://img.shields.io/github/v/release/kubecolor/kubecolor?display_name=tag&label=Homebrew&color=4cc61f)](https://github.com/kubecolor/homebrew-tap)
+[![Homebrew version](https://repology.org/badge/version-for-repo/homebrew/kubecolor.svg)](https://repology.org/project/kubecolor/versions)
 
 ```sh
-brew install kubecolor/tap/kubecolor
+brew install kubecolor
 ```
 
 ### Scoop
