@@ -104,6 +104,20 @@ docker run --rm -it -v $HOME/.kube:/home/nonroot/.kube:ro ghcr.io/kubecolor/kube
 brew install kubecolor
 ```
 
+<details>
+<summary>If you previously installed <code>kubecolor</code> using the old <code>tap</code>, remove it first (click to expand)</summary>
+
+> If kubecolor was installed using `brew install kubecolor/tap/kubecolor`, do the following:
+>
+> ```shell
+> brew uninstall kubecolor
+> brew untap kubecolor/tap
+> brew update
+> brew install kubecolor
+> ```
+
+</details>
+
 ### Scoop
 
 [![Scoop version](https://repology.org/badge/version-for-repo/scoop/kubecolor.svg)](https://repology.org/project/kubecolor/versions)
@@ -631,6 +645,6 @@ MIT
 
 ## Author
 
-This project is a heavily modified version of the original KubeColor maintained at [https://github.com/hidetatz/kubecolor](https://github.com/hidetatz/kubecolor)
+This project is a heavily modified version of the original KubeColor, archived at [https://github.com/hidetatz/kubecolor](https://github.com/hidetatz/kubecolor)
 
 [@kubecolor](https://github.com/kubecolor)
