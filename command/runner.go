@@ -109,6 +109,7 @@ func Run(args []string, version string) error {
 }
 
 func execWithoutColors(config *Config, args []string) error {
+	fmt.Println("in execWithoutColors")
 	if config.StdinOverride != "" {
 		r, err := getStdinOverrideReader(config.StdinOverride)
 		if err != nil {
@@ -121,6 +122,8 @@ func execWithoutColors(config *Config, args []string) error {
 
 	cmd := exec.Command(config.KubectlCmd, args...)
 	cmd.Stdin = os.Stdin
+	cmd.Stdout = Stdout
+	cmd.Stderr = Stderr
 
 	// when should not colorize, just run command and return
 	if err := cmd.Run(); err != nil {
