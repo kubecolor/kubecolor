@@ -109,7 +109,6 @@ func Run(args []string, version string) error {
 }
 
 func execWithoutColors(config *Config, args []string) error {
-	fmt.Println("in execWithoutColors")
 	if config.StdinOverride != "" {
 		r, err := getStdinOverrideReader(config.StdinOverride)
 		if err != nil {
