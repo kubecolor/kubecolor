@@ -134,6 +134,12 @@ func InspectSubcommand(command string) (Subcommand, bool) {
 		return KubectlPlugin, true
 	}
 
+	command = strings.ReplaceAll(command, "-", "_")
+
+	if _, err := exec.LookPath("kubectl-" + command); err == nil {
+		return KubectlPlugin, true
+	}
+
 	return 0, false
 }
 
