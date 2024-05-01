@@ -74,7 +74,7 @@ func Test_ResolveConfig(t *testing.T) {
 				Plain:           false,
 				ForceColor:      false,
 				KubectlCmd:      "kubectl",
-				Theme:           testconfig.DarkTheme,
+				Theme:           testconfig.LightTheme,
 				ArgsPassthrough: []string{"get", "pods"},
 			},
 		},

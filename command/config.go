@@ -37,9 +37,9 @@ func ResolveConfigViper(inputArgs []string, v *viper.Viper) (*Config, error) {
 		return nil, err
 	} else if ok {
 		if lightThemeEnv {
-			v.Set(config.PresetKey, "dark")
-		} else {
 			v.Set(config.PresetKey, "light")
+		} else {
+			v.Set(config.PresetKey, "dark")
 		}
 	}
 
