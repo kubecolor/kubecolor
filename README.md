@@ -271,25 +271,20 @@ To begin with, if you don't already have `kubectl` completion working, make sure
 kubectl completion fish | source
 ```
 
-To enable autocompletion for kubecolor, add the following function to your `~/.config/fish/config.fish` file:
+To enable completions for `kubecolor`, add the following function to your `~/.config/fish/config.fish` file:
 
 ```fish
+# reuse "kubectl" completions on "kubecolor"
 function kubecolor --wraps kubectl
   command kubecolor $argv
 end
-```
 
-If you want to substitute your `kubectl` with `kubecolor`, then also add the following function to your `~/.config/fish/config.fish` file:
-
-```fish
+# adds alias for "kubectl" to "kubecolor" with completions
 function kubectl --wraps kubectl
   command kubecolor $argv
 end
-```
 
-If you want to use an alias like `k` for `kubecolor`, then also add the following function to your `~/.config/fish/config.fish` file:
-
-```fish
+# adds alias for "k" to "kubecolor" with completions
 function k --wraps kubectl
   command kubecolor $argv
 end
