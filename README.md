@@ -264,31 +264,31 @@ compdef kubecolor=kubectl
 
 #### fish
 
-Fish completion is officially unsupported by `kubectl`, so it is unsupported by `kubecolor` as well.
+Fish completion is officially supported by `kubectl`.
+To begin with, if you don't already have `kubectl` completion working, make sure the following line is in your `~/.config/fish/config.fish` file:
 
-However, there are 2 ways we can make them work. Please keep in mind these are a kind of "hack" and not officially supported.
+```fish
+kubectl completion fish | source
+```
 
-1. Use [evanlucas/fish-kubectl-completions](https://github.com/evanlucas/fish-kubectl-completions) with `kubecolor`:
+To enable completions for `kubecolor`, add the following function to your `~/.config/fish/config.fish` file:
 
-   * Install `kubectl` completions (https://github.com/evanlucas/fish-kubectl-completions):
+```fish
+# reuse "kubectl" completions on "kubecolor"
+function kubecolor --wraps kubectl
+  command kubecolor $argv
+end
 
-      ```fish
-      fisher install evanlucas/fish-kubectl-completions
-      ```
+# adds alias for "kubectl" to "kubecolor" with completions
+function kubectl --wraps kubectl
+  command kubecolor $argv
+end
 
-   * Add the following function to your `~/.config/fish/config.fish` file:
-
-      ```fish
-      function kubectl
-        kubecolor $argv
-      end
-      ```
-
-2. Use [awinecki/fish-kubecolor-completions](https://github.com/awinecki/fish-kubecolor-completions)
-
-   The first way will override `kubectl` command. If you wish to preserve both `kubectl` and `kubecolor` with completions, you need to copy [evanlucas/fish-kubectl-completions](https://github.com/evanlucas/fish-kubectl-completions) for the `kubecolor` command.
-
-   For this purpose, you can use [awinecki/fish-kubecolor-completions](https://github.com/awinecki/fish-kubecolor-completions).
+# adds alias for "k" to "kubecolor" with completions
+function k --wraps kubectl
+  command kubecolor $argv
+end
+```
 
 #### PowerShell
 
