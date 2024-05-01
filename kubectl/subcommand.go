@@ -27,8 +27,9 @@ const (
 type Subcommand string
 
 const (
-	Unknown       Subcommand = ""
-	KubectlPlugin Subcommand = "(plugin)"
+	Unknown          Subcommand = ""
+	KubectlPlugin    Subcommand = "(plugin)"
+	InternalComplete Subcommand = "__complete"
 
 	APIResources Subcommand = "api-resources"
 	APIVersions  Subcommand = "api-versions"
@@ -132,6 +133,11 @@ func InspectSubcommand(command string) (Subcommand, bool) {
 		Wait:
 		return Subcommand(command), true
 	default:
+		// Catch __complete, __completeNoDesc, etc
+		if strings.HasPrefix(command, "__complete") {
+			return InternalComplete, true
+		}
+
 		if _, err := exec.LookPath("kubectl-" + command); err == nil {
 			return KubectlPlugin, true
 		}
@@ -141,6 +147,10 @@ func InspectSubcommand(command string) (Subcommand, bool) {
 
 func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 	for i := range args {
+		// Stop parsing flags after "--", such as in "kubectl exec my-pod -- bash"
+		if args[i] == "--" {
+			break
+		}
 		if strings.HasPrefix(args[i], "--output") {
 			switch args[i] {
 			case "--output=json":
@@ -216,8 +226,13 @@ func InspectSubcommandInfo(args []string) (*SubcommandInfo, bool) {
 
 	CollectCommandlineOptions(args, ret)
 
-	for i := range args {
-		cmd, ok := InspectSubcommand(args[i])
+	for _, arg := range args {
+		// Stop parsing args after "--", such as in "kubectl exec my-pod -- bash"
+		if arg == "--" {
+			break
+		}
+
+		cmd, ok := InspectSubcommand(arg)
 		if !ok {
 			continue
 		}
