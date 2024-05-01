@@ -51,16 +51,16 @@ func printLineAsJsonFormat(line string, w io.Writer, theme *config.Theme) {
 	// "key": value,
 	// value,
 	// value
-	splitted := strings.SplitN(trimmedLine, ": ", 2) // if key contains ": " this works in a wrong way but it's unlikely to happen
+	split := strings.SplitN(trimmedLine, ": ", 2) // if key contains ": " this works in a wrong way but it's unlikely to happen
 
-	if len(splitted) == 1 {
+	if len(split) == 1 {
 		// when coming here, it will be a value in an array
-		fmt.Fprintf(w, "%s%s\n", indent, toColorizedJsonValue(splitted[0], theme))
+		fmt.Fprintf(w, "%s%s\n", indent, toColorizedJsonValue(split[0], theme))
 		return
 	}
 
-	key := splitted[0]
-	val := splitted[1]
+	key := split[0]
+	val := split[1]
 
 	fmt.Fprintf(w, "%s%s: %s\n", indent, toColorizedJsonKey(key, indentCnt, 4, theme), toColorizedJsonValue(val, theme))
 }

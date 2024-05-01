@@ -15,7 +15,7 @@ KubeColor is a `kubectl` replacement used to add colors to your kubectl output.
 ![screenshot](./docs/kubectl-describe-pod.svg)
 
 <details>
-<summary>You can also change color theme for light-backgrounded environment (click to expand)</summary>
+<summary>You can also change color theme for light-background environment (click to expand)</summary>
 
 > ![screenshot](./docs/kubectl-get-pods-light.svg)
 >
@@ -38,7 +38,6 @@ KubeColor is a `kubectl` replacement used to add colors to your kubectl output.
 > As of version `v0.3.0`, both `deuteranopia` and `tritanopia` themes are the same as `protanopia`. They may differ in future versions when we better tune them. Set your configuration to match your color-blindness type so you will benefit of the future changes. We gladly accept suggestions on how to improve them.
 
 </details>
-
 
 ## What's this?
 
@@ -194,7 +193,7 @@ Prints the version of kubecolor (not kubectl one).
 * `--light-background`
 
 When your terminal's background color is something light (e.g white), default color preset might look too bright and not readable.
-If so, specify `--light-background` as a command line argument. kubecolor will use a color preset for light-backgrounded environment.
+If so, specify `--light-background` as a command line argument. kubecolor will use a color preset for light-background environment.
 
 * `--force-colors`
 

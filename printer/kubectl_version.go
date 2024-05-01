@@ -44,8 +44,8 @@ func (vp *VersionPrinter) Print(r io.Reader, w io.Writer) {
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
 		line := scanner.Text()
-		splitted := strings.SplitN(line, ": ", 2)
-		key, val := splitted[0], splitted[1]
+		split := strings.SplitN(line, ": ", 2)
+		key, val := split[0], split[1]
 		key = getColorByKeyIndent(0, 2, vp.Theme.Version.Key).Render(key)
 
 		// val is go struct like
