@@ -2,6 +2,7 @@ package printer
 
 import (
 	"io"
+	"strings"
 	"time"
 
 	"github.com/kubecolor/kubecolor/config"
@@ -164,6 +165,8 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 				withHeader,
 				kp.Theme,
 				func(_ int, column string) (config.Color, bool) {
+					column = strings.TrimPrefix(column, "Init:")
+
 					// first try to match a status
 					col, matched := ColorStatus(column, kp.Theme)
 					if matched {
