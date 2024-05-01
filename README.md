@@ -265,7 +265,7 @@ compdef kubecolor=kubectl
 #### fish
 
 Fish completion is officially supported by `kubectl`.
-If you did not install `kubectl` with `homebrew` (`homebrew` will auto enable autocompletion), make sure the following line is in your `~/.config/fish/config.fish` file:
+To begin with, if you don't already have `kubectl` completion working, make sure the following line is in your `~/.config/fish/config.fish` file:
 
 ```fish
 kubectl completion fish | source
