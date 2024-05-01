@@ -1,3 +1,5 @@
+# vi: ft=gitignore
+
 # Git
 .git
 .gitignore

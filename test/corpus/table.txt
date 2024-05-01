@@ -114,3 +114,20 @@ tokenreviews                                   authentication.k8s.io          fa
 [37mdaemonsets[0m                        [36mds[0m           [37mapps[0m                           [36mtrue[0m         [37mDaemonSet[0m
 [37mstatefulsets[0m                      [36msts[0m          [37mapps[0m                           [36mtrue[0m         [37mStatefulSet[0m
 [37mtokenreviews[0m                                   [37mauthentication.k8s.io[0m          [36mfalse[0m        [37mTokenReview[0m
+
+================================================================================
+# a table whose some parts are missing can be handled
+$ kubectl get pods
+================================================================================
+
+NAME          READY   STATUS                  RESTARTS   AGE
+nginx-dnmv5   0/2     Init:ImagePullBackOff   0          2m3s
+nginx-m8pbc   0/2     Init:0/1                0          2m3s
+nginx-qdf9b   0/2     Init:ErrImagePull       0          2m3s
+
+--------------------------------------------------------------------------------
+
+[1mNAME          READY   STATUS                  RESTARTS   AGE[0m
+[37mnginx-dnmv5[0m   [33m0/2[0m     [31mInit:ImagePullBackOff[0m   [36m0[0m          [37m2m3s[0m
+[37mnginx-m8pbc[0m   [33m0/2[0m     [33mInit:0/1[0m                [36m0[0m          [37m2m3s[0m
+[37mnginx-qdf9b[0m   [33m0/2[0m     [31mInit:ErrImagePull[0m       [36m0[0m          [37m2m3s[0m
