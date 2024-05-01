@@ -2,7 +2,7 @@
 
 If you want to share your custom theme, please open a Pull Request and:
 
-- explain in the PR what is the goal of the theme (Ex: simple esthetic, disability related, better efficiency to display informations,...)
+- explain in the PR what is the goal of the theme (Ex: simple esthetic, disability related, better efficiency to display information,...)
 - add a folder for your theme into the `themes` folder, and name it with name of your theme and either the `-dark` or `-light` suffix. Ex: `my-test-theme-dark`.
 - a screenshot of the end result as `.jpg` or `.png`
 - the `color.yaml` file that starts with comments with:
@@ -35,7 +35,7 @@ Apply the files found in [../test-cluster](../test-cluster), like so:
 kubectl create -f ./test-cluster
 ```
 
-Type the `kubecolor` commands that can show how your theme changes from the default theme. Ex: 
+Type the `kubecolor` commands that can show how your theme changes from the default theme. Ex:
 
 ```bash
 kubecolor get pods -o wide -n kubecolor
