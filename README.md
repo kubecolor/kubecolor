@@ -279,7 +279,7 @@ However, there is a way we can make them work. Please keep in mind these are a k
 
     ```fish
     function kubecolor --wraps kubectl
-      kubecolor $argv
+      command kubecolor $argv
     end
     ```
 
@@ -287,7 +287,7 @@ However, there is a way we can make them work. Please keep in mind these are a k
 
     ```shell
     function k --wraps kubectl
-      kubecolor $argv
+      command kubecolor $argv
     end
     ```
 
