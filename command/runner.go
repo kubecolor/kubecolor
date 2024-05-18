@@ -61,6 +61,18 @@ func Run(args []string, version string) error {
 
 	shouldColorize, subcommandInfo := ResolveSubcommand(args, config)
 
+	subcmd := subcommandInfo.Subcommand
+	if config.Pager && isOutputTerminal() &&
+	   (subcmd == kubectl.Get || subcmd == kubectl.Describe) {
+		closePager, err := runPager()
+		if err != nil {
+			err = fmt.Errorf("failed to run pager: %w", err)
+			fmt.Fprintf(os.Stderr, "[kubecolor] [ERROR] %v\n", err)
+		} else {
+			defer closePager()
+		}
+	}
+
 	// when should not colorize, just run command and return
 	if !shouldColorize {
 		return execWithoutColors(config, args)
@@ -202,4 +214,45 @@ func (r *cmdWaitReadCloser) Close() error {
 	}
 	r.closed = true
 	return nil
+}
+
+func runPager() (func(), error) {
+	var pager string
+	if p := os.Getenv("KUBEPAGER"); p != "" {
+		pager = p
+	} else if p := os.Getenv("PAGER"); p != "" {
+		pager = p
+	} else {
+		pager = "pager"
+	}
+
+	pargs := strings.Fields(pager)
+	if _, err := exec.LookPath(pargs[0]); err != nil {
+		return nil, err
+	}
+	cmd := exec.Command(pargs[0], pargs[1:]...)
+
+	r, w, err := os.Pipe()
+	if err != nil {
+		return nil, err
+	}
+	cmd.Stdin = r
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	Stdout = colorable.NewColorable(w)
+
+	c := make(chan struct{})
+	go func() {
+		defer close(c)
+		err := cmd.Run()
+		if err != nil {
+			panic(err)
+		}
+		os.Exit(0)
+	}()
+
+	return func() {
+		w.Close()
+		<-c
+	}, nil
 }

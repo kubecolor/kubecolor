@@ -205,6 +205,10 @@ For example, when you want to pass kubecolor result to grep (`kubecolor get pods
 
 When you don't want to colorize output, you can specify `--plain`. Kubecolor understands this option and outputs the result without colorizing.
 
+* `--pager`
+
+Pipe the output of the `get` and `describe` subcommands to a pager. Kubecolor tries a pager defined by `$KUBEPAGER`, `$PAGER` and the command `pager`, in that order. When using less, use `PAGER="less -R"` to pass color escape sequences and use `PAGER="less -RF"` to exit the pager if the file can be displayed on the first screen.
+
 ### ENV Variables
 
 * `KUBECOLOR_OBJ_FRESH`

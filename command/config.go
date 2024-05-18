@@ -18,6 +18,7 @@ type Config struct {
 	StdinOverride        string
 	ObjFreshThreshold    time.Duration
 	Theme                *config.Theme
+	Pager                bool
 
 	ArgsPassthrough []string
 }
@@ -90,6 +91,12 @@ func ResolveConfigViper(inputArgs []string, v *viper.Viper) (*Config, error) {
 			cfg.StdinOverride = value
 		case "--kubecolor-theme":
 			v.Set(config.PresetKey, value)
+		case "--pager":
+			b, err := parseBoolFlag(flag, value)
+			if err != nil {
+				return nil, err
+			}
+			cfg.Pager = b
 		default:
 			cfg.ArgsPassthrough = append(cfg.ArgsPassthrough, s)
 		}
