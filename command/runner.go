@@ -64,12 +64,12 @@ func Run(args []string, version string) error {
 	subcmd := subcommandInfo.Subcommand
 	if config.Pager && isOutputTerminal() &&
 		(subcmd == kubectl.Get || subcmd == kubectl.Describe) {
-		closePager, err := runPager()
+		wait, err := runPager()
 		if err != nil {
 			err = fmt.Errorf("failed to run pager: %w", err)
 			fmt.Fprintf(os.Stderr, "[kubecolor] [ERROR] %v\n", err)
 		} else {
-			defer closePager()
+			defer wait()
 		}
 	}
 
