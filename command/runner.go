@@ -19,6 +19,7 @@ import (
 var (
 	Stdout = colorable.NewColorableStdout()
 	Stderr = colorable.NewColorableStderr()
+	DefaultPagers = []string{"pager", "less", "more"}
 )
 
 type Printers struct {
@@ -235,13 +236,22 @@ func (p pagerPipe) Write(b []byte) (int, error) {
 }
 
 func runPager() (*pagerPipe, error) {
-	var pager string
+	pager := ""
 	if p := os.Getenv("KUBECOLOR_PAGER"); p != "" {
 		pager = p
 	} else if p := os.Getenv("PAGER"); p != "" {
 		pager = p
 	} else {
-		pager = "pager"
+		for _, p := range DefaultPagers {
+			if _, err := exec.LookPath(p); err == nil {
+				pager = p
+				break
+			}
+		}
+	}
+
+	if pager == "" {
+		return nil, fmt.Errorf("no pager configured via PAGER or KUBECOLOR_PAGER environment variables")
 	}
 
 	pargs := strings.Fields(pager)
