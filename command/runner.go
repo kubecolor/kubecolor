@@ -19,7 +19,7 @@ import (
 var (
 	Stdout = colorable.NewColorableStdout()
 	Stderr = colorable.NewColorableStderr()
-	DefaultPagers = []string{"pager", "less", "more"}
+	DefaultPagers = []string{"less", "more"}
 )
 
 type Printers struct {
@@ -245,6 +245,9 @@ func runPager() (*pagerPipe, error) {
 		for _, p := range DefaultPagers {
 			if _, err := exec.LookPath(p); err == nil {
 				pager = p
+				if pager == "less" {
+					pager = "less -R"
+				}
 				break
 			}
 		}
