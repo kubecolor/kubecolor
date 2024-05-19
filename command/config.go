@@ -19,6 +19,7 @@ type Config struct {
 	ObjFreshThreshold    time.Duration
 	Theme                *config.Theme
 	Pager                bool
+	PagerCmd             string
 
 	ArgsPassthrough []string
 }
@@ -109,6 +110,7 @@ func ResolveConfigViper(inputArgs []string, v *viper.Viper) (*Config, error) {
 	cfg.KubectlCmd = newCfg.Kubectl
 	cfg.ObjFreshThreshold = newCfg.ObjFreshThreshold
 	cfg.Theme = &newCfg.Theme
+	cfg.PagerCmd = newCfg.Pager
 
 	return cfg, nil
 }

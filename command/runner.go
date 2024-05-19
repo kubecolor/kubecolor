@@ -17,8 +17,8 @@ import (
 )
 
 var (
-	Stdout = colorable.NewColorableStdout()
-	Stderr = colorable.NewColorableStderr()
+	Stdout        = colorable.NewColorableStdout()
+	Stderr        = colorable.NewColorableStderr()
 	DefaultPagers = []string{"less", "more"}
 )
 
@@ -71,7 +71,7 @@ func Run(args []string, version string) error {
 	if config.Pager && isOutputTerminal() &&
 		(subcmd == kubectl.Get || subcmd == kubectl.Describe ||
 			subcmd == kubectl.Logs || subcmd == kubectl.Explain) {
-		pipe, err := runPager()
+		pipe, err := runPager(config.PagerCmd)
 		if err != nil {
 			err = fmt.Errorf("failed to run pager: %w", err)
 			fmt.Fprintf(os.Stderr, "[kubecolor] [ERROR] %v\n", err)
@@ -235,9 +235,11 @@ func (p pagerPipe) Write(b []byte) (int, error) {
 	return p.writer.Write(b)
 }
 
-func runPager() (*pagerPipe, error) {
+func runPager(pagerCmd string) (*pagerPipe, error) {
 	pager := ""
-	if p := os.Getenv("KUBECOLOR_PAGER"); p != "" {
+	if pagerCmd != "" {
+		pager = pagerCmd
+	} else if p := os.Getenv("KUBECOLOR_PAGER"); p != "" {
 		pager = p
 	} else if p := os.Getenv("PAGER"); p != "" {
 		pager = p
