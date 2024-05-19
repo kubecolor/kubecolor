@@ -535,6 +535,7 @@ Example file (the values shows the default values):
 kubectl: kubectl # path to kubectl executable
 preset: dark # color theme preset
 objFreshThreshold: 0 # ages below this uses theme.data.durationfresh coloring
+pager: "" # command to run as pager
 
 # Color theme options
 theme:

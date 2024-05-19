@@ -21,7 +21,7 @@ type Config struct {
 	ObjFreshThreshold time.Duration // Ages below this uses theme.data.durationfresh coloring
 	Preset            Preset        // Color theme preset
 	Theme             Theme
-	Pager             string
+	Pager             string        // Command to execute as pager
 }
 
 func NewViper() *viper.Viper {
