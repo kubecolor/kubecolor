@@ -26,6 +26,11 @@ type Printers struct {
 	ErrorPrinter       printer.Printer
 }
 
+type pagerPipe struct {
+	writer *os.File
+	cc     *chan struct{}
+}
+
 // This is defined here to be replaced in test
 var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, objFreshThreshold time.Duration, theme *config.Theme) *Printers {
 	return &Printers{
@@ -64,12 +69,13 @@ func Run(args []string, version string) error {
 	subcmd := subcommandInfo.Subcommand
 	if config.Pager && isOutputTerminal() &&
 		(subcmd == kubectl.Get || subcmd == kubectl.Describe) {
-		wait, err := runPager()
+		pipe, err := runPager()
 		if err != nil {
 			err = fmt.Errorf("failed to run pager: %w", err)
 			fmt.Fprintf(os.Stderr, "[kubecolor] [ERROR] %v\n", err)
 		} else {
-			defer wait()
+			Stdout = pipe
+			defer pipe.Close()
 		}
 	}
 
@@ -216,9 +222,20 @@ func (r *cmdWaitReadCloser) Close() error {
 	return nil
 }
 
-func runPager() (func(), error) {
+// Close the pipe and wait until the consumer program exits
+func (p pagerPipe) Close() error {
+	err := p.writer.Close()
+	<-*p.cc
+	return err
+}
+
+func (p pagerPipe) Write(b []byte) (int, error) {
+	return p.writer.Write(b)
+}
+
+func runPager() (*pagerPipe, error) {
 	var pager string
-	if p := os.Getenv("KUBEPAGER"); p != "" {
+	if p := os.Getenv("KUBECOLOR_PAGER"); p != "" {
 		pager = p
 	} else if p := os.Getenv("PAGER"); p != "" {
 		pager = p
@@ -251,8 +268,8 @@ func runPager() (func(), error) {
 		os.Exit(0)
 	}()
 
-	return func() {
-		w.Close()
-		<-c
+	return &pagerPipe{
+		writer: w,
+		cc:     &c,
 	}, nil
 }
