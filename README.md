@@ -207,7 +207,7 @@ When you don't want to colorize output, you can specify `--plain`. Kubecolor und
 
 * `--pager`
 
-Pipe the output of the `get` and `describe` subcommands to a pager. Kubecolor tries a pager defined by `$KUBEPAGER`, `$PAGER` and the command `pager`, in that order. When using less, use `PAGER="less -R"` to pass color escape sequences and use `PAGER="less -RF"` to exit the pager if the file can be displayed on the first screen.
+Pipe the output of the `get` and `describe` subcommands to a pager. Kubecolor tries a pager defined by `$KUBECOLOR_PAGER`, then `$PAGER` and then tries less and more. When using less, use `less -R` to pass color escape sequences and use `less -RF` to exit the pager if the file can be displayed on the first screen.
 
 ### ENV Variables
 
@@ -535,7 +535,9 @@ Example file (the values shows the default values):
 kubectl: kubectl # path to kubectl executable
 preset: dark # color theme preset
 objFreshThreshold: 0 # ages below this uses theme.data.durationfresh coloring
-pager: "" # command to run as pager
+pager:
+  enabled: false # whether to use a pager
+  cmd: # command to run as pager
 
 # Color theme options
 theme:
