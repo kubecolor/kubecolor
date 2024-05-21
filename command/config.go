@@ -18,8 +18,7 @@ type Config struct {
 	StdinOverride        string
 	ObjFreshThreshold    time.Duration
 	Theme                *config.Theme
-	Pager                bool
-	PagerCmd             string
+	Paging               *config.Paging
 
 	ArgsPassthrough []string
 }
@@ -97,7 +96,7 @@ func ResolveConfigViper(inputArgs []string, v *viper.Viper) (*Config, error) {
 			if err != nil {
 				return nil, err
 			}
-			cfg.Pager = b
+			v.Set("pager.enabled", b)
 		default:
 			cfg.ArgsPassthrough = append(cfg.ArgsPassthrough, s)
 		}
@@ -110,7 +109,7 @@ func ResolveConfigViper(inputArgs []string, v *viper.Viper) (*Config, error) {
 	cfg.KubectlCmd = newCfg.Kubectl
 	cfg.ObjFreshThreshold = newCfg.ObjFreshThreshold
 	cfg.Theme = &newCfg.Theme
-	cfg.PagerCmd = newCfg.Pager
+	cfg.Paging = &newCfg.Paging
 
 	return cfg, nil
 }

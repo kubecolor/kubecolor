@@ -243,3 +243,17 @@ func InspectSubcommandInfo(args []string) (*SubcommandInfo, bool) {
 
 	return ret, false
 }
+
+func (sci *SubcommandInfo) SupportsPager() bool {
+	switch sci.Subcommand {
+	case Get:
+		return true
+	case Describe:
+		return true
+	case Logs:
+		return true
+	case Explain:
+		return true
+	}
+	return false
+}

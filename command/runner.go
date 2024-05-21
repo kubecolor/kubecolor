@@ -17,9 +17,8 @@ import (
 )
 
 var (
-	Stdout        = colorable.NewColorableStdout()
-	Stderr        = colorable.NewColorableStderr()
-	DefaultPagers = []string{"less", "more"}
+	Stdout = colorable.NewColorableStdout()
+	Stderr = colorable.NewColorableStderr()
 )
 
 type Printers struct {
@@ -29,7 +28,7 @@ type Printers struct {
 
 type pagerPipe struct {
 	writer *os.File
-	cc     *chan struct{}
+	cc     chan struct{}
 }
 
 // This is defined here to be replaced in test
@@ -67,16 +66,13 @@ func Run(args []string, version string) error {
 
 	shouldColorize, subcommandInfo := ResolveSubcommand(args, config)
 
-	subcmd := subcommandInfo.Subcommand
-	if config.Pager && isOutputTerminal() &&
-		(subcmd == kubectl.Get || subcmd == kubectl.Describe ||
-			subcmd == kubectl.Logs || subcmd == kubectl.Explain) {
-		pipe, err := runPager(config.PagerCmd)
+	if config.Paging.Enabled && isOutputTerminal() && subcommandInfo.SupportsPager() {
+		pipe, err := runPager(config.Paging.Cmd)
 		if err != nil {
 			err = fmt.Errorf("failed to run pager: %w", err)
 			fmt.Fprintf(os.Stderr, "[kubecolor] [ERROR] %v\n", err)
 		} else {
-			Stdout = pipe
+			Stdout = pipe.Writer()
 			defer pipe.Close()
 		}
 	}
@@ -227,32 +223,33 @@ func (r *cmdWaitReadCloser) Close() error {
 // Close the pipe and wait until the consumer program exits
 func (p pagerPipe) Close() error {
 	err := p.writer.Close()
-	<-*p.cc
+	<-p.cc
 	return err
 }
 
-func (p pagerPipe) Write(b []byte) (int, error) {
-	return p.writer.Write(b)
+func (p pagerPipe) Writer() io.Writer {
+	return p.writer
+}
+
+func defaultPager() string {
+	if p := os.Getenv("PAGER"); p != "" {
+		return p
+	}
+	if _, err := exec.LookPath("less"); err == nil {
+		return "less -R"
+	}
+	if _, err := exec.LookPath("more"); err == nil {
+		return "more"
+	}
+	return ""
 }
 
 func runPager(pagerCmd string) (*pagerPipe, error) {
-	pager := ""
+	var pager string
 	if pagerCmd != "" {
 		pager = pagerCmd
-	} else if p := os.Getenv("KUBECOLOR_PAGER"); p != "" {
-		pager = p
-	} else if p := os.Getenv("PAGER"); p != "" {
-		pager = p
 	} else {
-		for _, p := range DefaultPagers {
-			if _, err := exec.LookPath(p); err == nil {
-				pager = p
-				if pager == "less" {
-					pager = "less -R"
-				}
-				break
-			}
-		}
+		pager = defaultPager()
 	}
 
 	if pager == "" {
@@ -272,7 +269,6 @@ func runPager(pagerCmd string) (*pagerPipe, error) {
 	cmd.Stdin = r
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	Stdout = colorable.NewColorable(w)
 
 	c := make(chan struct{})
 	go func() {
@@ -286,6 +282,6 @@ func runPager(pagerCmd string) (*pagerPipe, error) {
 
 	return &pagerPipe{
 		writer: w,
-		cc:     &c,
+		cc:     c,
 	}, nil
 }
