@@ -205,9 +205,17 @@ For example, when you want to pass kubecolor result to grep (`kubecolor get pods
 
 When you don't want to colorize output, you can specify `--plain`. Kubecolor understands this option and outputs the result without colorizing.
 
-* `--pager`
+* `--no-paging`
 
-Pipe the output of the `get` and `describe` subcommands to a pager. Kubecolor tries a pager defined by `$KUBECOLOR_PAGER`, then `$PAGER` and then tries less and more. When using less, use `less -R` to pass color escape sequences and use `less -RF` to exit the pager if the file can be displayed on the first screen.
+Disable piping the output to a pager.
+
+* `--paging`
+
+Enable piping the output of to a pager if this was disabled in the config file.
+
+* `--pager=cmd`
+
+Use `cmd` as the pager.
 
 ### ENV Variables
 
@@ -535,9 +543,8 @@ Example file (the values shows the default values):
 kubectl: kubectl # path to kubectl executable
 preset: dark # color theme preset
 objFreshThreshold: 0 # ages below this uses theme.data.durationfresh coloring
-pager:
-  enabled: false # whether to use a pager
-  cmd: # command to run as pager
+paging: always # whether to pipe supported subcommands to a pager ("always" or "never")
+pager: # the command to use as pager; default uses $PAGER, less, or more
 
 # Color theme options
 theme:
