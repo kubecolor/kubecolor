@@ -236,7 +236,7 @@ func defaultPager() string {
 		return p
 	}
 	if _, err := exec.LookPath("less"); err == nil {
-		return "less -R"
+		return "less -RF"
 	}
 	if _, err := exec.LookPath("more"); err == nil {
 		return "more"
@@ -245,10 +245,8 @@ func defaultPager() string {
 }
 
 func runPager(pagerCmd string) (*pagerPipe, error) {
-	var pager string
-	if pagerCmd != "" {
-		pager = pagerCmd
-	} else {
+	pager := pagerCmd
+	if pagerCmd == "" {
 		pager = defaultPager()
 	}
 
