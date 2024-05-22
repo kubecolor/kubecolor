@@ -15,18 +15,29 @@ import (
 // PresetKey is the Viper config key to use in [viper.Viper.Set].
 const PresetKey = "preset"
 
-type Paging struct {
-	Enabled bool   // Whether to enable the pager
-	Cmd     string // Command to execute as pager
-}
+const (
+	PagingAlways Paging = "always"
+	PagingNever  Paging = "never"
+)
+
+// PagingOptions can be used for validation and schema generation (not implemented)
+var (
+	PagingOptions []Paging = []Paging{
+		PagingAlways,
+		PagingNever,
+	}
+)
+
+type Paging string
 
 type Config struct {
 	Debug             bool          `jsonschema:"-"`
 	Kubectl           string        `jsonschema:"default=kubectl,example=kubectl1.19,example=oc"` // Which kubectl executable to use
 	ObjFreshThreshold time.Duration // Ages below this uses theme.data.durationfresh coloring
 	Preset            Preset        // Color theme preset
-	Theme             Theme
-	Paging            Paging
+	Theme             Theme         //
+	Pager             string        // Command to use as pager
+	Paging            Paging        `jsonschema:"default=always"` // Whether to enable paging: "always" or "never"
 }
 
 func NewViper() *viper.Viper {
@@ -42,12 +53,12 @@ func NewViper() *viper.Viper {
 
 	v.MustBindEnv("kubectl", "KUBECTL_COMMAND")
 	v.MustBindEnv("objfreshthreshold", "KUBECOLOR_OBJ_FRESH")
-
-	v.BindEnv("paging.cmd", "KUBECOLOR_PAGER")
+	v.MustBindEnv("pager", "KUBECOLOR_PAGER") // Don't bind PAGER yet as it should be overwritten by the config file
 
 	v.SetDefault("kubectl", "kubectl")
 	// mapstructure doesn't like "type X string" values, so we have to convert it via string(...)
 	v.SetDefault(PresetKey, string(PresetDefault))
+	v.SetDefault("paging", "always")
 
 	return v
 }

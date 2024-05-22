@@ -10,7 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/kubecolor/kubecolor/config"
+	kcconfig "github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/kubectl"
 	"github.com/kubecolor/kubecolor/printer"
 	"github.com/mattn/go-colorable"
@@ -32,7 +32,7 @@ type pagerPipe struct {
 }
 
 // This is defined here to be replaced in test
-var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, objFreshThreshold time.Duration, theme *config.Theme) *Printers {
+var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, objFreshThreshold time.Duration, theme *kcconfig.Theme) *Printers {
 	return &Printers{
 		FullColoredPrinter: &printer.KubectlOutputColoredPrinter{
 			SubcommandInfo:    subcommandInfo,
@@ -41,7 +41,7 @@ var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, objFreshThreshold
 			Theme:             theme,
 		},
 		ErrorPrinter: &printer.WithFuncPrinter{
-			Fn: func(line string) config.Color {
+			Fn: func(line string) kcconfig.Color {
 				if strings.HasPrefix(strings.ToLower(line), "error") {
 					return theme.Stderr.Error
 				}
@@ -66,8 +66,8 @@ func Run(args []string, version string) error {
 
 	shouldColorize, subcommandInfo := ResolveSubcommand(args, config)
 
-	if config.Paging.Enabled && isOutputTerminal() && subcommandInfo.SupportsPager() {
-		pipe, err := runPager(config.Paging.Cmd)
+	if config.Paging==kcconfig.PagingAlways && isOutputTerminal() && subcommandInfo.SupportsPager() {
+		pipe, err := runPager(config.Pager)
 		if err != nil {
 			err = fmt.Errorf("failed to run pager: %w", err)
 			fmt.Fprintf(os.Stderr, "[kubecolor] [ERROR] %v\n", err)
