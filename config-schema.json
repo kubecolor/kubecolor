@@ -369,6 +369,15 @@
     },
     "theme": {
       "$ref": "#/$defs/theme"
+    },
+    "pager": {
+      "type": "string",
+      "description": "Command to use as pager"
+    },
+    "paging": {
+      "type": "string",
+      "description": "Whether to enable paging: \"always\" or \"never\"",
+      "default": "always"
     }
   },
   "additionalProperties": false,
