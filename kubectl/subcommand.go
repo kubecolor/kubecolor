@@ -123,6 +123,7 @@ func InspectSubcommand(command string) (Subcommand, bool) {
 		Proxy,
 		Replace,
 		Rollout,
+		Rsh,
 		Run,
 		Scale,
 		Set,
