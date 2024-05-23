@@ -109,7 +109,7 @@ func Test_ResolveSubcommand(t *testing.T) {
 			expectedInfo:           &kubectl.SubcommandInfo{Subcommand: kubectl.Get},
 		},
 		{
-			name:             "when the subcommand is unsupported, it won't colorize",
+			name:             "when the subcommand is help, it will colorize",
 			args:             []string{"-h"},
 			isOutputTerminal: func() bool { return true },
 			conf: &Config{
@@ -120,6 +120,19 @@ func Test_ResolveSubcommand(t *testing.T) {
 			},
 			expectedShouldColorize: true,
 			expectedInfo:           &kubectl.SubcommandInfo{Help: true},
+		},
+		{
+			name:             "when the subcommand is unsupported, it won't colorize",
+			args:             []string{"rsh"},
+			isOutputTerminal: func() bool { return true },
+			conf: &Config{
+				Plain:      false,
+				ForceColor: false,
+				KubectlCmd: "kubectl",
+				Theme:      testconfig.DarkTheme,
+			},
+			expectedShouldColorize: false,
+			expectedInfo:           &kubectl.SubcommandInfo{Subcommand: kubectl.Rsh},
 		},
 	}
 	for _, tt := range tests {
