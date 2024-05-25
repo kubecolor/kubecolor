@@ -66,7 +66,7 @@ func Run(args []string, version string) error {
 
 	shouldColorize, subcommandInfo := ResolveSubcommand(args, cfg)
 
-	if cfg.Paging==config.PagingAuto && isOutputTerminal() && subcommandInfo.SupportsPager() {
+	if cfg.Paging == config.PagingAuto && isOutputTerminal() && subcommandInfo.SupportsPager() {
 		pipe, err := runPager(cfg.Pager)
 		if err != nil {
 			err = fmt.Errorf("failed to run pager: %w", err)

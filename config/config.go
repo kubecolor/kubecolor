@@ -17,8 +17,8 @@ import (
 const PresetKey = "preset"
 
 const (
-	PagingAuto Paging = "auto"
-	PagingNever  Paging = "never"
+	PagingAuto  Paging = "auto"
+	PagingNever Paging = "never"
 )
 
 // PagingOptions can be used for validation and schema generation (not implemented)
