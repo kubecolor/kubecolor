@@ -116,7 +116,7 @@ func Test_ResolveConfig(t *testing.T) {
 			name: "Pager flags overwrite (2)",
 			args: []string{"--no-paging", "get", "pods"},
 			env: map[string]string{
-				"KUBECOLOR_PAGING": "always",
+				"KUBECOLOR_PAGING": string(config.PagingAuto),
 			},
 			expectedConf: &Config{
 				ArgsPassthrough: []string{"get", "pods"},

@@ -376,8 +376,8 @@
     },
     "paging": {
       "type": "string",
-      "description": "Whether to enable paging: \"always\" or \"never\"",
-      "default": "always"
+      "description": "Whether to enable paging: \"auto\" or \"never\"",
+      "default": "auto"
     }
   },
   "additionalProperties": false,
