@@ -96,7 +96,7 @@ func ResolveConfigViper(inputArgs []string, v *viper.Viper) (*Config, error) {
 			v.Set("pager", value)
 		case "--paging":
 			if value == "" {
-				v.Set("paging", config.PagingAlways)
+				v.Set("paging", config.PagingAuto)
 			} else {
 				v.Set("paging", value)
 			}

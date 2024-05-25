@@ -40,6 +40,11 @@ func TestEnvVars_pager(t *testing.T) {
 	testutil.MustNoError(t, err)
 	testutil.Equal(t, "", cfg.Pager)
 
+	v = NewViper() // this time with more as default pager
+	cfg, err = Unmarshal(v)
+	testutil.MustNoError(t, err)
+	testutil.Equal(t, "more", cfg.Pager)
+
 	testutil.Setenv(t, "KUBECOLOR_PAGER", "more2")
 	cfg, err = Unmarshal(v)
 	testutil.MustNoError(t, err)
@@ -50,8 +55,8 @@ func TestEnvVars_pager(t *testing.T) {
 	testutil.MustNoError(t, err)
 	testutil.Equal(t, PagingNever, cfg.Paging)
 
-	testutil.Setenv(t, "KUBECOLOR_PAGING", string(PagingAlways))
+	testutil.Setenv(t, "KUBECOLOR_PAGING", string(PagingAuto))
 	cfg, err = Unmarshal(v)
 	testutil.MustNoError(t, err)
-	testutil.Equal(t, PagingAlways, cfg.Paging)
+	testutil.Equal(t, PagingAuto, cfg.Paging)
 }

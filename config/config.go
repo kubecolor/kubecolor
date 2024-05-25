@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
@@ -16,14 +17,14 @@ import (
 const PresetKey = "preset"
 
 const (
-	PagingAlways Paging = "always"
+	PagingAuto Paging = "auto"
 	PagingNever  Paging = "never"
 )
 
 // PagingOptions can be used for validation and schema generation (not implemented)
 var (
 	PagingOptions []Paging = []Paging{
-		PagingAlways,
+		PagingAuto,
 		PagingNever,
 	}
 )
@@ -37,7 +38,7 @@ type Config struct {
 	Preset            Preset        // Color theme preset
 	Theme             Theme         //
 	Pager             string        // Command to use as pager
-	Paging            Paging        `jsonschema:"default=always"` // Whether to enable paging: "always" or "never"
+	Paging            Paging        `jsonschema:"default=auto"` // Whether to enable paging: "auto" or "never"
 }
 
 func NewViper() *viper.Viper {
@@ -53,12 +54,13 @@ func NewViper() *viper.Viper {
 
 	v.MustBindEnv("kubectl", "KUBECTL_COMMAND")
 	v.MustBindEnv("objfreshthreshold", "KUBECOLOR_OBJ_FRESH")
-	v.MustBindEnv("pager", "KUBECOLOR_PAGER") // Don't bind PAGER yet as it should be overwritten by the config file
+	// NOTE: Don't bind PAGER here as it should be overwritten by the config file
 
 	v.SetDefault("kubectl", "kubectl")
 	// mapstructure doesn't like "type X string" values, so we have to convert it via string(...)
 	v.SetDefault(PresetKey, string(PresetDefault))
-	v.SetDefault("paging", "always")
+	v.SetDefault("paging", PagingAuto)
+	v.SetDefault("pager", defaultPager())
 
 	return v
 }
@@ -118,4 +120,17 @@ func ApplyThemePreset(v *viper.Viper) error {
 	theme := NewBaseTheme(preset)
 	applyViperDefaults(theme, v)
 	return nil
+}
+
+func defaultPager() string {
+	if p := os.Getenv("PAGER"); p != "" {
+		return p
+	}
+	if _, err := exec.LookPath("less"); err == nil {
+		return "less -RF"
+	}
+	if _, err := exec.LookPath("more"); err == nil {
+		return "more"
+	}
+	return ""
 }
