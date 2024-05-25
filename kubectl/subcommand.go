@@ -248,6 +248,9 @@ func InspectSubcommandInfo(args []string) (*SubcommandInfo, bool) {
 }
 
 func (sci *SubcommandInfo) SupportsPager() bool {
+	if sci.Help {
+		return false
+	}
 	switch sci.Subcommand {
 	case Get:
 		return !sci.Watch
