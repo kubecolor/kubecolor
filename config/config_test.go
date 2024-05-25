@@ -40,10 +40,10 @@ func TestEnvVars_pager(t *testing.T) {
 	testutil.MustNoError(t, err)
 	testutil.Equal(t, "", cfg.Pager)
 
-	testutil.Setenv(t, "KUBECOLOR_PAGER", "more")
+	testutil.Setenv(t, "KUBECOLOR_PAGER", "more2")
 	cfg, err = Unmarshal(v)
 	testutil.MustNoError(t, err)
-	testutil.Equal(t, "more", cfg.Pager)
+	testutil.Equal(t, "more2", cfg.Pager)
 
 	testutil.Setenv(t, "KUBECOLOR_PAGING", string(PagingNever))
 	cfg, err = Unmarshal(v)
