@@ -212,7 +212,7 @@ func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 			}
 		} else if args[i] == "--no-headers" {
 			info.NoHeader = true
-		} else if args[i] == "-w" || args[i] == "--watch" {
+		} else if args[i] == "-w" || args[i] == "--watch" || args[i] == "--watch-only" {
 			info.Watch = true
 		} else if args[i] == "-f" || args[i] == "--follow" {
 			info.Follow = true
