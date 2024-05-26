@@ -63,16 +63,20 @@ func TestInspectSubcommandInfo(t *testing.T) {
 		{"rsh", &SubcommandInfo{Subcommand: Rsh}, true},
 
 		{"testplugin", &SubcommandInfo{Subcommand: KubectlPlugin}, true},
-		{"my-plugin with args", &SubcommandInfo{Subcommand: KubectlPlugin}, true},
+		{"testplugin with args", &SubcommandInfo{Subcommand: KubectlPlugin}, true},
+		{"my-plugin with multiple words", &SubcommandInfo{Subcommand: KubectlPlugin}, true},
 		// Args are not allowed in-between
-		{"my-plugin --hello with args", &SubcommandInfo{Subcommand: Unknown}, false},
+		{"my-plugin --hello with multiple words", &SubcommandInfo{Subcommand: Unknown}, false},
+		// No plugin found
+		{"my-non-existing-plugin", &SubcommandInfo{Subcommand: Unknown}, false},
 
 		{"", &SubcommandInfo{}, false},
+		{"--only-some-flag", &SubcommandInfo{}, false},
 	}
 
 	pluginHandler := TestPluginHandler{LookupMap: map[string]string{
 		"testplugin":          "/bin/testplugin",
-		"my_plugin-with-args": "/bin/my_plugin-with-args",
+		"my_plugin-with-multiple-words": "/bin/my_plugin-with-multiple-words",
 	}}
 
 	for _, tt := range tests {
