@@ -15,6 +15,7 @@ import (
 	"github.com/kubecolor/kubecolor/kubectl"
 	"github.com/kubecolor/kubecolor/printer"
 	"github.com/mattn/go-colorable"
+	"github.com/xo/terminfo"
 )
 
 var (
@@ -94,6 +95,13 @@ func Run(args []string, version string) error {
 		// We don't want this behaviour.
 		os.Unsetenv("FORCE_COLOR")
 		color.DetectColorLevel()
+
+		if color.TermColorLevel() == terminfo.ColorLevelNone && os.Getenv("COLORTERM") == "" {
+			// gookit/color package couldn't determine the color support of the terminal.
+			// The user did provide a `--force-colors` setting,
+			// so let's just fallback to basic ANSI color codes to be safe.
+			color.ForceSetColorLevel(terminfo.ColorLevelBasic)
+		}
 
 	default:
 		color.ForceSetColorLevel(cfg.ForceColor.TerminfoColorLevel())
