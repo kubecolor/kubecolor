@@ -64,6 +64,8 @@ func TestInspectSubcommandInfo(t *testing.T) {
 
 		{"testplugin", &SubcommandInfo{Subcommand: KubectlPlugin}, true},
 		{"my-plugin with args", &SubcommandInfo{Subcommand: KubectlPlugin}, true},
+		// Args are not allowed in-between
+		{"my-plugin --hello with args", &SubcommandInfo{Subcommand: Unknown}, false},
 
 		{"", &SubcommandInfo{}, false},
 	}
