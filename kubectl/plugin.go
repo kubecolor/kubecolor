@@ -69,6 +69,9 @@ func IsPlugin(cmdArgs []string, pluginHandler PluginHandler) bool {
 
 type DefaultPluginHandler struct{}
 
+// Ensure it implements the interface
+var _ PluginHandler = DefaultPluginHandler{}
+
 // Lookup implements PluginHandler
 func (DefaultPluginHandler) Lookup(filename string) (string, bool) {
 	for _, prefix := range validPluginPrefixes {
@@ -83,14 +86,4 @@ func (DefaultPluginHandler) Lookup(filename string) (string, bool) {
 
 func shouldSkipOnLookPathErr(err error) bool {
 	return err != nil && !errors.Is(err, exec.ErrDot)
-}
-
-type TestPluginHandler struct{
-	LookupMap map[string]string
-}
-
-// Lookup implements PluginHandler
-func (t TestPluginHandler) Lookup(filename string) (string, bool) {
-	path, found := t.LookupMap[filename]
-	return path, found
 }

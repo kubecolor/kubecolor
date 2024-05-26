@@ -88,3 +88,16 @@ func TestInspectSubcommandInfo(t *testing.T) {
 		})
 	}
 }
+
+type TestPluginHandler struct{
+	LookupMap map[string]string
+}
+
+// Ensure it implements the interface
+var _ PluginHandler = TestPluginHandler{}
+
+// Lookup implements PluginHandler
+func (t TestPluginHandler) Lookup(filename string) (string, bool) {
+	path, found := t.LookupMap[filename]
+	return path, found
+}
