@@ -211,7 +211,7 @@ When using kubecolor you can freely configure it to use RGB values in your [them
 and depending on your terminal's color support, it will convert the color to the nearest 8-bit or 4-bit color.
 
 The color support can be overridden via the `--force-colors` flag and `KUBECOLOR_FORCE_COLORS` environment variable,
-and it support multiple values.
+and it support multiple values: `auto`, `basic`, `256`, `truecolor`, and `none`
 
 ```bash
 # As an example, let's set the header color to a 24-bit/truecolor value:
