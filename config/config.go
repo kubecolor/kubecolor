@@ -16,23 +16,6 @@ import (
 // PresetKey is the Viper config key to use in [viper.Viper.Set].
 const PresetKey = "preset"
 
-const (
-	PagingAuto  Paging = "auto"
-	PagingNever Paging = "never"
-
-	PagingDefault = PagingAuto
-)
-
-// AllPagingModes can be used for validation and schema generation (not implemented)
-var (
-	AllPagingModes []Paging = []Paging{
-		PagingAuto,
-		PagingNever,
-	}
-)
-
-type Paging string
-
 type Config struct {
 	Debug             bool          `jsonschema:"-"`
 	Kubectl           string        `jsonschema:"default=kubectl,example=kubectl1.19,example=oc"` // Which kubectl executable to use
@@ -61,7 +44,7 @@ func NewViper() *viper.Viper {
 	v.SetDefault("kubectl", "kubectl")
 	// mapstructure doesn't like "type X string" values, so we have to convert it via string(...)
 	v.SetDefault(PresetKey, string(PresetDefault))
-	v.SetDefault("paging", PagingDefault)
+	v.SetDefault("paging", string(PagingDefault))
 	v.SetDefault("pager", defaultPager())
 
 	return v

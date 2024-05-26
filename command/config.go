@@ -96,12 +96,14 @@ func ResolveConfigViper(inputArgs []string, v *viper.Viper) (*Config, error) {
 			v.Set("pager", value)
 		case "--paging":
 			if value == "" {
-				v.Set("paging", config.PagingAuto)
+				// mapstructure doesn't like "type X string" values,
+				// so we have to convert it via string(...)
+				v.Set("paging", string(config.PagingAuto))
 			} else {
 				v.Set("paging", value)
 			}
 		case "--no-paging":
-			v.Set("paging", config.PagingNever)
+			v.Set("paging", string(config.PagingNever))
 		default:
 			cfg.ArgsPassthrough = append(cfg.ArgsPassthrough, s)
 		}
