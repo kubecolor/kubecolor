@@ -199,13 +199,13 @@ kubecolor get pods --force-colors > result.txt
 
 Kubecolor will infer which colors your terminal supports.
 
-> For context, practically all terminals supports the basic ["3-bit" or "4-bit" ANSI color set](https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit)
-> which includes 8 or 16 different colors (respectively),
-> while most support the ["8-bit" ANSI color set](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit)
-> which. includes 256 different colors.
-> More advanced and modern terminal emulators also support the ["24-bit" color set (aka true color)](https://en.wikipedia.org/wiki/ANSI_escape_code#24-bit),
-> which includes the famous 16 777 216 number of colors,
-> and are most commonly referred to by their RGB (e.g `rgb(90, 12, 135)`) or HEX (e.g `#5a8487`) representations.
+For context, practically all terminals supports the basic ["3-bit" or "4-bit" ANSI color set](https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit)
+which includes 8 or 16 different colors (respectively),
+while most support the ["8-bit" ANSI color set](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit)
+which. includes 256 different colors.
+More advanced and modern terminal emulators also support the ["24-bit" color set (aka true color)](https://en.wikipedia.org/wiki/ANSI_escape_code#24-bit),
+which includes the famous 16 777 216 number of colors,
+and are most commonly referred to by their RGB (e.g `rgb(90, 12, 135)`) or HEX (e.g `#5a8487`) representations.
 
 When using kubecolor you can freely configure it to use RGB values in your [theme](#color-theme),
 and depending on your terminal's color support, it will convert the color to the nearest 8-bit or 4-bit color.
