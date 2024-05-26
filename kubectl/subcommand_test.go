@@ -62,13 +62,28 @@ func TestInspectSubcommandInfo(t *testing.T) {
 
 		{"rsh", &SubcommandInfo{Subcommand: Rsh}, true},
 
+		{"testplugin", &SubcommandInfo{Subcommand: KubectlPlugin}, true},
+		{"testplugin with args", &SubcommandInfo{Subcommand: KubectlPlugin}, true},
+		{"my-plugin with multiple words", &SubcommandInfo{Subcommand: KubectlPlugin}, true},
+		// Args are not allowed in-between
+		{"my-plugin --hello with multiple words", &SubcommandInfo{Subcommand: Unknown}, false},
+		// No plugin found
+		{"my-non-existing-plugin", &SubcommandInfo{Subcommand: Unknown}, false},
+
 		{"", &SubcommandInfo{}, false},
+		{"--only-some-flag", &SubcommandInfo{}, false},
 	}
+
+	pluginHandler := TestPluginHandler{LookupMap: map[string]string{
+		"testplugin":          "/bin/testplugin",
+		"my_plugin-with-multiple-words": "/bin/my_plugin-with-multiple-words",
+	}}
+
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.args, func(t *testing.T) {
 			t.Parallel()
-			s, ok := InspectSubcommandInfo(strings.Split(tt.args, " "))
+			s, ok := InspectSubcommandInfo(strings.Fields(tt.args), pluginHandler)
 			if tt.expectedOK != ok {
 				t.Error("failed")
 			}
@@ -78,4 +93,17 @@ func TestInspectSubcommandInfo(t *testing.T) {
 			}
 		})
 	}
+}
+
+type TestPluginHandler struct {
+	LookupMap map[string]string
+}
+
+// Ensure it implements the interface
+var _ PluginHandler = TestPluginHandler{}
+
+// Lookup implements PluginHandler
+func (t TestPluginHandler) Lookup(filename string) (string, bool) {
+	path, found := t.LookupMap[filename]
+	return path, found
 }

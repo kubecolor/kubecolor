@@ -12,6 +12,8 @@ var isOutputTerminal = func() bool {
 	return isatty.IsTerminal(os.Stdout.Fd()) || isatty.IsCygwinTerminal(os.Stdout.Fd())
 }
 
+var pluginHandler kubectl.PluginHandler = kubectl.DefaultPluginHandler{}
+
 func ResolveSubcommand(args []string, config *Config) (bool, *kubectl.SubcommandInfo) {
 	// if --plain found, it does not colorize
 	if config.Plain {
@@ -19,7 +21,7 @@ func ResolveSubcommand(args []string, config *Config) (bool, *kubectl.Subcommand
 	}
 
 	// subcommandFound becomes false when subcommand is not found; e.g. "kubecolor --help"
-	subcommandInfo, subcommandFound := kubectl.InspectSubcommandInfo(args)
+	subcommandInfo, subcommandFound := kubectl.InspectSubcommandInfo(args, pluginHandler)
 
 	// if subcommand is not found (e.g. kubecolor --help or just "kubecolor"),
 	// it is treated as help because kubectl shows help for such input
