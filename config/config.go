@@ -19,11 +19,13 @@ const PresetKey = "preset"
 const (
 	PagingAuto  Paging = "auto"
 	PagingNever Paging = "never"
+
+	PagingDefault = PagingAuto
 )
 
-// PagingOptions can be used for validation and schema generation (not implemented)
+// AllPagingModes can be used for validation and schema generation (not implemented)
 var (
-	PagingOptions []Paging = []Paging{
+	AllPagingModes []Paging = []Paging{
 		PagingAuto,
 		PagingNever,
 	}
@@ -37,8 +39,8 @@ type Config struct {
 	ObjFreshThreshold time.Duration // Ages below this uses theme.data.durationfresh coloring
 	Preset            Preset        // Color theme preset
 	Theme             Theme         //
-	Pager             string        // Command to use as pager
-	Paging            Paging        `jsonschema:"default=auto"` // Whether to enable paging: "auto" or "never"
+	Pager             string        `jsonschema:"example=less -RF,less --RAW-CONTROL-CHARS --quit-if-one-screen,example=more"` // Command to use as pager
+	Paging            Paging        `jsonschema:"default=auto"`                                                                // Whether to enable paging: "auto" or "never"
 }
 
 func NewViper() *viper.Viper {
@@ -59,7 +61,7 @@ func NewViper() *viper.Viper {
 	v.SetDefault("kubectl", "kubectl")
 	// mapstructure doesn't like "type X string" values, so we have to convert it via string(...)
 	v.SetDefault(PresetKey, string(PresetDefault))
-	v.SetDefault("paging", PagingAuto)
+	v.SetDefault("paging", PagingDefault)
 	v.SetDefault("pager", defaultPager())
 
 	return v

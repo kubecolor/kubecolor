@@ -49,6 +49,16 @@
         "5h"
       ]
     },
+    "paging": {
+      "type": "string",
+      "enum": [
+        "auto",
+        "never"
+      ],
+      "title": "Paging mode preference",
+      "description": "Whether to pipe supported subcommands to a pager (\"auto\" or \"never\")",
+      "default": "auto"
+    },
     "preset": {
       "type": "string",
       "enum": [
@@ -372,12 +382,15 @@
     },
     "pager": {
       "type": "string",
-      "description": "Command to use as pager"
+      "description": "Command to use as pager",
+      "examples": [
+        "less -RF",
+        "more"
+      ]
     },
     "paging": {
-      "type": "string",
-      "description": "Whether to enable paging: \"auto\" or \"never\"",
-      "default": "auto"
+      "$ref": "#/$defs/paging",
+      "description": "Whether to enable paging: \"auto\" or \"never\""
     }
   },
   "additionalProperties": false,
