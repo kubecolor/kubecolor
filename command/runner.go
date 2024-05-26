@@ -71,7 +71,7 @@ func Run(args []string, version string) error {
 		if err != nil {
 			err = fmt.Errorf("failed to run pager: %w", err)
 			fmt.Fprintf(os.Stderr, "[kubecolor] [ERROR] %v\n", err)
-		} else {
+		} else if pipe != nil {
 			Stdout = pipe.Writer()
 			defer pipe.Close()
 		}
@@ -233,7 +233,11 @@ func (p pagerPipe) Writer() io.Writer {
 
 func runPager(pager string) (*pagerPipe, error) {
 	if pager == "" {
-		return nil, fmt.Errorf("no pager configured via PAGER or KUBECOLOR_PAGER environment variables")
+		// No pager is set, so just skip using pager.
+		// By default kubecolor defaults to looking up "less" and "more",
+		// but if neither exist (such as in our Docker image),
+		// then just silently skip pager integration.
+		return nil, nil
 	}
 
 	pargs := strings.Fields(pager)
