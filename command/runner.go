@@ -84,6 +84,8 @@ func Run(args []string, version string) error {
 	case !isColoringSupported(subcommandInfo.Subcommand),
 		// Skip if explicitly setting --force-colors=none
 		cfg.ForceColor == ColorLevelNone,
+		// Conventional environment variable for disabling colors
+		os.Getenv("NO_COLOR") != "",
 		// Skip if stdout is not a tty UNLESS --force-colors is set
 		!isOutputTerminal() && cfg.ForceColor == ColorLevelUnset:
 
