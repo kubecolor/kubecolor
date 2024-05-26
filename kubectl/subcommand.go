@@ -82,7 +82,7 @@ const (
 	Rsh Subcommand = "rsh"
 )
 
-func InspectSubcommand(cmdArgs []string) (Subcommand, bool) {
+func InspectSubcommand(cmdArgs []string, pluginHandler PluginHandler) (Subcommand, bool) {
 	if len(cmdArgs) == 0 {
 		return Unknown, false
 	}
@@ -143,7 +143,7 @@ func InspectSubcommand(cmdArgs []string) (Subcommand, bool) {
 			return InternalComplete, true
 		}
 
-		if IsPlugin(cmdArgs) {
+		if IsPlugin(cmdArgs, pluginHandler) {
 			return KubectlPlugin, true
 		}
 		return Unknown, false
@@ -228,7 +228,7 @@ func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 	}
 }
 
-func InspectSubcommandInfo(args []string) (*SubcommandInfo, bool) {
+func InspectSubcommandInfo(args []string, pluginHandler PluginHandler) (*SubcommandInfo, bool) {
 	ret := &SubcommandInfo{}
 
 	CollectCommandlineOptions(args, ret)
@@ -239,7 +239,7 @@ func InspectSubcommandInfo(args []string) (*SubcommandInfo, bool) {
 			break
 		}
 
-		cmd, ok := InspectSubcommand(args[i:])
+		cmd, ok := InspectSubcommand(args[i:], pluginHandler)
 		if !ok {
 			continue
 		}

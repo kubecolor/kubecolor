@@ -31,9 +31,13 @@ var (
 	validPluginPrefixes = []string{"kubectl"}
 )
 
+type PluginHandler interface {
+	Lookup(filename string) (string, bool)
+}
+
 // IsPlugin receives a pluginHandler and command-line arguments and attempts to find
 // a plugin executable on the PATH that satisfies the given arguments.
-func IsPlugin(cmdArgs []string) bool {
+func IsPlugin(cmdArgs []string, pluginHandler PluginHandler) bool {
 	var remainingArgs []string // all "non-flag" arguments
 	for _, arg := range cmdArgs {
 		if strings.HasPrefix(arg, "-") {
@@ -49,7 +53,7 @@ func IsPlugin(cmdArgs []string) bool {
 
 	// attempt to find binary, starting at longest possible name with given cmdArgs
 	for len(remainingArgs) > 0 {
-		_, found := lookupPlugin(strings.Join(remainingArgs, "-"))
+		_, found := pluginHandler.Lookup(strings.Join(remainingArgs, "-"))
 		if !found {
 			remainingArgs = remainingArgs[:len(remainingArgs)-1]
 			continue
@@ -63,8 +67,10 @@ func IsPlugin(cmdArgs []string) bool {
 	return false
 }
 
+type DefaultPluginHandler struct{}
+
 // Lookup implements PluginHandler
-func lookupPlugin(filename string) (string, bool) {
+func (DefaultPluginHandler) Lookup(filename string) (string, bool) {
 	for _, prefix := range validPluginPrefixes {
 		path, err := exec.LookPath(fmt.Sprintf("%s-%s", prefix, filename))
 		if shouldSkipOnLookPathErr(err) || len(path) == 0 {
@@ -77,4 +83,14 @@ func lookupPlugin(filename string) (string, bool) {
 
 func shouldSkipOnLookPathErr(err error) bool {
 	return err != nil && !errors.Is(err, exec.ErrDot)
+}
+
+type TestPluginHandler struct{
+	LookupMap map[string]string
+}
+
+// Lookup implements PluginHandler
+func (t TestPluginHandler) Lookup(filename string) (string, bool) {
+	path, found := t.LookupMap[filename]
+	return path, found
 }

@@ -62,13 +62,22 @@ func TestInspectSubcommandInfo(t *testing.T) {
 
 		{"rsh", &SubcommandInfo{Subcommand: Rsh}, true},
 
+		{"testplugin", &SubcommandInfo{Subcommand: KubectlPlugin}, true},
+		{"my-plugin with args", &SubcommandInfo{Subcommand: KubectlPlugin}, true},
+
 		{"", &SubcommandInfo{}, false},
 	}
+
+	pluginHandler := TestPluginHandler{LookupMap: map[string]string{
+		"testplugin": "/bin/testplugin",
+		"my_plugin-with-args": "/bin/my_plugin-with-args",
+	}}
+
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.args, func(t *testing.T) {
 			t.Parallel()
-			s, ok := InspectSubcommandInfo(strings.Split(tt.args, " "))
+			s, ok := InspectSubcommandInfo(strings.Fields(tt.args), pluginHandler)
 			if tt.expectedOK != ok {
 				t.Error("failed")
 			}
