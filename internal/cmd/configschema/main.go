@@ -88,7 +88,15 @@ func main() {
 		Title:       "Color theme preset",
 		Description: "Preset is a set of defaults for the color theme.",
 		Default:     config.PresetDefault.String(),
-		Enum:        allPresets(),
+		Enum:        castToAnySlice(config.AllPresets),
+	}
+
+	s.Definitions["paging"] = &jsonschema.Schema{
+		Type:        "string",
+		Title:       "Paging mode preference",
+		Description: "Whether to pipe supported subcommands to a pager (\"auto\" or \"never\")",
+		Default:     string(config.PagingDefault),
+		Enum:        castToAnySlice(config.AllPagingModes),
 	}
 
 	s.Definitions["duration"] = &jsonschema.Schema{
@@ -125,10 +133,9 @@ func main() {
 	}
 }
 
-func allPresets() []any {
-	all := config.AllPresets
-	slice := make([]any, len(all))
-	for i, v := range all {
+func castToAnySlice[E any](s []E) []any {
+	slice := make([]any, len(s))
+	for i, v := range s {
 		slice[i] = v
 	}
 	return slice
@@ -138,7 +145,7 @@ func allPresets() []any {
 // types to Schema IDs.
 func Lookup(t reflect.Type) jsonschema.ID {
 	switch t.Name() {
-	case "Color", "ColorSlice", "Preset", "Duration":
+	case "Color", "ColorSlice", "Preset", "Paging", "Duration":
 		return jsonschema.ID("#/$defs/" + Namer(t.Name()))
 	default:
 		return ""

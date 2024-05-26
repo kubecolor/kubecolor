@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
@@ -20,7 +21,9 @@ type Config struct {
 	Kubectl           string        `jsonschema:"default=kubectl,example=kubectl1.19,example=oc"` // Which kubectl executable to use
 	ObjFreshThreshold time.Duration // Ages below this uses theme.data.durationfresh coloring
 	Preset            Preset        // Color theme preset
-	Theme             Theme
+	Theme             Theme         //
+	Pager             string        `jsonschema:"example=less -RF,less --RAW-CONTROL-CHARS --quit-if-one-screen,example=more"` // Command to use as pager
+	Paging            Paging        `jsonschema:"default=auto"`                                                                // Whether to enable paging: "auto" or "never"
 }
 
 func NewViper() *viper.Viper {
@@ -36,10 +39,13 @@ func NewViper() *viper.Viper {
 
 	v.MustBindEnv("kubectl", "KUBECTL_COMMAND")
 	v.MustBindEnv("objfreshthreshold", "KUBECOLOR_OBJ_FRESH")
+	// NOTE: Don't bind PAGER here as it should be overwritten by the config file
 
 	v.SetDefault("kubectl", "kubectl")
 	// mapstructure doesn't like "type X string" values, so we have to convert it via string(...)
 	v.SetDefault(PresetKey, string(PresetDefault))
+	v.SetDefault("paging", string(PagingDefault))
+	v.SetDefault("pager", defaultPager())
 
 	return v
 }
@@ -99,4 +105,17 @@ func ApplyThemePreset(v *viper.Viper) error {
 	theme := NewBaseTheme(preset)
 	applyViperDefaults(theme, v)
 	return nil
+}
+
+func defaultPager() string {
+	if p := os.Getenv("PAGER"); p != "" {
+		return p
+	}
+	if _, err := exec.LookPath("less"); err == nil {
+		return "less -RF"
+	}
+	if _, err := exec.LookPath("more"); err == nil {
+		return "more"
+	}
+	return ""
 }

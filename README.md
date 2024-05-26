@@ -205,6 +205,18 @@ For example, when you want to pass kubecolor result to grep (`kubecolor get pods
 
 When you don't want to colorize output, you can specify `--plain`. Kubecolor understands this option and outputs the result without colorizing.
 
+* `--no-paging`
+
+Disable piping the output to a pager.
+
+* `--paging`
+
+Enable piping the output of to a pager if this was disabled in the config file.
+
+* `--pager=cmd`
+
+Use `cmd` as the pager.
+
 ### ENV Variables
 
 * `KUBECOLOR_OBJ_FRESH`
@@ -372,11 +384,11 @@ colors of your output.
 | `KUBECOLOR_THEME_STATUS_WARNING`     | color   | used in status keywords, e.g "Terminating"<br/>*(fallback to `KUBECOLOR_THEME_BASE_WARNING`)*                                                                                                                                                       | `yellow`
 | `KUBECOLOR_THEME_STATUS_ERROR`       | color   | used in status keywords, e.g "Failed", "Unhealthy"<br/>*(fallback to `KUBECOLOR_THEME_BASE_DANGER`)*                                                                                                                                                | `red`
 |                                      |         |                                                                                                                                                                                                                                                     |
-| `KUBECOLOR_THEME_TABLE_HEADER`       | color   | used on table headers<br/>*(fallback to `KUBECOLOR_THEME_BASE_INFO`)*                                                                                                                                                                               | `fg=white:#aaff00`
+| `KUBECOLOR_THEME_TABLE_HEADER`       | color   | used on table headers<br/>*(fallback to `KUBECOLOR_THEME_BASE_INFO`)*                                                                                                                                                                               | `bold`
 | `KUBECOLOR_THEME_TABLE_COLUMNS`      | color[] | used on table columns when no other coloring applies such as status or duration coloring. The multiple colors are cycled based on column ID, from left to right.<br/>*(fallback to `[KUBECOLOR_THEME_BASE_INFO / KUBECOLOR_THEME_BASE_SECONDARY]`)* | `white / cyan`
 |                                      |         |                                                                                                                                                                                                                                                     |
 | `KUBECOLOR_THEME_STDERR_DEFAULT`     | color   | default when no specific mapping is found for the output line<br/>*(fallback to `KUBECOLOR_THEME_BASE_INFO`)*                                                                                                                                       | `white`
-| `KUBECOLOR_THEME_STDERR_ERROR`       | color   | e.g when text contains "error"<br/>*(fallback to `KUBECOLOR_THEME_BASE_DANGER`)*                                                                                                                                                                    | `fg=hi-yellow:bg=red:bold`
+| `KUBECOLOR_THEME_STDERR_ERROR`       | color   | e.g when text contains "error"<br/>*(fallback to `KUBECOLOR_THEME_BASE_DANGER`)*                                                                                                                                                                    | `red`
 |                                      |         |                                                                                                                                                                                                                                                     |
 | `KUBECOLOR_THEME_DESCRIBE_KEY`       | color[] | used on keys. The multiple colors are cycled based on indentation.<br/>*(fallback to `KUBECOLOR_THEME_BASE_KEY`)*                                                                                                                                   | `hicyan / cyan`
 |                                      |         |                                                                                                                                                                                                                                                     |
@@ -531,6 +543,8 @@ Example file (the values shows the default values):
 kubectl: kubectl # path to kubectl executable
 preset: dark # color theme preset
 objFreshThreshold: 0 # ages below this uses theme.data.durationfresh coloring
+paging: auto # whether to pipe supported subcommands to a pager ("auto" or "never")
+pager: # the command to use as pager; default uses $PAGER, less, or more
 
 # Color theme options
 theme:
@@ -563,11 +577,11 @@ theme:
     warning: yellow # (color) used in status keywords, e.g "Terminating" (fallback to theme.base.warning)
     error: red # (color) used in status keywords, e.g "Failed", "Unhealthy" (fallback to theme.base.danger)
   table:
-    header: fg=white:#aaff00 # (color) used on table headers (fallback to theme.base.info)
+    header: bold # (color) used on table headers (fallback to theme.base.info)
     columns: white / cyan # (color[]) used on table columns when no other coloring applies such as status or duration coloring. The multiple colors are cycled based on column ID, from left to right. (fallback to [theme.base.info / theme.base.secondary])
   stderr:
     default: white # (color) default when no specific mapping is found for the output line (fallback to theme.base.info)
-    error: fg=hi-yellow:bg=red:bold # (color) e.g when text contains "error" (fallback to theme.base.danger)
+    error: red # (color) e.g when text contains "error" (fallback to theme.base.danger)
   describe:
     key: hicyan / cyan # (color[]) used on keys. The multiple colors are cycled based on indentation. (fallback to theme.base.key)
   apply:

@@ -10,6 +10,7 @@ type SubcommandInfo struct {
 	FormatOption FormatOption
 	NoHeader     bool
 	Watch        bool
+	Follow       bool
 	Help         bool
 	Recursive    bool
 	Client       bool
@@ -212,8 +213,10 @@ func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 			}
 		} else if args[i] == "--no-headers" {
 			info.NoHeader = true
-		} else if args[i] == "-w" || args[i] == "--watch" {
+		} else if args[i] == "-w" || args[i] == "--watch" || args[i] == "--watch-only" {
 			info.Watch = true
+		} else if args[i] == "-f" || args[i] == "--follow" {
+			info.Follow = true
 		} else if args[i] == "--recursive=true" || args[i] == "--recursive" {
 			info.Recursive = true
 		} else if args[i] == "-h" || args[i] == "--help" {
@@ -243,4 +246,20 @@ func InspectSubcommandInfo(args []string) (*SubcommandInfo, bool) {
 	}
 
 	return ret, false
+}
+
+func (sci *SubcommandInfo) SupportsPager() bool {
+	if sci.Help {
+		return false
+	}
+	switch sci.Subcommand {
+	case Get:
+		return !sci.Watch
+	case Logs:
+		return !sci.Follow
+	case Describe,
+		Explain:
+		return true
+	}
+	return false
 }
