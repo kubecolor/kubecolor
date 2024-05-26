@@ -1,7 +1,6 @@
 package kubectl
 
 import (
-	"os/exec"
 	"strings"
 )
 
@@ -83,8 +82,12 @@ const (
 	Rsh Subcommand = "rsh"
 )
 
-func InspectSubcommand(command string) (Subcommand, bool) {
-	switch Subcommand(command) {
+func InspectSubcommand(cmdArgs []string) (Subcommand, bool) {
+	if len(cmdArgs) == 0 {
+		return Unknown, false
+	}
+	cmd := cmdArgs[0]
+	switch Subcommand(cmd) {
 	case
 		APIResources,
 		APIVersions,
@@ -133,14 +136,14 @@ func InspectSubcommand(command string) (Subcommand, bool) {
 		Uncordon,
 		Version,
 		Wait:
-		return Subcommand(command), true
+		return Subcommand(cmd), true
 	default:
 		// Catch __complete, __completeNoDesc, etc
-		if strings.HasPrefix(command, "__complete") {
+		if strings.HasPrefix(cmd, "__complete") {
 			return InternalComplete, true
 		}
 
-		if _, err := exec.LookPath("kubectl-" + command); err == nil {
+		if IsPlugin(cmdArgs) {
 			return KubectlPlugin, true
 		}
 		return Unknown, false
@@ -230,13 +233,13 @@ func InspectSubcommandInfo(args []string) (*SubcommandInfo, bool) {
 
 	CollectCommandlineOptions(args, ret)
 
-	for _, arg := range args {
+	for i, arg := range args {
 		// Stop parsing args after "--", such as in "kubectl exec my-pod -- bash"
 		if arg == "--" {
 			break
 		}
 
-		cmd, ok := InspectSubcommand(arg)
+		cmd, ok := InspectSubcommand(args[i:])
 		if !ok {
 			continue
 		}
