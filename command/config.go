@@ -11,8 +11,7 @@ import (
 )
 
 type Config struct {
-	Plain                bool
-	ForceColor           bool
+	ForceColor           ColorLevel
 	ShowKubecolorVersion bool
 	KubectlCmd           string
 	StdinOverride        string
@@ -45,10 +44,10 @@ func ResolveConfigViper(inputArgs []string, v *viper.Viper) (*Config, error) {
 		}
 	}
 
-	if b, ok, err := parseBoolEnv("KUBECOLOR_FORCE_COLORS"); err != nil {
+	if c, ok, err := parseColorLevelEnv("KUBECOLOR_FORCE_COLORS"); err != nil {
 		return nil, err
 	} else if ok {
-		cfg.ForceColor = b
+		cfg.ForceColor = c
 	}
 
 	for _, s := range inputArgs {
@@ -59,7 +58,9 @@ func ResolveConfigViper(inputArgs []string, v *viper.Viper) (*Config, error) {
 			if err != nil {
 				return nil, err
 			}
-			cfg.Plain = b
+			if b {
+				cfg.ForceColor = ColorLevelNone
+			}
 		case "--light-background":
 			b, err := parseBoolFlag(flag, value)
 			if err != nil {
@@ -71,11 +72,11 @@ func ResolveConfigViper(inputArgs []string, v *viper.Viper) (*Config, error) {
 				v.Set(config.PresetKey, "dark")
 			}
 		case "--force-colors":
-			b, err := parseBoolFlag(flag, value)
+			c, err := parseColorLevelFlag(flag, value)
 			if err != nil {
 				return nil, err
 			}
-			cfg.ForceColor = b
+			cfg.ForceColor = c
 		case "--kubecolor-version":
 			b, err := parseBoolFlag(flag, value)
 			if err != nil {

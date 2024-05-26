@@ -228,7 +228,7 @@ func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 	}
 }
 
-func InspectSubcommandInfo(args []string, pluginHandler PluginHandler) (*SubcommandInfo, bool) {
+func InspectSubcommandInfo(args []string, pluginHandler PluginHandler) *SubcommandInfo {
 	ret := &SubcommandInfo{}
 
 	CollectCommandlineOptions(args, ret)
@@ -245,10 +245,14 @@ func InspectSubcommandInfo(args []string, pluginHandler PluginHandler) (*Subcomm
 		}
 
 		ret.Subcommand = cmd
-		return ret, true
+		return ret
 	}
 
-	return ret, false
+	// if subcommand is not found (e.g. kubecolor --help or just "kubecolor"),
+	// it is treated as help because kubectl shows help for such input
+	ret.Help = true
+
+	return ret
 }
 
 func (sci *SubcommandInfo) SupportsPager() bool {

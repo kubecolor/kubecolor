@@ -67,6 +67,16 @@ func IsPlugin(cmdArgs []string, pluginHandler PluginHandler) bool {
 	return false
 }
 
+type NoopPluginHandler struct{}
+
+// Ensure it implements the interface
+var _ PluginHandler = NoopPluginHandler{}
+
+// Lookup implements PluginHandler
+func (NoopPluginHandler) Lookup(filename string) (string, bool) {
+	return "", false
+}
+
 type DefaultPluginHandler struct{}
 
 // Ensure it implements the interface

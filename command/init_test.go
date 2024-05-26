@@ -1,9 +1,10 @@
-package config
+package command
 
 import (
 	"os"
 
 	"github.com/gookit/color"
+	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
@@ -12,5 +13,5 @@ func init() {
 	color.ForceColor()
 	color.Enable = true
 
-	testutil.DiffAllowUnexported(Color{})
+	testutil.DiffAllowUnexported(config.Color{})
 }

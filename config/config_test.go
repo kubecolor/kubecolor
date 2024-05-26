@@ -27,7 +27,7 @@ func TestEnvVars_theme(t *testing.T) {
 	cfg, err := Unmarshal(v)
 	testutil.MustNoError(t, err)
 
-	testutil.Equal(t, Color{Source: "red", Code: "31"}, cfg.Theme.Table.Header, "Read from cfg.Theme.Table.Header")
+	testutil.Equal(t, "red", cfg.Theme.Table.Header.Source, "Read from cfg.Theme.Table.Header")
 	testutil.Equal(t, "red", v.Get("theme.table.header"), "Read from v.Get(...)")
 }
 

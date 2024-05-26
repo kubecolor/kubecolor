@@ -75,7 +75,7 @@ Additionally, if `kubectl` resulted an error, kubecolor just shows the error mes
 Running it via Docker can be nice for just trying out kubecolor:
 
 ```bash
-docker run --rm -it -v $HOME/.kube:/home/nonroot/.kube:ro ghcr.io/kubecolor/kubecolor get pods
+docker run --rm -it -v $HOME/.kube:/home/nonroot/.kube:ro --env COLORTERM ghcr.io/kubecolor/kubecolor get pods
 ```
 
 <details>

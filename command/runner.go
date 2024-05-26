@@ -10,6 +10,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/gookit/color"
 	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/kubectl"
 	"github.com/kubecolor/kubecolor/printer"
@@ -64,7 +65,7 @@ func Run(args []string, version string) error {
 		return nil
 	}
 
-	shouldColorize, subcommandInfo := ResolveSubcommand(args, cfg)
+	subcommandInfo := kubectl.InspectSubcommandInfo(args, kubectl.DefaultPluginHandler{})
 
 	if cfg.Paging == config.PagingAuto && isOutputTerminal() && subcommandInfo.SupportsPager() {
 		pipe, err := runPager(cfg.Pager)
@@ -77,10 +78,29 @@ func Run(args []string, version string) error {
 		}
 	}
 
-	// when should not colorize, just run command and return
-	if !shouldColorize {
+	switch {
+		// Skip if special subcommand (e.g "kubectl exec")
+	case !isColoringSupported(subcommandInfo.Subcommand),
+		// Skip if explicitly setting --force-colors=none
+		cfg.ForceColor == ColorLevelNone,
+		// Skip if stdout is not a tty UNLESS --force-colors is set
+		!isOutputTerminal() && cfg.ForceColor == ColorLevelUnset:
+
+		// when we shan't colorize, just run command and return
 		return execWithoutColors(cfg, args)
+
+	case cfg.ForceColor == ColorLevelAuto || cfg.ForceColor == ColorLevelUnset:
+		// gookit/color defaults to 8-bit colors when FORCE_COLOR is set.
+		// We don't want this behaviour.
+		os.Unsetenv("FORCE_COLOR")
+		color.DetectColorLevel()
+
+	default:
+		color.ForceSetColorLevel(cfg.ForceColor.TerminfoColorLevel())
 	}
+
+	// Computes color code caches, AFTER the [color.DetectColorLevel] and [color.ForceSetColorLevel]
+	cfg.Theme.ComputeCache()
 
 	stdoutReader, stderrReader, err := execWithReaders(cfg, args)
 	if err != nil {

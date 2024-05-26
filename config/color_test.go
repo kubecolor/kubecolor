@@ -103,7 +103,7 @@ func TestParseColor(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			got, err := ParseColor(tc.input)
 			testutil.MustNoError(t, err)
-			testutil.Equal(t, Color{Source: tc.input, Code: tc.wantCode}, got)
+			testutil.Equalf(t, tc.wantCode, got.ANSICode(), "Color %q", tc.input)
 		})
 	}
 }
