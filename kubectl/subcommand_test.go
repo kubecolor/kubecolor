@@ -69,7 +69,7 @@ func TestInspectSubcommandInfo(t *testing.T) {
 	}
 
 	pluginHandler := TestPluginHandler{LookupMap: map[string]string{
-		"testplugin": "/bin/testplugin",
+		"testplugin":          "/bin/testplugin",
 		"my_plugin-with-args": "/bin/my_plugin-with-args",
 	}}
 
@@ -89,7 +89,7 @@ func TestInspectSubcommandInfo(t *testing.T) {
 	}
 }
 
-type TestPluginHandler struct{
+type TestPluginHandler struct {
 	LookupMap map[string]string
 }
 
