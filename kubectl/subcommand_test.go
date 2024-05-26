@@ -60,6 +60,8 @@ func TestInspectSubcommandInfo(t *testing.T) {
 
 		{"apply", &SubcommandInfo{Subcommand: Apply}, true},
 
+		{"rsh", &SubcommandInfo{Subcommand: Rsh}, true},
+
 		{"", &SubcommandInfo{}, false},
 	}
 	for _, tt := range tests {

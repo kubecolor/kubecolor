@@ -15,7 +15,7 @@ KubeColor is a `kubectl` replacement used to add colors to your kubectl output.
 ![screenshot](./docs/kubectl-describe-pod.svg)
 
 <details>
-<summary>You can also change color theme for light-backgrounded environment (click to expand)</summary>
+<summary>You can also change color theme for light-background environment (click to expand)</summary>
 
 > ![screenshot](./docs/kubectl-get-pods-light.svg)
 >
@@ -38,7 +38,6 @@ KubeColor is a `kubectl` replacement used to add colors to your kubectl output.
 > As of version `v0.3.0`, both `deuteranopia` and `tritanopia` themes are the same as `protanopia`. They may differ in future versions when we better tune them. Set your configuration to match your color-blindness type so you will benefit of the future changes. We gladly accept suggestions on how to improve them.
 
 </details>
-
 
 ## What's this?
 
@@ -194,7 +193,7 @@ Prints the version of kubecolor (not kubectl one).
 * `--light-background`
 
 When your terminal's background color is something light (e.g white), default color preset might look too bright and not readable.
-If so, specify `--light-background` as a command line argument. kubecolor will use a color preset for light-backgrounded environment.
+If so, specify `--light-background` as a command line argument. kubecolor will use a color preset for light-background environment.
 
 * `--force-colors`
 
@@ -205,6 +204,18 @@ For example, when you want to pass kubecolor result to grep (`kubecolor get pods
 * `--plain`
 
 When you don't want to colorize output, you can specify `--plain`. Kubecolor understands this option and outputs the result without colorizing.
+
+* `--no-paging`
+
+Disable piping the output to a pager.
+
+* `--paging`
+
+Enable piping the output of to a pager if this was disabled in the config file.
+
+* `--pager=cmd`
+
+Use `cmd` as the pager.
 
 ### ENV Variables
 
@@ -265,31 +276,31 @@ compdef kubecolor=kubectl
 
 #### fish
 
-Fish completion is officially unsupported by `kubectl`, so it is unsupported by `kubecolor` as well.
+Fish completion is officially supported by `kubectl`.
+To begin with, if you don't already have `kubectl` completion working, make sure the following line is in your `~/.config/fish/config.fish` file:
 
-However, there are 2 ways we can make them work. Please keep in mind these are a kind of "hack" and not officially supported.
+```fish
+kubectl completion fish | source
+```
 
-1. Use [evanlucas/fish-kubectl-completions](https://github.com/evanlucas/fish-kubectl-completions) with `kubecolor`:
+To enable completions for `kubecolor`, add the following function to your `~/.config/fish/config.fish` file:
 
-   * Install `kubectl` completions (https://github.com/evanlucas/fish-kubectl-completions):
+```fish
+# reuse "kubectl" completions on "kubecolor"
+function kubecolor --wraps kubectl
+  command kubecolor $argv
+end
 
-      ```fish
-      fisher install evanlucas/fish-kubectl-completions
-      ```
+# adds alias for "kubectl" to "kubecolor" with completions
+function kubectl --wraps kubectl
+  command kubecolor $argv
+end
 
-   * Add the following function to your `~/.config/fish/config.fish` file:
-
-      ```fish
-      function kubectl
-        kubecolor $argv
-      end
-      ```
-
-2. Use [awinecki/fish-kubecolor-completions](https://github.com/awinecki/fish-kubecolor-completions)
-
-   The first way will override `kubectl` command. If you wish to preserve both `kubectl` and `kubecolor` with completions, you need to copy [evanlucas/fish-kubectl-completions](https://github.com/evanlucas/fish-kubectl-completions) for the `kubecolor` command.
-
-   For this purpose, you can use [awinecki/fish-kubecolor-completions](https://github.com/awinecki/fish-kubecolor-completions).
+# adds alias for "k" to "kubecolor" with completions
+function k --wraps kubectl
+  command kubecolor $argv
+end
+```
 
 #### PowerShell
 
@@ -373,11 +384,11 @@ colors of your output.
 | `KUBECOLOR_THEME_STATUS_WARNING`     | color   | used in status keywords, e.g "Terminating"<br/>*(fallback to `KUBECOLOR_THEME_BASE_WARNING`)*                                                                                                                                                       | `yellow`
 | `KUBECOLOR_THEME_STATUS_ERROR`       | color   | used in status keywords, e.g "Failed", "Unhealthy"<br/>*(fallback to `KUBECOLOR_THEME_BASE_DANGER`)*                                                                                                                                                | `red`
 |                                      |         |                                                                                                                                                                                                                                                     |
-| `KUBECOLOR_THEME_TABLE_HEADER`       | color   | used on table headers<br/>*(fallback to `KUBECOLOR_THEME_BASE_INFO`)*                                                                                                                                                                               | `fg=white:#aaff00`
+| `KUBECOLOR_THEME_TABLE_HEADER`       | color   | used on table headers<br/>*(fallback to `KUBECOLOR_THEME_BASE_INFO`)*                                                                                                                                                                               | `bold`
 | `KUBECOLOR_THEME_TABLE_COLUMNS`      | color[] | used on table columns when no other coloring applies such as status or duration coloring. The multiple colors are cycled based on column ID, from left to right.<br/>*(fallback to `[KUBECOLOR_THEME_BASE_INFO / KUBECOLOR_THEME_BASE_SECONDARY]`)* | `white / cyan`
 |                                      |         |                                                                                                                                                                                                                                                     |
 | `KUBECOLOR_THEME_STDERR_DEFAULT`     | color   | default when no specific mapping is found for the output line<br/>*(fallback to `KUBECOLOR_THEME_BASE_INFO`)*                                                                                                                                       | `white`
-| `KUBECOLOR_THEME_STDERR_ERROR`       | color   | e.g when text contains "error"<br/>*(fallback to `KUBECOLOR_THEME_BASE_DANGER`)*                                                                                                                                                                    | `fg=hi-yellow:bg=red:bold`
+| `KUBECOLOR_THEME_STDERR_ERROR`       | color   | e.g when text contains "error"<br/>*(fallback to `KUBECOLOR_THEME_BASE_DANGER`)*                                                                                                                                                                    | `red`
 |                                      |         |                                                                                                                                                                                                                                                     |
 | `KUBECOLOR_THEME_DESCRIBE_KEY`       | color[] | used on keys. The multiple colors are cycled based on indentation.<br/>*(fallback to `KUBECOLOR_THEME_BASE_KEY`)*                                                                                                                                   | `hicyan / cyan`
 |                                      |         |                                                                                                                                                                                                                                                     |
@@ -532,6 +543,8 @@ Example file (the values shows the default values):
 kubectl: kubectl # path to kubectl executable
 preset: dark # color theme preset
 objFreshThreshold: 0 # ages below this uses theme.data.durationfresh coloring
+paging: auto # whether to pipe supported subcommands to a pager ("auto" or "never")
+pager: # the command to use as pager; default uses $PAGER, less, or more
 
 # Color theme options
 theme:
@@ -564,11 +577,11 @@ theme:
     warning: yellow # (color) used in status keywords, e.g "Terminating" (fallback to theme.base.warning)
     error: red # (color) used in status keywords, e.g "Failed", "Unhealthy" (fallback to theme.base.danger)
   table:
-    header: fg=white:#aaff00 # (color) used on table headers (fallback to theme.base.info)
+    header: bold # (color) used on table headers (fallback to theme.base.info)
     columns: white / cyan # (color[]) used on table columns when no other coloring applies such as status or duration coloring. The multiple colors are cycled based on column ID, from left to right. (fallback to [theme.base.info / theme.base.secondary])
   stderr:
     default: white # (color) default when no specific mapping is found for the output line (fallback to theme.base.info)
-    error: fg=hi-yellow:bg=red:bold # (color) e.g when text contains "error" (fallback to theme.base.danger)
+    error: red # (color) e.g when text contains "error" (fallback to theme.base.danger)
   describe:
     key: hicyan / cyan # (color[]) used on keys. The multiple colors are cycled based on indentation. (fallback to theme.base.key)
   apply:

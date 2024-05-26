@@ -34,24 +34,24 @@ func (yp *YamlPrinter) printLineAsYamlFormat(line string, w io.Writer) {
 		return
 	}
 
-	splitted := strings.SplitN(trimmedLine, ": ", 2) // assuming key does not contain ": " while value might do
+	split := strings.SplitN(trimmedLine, ": ", 2) // assuming key does not contain ": " while value might do
 
-	if len(splitted) == 2 {
+	if len(split) == 2 {
 		// key: value
-		key, val := splitted[0], splitted[1]
+		key, val := split[0], split[1]
 		fmt.Fprintf(w, "%s%s: %s\n", indent, yp.toColorizedYamlKey(key, indentCnt, 2), yp.toColorizedYamlValue(val))
 		yp.inString = yp.isStringOpenedButNotClosed(val)
 		return
 	}
 
 	// when coming here, the line is just a "key:" or an element of an array
-	if strings.HasSuffix(splitted[0], ":") {
+	if strings.HasSuffix(split[0], ":") {
 		// key:
-		fmt.Fprintf(w, "%s%s\n", indent, yp.toColorizedYamlKey(splitted[0], indentCnt, 2))
+		fmt.Fprintf(w, "%s%s\n", indent, yp.toColorizedYamlKey(split[0], indentCnt, 2))
 		return
 	}
 
-	fmt.Fprintf(w, "%s%s\n", indent, yp.toColorizedYamlValue(splitted[0]))
+	fmt.Fprintf(w, "%s%s\n", indent, yp.toColorizedYamlValue(split[0]))
 }
 
 func (yp *YamlPrinter) toColorizedYamlKey(key string, indentCnt, basicWidth int) string {

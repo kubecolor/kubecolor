@@ -10,6 +10,7 @@ type SubcommandInfo struct {
 	FormatOption FormatOption
 	NoHeader     bool
 	Watch        bool
+	Follow       bool
 	Help         bool
 	Recursive    bool
 	Client       bool
@@ -24,127 +25,134 @@ const (
 	Yaml
 )
 
-type Subcommand int
+type Subcommand string
 
 const (
-	Create Subcommand = iota + 1
-	Expose
-	Run
-	Set
-	Explain
-	Get
-	Edit
-	Delete
-	Rollout
-	Scale
-	Autoscale
-	Certificate
-	ClusterInfo
-	Top
-	Cordon
-	Uncordon
-	Drain
-	Taint
-	Describe
-	Logs
-	Attach
-	Exec
-	PortForward
-	Proxy
-	Cp
-	Auth
-	Diff
-	Apply
-	Patch
-	Replace
-	Wait
-	Convert
-	Kustomize
-	Label
-	Annotate
-	Completion
-	APIResources
-	APIVersions
-	Config
-	Plugin
-	Version
-	Options
-	Ctx
-	Ns
-	Debug
-	KubectlPlugin
-	Events
+	Unknown          Subcommand = ""
+	KubectlPlugin    Subcommand = "(plugin)"
+	InternalComplete Subcommand = "__complete"
+
+	APIResources Subcommand = "api-resources"
+	APIVersions  Subcommand = "api-versions"
+	Annotate     Subcommand = "annotate"
+	Apply        Subcommand = "apply"
+	Attach       Subcommand = "attach"
+	Auth         Subcommand = "auth"
+	Autoscale    Subcommand = "autoscale"
+	Certificate  Subcommand = "certificate"
+	ClusterInfo  Subcommand = "cluster-info"
+	Completion   Subcommand = "completion"
+	Config       Subcommand = "config"
+	Convert      Subcommand = "convert"
+	Cordon       Subcommand = "cordon"
+	Cp           Subcommand = "cp"
+	Create       Subcommand = "create"
+	Ctx          Subcommand = "ctx"
+	Debug        Subcommand = "debug"
+	Delete       Subcommand = "delete"
+	Describe     Subcommand = "describe"
+	Diff         Subcommand = "diff"
+	Drain        Subcommand = "drain"
+	Edit         Subcommand = "edit"
+	Events       Subcommand = "events"
+	Exec         Subcommand = "exec"
+	Explain      Subcommand = "explain"
+	Expose       Subcommand = "expose"
+	Get          Subcommand = "get"
+	Kustomize    Subcommand = "kustomize"
+	Label        Subcommand = "label"
+	Logs         Subcommand = "logs"
+	Ns           Subcommand = "ns"
+	Options      Subcommand = "options"
+	Patch        Subcommand = "patch"
+	Plugin       Subcommand = "plugin"
+	PortForward  Subcommand = "port-forward"
+	Proxy        Subcommand = "proxy"
+	Replace      Subcommand = "replace"
+	Rollout      Subcommand = "rollout"
+	Run          Subcommand = "run"
+	Scale        Subcommand = "scale"
+	Set          Subcommand = "set"
+	Taint        Subcommand = "taint"
+	Top          Subcommand = "top"
+	Uncordon     Subcommand = "uncordon"
+	Version      Subcommand = "version"
+	Wait         Subcommand = "wait"
+
+	// oc (OpenShift CLI) specific subcommands
+	Rsh Subcommand = "rsh"
 )
 
-var strToSubcommand = map[string]Subcommand{
-	"create":        Create,
-	"expose":        Expose,
-	"run":           Run,
-	"set":           Set,
-	"explain":       Explain,
-	"get":           Get,
-	"edit":          Edit,
-	"delete":        Delete,
-	"rollout":       Rollout,
-	"scale":         Scale,
-	"autoscale":     Autoscale,
-	"certificate":   Certificate,
-	"cluster-info":  ClusterInfo,
-	"top":           Top,
-	"cordon":        Cordon,
-	"uncordon":      Uncordon,
-	"drain":         Drain,
-	"taint":         Taint,
-	"describe":      Describe,
-	"logs":          Logs,
-	"attach":        Attach,
-	"exec":          Exec,
-	"port-forward":  PortForward,
-	"proxy":         Proxy,
-	"cp":            Cp,
-	"auth":          Auth,
-	"diff":          Diff,
-	"apply":         Apply,
-	"patch":         Patch,
-	"replace":       Replace,
-	"wait":          Wait,
-	"convert":       Convert,
-	"kustomize":     Kustomize,
-	"label":         Label,
-	"annotate":      Annotate,
-	"completion":    Completion,
-	"api-resources": APIResources,
-	"api-versions":  APIVersions,
-	"config":        Config,
-	"plugin":        Plugin,
-	"version":       Version,
-	"options":       Options,
-	"ctx":           Ctx,
-	"ns":            Ns,
-	"debug":         Debug,
-	"events":        Events,
-}
-
 func InspectSubcommand(command string) (Subcommand, bool) {
-	if sc, ok := strToSubcommand[command]; ok {
-		return sc, true
+	switch Subcommand(command) {
+	case
+		APIResources,
+		APIVersions,
+		Annotate,
+		Apply,
+		Attach,
+		Auth,
+		Autoscale,
+		Certificate,
+		ClusterInfo,
+		Completion,
+		Config,
+		Convert,
+		Cordon,
+		Cp,
+		Create,
+		Ctx,
+		Debug,
+		Delete,
+		Describe,
+		Diff,
+		Drain,
+		Edit,
+		Events,
+		Exec,
+		Explain,
+		Expose,
+		Get,
+		Kustomize,
+		Label,
+		Logs,
+		Ns,
+		Options,
+		Patch,
+		Plugin,
+		PortForward,
+		Proxy,
+		Replace,
+		Rollout,
+		Rsh,
+		Run,
+		Scale,
+		Set,
+		Taint,
+		Top,
+		Uncordon,
+		Version,
+		Wait:
+		return Subcommand(command), true
+	default:
+		// Catch __complete, __completeNoDesc, etc
+		if strings.HasPrefix(command, "__complete") {
+			return InternalComplete, true
+		}
+
+		if _, err := exec.LookPath("kubectl-" + command); err == nil {
+			return KubectlPlugin, true
+		}
+		return Unknown, false
 	}
-
-	if _, err := exec.LookPath("kubectl-" + command); err == nil {
-		return KubectlPlugin, true
-	}
-
-	command = strings.ReplaceAll(command, "-", "_")
-
-	if _, err := exec.LookPath("kubectl-" + command); err == nil {
-		return KubectlPlugin, true
-	}
-
-	return 0, false
 }
 
 func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 	for i := range args {
+		// Stop parsing flags after "--", such as in "kubectl exec my-pod -- bash"
+		if args[i] == "--" {
+			break
+		}
 		if strings.HasPrefix(args[i], "--output") {
 			switch args[i] {
 			case "--output=json":
@@ -205,8 +213,10 @@ func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 			}
 		} else if args[i] == "--no-headers" {
 			info.NoHeader = true
-		} else if args[i] == "-w" || args[i] == "--watch" {
+		} else if args[i] == "-w" || args[i] == "--watch" || args[i] == "--watch-only" {
 			info.Watch = true
+		} else if args[i] == "-f" || args[i] == "--follow" {
+			info.Follow = true
 		} else if args[i] == "--recursive=true" || args[i] == "--recursive" {
 			info.Recursive = true
 		} else if args[i] == "-h" || args[i] == "--help" {
@@ -220,8 +230,13 @@ func InspectSubcommandInfo(args []string) (*SubcommandInfo, bool) {
 
 	CollectCommandlineOptions(args, ret)
 
-	for i := range args {
-		cmd, ok := InspectSubcommand(args[i])
+	for _, arg := range args {
+		// Stop parsing args after "--", such as in "kubectl exec my-pod -- bash"
+		if arg == "--" {
+			break
+		}
+
+		cmd, ok := InspectSubcommand(arg)
 		if !ok {
 			continue
 		}
@@ -231,4 +246,20 @@ func InspectSubcommandInfo(args []string) (*SubcommandInfo, bool) {
 	}
 
 	return ret, false
+}
+
+func (sci *SubcommandInfo) SupportsPager() bool {
+	if sci.Help {
+		return false
+	}
+	switch sci.Subcommand {
+	case Get:
+		return !sci.Watch
+	case Logs:
+		return !sci.Follow
+	case Describe,
+		Explain:
+		return true
+	}
+	return false
 }

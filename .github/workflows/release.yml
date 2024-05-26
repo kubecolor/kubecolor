@@ -3,7 +3,7 @@ name: goreleaser
 on:
   push:
     tags:
-      - '*'
+      - 'v*'
 
 jobs:
   goreleaser:
@@ -27,3 +27,31 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GLOBAL_GITHUB_TOKEN: ${{ secrets.GLOBAL_GITHUB_TOKEN }}
+  homebrew:
+    name: Bump Homebrew formula
+    # Skip this job in case of git pushes to prerelease tags
+    if: ${{ github.event_name != 'push' || !contains(github.ref, '-') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    needs: goreleaser
+    steps:
+      - name: Extract version
+        id: extract-version
+        # Strip a string prefix from the git tag name:
+        run: |
+          echo "tag-name=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - uses: mislav/bump-homebrew-formula-action@v3
+        with:
+          formula-name: kubecolor
+          formula-path: Formula/k/kubecolor.rb
+          homebrew-tap: Homebrew/homebrew-core
+          base-branch: master
+          download-url: https://github.com/kubecolor/kubecolor/archive/refs/tags/${{ steps.extract-version.outputs.tag-name }}.tar.gz
+          commit-message: |
+            {{formulaName}} {{version}}
+
+            Created by https://github.com/mislav/bump-homebrew-formula-action
+        env:
+          COMMITTER_TOKEN: ${{ secrets.GLOBAL_GITHUB_TOKEN }}

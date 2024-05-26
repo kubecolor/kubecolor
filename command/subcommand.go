@@ -2,7 +2,6 @@ package command
 
 import (
 	"os"
-	"strings"
 
 	"github.com/kubecolor/kubecolor/kubectl"
 	"github.com/mattn/go-isatty"
@@ -25,17 +24,13 @@ func ResolveSubcommand(args []string, config *Config) (bool, *kubectl.Subcommand
 	// if subcommand is not found (e.g. kubecolor --help or just "kubecolor"),
 	// it is treated as help because kubectl shows help for such input
 	if !subcommandFound {
-		// if there is an argument starting with __,
-		// the subcommand is probably an internal subcommand (like __completeNoDesc)
-		// and should probably not be colorized
-		for i := range args {
-			if strings.HasPrefix(args[i], "__") {
-				return false, subcommandInfo
-			}
-		}
-
 		subcommandInfo.Help = true
 		return true, subcommandInfo
+	}
+
+	colorsSupported := isColoringSupported(subcommandInfo.Subcommand)
+	if !colorsSupported {
+		return false, subcommandInfo
 	}
 
 	// when the command output tty is not standard output, shouldColorize depends on --force-colors flag.
@@ -47,34 +42,33 @@ func ResolveSubcommand(args []string, config *Config) (bool, *kubectl.Subcommand
 	}
 
 	// else, when the given subcommand is supported, then we colorize it
-	return subcommandFound && isColoringSupported(subcommandInfo.Subcommand), subcommandInfo
+	return subcommandFound, subcommandInfo
+}
+
+// when you add something here, it won't be colorized
+var unsupported = map[kubectl.Subcommand]struct{}{
+	kubectl.Attach:           {},
+	kubectl.Completion:       {},
+	kubectl.Create:           {},
+	kubectl.Ctx:              {},
+	kubectl.Debug:            {},
+	kubectl.Delete:           {},
+	kubectl.Edit:             {},
+	kubectl.Exec:             {},
+	kubectl.InternalComplete: {},
+	kubectl.KubectlPlugin:    {},
+	kubectl.Ns:               {},
+	kubectl.Plugin:           {},
+	kubectl.Proxy:            {},
+	kubectl.Replace:          {},
+	kubectl.Run:              {},
+	kubectl.Wait:             {},
+
+	// oc (OpenShift CLI) specific subcommands
+	kubectl.Rsh: {},
 }
 
 func isColoringSupported(sc kubectl.Subcommand) bool {
-	// when you add something here, it won't be colorized
-	unsupported := []kubectl.Subcommand{
-		kubectl.Create,
-		kubectl.Delete,
-		kubectl.Edit,
-		kubectl.Attach,
-		kubectl.Replace,
-		kubectl.Completion,
-		kubectl.Exec,
-		kubectl.Proxy,
-		kubectl.Plugin,
-		kubectl.Wait,
-		kubectl.Run,
-		kubectl.Ctx,
-		kubectl.Ns,
-		kubectl.Debug,
-		kubectl.KubectlPlugin,
-	}
-
-	for _, u := range unsupported {
-		if sc == u {
-			return false
-		}
-	}
-
-	return true
+	_, found := unsupported[sc]
+	return !found
 }

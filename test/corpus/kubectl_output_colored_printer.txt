@@ -123,7 +123,7 @@ nginx-qdf9b   1/1     Running   0          6d6h
 [37mnginx-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
 
 ================================================================================
-# kubectl get pod with crashloop
+# kubectl get pod with crash loop
 $ kubectl get pod
 ================================================================================
 
