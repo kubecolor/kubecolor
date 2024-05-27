@@ -21,7 +21,7 @@ func Test_ResolveConfig(t *testing.T) {
 			name: "no config",
 			args: []string{"get", "pods"},
 			expectedConf: &Config{
-				Paging:            config.PagingAuto,
+				Paging:            config.PagingDefault,
 				ForceColor:        ColorLevelUnset,
 				KubectlCmd:        "kubectl",
 				ObjFreshThreshold: time.Duration(0),
@@ -33,7 +33,7 @@ func Test_ResolveConfig(t *testing.T) {
 			name: "plain, light, force",
 			args: []string{"get", "pods", "--plain", "--light-background", "--force-colors"},
 			expectedConf: &Config{
-				Paging:            config.PagingAuto,
+				Paging:            config.PagingDefault,
 				ForceColor:        ColorLevelAuto,
 				KubectlCmd:        "kubectl",
 				ObjFreshThreshold: time.Duration(0),
@@ -46,7 +46,7 @@ func Test_ResolveConfig(t *testing.T) {
 			args: []string{"get", "pods", "--plain"},
 			env:  map[string]string{"KUBECTL_COMMAND": "kubectl.1.19"},
 			expectedConf: &Config{
-				Paging:            config.PagingAuto,
+				Paging:            config.PagingDefault,
 				ForceColor:        ColorLevelNone,
 				KubectlCmd:        "kubectl.1.19",
 				ObjFreshThreshold: time.Duration(0),
@@ -59,7 +59,7 @@ func Test_ResolveConfig(t *testing.T) {
 			args: []string{"get", "pods"},
 			env:  map[string]string{"KUBECOLOR_OBJ_FRESH": "1m"},
 			expectedConf: &Config{
-				Paging:            config.PagingAuto,
+				Paging:            config.PagingDefault,
 				ForceColor:        ColorLevelUnset,
 				KubectlCmd:        "kubectl",
 				ObjFreshThreshold: time.Minute,
@@ -72,7 +72,7 @@ func Test_ResolveConfig(t *testing.T) {
 			args: []string{"get", "pods"},
 			env:  map[string]string{"KUBECOLOR_LIGHT_BACKGROUND": "true"},
 			expectedConf: &Config{
-				Paging:          config.PagingAuto,
+				Paging:          config.PagingDefault,
 				ForceColor:      ColorLevelUnset,
 				KubectlCmd:      "kubectl",
 				Theme:           testconfig.LightTheme,
@@ -84,7 +84,7 @@ func Test_ResolveConfig(t *testing.T) {
 			args: []string{"get", "pods"},
 			env:  map[string]string{"KUBECOLOR_FORCE_COLORS": "true"},
 			expectedConf: &Config{
-				Paging:          config.PagingAuto,
+				Paging:          config.PagingDefault,
 				ForceColor:      ColorLevelAuto,
 				KubectlCmd:      "kubectl",
 				Theme:           testconfig.DarkTheme,
@@ -96,7 +96,7 @@ func Test_ResolveConfig(t *testing.T) {
 			args: []string{"get", "pods"},
 			env:  map[string]string{"KUBECOLOR_FORCE_COLORS": "truecolor"},
 			expectedConf: &Config{
-				Paging:          config.PagingAuto,
+				Paging:          config.PagingDefault,
 				ForceColor:      ColorLevelTrueColor,
 				KubectlCmd:      "kubectl",
 				Theme:           testconfig.DarkTheme,
