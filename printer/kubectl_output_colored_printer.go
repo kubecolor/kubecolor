@@ -17,6 +17,7 @@ type KubectlOutputColoredPrinter struct {
 	Recursive         bool
 	ObjFreshThreshold time.Duration
 	Theme             *config.Theme
+	KubecolorVersion  string
 }
 
 func ColorStatus(status string, theme *config.Theme) (config.Color, bool) {
@@ -223,16 +224,13 @@ func (kp *KubectlOutputColoredPrinter) getPrinter() Printer {
 	case kubectl.Version:
 		switch {
 		case kp.SubcommandInfo.FormatOption == kubectl.Json:
-			return &JsonPrinter{Theme: kp.Theme}
+			return &VersionJSONInjectorPrinter{KubecolorVersion: kp.KubecolorVersion, JsonPrinter: &JsonPrinter{Theme: kp.Theme}}
 		case kp.SubcommandInfo.FormatOption == kubectl.Yaml:
-			return &YamlPrinter{Theme: kp.Theme}
-		case kp.SubcommandInfo.Client:
-			return &VersionClientPrinter{
-				Theme: kp.Theme,
-			}
+			return &VersionYAMLInjectorPrinter{KubecolorVersion: kp.KubecolorVersion, YamlPrinter: &YamlPrinter{Theme: kp.Theme}}
 		default:
-			return &VersionClientPrinter{
-				Theme: kp.Theme,
+			return &VersionPrinter{
+				Theme:            kp.Theme,
+				KubecolorVersion: kp.KubecolorVersion,
 			}
 		}
 	case kubectl.Options:

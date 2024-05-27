@@ -2,38 +2,19 @@ package printer
 
 import (
 	"bufio"
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"strings"
 
 	"github.com/kubecolor/kubecolor/config"
+	"gopkg.in/yaml.v3"
 )
 
-type VersionClientPrinter struct {
-	Theme *config.Theme
-}
-
-// kubectl version --client=true
-// Client Version: v1.29.0
-// Kustomize Version: v5.0.4-0.20230601165947-6ce0bf390ce3
-func (vsp *VersionClientPrinter) Print(r io.Reader, w io.Writer) {
-	scanner := bufio.NewScanner(r)
-	for scanner.Scan() {
-		line := scanner.Text()
-		key, val, ok := strings.Cut(line, ": ")
-		if !ok {
-			fmt.Fprintln(w, line)
-			continue
-		}
-		fmt.Fprintf(w, "%s: %s\n",
-			getColorByKeyIndent(0, 2, vsp.Theme.Version.Key).Render(key),
-			getColorByValueType(val, vsp.Theme).Render(val),
-		)
-	}
-}
-
 type VersionPrinter struct {
-	Theme *config.Theme
+	Theme            *config.Theme
+	KubecolorVersion string
 }
 
 // kubectl version --client=false
@@ -42,39 +23,77 @@ type VersionPrinter struct {
 // Server Version: v1.27.5-gke.200
 func (vp *VersionPrinter) Print(r io.Reader, w io.Writer) {
 	scanner := bufio.NewScanner(r)
+	any := false
 	for scanner.Scan() {
 		line := scanner.Text()
-		split := strings.SplitN(line, ": ", 2)
-		key, val := split[0], split[1]
-		key = getColorByKeyIndent(0, 2, vp.Theme.Version.Key).Render(key)
-
-		// val is go struct like
-		// version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.2", GitCommit:"f5743093fd1c663cb0cbc89748f730662345d44d", GitTreeState:"clean", BuildDate:"2020-09-16T13:32:58Z", GoVersion:"go1.15", Compiler:"gc", Platform:"linux/amd64"}
-		val = strings.TrimRight(val, "}")
-
-		pkgAndValues := strings.SplitN(val, "{", 2)
-		packageName := pkgAndValues[0]
-
-		values := strings.Split(pkgAndValues[1], ", ")
-		coloredValues := make([]string, len(values))
-
-		fmt.Fprintf(w, "%s: %s{", key, getColorByKeyIndent(2, 2, vp.Theme.Version.Key).Render(packageName))
-		for i, value := range values {
-			kv := strings.SplitN(value, ":", 2)
-			coloredKey := getColorByKeyIndent(0, 2, vp.Theme.Version.Key).Render(kv[0])
-
-			isValDoubleQuotationSurrounded := strings.HasPrefix(kv[1], `"`) && strings.HasSuffix(kv[1], `"`)
-			val := strings.TrimRight(strings.TrimLeft(kv[1], `"`), `"`)
-
-			coloredVal := getColorByValueType(kv[1], vp.Theme).Render(val)
-
-			if isValDoubleQuotationSurrounded {
-				coloredValues[i] = fmt.Sprintf(`%s:"%s"`, coloredKey, coloredVal)
-			} else {
-				coloredValues[i] = fmt.Sprintf(`%s:%s`, coloredKey, coloredVal)
-			}
+		key, val, ok := strings.Cut(line, ": ")
+		if !ok {
+			fmt.Fprintln(w, line)
+			continue
 		}
-
-		fmt.Fprintf(w, "%s}\n", strings.Join(coloredValues, ", "))
+		fmt.Fprintf(w, "%s: %s\n",
+			getColorByKeyIndent(0, 2, vp.Theme.Version.Key).Render(key),
+			getColorByValueType(val, vp.Theme).Render(val),
+		)
+		any = true
 	}
+
+	// Check if any got printed, so we don't print version after an error like
+	// 	error: invalid argument "foo" for "--client" flag: strconv.ParseBool: parsing "foo": invalid syntax
+	if any {
+		key := "Kubecolor Version"
+		val := vp.KubecolorVersion
+		fmt.Fprintf(w, "%s: %s\n",
+			getColorByKeyIndent(0, 2, vp.Theme.Version.Key).Render(key),
+			getColorByValueType("", vp.Theme).Render(val),
+		)
+	}
+}
+
+type VersionJSONInjectorPrinter struct {
+	JsonPrinter      *JsonPrinter
+	KubecolorVersion string
+}
+
+func (vp *VersionJSONInjectorPrinter) Print(r io.Reader, w io.Writer) {
+	b, err := io.ReadAll(r)
+	if err != nil {
+		return
+	}
+	var output map[string]any
+	if err := json.Unmarshal(b, &output); err != nil {
+		w.Write(b)
+		return
+	}
+	output["kubecolorVersion"] = vp.KubecolorVersion
+	result, err := json.MarshalIndent(output, "", "  ")
+	if err != nil {
+		w.Write(b)
+		return
+	}
+	vp.JsonPrinter.Print(bytes.NewReader(result), w)
+}
+
+type VersionYAMLInjectorPrinter struct {
+	YamlPrinter      *YamlPrinter
+	KubecolorVersion string
+}
+
+func (vp *VersionYAMLInjectorPrinter) Print(r io.Reader, w io.Writer) {
+	b, err := io.ReadAll(r)
+	if err != nil {
+		return
+	}
+	var output map[string]any
+	if err := yaml.Unmarshal(b, &output); err != nil {
+		w.Write(b)
+		return
+	}
+	output["kubecolorVersion"] = vp.KubecolorVersion
+	result, err := yaml.Marshal(output)
+	if err != nil {
+		w.Write(b)
+		return
+	}
+	vp.YamlPrinter.Print(bytes.NewReader(result), w)
 }
