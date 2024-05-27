@@ -15,6 +15,7 @@ import (
 	"github.com/kubecolor/kubecolor/kubectl"
 	"github.com/kubecolor/kubecolor/printer"
 	"github.com/mattn/go-colorable"
+	"github.com/mattn/go-isatty"
 	"github.com/xo/terminfo"
 )
 
@@ -73,7 +74,7 @@ func Run(args []string, version string) error {
 		if err != nil {
 			err = fmt.Errorf("failed to run pager: %w", err)
 			fmt.Fprintf(os.Stderr, "[kubecolor] [ERROR] %v\n", err)
-		} else {
+		} else if pipe != nil {
 			Stdout = pipe.Writer()
 			defer pipe.Close()
 		}
@@ -81,7 +82,7 @@ func Run(args []string, version string) error {
 
 	switch {
 		// Skip if special subcommand (e.g "kubectl exec")
-	case !isColoringSupported(subcommandInfo.Subcommand),
+	case !subcommandInfo.SupportsColoring(),
 		// Skip if explicitly setting --force-colors=none
 		cfg.ForceColor == ColorLevelNone,
 		// Conventional environment variable for disabling colors
@@ -263,7 +264,11 @@ func (p pagerPipe) Writer() io.Writer {
 
 func runPager(pager string) (*pagerPipe, error) {
 	if pager == "" {
-		return nil, fmt.Errorf("no pager configured via PAGER or KUBECOLOR_PAGER environment variables")
+		// No pager is set, so just skip using pager.
+		// By default kubecolor defaults to looking up "less" and "more",
+		// but if neither exist (such as in our Docker image),
+		// then just silently skip pager integration.
+		return nil, nil
 	}
 
 	pargs := strings.Fields(pager)
@@ -294,4 +299,9 @@ func runPager(pager string) (*pagerPipe, error) {
 		writer: w,
 		cc:     c,
 	}, nil
+}
+
+// mocked in unit tests
+var isOutputTerminal = func() bool {
+	return isatty.IsTerminal(os.Stdout.Fd()) || isatty.IsCygwinTerminal(os.Stdout.Fd())
 }

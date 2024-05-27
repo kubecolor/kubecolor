@@ -147,21 +147,28 @@ func ColorStatus(status string, theme *config.Theme) (config.Color, bool) {
 // Print reads r then write it to w, its format is based on kubectl subcommand.
 // If given subcommand is not supported by the printer, it prints data in Green.
 func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
+	printer := kp.getPrinter()
+	printer.Print(r, w)
+}
+
+func (kp *KubectlOutputColoredPrinter) getPrinter() Printer {
 	withHeader := !kp.SubcommandInfo.NoHeader
 
-	var printer Printer = &SingleColoredPrinter{Color: kp.Theme.Default}
+	if kp.SubcommandInfo.Help {
+		return &HelpPrinter{Theme: kp.Theme}
+	}
 
 	switch kp.SubcommandInfo.Subcommand {
 	case kubectl.Top, kubectl.APIResources:
-		printer = NewTablePrinter(withHeader, kp.Theme, nil)
+		return NewTablePrinter(withHeader, kp.Theme, nil)
 
 	case kubectl.APIVersions:
-		printer = NewTablePrinter(false, kp.Theme, nil) // api-versions always doesn't have header
+		return NewTablePrinter(false, kp.Theme, nil) // api-versions always doesn't have header
 
 	case kubectl.Get, kubectl.Events:
 		switch kp.SubcommandInfo.FormatOption {
 		case kubectl.None, kubectl.Wide:
-			printer = NewTablePrinter(
+			return NewTablePrinter(
 				withHeader,
 				kp.Theme,
 				func(_ int, column string) (config.Color, bool) {
@@ -197,55 +204,51 @@ func (kp *KubectlOutputColoredPrinter) Print(r io.Reader, w io.Writer) {
 				},
 			)
 		case kubectl.Json:
-			printer = &JsonPrinter{Theme: kp.Theme}
+			return &JsonPrinter{Theme: kp.Theme}
 		case kubectl.Yaml:
-			printer = &YamlPrinter{Theme: kp.Theme}
+			return &YamlPrinter{Theme: kp.Theme}
 		}
 
 	case kubectl.Describe:
-		printer = &DescribePrinter{
+		return &DescribePrinter{
 			TablePrinter: NewTablePrinter(false, kp.Theme, func(_ int, column string) (config.Color, bool) {
 				return ColorStatus(column, kp.Theme)
 			}),
 		}
 	case kubectl.Explain:
-		printer = &ExplainPrinter{
+		return &ExplainPrinter{
 			Theme:     kp.Theme,
 			Recursive: kp.Recursive,
 		}
 	case kubectl.Version:
 		switch {
 		case kp.SubcommandInfo.FormatOption == kubectl.Json:
-			printer = &JsonPrinter{Theme: kp.Theme}
+			return &JsonPrinter{Theme: kp.Theme}
 		case kp.SubcommandInfo.FormatOption == kubectl.Yaml:
-			printer = &YamlPrinter{Theme: kp.Theme}
+			return &YamlPrinter{Theme: kp.Theme}
 		case kp.SubcommandInfo.Client:
-			printer = &VersionClientPrinter{
+			return &VersionClientPrinter{
 				Theme: kp.Theme,
 			}
 		default:
-			printer = &VersionClientPrinter{
+			return &VersionClientPrinter{
 				Theme: kp.Theme,
 			}
 		}
 	case kubectl.Options:
-		printer = &OptionsPrinter{
+		return &OptionsPrinter{
 			Theme: kp.Theme,
 		}
 	case kubectl.Apply:
 		switch kp.SubcommandInfo.FormatOption {
 		case kubectl.Json:
-			printer = &JsonPrinter{Theme: kp.Theme}
+			return &JsonPrinter{Theme: kp.Theme}
 		case kubectl.Yaml:
-			printer = &YamlPrinter{Theme: kp.Theme}
+			return &YamlPrinter{Theme: kp.Theme}
 		default:
-			printer = &ApplyPrinter{Theme: kp.Theme}
+			return &ApplyPrinter{Theme: kp.Theme}
 		}
 	}
 
-	if kp.SubcommandInfo.Help {
-		printer = &SingleColoredPrinter{Color: kp.Theme.Default}
-	}
-
-	printer.Print(r, w)
+	return &SingleColoredPrinter{Color: kp.Theme.Default}
 }

@@ -74,7 +74,7 @@ func TestInspectSubcommandInfo(t *testing.T) {
 	}
 
 	pluginHandler := TestPluginHandler{LookupMap: map[string]string{
-		"testplugin":          "/bin/testplugin",
+		"testplugin":                    "/bin/testplugin",
 		"my_plugin-with-multiple-words": "/bin/my_plugin-with-multiple-words",
 	}}
 

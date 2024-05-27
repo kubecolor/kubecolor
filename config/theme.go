@@ -294,6 +294,7 @@ type Theme struct {
 
 	Default Color // default when no specific mapping is found for the command
 
+	Shell  ThemeShell  // colors for representing shells (e.g bash, zsh, etc)
 	Data   ThemeData   // colors for representing data
 	Status ThemeStatus // generic status coloring (e.g "Ready", "Terminating")
 	Table  ThemeTable  // used in table output, e.g "kubectl get" and parts of "kubectl describe"
@@ -304,6 +305,7 @@ type Theme struct {
 	Explain  ThemeExplain  // used in "kubectl explain"
 	Options  ThemeOptions  // used in "kubectl options"
 	Version  ThemeVersion  // used in "kubectl version"
+	Help     ThemeHelp     // used in "kubectl --help"
 }
 
 func (t *Theme) ComputeCache() {
@@ -326,6 +328,14 @@ type ThemeBase struct {
 	Muted     Color // general color for when things are less relevant
 
 	Key ColorSlice `defaultFromMany:"theme.base.secondary"` // general color for keys
+}
+
+// ThemeShell holds colors for when representing shell commands (bash, zsh, etc)
+type ThemeShell struct {
+	Comment Color `defaultFrom:"theme.base.muted"`     // used on comments, e.g `# this is a comment`
+	Command Color `defaultFrom:"theme.base.success"`   // used on commands, e.g `kubectl` or `echo`
+	Arg     Color `defaultFrom:"theme.base.info"`      // used on arguments, e.g `get pods` in `kubectl get pods`
+	Flag    Color `defaultFrom:"theme.base.secondary"` // used on flags, e.g `--watch` in `kubectl get pods --watch`
 }
 
 // ThemeData holds colors for when representing parsed data.
@@ -399,6 +409,15 @@ type ThemeOptions struct {
 // ThemeVersion holds colors for the "kubectl version" output.
 type ThemeVersion struct {
 	Key ColorSlice `defaultFrom:"theme.base.key"` // used on the key
+}
+
+// ThemeHelp holds colors for the "kubectl --help" output.
+type ThemeHelp struct {
+	Header   Color `defaultFrom:"theme.table.header"`   // e.g "Examples:" or "Options:"
+	Flag     Color `defaultFrom:"theme.base.secondary"` // e.g "--kubeconfig"
+	FlagDesc Color `defaultFrom:"theme.base.info"`      // Flag descripion under "Options:" heading
+	Url      Color `defaultFrom:"theme.base.secondary"` // e.g `[https://example.com]`
+	Text     Color `defaultFrom:"theme.base.info"`      // Fallback text color
 }
 
 func applyViperDefaults(theme *Theme, v *viper.Viper) {

@@ -4,6 +4,7 @@ import (
 	"cmp"
 	"encoding"
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/gookit/color"
@@ -55,7 +56,20 @@ func (c Color) Render(s string) string {
 	if !c.cached {
 		c.ComputeCache()
 	}
+	if strings.ContainsRune(s, '\033') {
+		return c.renderInject(s)
+	}
 	return color.RenderString(c.cachedCode, s)
+}
+
+var afterResetRegex = regexp.MustCompile("\033\\[0m[^\033]")
+
+func (c Color) renderInject(s string) string {
+	updated := afterResetRegex.ReplaceAllStringFunc(s, func(orig string) string {
+		lastByte := orig[len(orig)-1]
+		return fmt.Sprintf("\033[0m\033[%sm%c", c.cachedCode, lastByte)
+	})
+	return color.RenderString(c.cachedCode, updated)
 }
 
 // Sprint returns the stringified args (concatenated right after each other)

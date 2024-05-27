@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/kubecolor/kubecolor/testutil"
@@ -106,4 +107,15 @@ func TestParseColor(t *testing.T) {
 			testutil.Equalf(t, tc.wantCode, got.ANSICode(), "Color %q", tc.input)
 		})
 	}
+}
+
+func TestRender_onColoredText(t *testing.T) {
+	highlight := MustParseColor("cyan")
+
+	s := fmt.Sprintf("prefix %s suffix", highlight.Render("highlighted"))
+	testutil.Equal(t, "prefix \033[36mhighlighted\033[0m suffix", s, "only highlight")
+
+	surrounding := MustParseColor("yellow")
+	s2 := surrounding.Render(s)
+	testutil.Equal(t, "\033[33mprefix \033[36mhighlighted\033[0m\033[33m suffix\033[0m", s2, "with surrounding color")
 }

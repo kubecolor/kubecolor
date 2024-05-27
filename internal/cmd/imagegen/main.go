@@ -25,24 +25,28 @@ var flags = struct {
 	preset       string
 	width        int
 
-	prompt      string
-	promptColor config.Color
-	cmd         string
-	cmdColor    config.Color
-	argColor    config.Color
-	flagColor   config.Color
+	prompt       string
+	promptColor  config.Color
+	cmd          string
+	cmdColor     config.Color
+	argColor     config.Color
+	valueColor   config.Color
+	keywordColor config.Color
+	flagColor    config.Color
 }{
 	outputDir:    "./docs",
 	freezeConfig: "./docs/freeze-config.json",
 	preset:       "dark",
 	width:        100,
 
-	prompt:      "❯",
-	promptColor: config.MustParseColor("green"),
-	cmd:         "kubectl",
-	cmdColor:    config.MustParseColor("green"),
-	argColor:    config.MustParseColor("none"),
-	flagColor:   config.MustParseColor("cyan"),
+	prompt:       "❯",
+	promptColor:  config.MustParseColor("green"),
+	cmd:          "kubectl",
+	cmdColor:     config.MustParseColor("green"),
+	argColor:     config.MustParseColor("none"),
+	valueColor:   config.MustParseColor("yellow"),
+	keywordColor: config.MustParseColor("magenta"),
+	flagColor:    config.MustParseColor("cyan"),
 }
 
 func init() {
@@ -86,9 +90,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	printed, err := parseAndPrintCommand(string(input), []EnvVar{
+	printed, err := parseAndPrintCommand(string(input), &EnvStore{Vars: []EnvVar{
 		{Key: "KUBECOLOR_THEME_PRESET", Value: flags.preset},
-	})
+	}})
 	if err != nil {
 		slog.Error("Failed to print command via kubecolor", "error", err)
 		os.Exit(1)
@@ -132,29 +136,66 @@ func freezeCmd(args ...string) *exec.Cmd {
 	return exec.Command("go", append([]string{"run", "github.com/charmbracelet/freeze@latest"}, args...)...)
 }
 
+type EnvStore struct {
+	Vars []EnvVar
+}
+
+func (e *EnvStore) Add(key, value string) {
+	e.Vars = append(e.Vars, EnvVar{
+		Key:   key,
+		Value: value,
+	})
+}
+
 type EnvVar struct {
 	Key   string
 	Value string
 }
 
-func parseAndPrintCommand(input string, env []EnvVar) (string, error) {
-	args, commandInput, err := splitInputIntoArgsAndOutput(input)
+func parseAndPrintCommand(input string, env *EnvStore) (string, error) {
+	commands, err := splitInputIntoCommands(input)
 	if err != nil {
 		return "", err
 	}
-
-	commandOutput, err := printCommand(args, commandInput, env)
-	if err != nil {
-		return "", err
+	if len(commands) == 0 {
+		return "", fmt.Errorf("no commands found")
 	}
-	commandOutput = setWidth(commandOutput, flags.width)
 
+	var buf bytes.Buffer
+	for i, cmd := range commands {
+		if i > 0 {
+			buf.WriteByte('\n')
+		}
+		commandOutput, err := runCommand(cmd, env)
+		if err != nil {
+			return "", err
+		}
+		commandOutput = setWidth(commandOutput, flags.width)
+		buf.WriteString(commandOutput)
+	}
+	return buf.String(), nil
+}
+
+func runCommand(cmd Command, env *EnvStore) (string, error) {
+	switch cmd.Exe {
+	case "echo", "print":
+		return runNoopCommand(cmd, env)
+	case "export":
+		return runExportCommand(cmd, env)
+	case "kubectl", "kubecolor":
+		return runKubecolorCommand(cmd, env)
+	default:
+		return "", fmt.Errorf("unsupported command: %q", cmd.Exe)
+	}
+}
+
+func runNoopCommand(cmd Command, _ *EnvStore) (string, error) {
 	var buf bytes.Buffer
 
 	buf.WriteString(flags.promptColor.Render(flags.prompt))
 	buf.WriteByte(' ')
-	buf.WriteString(flags.cmdColor.Render(flags.cmd))
-	for _, arg := range args {
+	buf.WriteString(flags.cmdColor.Render(cmd.Exe))
+	for _, arg := range cmd.Args {
 		buf.WriteByte(' ')
 		if strings.HasPrefix(arg, "-") {
 			buf.WriteString(flags.flagColor.Render(arg))
@@ -164,48 +205,132 @@ func parseAndPrintCommand(input string, env []EnvVar) (string, error) {
 	}
 	buf.WriteByte('\n')
 
-	buf.WriteString(commandOutput)
+	buf.WriteString(cmd.Input)
+	buf.WriteByte('\n')
+
 	return buf.String(), nil
 }
 
-func printCommand(args []string, commandInput string, env []EnvVar) (string, error) {
+func runExportCommand(cmd Command, env *EnvStore) (string, error) {
+	var buf bytes.Buffer
+
+	buf.WriteString(flags.promptColor.Render(flags.prompt))
+	buf.WriteByte(' ')
+	buf.WriteString(flags.keywordColor.Render(cmd.Exe))
+	buf.WriteByte(' ')
+	key, value := cmd.Args[0], cmd.Args[1]
+	buf.WriteString(flags.argColor.Render(key))
+	buf.WriteByte('=')
+	buf.WriteString(flags.valueColor.Render(value))
+	buf.WriteByte('\n')
+
+	env.Add(key, value)
+
+	return buf.String(), nil
+}
+
+func runKubecolorCommand(cmd Command, env *EnvStore) (string, error) {
 	defer restoreEnv(os.Environ())
 	os.Clearenv()
 
-	for _, e := range env {
+	var buf bytes.Buffer
+
+	buf.WriteString(flags.promptColor.Render(flags.prompt))
+	buf.WriteByte(' ')
+	buf.WriteString(flags.cmdColor.Render(flags.cmd))
+	for _, arg := range cmd.Args {
+		buf.WriteByte(' ')
+		if strings.HasPrefix(arg, "-") {
+			buf.WriteString(flags.flagColor.Render(arg))
+		} else {
+			buf.WriteString(flags.argColor.Render(arg))
+		}
+	}
+	buf.WriteByte('\n')
+
+	for _, e := range env.Vars {
 		if err := os.Setenv(e.Key, e.Value); err != nil {
 			return "", fmt.Errorf("set env %s=%q: %s", e.Key, e.Value, err)
 		}
 	}
 
 	v := config.NewViper()
-	cfg, err := command.ResolveConfigViper(args, v)
+	cfg, err := command.ResolveConfigViper(cmd.Args, v)
 	if err != nil {
 		return "", err
 	}
 	cfg.ForceColor = command.ColorLevelTrueColor
 
-	subcommandInfo := kubectl.InspectSubcommandInfo(args, kubectl.NoopPluginHandler{})
+	subcommandInfo := kubectl.InspectSubcommandInfo(cmd.Args, kubectl.NoopPluginHandler{})
 	p := &printer.KubectlOutputColoredPrinter{
 		SubcommandInfo:    subcommandInfo,
 		Recursive:         subcommandInfo.Recursive,
 		ObjFreshThreshold: cfg.ObjFreshThreshold,
 		Theme:             cfg.Theme,
 	}
-	var buf bytes.Buffer
-	p.Print(strings.NewReader(commandInput), &buf)
+	p.Print(strings.NewReader(cmd.Input), &buf)
 	return buf.String(), nil
 }
 
-func splitInputIntoArgsAndOutput(input string) ([]string, string, error) {
-	cmdline, rest, _ := strings.Cut(input, "\n")
-	args := strings.Split(cmdline, " ")
+type Command struct {
+	Exe   string
+	Args  []string
+	Input string
+}
 
-	if len(args) < 2 || args[0] != "$" || args[1] != "kubectl" {
-		return nil, "", fmt.Errorf(`expected first line to start with '$ kubectl ...', but got: '%s'`, cmdline)
+func splitInputIntoCommands(input string) ([]Command, error) {
+	if !strings.HasPrefix(input, "$") {
+		return nil, fmt.Errorf(`expected first line to start with '$ ...'`)
 	}
 
-	return args[2:], strings.TrimSpace(rest), nil
+	lines := strings.Split(input, "\n")
+
+	var commands []Command
+	var currentCommand Command
+
+	for _, line := range lines {
+		if cmdline, ok := strings.CutPrefix(line, "$"); ok {
+			// new command
+			cmdline = strings.TrimSpace(cmdline)
+			if currentCommand.Exe != "" {
+				currentCommand.Input = strings.TrimSpace(currentCommand.Input)
+				commands = append(commands, currentCommand)
+			}
+			args := strings.Fields(cmdline)
+			if len(args) == 0 {
+				return nil, fmt.Errorf("missing command on line that starts with '$ ...'")
+			}
+
+			if args[0] == "export" {
+				if len(args) != 2 {
+					return nil, fmt.Errorf("export command must be in format '$ export KEY=VALUE'")
+				}
+				key, value, ok := strings.Cut(args[1], "=")
+				if !ok {
+					return nil, fmt.Errorf("export command must be in format '$ export KEY=VALUE'")
+				}
+				args = []string{"export", key, value}
+			}
+
+			currentCommand = Command{
+				Exe:  args[0],
+				Args: args[1:],
+			}
+			continue
+		}
+
+		if currentCommand.Input != "" {
+			currentCommand.Input += "\n"
+		}
+		currentCommand.Input += line
+	}
+
+	if currentCommand.Exe != "" {
+		currentCommand.Input = strings.TrimSpace(currentCommand.Input)
+		commands = append(commands, currentCommand)
+	}
+
+	return commands, nil
 }
 
 func setWidth(s string, width int) string {
