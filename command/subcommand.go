@@ -30,8 +30,7 @@ func ResolveSubcommand(args []string, config *Config) (bool, *kubectl.Subcommand
 		return true, subcommandInfo
 	}
 
-	colorsSupported := isColoringSupported(subcommandInfo.Subcommand)
-	if !colorsSupported && !subcommandInfo.Help {
+	if !subcommandInfo.SupportsColoring() {
 		return false, subcommandInfo
 	}
 
@@ -47,30 +46,3 @@ func ResolveSubcommand(args []string, config *Config) (bool, *kubectl.Subcommand
 	return subcommandFound, subcommandInfo
 }
 
-// when you add something here, it won't be colorized
-var unsupported = map[kubectl.Subcommand]struct{}{
-	kubectl.Attach:           {},
-	kubectl.Completion:       {},
-	kubectl.Create:           {},
-	kubectl.Ctx:              {},
-	kubectl.Debug:            {},
-	kubectl.Delete:           {},
-	kubectl.Edit:             {},
-	kubectl.Exec:             {},
-	kubectl.InternalComplete: {},
-	kubectl.KubectlPlugin:    {},
-	kubectl.Ns:               {},
-	kubectl.Plugin:           {},
-	kubectl.Proxy:            {},
-	kubectl.Replace:          {},
-	kubectl.Run:              {},
-	kubectl.Wait:             {},
-
-	// oc (OpenShift CLI) specific subcommands
-	kubectl.Rsh: {},
-}
-
-func isColoringSupported(sc kubectl.Subcommand) bool {
-	_, found := unsupported[sc]
-	return !found
-}
