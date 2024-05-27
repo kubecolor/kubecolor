@@ -14,6 +14,7 @@ import (
 	"github.com/gookit/color"
 	"github.com/kubecolor/kubecolor/command"
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/kubectl"
 	"github.com/kubecolor/kubecolor/printer"
 )
 
@@ -258,12 +259,9 @@ func runKubecolorCommand(cmd Command, env *EnvStore) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	cfg.ForceColor = true
+	cfg.ForceColor = command.ColorLevelTrueColor
 
-	shouldColorize, subcommandInfo := command.ResolveSubcommand(cmd.Args, cfg)
-	if !shouldColorize {
-		return cmd.Input, nil
-	}
+	subcommandInfo := kubectl.InspectSubcommandInfo(cmd.Args, kubectl.NoopPluginHandler{})
 	p := &printer.KubectlOutputColoredPrinter{
 		SubcommandInfo:    subcommandInfo,
 		Recursive:         subcommandInfo.Recursive,

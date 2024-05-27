@@ -308,6 +308,11 @@ type Theme struct {
 	Help     ThemeHelp     // used in "kubectl --help"
 }
 
+func (t *Theme) ComputeCache() {
+	themeVal := reflect.ValueOf(t).Elem()
+	walkFields(themeVal, "theme", visitorComputeCache)
+}
+
 // ThemeBase contains base colors that other theme fields can default to,
 // just to make overriding themes easier.
 //
@@ -417,16 +422,14 @@ type ThemeHelp struct {
 
 func applyViperDefaults(theme *Theme, v *viper.Viper) {
 	themeVal := reflect.ValueOf(theme).Elem()
-	themeViperVisitor{
-		viper: v,
-	}.walkFields(themeVal, "theme")
+	walkFields(themeVal, "theme", themeViperVisitor{viper: v}.visitorApplyDefaults)
 }
 
 type themeViperVisitor struct {
 	viper *viper.Viper
 }
 
-func (t themeViperVisitor) walkFields(val reflect.Value, viperKey string) {
+func walkFields(val reflect.Value, viperKey string, visitor func(viperKey string, value reflect.Value, tags reflect.StructTag)) {
 	typ := val.Type()
 	for i := range val.NumField() {
 		fieldTyp := typ.Field(i)
@@ -438,16 +441,26 @@ func (t themeViperVisitor) walkFields(val reflect.Value, viperKey string) {
 		newViperKey := fmt.Sprintf("%s.%s", viperKey, strings.ToLower(fieldTyp.Name))
 		// Only dig deeper if its a theme struct, e.g ThemeApply
 		if strings.HasPrefix(fieldTyp.Type.Name(), "Theme") {
-			t.walkFields(fieldVal, newViperKey)
+			walkFields(fieldVal, newViperKey, visitor)
 			continue
 		}
-		fieldValInterface := fieldVal.Interface()
-		t.visitField(newViperKey, fieldValInterface, fieldTyp.Tag)
+		visitor(newViperKey, fieldVal, fieldTyp.Tag)
 	}
 }
 
-func (t themeViperVisitor) visitField(viperKey string, value any, tags reflect.StructTag) {
-	switch value := value.(type) {
+func visitorComputeCache(viperKey string, value reflect.Value, _ reflect.StructTag) {
+	switch value := value.Addr().Interface().(type) {
+	case *Color:
+		value.ComputeCache()
+	case *ColorSlice:
+		value.ComputeCache()
+	default:
+		panic(fmt.Errorf("%s: unsupported field type: %T", viperKey, value))
+	}
+}
+
+func (t themeViperVisitor) visitorApplyDefaults(viperKey string, value reflect.Value, tags reflect.StructTag) {
+	switch value := value.Interface().(type) {
 	case Color:
 		if _, ok := tags.Lookup("defaultFromMany"); ok {
 			panic(fmt.Errorf("%s: cannot use defaultFromMany tag on a Color field", viperKey))
@@ -479,7 +492,7 @@ func (t themeViperVisitor) setColorOrKey(key string, value Color, otherKey strin
 }
 
 func (t themeViperVisitor) setColor(key string, value Color) bool {
-	if value == (Color{}) {
+	if value.IsZero() {
 		t.viper.SetDefault(key, Color{})
 		return false
 	}

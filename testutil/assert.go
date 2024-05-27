@@ -9,10 +9,16 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
+var diffAllowUnexported []any
+
+func DiffAllowUnexported(typ any) {
+	diffAllowUnexported = append(diffAllowUnexported, typ)
+}
+
 func Equal(t testing.TB, want, got any, msg ...any) {
 	t.Helper()
 
-	if diff := cmp.Diff(want, got); diff != "" {
+	if diff := cmp.Diff(want, got, cmp.AllowUnexported(diffAllowUnexported...)); diff != "" {
 		if len(msg) > 0 {
 			t.Errorf("%s\ndiff (-want +got):\n%s", fmt.Sprint(msg...), diff)
 		} else {
@@ -24,7 +30,7 @@ func Equal(t testing.TB, want, got any, msg ...any) {
 func Equalf(t testing.TB, want, got any, format string, msg ...any) {
 	t.Helper()
 
-	if diff := cmp.Diff(want, got); diff != "" {
+	if diff := cmp.Diff(want, got, cmp.AllowUnexported(diffAllowUnexported...)); diff != "" {
 		if format != "" {
 			t.Errorf("%s\ndiff (-want +got):\n%s", fmt.Sprintf(format, msg...), diff)
 		} else {
@@ -36,7 +42,7 @@ func Equalf(t testing.TB, want, got any, format string, msg ...any) {
 func MustEqual(t testing.TB, want, got any, msg ...any) {
 	t.Helper()
 
-	if diff := cmp.Diff(want, got); diff != "" {
+	if diff := cmp.Diff(want, got, cmp.AllowUnexported(diffAllowUnexported...)); diff != "" {
 		if len(msg) > 0 {
 			t.Fatalf("%s\ndiff (-want +got):\n%s", fmt.Sprint(msg...), diff)
 		} else {
@@ -48,7 +54,7 @@ func MustEqual(t testing.TB, want, got any, msg ...any) {
 func MustEqualf(t testing.TB, want, got any, format string, msg ...any) {
 	t.Helper()
 
-	if diff := cmp.Diff(want, got); diff != "" {
+	if diff := cmp.Diff(want, got, cmp.AllowUnexported(diffAllowUnexported...)); diff != "" {
 		if format != "" {
 			t.Fatalf("%s\ndiff (-want +got):\n%s", fmt.Sprintf(format, msg...), diff)
 		} else {

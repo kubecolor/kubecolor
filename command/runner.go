@@ -10,10 +10,13 @@ import (
 	"sync"
 	"time"
 
+	"github.com/gookit/color"
 	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/kubectl"
 	"github.com/kubecolor/kubecolor/printer"
 	"github.com/mattn/go-colorable"
+	"github.com/mattn/go-isatty"
+	"github.com/xo/terminfo"
 )
 
 var (
@@ -64,7 +67,7 @@ func Run(args []string, version string) error {
 		return nil
 	}
 
-	shouldColorize, subcommandInfo := ResolveSubcommand(args, cfg)
+	subcommandInfo := kubectl.InspectSubcommandInfo(args, kubectl.DefaultPluginHandler{})
 
 	if cfg.Paging == config.PagingAuto && isOutputTerminal() && subcommandInfo.SupportsPager() {
 		pipe, err := runPager(cfg.Pager)
@@ -77,10 +80,38 @@ func Run(args []string, version string) error {
 		}
 	}
 
-	// when should not colorize, just run command and return
-	if !shouldColorize {
+	switch {
+		// Skip if special subcommand (e.g "kubectl exec")
+	case !subcommandInfo.SupportsColoring(),
+		// Skip if explicitly setting --force-colors=none
+		cfg.ForceColor == ColorLevelNone,
+		// Conventional environment variable for disabling colors
+		os.Getenv("NO_COLOR") != "",
+		// Skip if stdout is not a tty UNLESS --force-colors is set
+		!isOutputTerminal() && cfg.ForceColor == ColorLevelUnset:
+
+		// when we shan't colorize, just run command and return
 		return execWithoutColors(cfg, args)
+
+	case cfg.ForceColor == ColorLevelAuto || cfg.ForceColor == ColorLevelUnset:
+		// gookit/color defaults to 8-bit colors when FORCE_COLOR is set.
+		// We don't want this behaviour.
+		os.Unsetenv("FORCE_COLOR")
+		color.DetectColorLevel()
+
+		if color.TermColorLevel() == terminfo.ColorLevelNone && os.Getenv("COLORTERM") == "" {
+			// gookit/color package couldn't determine the color support of the terminal.
+			// The user did provide a `--force-colors` setting,
+			// so let's just fallback to basic ANSI color codes to be safe.
+			color.ForceSetColorLevel(terminfo.ColorLevelBasic)
+		}
+
+	default:
+		color.ForceSetColorLevel(cfg.ForceColor.TerminfoColorLevel())
 	}
+
+	// Computes color code caches, AFTER the [color.DetectColorLevel] and [color.ForceSetColorLevel]
+	cfg.Theme.ComputeCache()
 
 	stdoutReader, stderrReader, err := execWithReaders(cfg, args)
 	if err != nil {
@@ -268,4 +299,9 @@ func runPager(pager string) (*pagerPipe, error) {
 		writer: w,
 		cc:     c,
 	}, nil
+}
+
+// mocked in unit tests
+var isOutputTerminal = func() bool {
+	return isatty.IsTerminal(os.Stdout.Fd()) || isatty.IsCygwinTerminal(os.Stdout.Fd())
 }

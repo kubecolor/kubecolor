@@ -12,66 +12,65 @@ func TestInspectSubcommandInfo(t *testing.T) {
 	tests := []struct {
 		args       string
 		expected   *SubcommandInfo
-		expectedOK bool
 	}{
-		{"get pods", &SubcommandInfo{Subcommand: Get}, true},
-		{"get pod", &SubcommandInfo{Subcommand: Get}, true},
-		{"get po", &SubcommandInfo{Subcommand: Get}, true},
+		{"get pods", &SubcommandInfo{Subcommand: Get}},
+		{"get pod", &SubcommandInfo{Subcommand: Get}},
+		{"get po", &SubcommandInfo{Subcommand: Get}},
 
-		{"get pod -o wide", &SubcommandInfo{Subcommand: Get, FormatOption: Wide}, true},
-		{"get pod -o=wide", &SubcommandInfo{Subcommand: Get, FormatOption: Wide}, true},
-		{"get pod -owide", &SubcommandInfo{Subcommand: Get, FormatOption: Wide}, true},
+		{"get pod -o wide", &SubcommandInfo{Subcommand: Get, FormatOption: Wide}},
+		{"get pod -o=wide", &SubcommandInfo{Subcommand: Get, FormatOption: Wide}},
+		{"get pod -owide", &SubcommandInfo{Subcommand: Get, FormatOption: Wide}},
 
-		{"get pod -o json", &SubcommandInfo{Subcommand: Get, FormatOption: Json}, true},
-		{"get pod -o=json", &SubcommandInfo{Subcommand: Get, FormatOption: Json}, true},
-		{"get pod -ojson", &SubcommandInfo{Subcommand: Get, FormatOption: Json}, true},
+		{"get pod -o json", &SubcommandInfo{Subcommand: Get, FormatOption: Json}},
+		{"get pod -o=json", &SubcommandInfo{Subcommand: Get, FormatOption: Json}},
+		{"get pod -ojson", &SubcommandInfo{Subcommand: Get, FormatOption: Json}},
 
-		{"get pod -o yaml", &SubcommandInfo{Subcommand: Get, FormatOption: Yaml}, true},
-		{"get pod -o=yaml", &SubcommandInfo{Subcommand: Get, FormatOption: Yaml}, true},
-		{"get pod -oyaml", &SubcommandInfo{Subcommand: Get, FormatOption: Yaml}, true},
+		{"get pod -o yaml", &SubcommandInfo{Subcommand: Get, FormatOption: Yaml}},
+		{"get pod -o=yaml", &SubcommandInfo{Subcommand: Get, FormatOption: Yaml}},
+		{"get pod -oyaml", &SubcommandInfo{Subcommand: Get, FormatOption: Yaml}},
 
-		{"get pod --output json", &SubcommandInfo{Subcommand: Get, FormatOption: Json}, true},
-		{"get pod --output=json", &SubcommandInfo{Subcommand: Get, FormatOption: Json}, true},
-		{"get pod --output yaml", &SubcommandInfo{Subcommand: Get, FormatOption: Yaml}, true},
-		{"get pod --output=yaml", &SubcommandInfo{Subcommand: Get, FormatOption: Yaml}, true},
-		{"get pod --output wide", &SubcommandInfo{Subcommand: Get, FormatOption: Wide}, true},
-		{"get pod --output=wide", &SubcommandInfo{Subcommand: Get, FormatOption: Wide}, true},
+		{"get pod --output json", &SubcommandInfo{Subcommand: Get, FormatOption: Json}},
+		{"get pod --output=json", &SubcommandInfo{Subcommand: Get, FormatOption: Json}},
+		{"get pod --output yaml", &SubcommandInfo{Subcommand: Get, FormatOption: Yaml}},
+		{"get pod --output=yaml", &SubcommandInfo{Subcommand: Get, FormatOption: Yaml}},
+		{"get pod --output wide", &SubcommandInfo{Subcommand: Get, FormatOption: Wide}},
+		{"get pod --output=wide", &SubcommandInfo{Subcommand: Get, FormatOption: Wide}},
 
-		{"get pod --no-headers", &SubcommandInfo{Subcommand: Get, NoHeader: true}, true},
-		{"get pod -w", &SubcommandInfo{Subcommand: Get, Watch: true}, true},
-		{"get pod --watch", &SubcommandInfo{Subcommand: Get, Watch: true}, true},
-		{"get pod -h", &SubcommandInfo{Subcommand: Get, Help: true}, true},
-		{"get pod --help", &SubcommandInfo{Subcommand: Get, Help: true}, true},
+		{"get pod --no-headers", &SubcommandInfo{Subcommand: Get, NoHeader: true}},
+		{"get pod -w", &SubcommandInfo{Subcommand: Get, Watch: true}},
+		{"get pod --watch", &SubcommandInfo{Subcommand: Get, Watch: true}},
+		{"get pod -h", &SubcommandInfo{Subcommand: Get, Help: true}},
+		{"get pod --help", &SubcommandInfo{Subcommand: Get, Help: true}},
 
-		{"describe pod pod-aaa", &SubcommandInfo{Subcommand: Describe}, true},
-		{"top pod", &SubcommandInfo{Subcommand: Top}, true},
-		{"top pods", &SubcommandInfo{Subcommand: Top}, true},
+		{"describe pod pod-aaa", &SubcommandInfo{Subcommand: Describe}},
+		{"top pod", &SubcommandInfo{Subcommand: Top}},
+		{"top pods", &SubcommandInfo{Subcommand: Top}},
 
-		{"api-versions", &SubcommandInfo{Subcommand: APIVersions}, true},
+		{"api-versions", &SubcommandInfo{Subcommand: APIVersions}},
 
-		{"explain pod", &SubcommandInfo{Subcommand: Explain}, true},
-		{"explain pod --recursive=true", &SubcommandInfo{Subcommand: Explain, Recursive: true}, true},
-		{"explain pod --recursive", &SubcommandInfo{Subcommand: Explain, Recursive: true}, true},
+		{"explain pod", &SubcommandInfo{Subcommand: Explain}},
+		{"explain pod --recursive=true", &SubcommandInfo{Subcommand: Explain, Recursive: true}},
+		{"explain pod --recursive", &SubcommandInfo{Subcommand: Explain, Recursive: true}},
 
-		{"version", &SubcommandInfo{Subcommand: Version}, true},
-		{"version --client", &SubcommandInfo{Subcommand: Version, Client: true}, true},
-		{"version -o json", &SubcommandInfo{Subcommand: Version, FormatOption: Json}, true},
-		{"version -o yaml", &SubcommandInfo{Subcommand: Version, FormatOption: Yaml}, true},
+		{"version", &SubcommandInfo{Subcommand: Version}},
+		{"version --client", &SubcommandInfo{Subcommand: Version, Client: true}},
+		{"version -o json", &SubcommandInfo{Subcommand: Version, FormatOption: Json}},
+		{"version -o yaml", &SubcommandInfo{Subcommand: Version, FormatOption: Yaml}},
 
-		{"apply", &SubcommandInfo{Subcommand: Apply}, true},
+		{"apply", &SubcommandInfo{Subcommand: Apply}},
 
-		{"rsh", &SubcommandInfo{Subcommand: Rsh}, true},
+		{"rsh", &SubcommandInfo{Subcommand: Rsh}},
 
-		{"testplugin", &SubcommandInfo{Subcommand: KubectlPlugin}, true},
-		{"testplugin with args", &SubcommandInfo{Subcommand: KubectlPlugin}, true},
-		{"my-plugin with multiple words", &SubcommandInfo{Subcommand: KubectlPlugin}, true},
+		{"testplugin", &SubcommandInfo{Subcommand: KubectlPlugin}},
+		{"testplugin with args", &SubcommandInfo{Subcommand: KubectlPlugin}},
+		{"my-plugin with multiple words", &SubcommandInfo{Subcommand: KubectlPlugin}},
 		// Args are not allowed in-between
-		{"my-plugin --hello with multiple words", &SubcommandInfo{Subcommand: Unknown}, false},
-		// No plugin found
-		{"my-non-existing-plugin", &SubcommandInfo{Subcommand: Unknown}, false},
+		{"my-plugin --hello with multiple words", &SubcommandInfo{Subcommand: Unknown, Help: true}},
+		// No plugin found, so assume it is help
+		{"my-non-existing-plugin", &SubcommandInfo{Subcommand: Unknown, Help: true}},
 
-		{"", &SubcommandInfo{}, false},
-		{"--only-some-flag", &SubcommandInfo{}, false},
+		{"", &SubcommandInfo{Subcommand: Unknown, Help: true}},
+		{"--only-some-flag", &SubcommandInfo{Subcommand: Unknown, Help: true}},
 	}
 
 	pluginHandler := TestPluginHandler{LookupMap: map[string]string{
@@ -83,10 +82,7 @@ func TestInspectSubcommandInfo(t *testing.T) {
 		tt := tt
 		t.Run(tt.args, func(t *testing.T) {
 			t.Parallel()
-			s, ok := InspectSubcommandInfo(strings.Fields(tt.args), pluginHandler)
-			if tt.expectedOK != ok {
-				t.Error("failed")
-			}
+			s := InspectSubcommandInfo(strings.Fields(tt.args), pluginHandler)
 
 			if diff := cmp.Diff(s, tt.expected); diff != "" {
 				t.Errorf(diff)

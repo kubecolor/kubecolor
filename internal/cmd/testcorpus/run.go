@@ -15,6 +15,7 @@ import (
 	"github.com/hexops/gotextdiff/span"
 	"github.com/kubecolor/kubecolor/command"
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/kubectl"
 	"github.com/kubecolor/kubecolor/printer"
 )
 
@@ -108,12 +109,9 @@ func printCommand(args []string, input string, env []EnvVar) string {
 	if err != nil {
 		return fmt.Sprintf("config error: %s", err)
 	}
-	cfg.ForceColor = true
+	cfg.ForceColor = command.ColorLevelTrueColor
 
-	shouldColorize, subcommandInfo := command.ResolveSubcommand(args, cfg)
-	if !shouldColorize {
-		return input
-	}
+	subcommandInfo := kubectl.InspectSubcommandInfo(args, kubectl.NoopPluginHandler{})
 	p := &printer.KubectlOutputColoredPrinter{
 		SubcommandInfo:    subcommandInfo,
 		Recursive:         subcommandInfo.Recursive,
@@ -197,7 +195,7 @@ func quoteAndTabWrite(diffs []gotextdiff.Line) []gotextdiff.Line {
 var colorRegex = regexp.MustCompile(`\x1b\[[0-9;\.,]+m`)
 
 func injectColor(s string, color config.Color) string {
-	newCode := strings.TrimSuffix(strings.TrimPrefix(color.Code, "\x1b["), "m")
+	newCode := strings.TrimSuffix(strings.TrimPrefix(color.ANSICode(), "\x1b["), "m")
 
 	updatedColors := colorRegex.ReplaceAllStringFunc(s, func(s string) string {
 		originalCode := strings.TrimSuffix(strings.TrimPrefix(s, "\x1b["), "m")

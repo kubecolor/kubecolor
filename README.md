@@ -75,8 +75,10 @@ Additionally, if `kubectl` resulted an error, kubecolor just shows the error mes
 Running it via Docker can be nice for just trying out kubecolor:
 
 ```bash
-docker run --rm -it -v $HOME/.kube:/home/nonroot/.kube:ro ghcr.io/kubecolor/kubecolor get pods
+docker run --rm -it -v $HOME/.kube:/home/nonroot/.kube:ro --env COLORTERM ghcr.io/kubecolor/kubecolor get pods
 ```
+
+*Why `--env COLORTERM`? See section on [Dynamic color support](#dynamic-color-support) below.*
 
 <details>
 <summary>If you're getting the following error <code>permission denied</code> (click to expand)</summary>
@@ -179,8 +181,85 @@ alias kubectl="kubecolor"
 ### Dynamic tty support
 
 When the kubecolor output tty is not standard output, it automatically disables the colorization.
-For example, if you are running `kubecolor get pods > result.txt` or `kubecolor get pods | grep xxx`, the output will be passed through to file or another command, so colorization is not applied.
-You can force kubecolor do colorization at such cases by passing `--force-colors` flag. See the upcoming section for more details.
+For example:
+
+```bash
+# Prints with color codes
+kubecolor get pods
+
+# Automatically disables color codes for these two:
+kubecolor get pods > result.txt
+kubecolor get pods | grep Running
+
+# Force kubecolor to print color codes anyways
+kubecolor get pods --force-colors > result.txt
+```
+
+### Dynamic color support
+
+Kubecolor will infer which colors your terminal supports.
+
+For context, practically all terminals supports the basic ["3-bit" or "4-bit" ANSI color set](https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit)
+which includes 8 or 16 different colors (respectively),
+while most support the ["8-bit" ANSI color set](https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit)
+which, includes 256 different colors.
+More advanced and modern terminal emulators also support the ["24-bit" color set (aka true color)](https://en.wikipedia.org/wiki/ANSI_escape_code#24-bit),
+which includes the famous 16 777 216 number of colors,
+and are most commonly referred to by their RGB (e.g `rgb(90, 12, 135)`) or HEX (e.g `#5a8487`) representations.
+
+When using kubecolor you can freely configure it to use RGB values in your [theme](#color-theme),
+and depending on your terminal's color support, it will convert the color to the nearest 8-bit or 4-bit color.
+
+The color support can be overridden via the `--force-colors` flag and `KUBECOLOR_FORCE_COLORS` environment variable,
+and it support multiple values: `auto`, `basic`, `256`, `truecolor`, and `none`
+
+```bash
+# As an example, let's set the header color to a 24-bit/truecolor value:
+export KUBECOLOR_THEME_TABLE_HEADER='#5a8487'
+
+# Automatically detect color support,
+# but fallback to basic/4-bit colors if detection fails
+kubecolor get pods --force-colors=auto
+
+# Force colors to basic/4-bit colors,
+# resulting in header color code `␛[37m`
+kubecolor get pods --force-colors=basic
+
+# Force colors to 256/8-bit colors,
+# resulting in header color code `␛[38;5;66m`
+kubecolor get pods --force-colors=256
+
+# Force colors to truecolor/24-bit colors,
+# resulting in header color code `␛[38;2;90;132;135m`
+kubecolor get pods --force-colors=truecolor
+
+# Forcing no colors, i.e. disabling colors
+kubecolor get pods --force-colors=none
+```
+
+When not using the `--force-colors` flag or `KUBECOLOR_FORCE_COLORS` env var,
+the behavior then depends on if the output is a terminal or not:
+
+```bash
+# Same behavior as --force-colors=auto
+kubecolor get pods
+
+# Same behavior as --force-colors=none
+kubecolor get pods > result.txt
+kubecolor get pods | grep Running
+```
+
+How kubecolor figures this out is through some standards using the
+`COLORTERM` environment variable and `TERMINFO` files,
+where we rely on the [github.com/gookit/color package's detection logic](https://github.com/gookit/color/blob/v1.5.4/detect_env.go#L29-L183).
+
+> [!IMPORTANT]
+> If running `kubecolor` in a restrictive environment such as a Docker container,
+> then make sure to give it all the hints of your intended color support.
+>
+> This can be done by forwarding your `--env COLORTERM` environment variable,
+> or by setting the support level explicitly via the `--force-colors=256` flag
+> or `KUBECOLOR_FORCE_COLORS=256` environment variable.
 
 ### Flags
 
@@ -199,11 +278,16 @@ If so, specify `--light-background` as a command line argument. kubecolor will u
 
 By default, kubecolor never output the result in colors when the tty is not a terminal standard output.
 If you want to force kubecolor to show the result in colors for non-terminal tty, you can specify this flag.
-For example, when you want to pass kubecolor result to grep (`kubecolor get pods | grep pod_name`), this option is useful.
+For example, when you want to pass kubecolor result to grep (e.g `kubecolor get pods --force-colors | grep pod_name`), this option is useful.
+It supports multiple values in the form of `--force-colors=...`.
+Just specifying `--force-colors` is the same as `--force-colors=auto`.
+See [Dynamic color support](#dynamic-color-support) section for all possible values.
 
 * `--plain`
 
-When you don't want to colorize output, you can specify `--plain`. Kubecolor understands this option and outputs the result without colorizing.
+When you don't want to colorize output, you can specify `--plain`.
+Kubecolor understands this option and outputs the result without colorizing.
+Semantically identical to `--force-colors=none`.
 
 * `--no-paging`
 
@@ -227,12 +311,18 @@ Please see [Specify object fresh age threshold](#specify-object-fresh-age-thresh
 
 * `KUBECOLOR_FORCE_COLORS`
 
-In addition to forcing colors with `--force-colors`, you can also do so by setting the environment variable `KUBECOLOR_FORCE_COLORS=true`.
+In addition to forcing colors with `--force-colors`, you can also do so by setting the environment variable `KUBECOLOR_FORCE_COLORS=auto`.
+See [Dynamic color support](#dynamic-color-support) section for all possible values.
+
 You can use this environment variable to colorize output when you invoke kubecolor in the `watch` command (e.g. `watch kubecolor get pods`).
 Set the following alias:
 
-```shell
-alias watch='KUBECOLOR_FORCE_COLORS=true watch --color '
+```bash
+# Add this line to your ~/.bashrc, ~/.zshrc, or similar:
+alias watch='KUBECOLOR_FORCE_COLORS=auto watch --color '
+
+# Usage:
+watch kubecolor get pods
 ```
 
 Be sure to include the space at the end to enable alias expansion (without this additional space, the command `watch kgp` would fail, for example).

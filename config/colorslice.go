@@ -56,3 +56,9 @@ func (s *ColorSlice) UnmarshalText(text []byte) error {
 func (s ColorSlice) MarshalText() (text []byte, err error) {
 	return []byte(s.String()), nil
 }
+
+func (s ColorSlice) ComputeCache() {
+	for i := range s {
+		s[i].ComputeCache()
+	}
+}

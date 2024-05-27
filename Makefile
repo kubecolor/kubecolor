@@ -1,4 +1,4 @@
-GO_FILES=$(shell find -name '*.go' -print)
+GO_FILES=$(wildcard *.go */*.go */*/*.go */*/*/*.go)
 
 help: ## Print usage
 	@sed -r '/^(\w[^:]+):[^#]*##/!d;s/^([^:]+):[^#]*##\s*(.*)/\x1b[36m\1\t:\x1b[m \2/g' ${MAKEFILE_LIST} | column -t -s $$'\t'
