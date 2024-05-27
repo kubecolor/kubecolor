@@ -49,7 +49,7 @@ func (hp *HelpPrinter) Print(r io.Reader, w io.Writer) {
 			continue
 		}
 
-		if scanner.Path().HasPrefix("Options") || scanner.Path().HasPrefix("Flags") {
+		if (scanner.Path().HasPrefix("Options") || scanner.Path().HasPrefix("Flags")) && len(scanner.Path()) == 2 {
 			val := string(line.Value)
 			fmt.Fprintf(w, "%s%s%s%s%s\n",
 				line.Indent,
