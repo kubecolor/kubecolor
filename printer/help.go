@@ -16,7 +16,8 @@ import (
 type HelpPrinter struct {
 	Theme *config.Theme
 
-	commandBuf *bytes.Buffer
+	commandBuf              *bytes.Buffer
+	lastCommandWasContinued bool
 }
 
 var urlRegex = regexp.MustCompile(`\[(https?://[a-zA-Z0-9][-a-zA-Z0-9]*\.[^\]]+)\]|(https?://[a-zA-Z0-9][-a-zA-Z0-9\.@:%_\+~#=/\?]*)`)
@@ -91,25 +92,52 @@ func (hp *HelpPrinter) printCommandLine(w io.Writer, line string) bool {
 
 	hp.commandBuf.Reset()
 
-	// Don't want to use [strings.Fields], as that trims away double-spaces
-	for i, field := range strings.Split(withoutIndent, " ") {
-		if i > 0 {
-			hp.commandBuf.WriteByte(' ')
+	for pipeIdx, pipe := range strings.Split(withoutIndent, " | ") {
+		if pipeIdx > 0 {
+			hp.commandBuf.WriteString(" | ")
 		}
-		switch {
-		case field == "":
-			// Do nothing
-		case i == 0:
-			hp.commandBuf.WriteString(hp.Theme.Shell.Command.Render(field))
-		case field[0] == '-',
-			strings.HasPrefix(field, "[(-") && strings.HasSuffix(field, "]"):
-			hp.commandBuf.WriteString(hp.Theme.Shell.Flag.Render(field))
-		default:
-			hp.commandBuf.WriteString(hp.Theme.Shell.Arg.Render(field))
+
+		// Don't want to use [strings.Fields], as that trims away double-spaces
+		fields := strings.Split(pipe, " ")
+		for i, field := range fields {
+			if i > 0 {
+				hp.commandBuf.WriteByte(' ')
+			}
+			switch {
+			case field == "":
+				// Empty, do nothing
+
+				// First arg: it's the executable
+			case i == 0 && !hp.lastCommandWasContinued,
+				// First arg after "kubectl exec --"
+				len(fields) > 3 && fields[0] == "kubectl" && fields[1] == "exec" && fields[i-1] == "--":
+				hp.commandBuf.WriteString(hp.Theme.Shell.Command.Render(field))
+			case field[0] == '-',
+				strings.HasPrefix(field, "[(-") && strings.HasSuffix(field, "]"):
+
+				if flag, value, ok := strings.Cut(field, "="); ok {
+					hp.commandBuf.WriteString(hp.Theme.Shell.Flag.Render(flag + "="))
+					c := getColorByValueType(value, hp.Theme)
+					hp.commandBuf.WriteString(c.Render(value))
+				} else {
+					hp.commandBuf.WriteString(hp.Theme.Shell.Flag.Render(field))
+				}
+			case isQuoted(field):
+				hp.commandBuf.WriteString(hp.Theme.Data.String.Render(field))
+			default:
+				if flag, value, ok := strings.Cut(field, "="); ok {
+					hp.commandBuf.WriteString(hp.Theme.Shell.Arg.Render(flag + "="))
+					c := getColorByValueType(value, hp.Theme)
+					hp.commandBuf.WriteString(c.Render(value))
+				} else {
+					hp.commandBuf.WriteString(hp.Theme.Shell.Arg.Render(field))
+				}
+			}
 		}
 	}
 
 	fmt.Fprint(w, "  ", hp.commandBuf.String(), "\n")
+	hp.lastCommandWasContinued = strings.HasSuffix(withoutIndent, "\\")
 
 	return true
 }
@@ -121,4 +149,11 @@ func (hp *HelpPrinter) colorizeUrls(s string) string {
 		}
 		return hp.Theme.Help.Url.Render(url)
 	})
+}
+
+func isQuoted(s string) bool {
+	if len(s) < 2 {
+		return false
+	}
+	return (s[0] == '\'' || s[0] == '"') && s[len(s)-1] == s[0]
 }

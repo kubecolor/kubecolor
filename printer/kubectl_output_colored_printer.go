@@ -252,4 +252,3 @@ func (kp *KubectlOutputColoredPrinter) getPrinter() Printer {
 
 	return &SingleColoredPrinter{Color: kp.Theme.Default}
 }
-

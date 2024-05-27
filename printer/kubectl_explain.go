@@ -12,8 +12,8 @@ import (
 
 // ExplainPrinter is a specific printer to print kubectl explain format.
 type ExplainPrinter struct {
-	Theme          *config.Theme
-	Recursive      bool
+	Theme     *config.Theme
+	Recursive bool
 }
 
 func (ep *ExplainPrinter) Print(r io.Reader, w io.Writer) {

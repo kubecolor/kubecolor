@@ -45,4 +45,3 @@ func ResolveSubcommand(args []string, config *Config) (bool, *kubectl.Subcommand
 	// else, when the given subcommand is supported, then we colorize it
 	return subcommandFound, subcommandInfo
 }
-
