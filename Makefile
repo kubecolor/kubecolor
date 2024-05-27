@@ -1,3 +1,5 @@
+GO_FILES=$(shell find -name '*.go' -print)
+
 help: ## Print usage
 	@sed -r '/^(\w[^:]+):[^#]*##/!d;s/^([^:]+):[^#]*##\s*(.*)/\x1b[36m\1\t:\x1b[m \2/g' ${MAKEFILE_LIST} | column -t -s $$'\t'
 .PHONY: help
@@ -34,11 +36,11 @@ lint: ## lint code
 config-schema.json: $(wildcard **/*.go) ## regenerate config-schema.json based on config package
 	go run ./internal/cmd/configschema -out config-schema.json
 
-docs: docs/*.svg ## generate docs images
+docs: $(patsubst %.txt,%.svg,$(wildcard docs/*.txt)) ## generate docs images
 .PHONY: docs
 
 # View available themes in charmbracelet/freeze: https://xyproto.github.io/splash/docs/index.html
-docs/%.svg: ./docs/%.txt Makefile ./docs/freeze-config.json $(wildcard **/*.go)
+docs/%.svg: ./docs/%.txt Makefile ./docs/freeze-config.json ${GO_FILES}
 	go run ./internal/cmd/imagegen $<
-docs/%-light.svg: ./docs/%-light.txt Makefile ./docs/freeze-config-light.json $(wildcard **/*.go)
+docs/%-light.svg: ./docs/%-light.txt Makefile ./docs/freeze-config-light.json ${GO_FILES}
 	go run ./internal/cmd/imagegen -freeze-config=./docs/freeze-config-light.json -flag-color=blue $<
