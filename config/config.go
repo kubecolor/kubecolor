@@ -23,7 +23,7 @@ type Config struct {
 	Preset            Preset        // Color theme preset
 	Theme             Theme         //
 	Pager             string        `jsonschema:"example=less -RF,less --RAW-CONTROL-CHARS --quit-if-one-screen,example=more"` // Command to use as pager
-	Paging            Paging        `jsonschema:"default=auto"`                                                                // Whether to enable paging: "auto" or "never"
+	Paging            Paging        `jsonschema:"default=never"`                                                               // Whether to enable paging: "auto" or "never"
 }
 
 func NewViper() *viper.Viper {
