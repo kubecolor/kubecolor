@@ -8,10 +8,10 @@ import (
 	"os/exec"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/gookit/color"
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/internal/flagutil"
 	"github.com/kubecolor/kubecolor/kubectl"
 	"github.com/kubecolor/kubecolor/printer"
 	"github.com/mattn/go-colorable"
@@ -35,21 +35,22 @@ type pagerPipe struct {
 }
 
 // This is defined here to be replaced in test
-var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, objFreshThreshold time.Duration, theme *config.Theme) *Printers {
+var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, cfg *config.Config, flags flagutil.FlagSet) *Printers {
 	return &Printers{
 		FullColoredPrinter: &printer.KubectlOutputColoredPrinter{
 			SubcommandInfo:    subcommandInfo,
 			Recursive:         subcommandInfo.Recursive,
-			ObjFreshThreshold: objFreshThreshold,
-			Theme:             theme,
+			ObjFreshThreshold: cfg.ObjFreshThreshold,
+			Theme:             &cfg.Theme,
+			Flags:             flags,
 		},
 		ErrorPrinter: &printer.WithFuncPrinter{
 			Fn: func(line string) config.Color {
 				if strings.HasPrefix(strings.ToLower(line), "error") {
-					return theme.Stderr.Error
+					return cfg.Theme.Stderr.Error
 				}
 
-				return theme.Stderr.Default
+				return cfg.Theme.Stderr.Default
 			},
 		},
 	}
@@ -125,7 +126,7 @@ func Run(args []string, version string) error {
 	errBuf := new(bytes.Buffer)
 	errBufReader := io.TeeReader(stderrReader, errBuf)
 
-	printers := getPrinters(subcommandInfo, cfg.ObjFreshThreshold, cfg.Theme)
+	printers := getPrinters(subcommandInfo, cfg.Config, cfg.Flags)
 
 	wg := &sync.WaitGroup{}
 
@@ -166,7 +167,7 @@ func execWithoutColors(config *Config, args []string) error {
 		return err
 	}
 
-	cmd := exec.Command(config.KubectlCmd, args...)
+	cmd := exec.Command(config.Kubectl, args...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = Stdout
 	cmd.Stderr = Stderr
@@ -185,7 +186,7 @@ func execWithReaders(config *Config, args []string) (io.ReadCloser, io.ReadClose
 		return stdout, nopReadCloser{}, err
 	}
 
-	cmd := exec.Command(config.KubectlCmd, args...)
+	cmd := exec.Command(config.Kubectl, args...)
 	cmd.Stdin = os.Stdin
 
 	// when colorize, capture stdout and err then colorize it

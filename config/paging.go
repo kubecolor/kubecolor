@@ -37,6 +37,15 @@ func (p Paging) String() string {
 	return string(p)
 }
 
+func (p *Paging) TextUnmarshal(text []byte) error {
+	parsed, err := ParsePaging(string(text))
+	if err != nil {
+		return err
+	}
+	*p = parsed
+	return nil
+}
+
 func ParsePaging(s string) (Paging, error) {
 	if s == "" {
 		return PagingAuto, nil

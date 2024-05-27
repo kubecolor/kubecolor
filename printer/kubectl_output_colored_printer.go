@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/internal/flagutil"
 	"github.com/kubecolor/kubecolor/internal/stringutil"
 	"github.com/kubecolor/kubecolor/kubectl"
 )
@@ -17,6 +18,7 @@ type KubectlOutputColoredPrinter struct {
 	Recursive         bool
 	ObjFreshThreshold time.Duration
 	Theme             *config.Theme
+	Flags             flagutil.FlagSet
 }
 
 func ColorStatus(status string, theme *config.Theme) (config.Color, bool) {
