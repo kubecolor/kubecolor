@@ -366,6 +366,11 @@ colors of your output.
 |                                      |         |                                                                                                                                                                                                                                                     |
 | `KUBECOLOR_THEME_DEFAULT`            | color   | default when no specific mapping is found for the command                                                                                                                                                                                           | `green`
 |                                      |         |                                                                                                                                                                                                                                                     |
+| `KUBECOLOR_THEME_SHELL_COMMENT`      | color   | used on comments, e.g `# this is a comment`<br/>*(fallback to `KUBECOLOR_THEME_BASE_MUTED`)*                                                                                                                                                        | `gray:italic`
+| `KUBECOLOR_THEME_SHELL_COMMAND`      | color   | used on commands, e.g `kubectl` or `echo`<br/>*(fallback to `KUBECOLOR_THEME_BASE_SUCCESS`)*                                                                                                                                                        | `green`
+| `KUBECOLOR_THEME_SHELL_ARG`          | color   | used on arguments, e.g `get pods` in `kubectl get pods`<br/>*(fallback to `KUBECOLOR_THEME_BASE_INFO`)*                                                                                                                                             | `white`
+| `KUBECOLOR_THEME_SHELL_FLAG`         | color   | used on flags, e.g `--watch` in `kubectl get pods --watch`<br/>*(fallback to `KUBECOLOR_THEME_BASE_SECONDARY`)*                                                                                                                                     | `cyan`
+|                                      |         |                                                                                                                                                                                                                                                     |
 | `KUBECOLOR_THEME_DATA_KEY`           | color[] | used for the key<br/>*(fallback to `KUBECOLOR_THEME_BASE_KEY`)*                                                                                                                                                                                     | `hicyan / cyan`
 | `KUBECOLOR_THEME_DATA_STRING`        | color   | used when value is a string<br/>*(fallback to `KUBECOLOR_THEME_BASE_INFO`)*                                                                                                                                                                         | `hiyellow`
 | `KUBECOLOR_THEME_DATA_TRUE`          | color   | used when value is true<br/>*(fallback to `KUBECOLOR_THEME_BASE_SUCCESS`)*                                                                                                                                                                          | `green`
@@ -404,6 +409,12 @@ colors of your output.
 | `KUBECOLOR_THEME_OPTIONS_FLAG`       | color   | e.g "--kubeconfig"<br/>*(fallback to `KUBECOLOR_THEME_BASE_SECONDARY`)*                                                                                                                                                                             | `cyan`
 |                                      |         |                                                                                                                                                                                                                                                     |
 | `KUBECOLOR_THEME_VERSION_KEY`        | color[] | used on the key<br/>*(fallback to `KUBECOLOR_THEME_BASE_KEY`)*                                                                                                                                                                                      | `hicyan / cyan`
+|                                      |         |                                                                                                                                                                                                                                                     |
+| `KUBECOLOR_THEME_HELP_HEADER`        | color   | e.g "Examples:" or "Options:"<br/>*(fallback to `KUBECOLOR_THEME_TABLE_HEADER`)*                                                                                                                                                                    | `bold`
+| `KUBECOLOR_THEME_HELP_FLAG`          | color   | e.g "--kubeconfig"<br/>*(fallback to `KUBECOLOR_THEME_BASE_SECONDARY`)*                                                                                                                                                                             | `cyan`
+| `KUBECOLOR_THEME_HELP_FLAGDESC`      | color   | Flag descripion under "Options:" heading<br/>*(fallback to `KUBECOLOR_THEME_BASE_INFO`)*                                                                                                                                                            | `white`
+| `KUBECOLOR_THEME_HELP_URL`           | color   | e.g `[https://example.com]`<br/>*(fallback to `KUBECOLOR_THEME_BASE_SECONDARY`)*                                                                                                                                                                    | `cyan`
+| `KUBECOLOR_THEME_HELP_TEXT`          | color   | Fallback text color<br/>*(fallback to `KUBECOLOR_THEME_BASE_INFO`)*                                                                                                                                                                                 | `white`
 
 ### Config type: `color`
 
@@ -558,6 +569,11 @@ theme:
     muted: gray:italic # (color) general color for when things are less relevant
     key: hicyan / cyan # (color[]) general color for keys (fallback to [theme.base.secondary])
   default: green # (color) default when no specific mapping is found for the command
+  shell:
+    comment: gray:italic # (color) used on comments, e.g `# this is a comment` (fallback to theme.base.muted)
+    command: green # (color) used on commands, e.g `kubectl` or `echo` (fallback to theme.base.success)
+    arg: white # (color) used on arguments, e.g `get pods` in `kubectl get pods` (fallback to theme.base.info)
+    flag: cyan # (color) used on flags, e.g `--watch` in `kubectl get pods --watch` (fallback to theme.base.secondary)
   data:
     key: hicyan / cyan # (color[]) used for the key (fallback to theme.base.key)
     string: hiyellow # (color) used when value is a string (fallback to theme.base.info)
@@ -597,6 +613,12 @@ theme:
     flag: cyan # (color) e.g "--kubeconfig" (fallback to theme.base.secondary)
   version:
     key: hicyan / cyan # (color[]) used on the key (fallback to theme.base.key)
+  help:
+    header: bold # (color) e.g "Examples:" or "Options:" (fallback to theme.table.header)
+    flag: cyan # (color) e.g "--kubeconfig" (fallback to theme.base.secondary)
+    flagdesc: white # (color) Flag descripion under "Options:" heading (fallback to theme.base.info)
+    url: cyan # (color) e.g `[https://example.com]` (fallback to theme.base.secondary)
+    text: white # (color) Fallback text color (fallback to theme.base.info)
 ```
 
 You can also override this using the `KUBECOLOR_CONFIG` environment variable:

@@ -90,6 +90,10 @@
           "$ref": "#/$defs/color",
           "description": "default when no specific mapping is found for the command"
         },
+        "shell": {
+          "$ref": "#/$defs/themeShell",
+          "description": "colors for representing shells (e.g bash, zsh, etc)"
+        },
         "data": {
           "$ref": "#/$defs/themeData",
           "description": "colors for representing data"
@@ -125,6 +129,10 @@
         "version": {
           "$ref": "#/$defs/themeVersion",
           "description": "used in \"kubectl version\""
+        },
+        "help": {
+          "$ref": "#/$defs/themeHelp",
+          "description": "used in \"kubectl --help\""
         }
       },
       "additionalProperties": false,
@@ -287,6 +295,33 @@
       "type": "object",
       "description": "ThemeExplain holds colors for the \"kubectl explain\" output."
     },
+    "themeHelp": {
+      "properties": {
+        "header": {
+          "$ref": "#/$defs/color",
+          "description": "e.g \"Examples:\" or \"Options:\""
+        },
+        "flag": {
+          "$ref": "#/$defs/color",
+          "description": "e.g \"--kubeconfig\""
+        },
+        "flagDesc": {
+          "$ref": "#/$defs/color",
+          "description": "Flag descripion under \"Options:\" heading"
+        },
+        "url": {
+          "$ref": "#/$defs/color",
+          "description": "e.g `[https://example.com]`"
+        },
+        "text": {
+          "$ref": "#/$defs/color",
+          "description": "Fallback text color"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeHelp holds colors for the \"kubectl --help\" output."
+    },
     "themeOptions": {
       "properties": {
         "flag": {
@@ -297,6 +332,29 @@
       "additionalProperties": false,
       "type": "object",
       "description": "ThemeOptions holds colors for the \"kubectl options\" output."
+    },
+    "themeShell": {
+      "properties": {
+        "comment": {
+          "$ref": "#/$defs/color",
+          "description": "used on comments, e.g `# this is a comment`"
+        },
+        "command": {
+          "$ref": "#/$defs/color",
+          "description": "used on commands, e.g `kubectl` or `echo`"
+        },
+        "arg": {
+          "$ref": "#/$defs/color",
+          "description": "used on arguments, e.g `get pods` in `kubectl get pods`"
+        },
+        "flag": {
+          "$ref": "#/$defs/color",
+          "description": "used on flags, e.g `--watch` in `kubectl get pods --watch`"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeShell holds colors for when representing shell commands (bash, zsh, etc)"
     },
     "themeStatus": {
       "properties": {

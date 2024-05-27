@@ -46,7 +46,6 @@ const (
 	Cordon       Subcommand = "cordon"
 	Cp           Subcommand = "cp"
 	Create       Subcommand = "create"
-	Ctx          Subcommand = "ctx"
 	Debug        Subcommand = "debug"
 	Delete       Subcommand = "delete"
 	Describe     Subcommand = "describe"
@@ -61,7 +60,6 @@ const (
 	Kustomize    Subcommand = "kustomize"
 	Label        Subcommand = "label"
 	Logs         Subcommand = "logs"
-	Ns           Subcommand = "ns"
 	Options      Subcommand = "options"
 	Patch        Subcommand = "patch"
 	Plugin       Subcommand = "plugin"
@@ -104,7 +102,6 @@ func InspectSubcommand(cmdArgs []string, pluginHandler PluginHandler) (Subcomman
 		Cordon,
 		Cp,
 		Create,
-		Ctx,
 		Debug,
 		Delete,
 		Describe,
@@ -119,7 +116,6 @@ func InspectSubcommand(cmdArgs []string, pluginHandler PluginHandler) (Subcomman
 		Kustomize,
 		Label,
 		Logs,
-		Ns,
 		Options,
 		Patch,
 		Plugin,
@@ -265,4 +261,30 @@ func (sci *SubcommandInfo) SupportsPager() bool {
 		return true
 	}
 	return false
+}
+
+func (sci *SubcommandInfo) SupportsColoring() bool {
+	switch sci.Subcommand {
+	case Attach,
+		Debug,
+		Edit,
+		Exec,
+		Plugin,
+		Proxy,
+		Run,
+		Wait:
+		return sci.Help
+
+	case KubectlPlugin,
+		InternalComplete:
+		return false
+
+	// oc (OpenShift CLI) specific subcommands
+	case Rsh:
+		return sci.Help
+
+	// By default, all of our commands supports coloring
+	default:
+		return true
+	}
 }
