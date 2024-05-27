@@ -117,6 +117,7 @@ func printCommand(args []string, input string, env []EnvVar) string {
 		Recursive:         subcommandInfo.Recursive,
 		ObjFreshThreshold: cfg.ObjFreshThreshold,
 		Theme:             cfg.Theme,
+		KubecolorVersion:  "dev",
 	}
 	var buf bytes.Buffer
 	p.Print(strings.NewReader(input), &buf)
