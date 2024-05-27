@@ -81,7 +81,7 @@ func Run(args []string, version string) error {
 	}
 
 	switch {
-		// Skip if special subcommand (e.g "kubectl exec")
+	// Skip if special subcommand (e.g "kubectl exec")
 	case !subcommandInfo.SupportsColoring(),
 		// Skip if explicitly setting --force-colors=none
 		cfg.ForceColor == ColorLevelNone,

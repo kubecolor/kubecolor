@@ -10,8 +10,8 @@ import (
 // func TestInspectSubcommandInfo(args []string) (*SubcommandInfo, bool) {
 func TestInspectSubcommandInfo(t *testing.T) {
 	tests := []struct {
-		args       string
-		expected   *SubcommandInfo
+		args     string
+		expected *SubcommandInfo
 	}{
 		{"get pods", &SubcommandInfo{Subcommand: Get}},
 		{"get pod", &SubcommandInfo{Subcommand: Get}},

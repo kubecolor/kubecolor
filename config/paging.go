@@ -16,7 +16,10 @@ const (
 )
 
 var (
-	PagingDefault = PagingAuto
+	// Due to a thorough and long lasting democratic voting process
+	// (composed by a wide represenation of one (1) person),
+	// paging was decided to be opt-in instead of opt-out. :^)
+	PagingDefault = PagingNever
 
 	AllPagingModes []Paging = []Paging{
 		PagingAuto,

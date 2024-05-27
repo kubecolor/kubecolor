@@ -7,4 +7,3 @@ type Raw string
 func (r Raw) Code() string {
 	return string(r)
 }
-

@@ -57,7 +57,7 @@
       ],
       "title": "Paging mode preference",
       "description": "Whether to pipe supported subcommands to a pager (\"auto\" or \"never\")",
-      "default": "auto"
+      "default": "never"
     },
     "preset": {
       "type": "string",
