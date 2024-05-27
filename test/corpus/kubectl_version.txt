@@ -1,5 +1,5 @@
 ================================================================================
-# go struct dump can be colorized
+# old go struct dump format can be colorized
 $ kubectl version
 ================================================================================
 
@@ -10,9 +10,10 @@ Server Version: version.Info{Major:"1", Minor:"19", GitVersion:"v1.19.2", GitCom
 
 [96mClient Version[0m: [93mversion.Info{Major:"1", Minor:"19", GitVersion:"v1.19.3", GitCommit:"1e11e4a2108024935ecfcb2912226cedeafd99df", GitTreeState:"clean", BuildDate:"2020-10-14T18:49:28Z", GoVersion:"go1.15.2", Compiler:"gc", Platform:"darwin/amd64"}[0m
 [96mServer Version[0m: [93mversion.Info{Major:"1", Minor:"19", GitVersion:"v1.19.2", GitCommit:"f5743093fd1c663cb0cbc89748f730662345d44d", GitTreeState:"clean", BuildDate:"2020-09-16T13:32:58Z", GoVersion:"go1.15", Compiler:"gc", Platform:"linux/amd64"}`),[0m
+[96mKubecolor Version[0m: [35mdev[0m
 
 ================================================================================
-# --client can be colorized
+# injects version
 $ kubectl version
 ================================================================================
 
@@ -23,3 +24,4 @@ Server Version: v1.19.2
 
 [96mClient Version[0m: [93mv1.19.3[0m
 [96mServer Version[0m: [93mv1.19.2[0m
+[96mKubecolor Version[0m: [35mdev[0m
