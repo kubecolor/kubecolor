@@ -431,6 +431,8 @@ You can customize threshold level by using environment variable `KUBECOLOR_OBJ_F
 KUBECOLOR_OBJ_FRESH="1m" kubecolor get po
 ```
 
+![KUBECOLOR_OBJ_FRESH demo](./docs/object-fresh.svg)
+
 Default value is `0s`, it means is disabled.
 
 ## Color theme

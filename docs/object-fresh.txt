@@ -1,9 +1,10 @@
 $ kubectl get pods
 NAME                       READY   STATUS    RESTARTS   AGE
-nginx-7c5ddbdf54-9d575     1/1     Running   0          27h
-nginx-7c5ddbdf54-f6wft     1/1     Running   0          27h
-traefik-6b445777bf-xknsw   1/1     Running   0          15m
 grafana-6b978df578-tvchh   1/1     Running   0          1h30m
+nginx-7c5ddbdf54-9d575     1/1     Running   0          12d
+nginx-7c5ddbdf54-f6wft     1/1     Running   0          12d
+postgresql-0               1/1     Running   0          5h
+traefik-6b445777bf-xknsw   1/1     Running   0          15m
 
 $ export KUBECOLOR_OBJ_FRESH=10h
 
