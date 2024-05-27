@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/kubecolor/kubecolor/config"
-	"github.com/kubecolor/kubecolor/internal/flagutil"
 	"github.com/spf13/viper"
 )
 
@@ -19,7 +18,7 @@ type Config struct {
 	StdinOverride        string
 
 	ArgsPassthrough []string
-	Flags           flagutil.FlagSet
+	Flags           FlagSet
 }
 
 func ResolveConfig(inputArgs []string) (*Config, error) {
@@ -50,17 +49,29 @@ func ResolveConfigViper(inputArgs []string, v *viper.Viper) (*Config, error) {
 	}
 
 	var (
-		flagPlain     = cfg.Flags.NewBool("--plain", "Disable colored output.")
-		flagLightBg   = cfg.Flags.NewBool("--light-background", "Switches to light theme, or dark when --light-background=false. Same as doing --kubecolor-theme=light or --kubecolor-theme=dark.")
-		flagForceVal  = ColorLevelAuto // value used when no flag value
-		flagForce     = cfg.Flags.NewUnmarshaller("--force-colors", "Overrides the automatic color support detection. Overrides the KUBECOLOR_FORCE_COLORS env var.", &flagForceVal)
-		flagVersion   = cfg.Flags.NewBool("--kubecolor-version", "Print the kubecolor version and then exit.")
-		flagStdin     = cfg.Flags.NewString("--kubecolor-stdin", "Read command input from stdin or file instead of executing kubectl.")
-		flagTheme     = cfg.Flags.NewString("--kubecolor-theme", "Set kubecolor theme preset, e.g dark or light. Overrides the KUBECOLOR_PRESET env var.")
-		flagPager     = cfg.Flags.NewString("--pager", `Set kubecolor pager, e.g "less -RF" or "more". Overrides the KUBECOLOR_PAGER and PAGER env vars.`)
+		flagPlain = cfg.Flags.NewBool("--plain", "Disable colored output.")
+
+		flagLightBg = cfg.Flags.NewBool("--light-background", "Switches to light theme, or dark when --light-background=false. Same as doing --kubecolor-theme=light or --kubecolor-theme=dark.")
+
+		flagForceVal = ColorLevelAuto // value used when no flag value
+		flagForce    = cfg.Flags.NewString("--force-colors", "Overrides the automatic color support detection. Overrides the KUBECOLOR_FORCE_COLORS env var.").
+				WithUnmarshaller(&flagForceVal)
+
+		flagVersion = cfg.Flags.NewBool("--kubecolor-version", "Print the kubecolor version and then exit.")
+
+		flagStdin = cfg.Flags.NewString("--kubecolor-stdin", "Read command input from stdin or file instead of executing kubectl.")
+
+		flagTheme = cfg.Flags.NewString("--kubecolor-theme", "Set kubecolor theme preset, e.g dark or light. Overrides the KUBECOLOR_PRESET env var.").
+				WithRequiresValue()
+
+		flagPager = cfg.Flags.NewString("--pager", `Set kubecolor pager, e.g "less -RF" or "more". Overrides the KUBECOLOR_PAGER and PAGER env vars.`).
+				WithRequiresValue()
+
 		flagPagingVal = config.PagingAuto // value used when no flag value
-		flagPaging    = cfg.Flags.NewUnmarshaller("--paging", `Pipe kubecolor output into pager.`, &flagPagingVal)
-		flagNoPaging  = cfg.Flags.NewBool("--no-paging", `Disable paging. Alias to --paging=never.`)
+		flagPaging    = cfg.Flags.NewString("--paging", `Pipe kubecolor output into pager.`).
+				WithUnmarshaller(&flagPagingVal)
+
+		flagNoPaging = cfg.Flags.NewBool("--no-paging", `Disable paging. Alias to --paging=never.`)
 	)
 
 	for _, s := range inputArgs {

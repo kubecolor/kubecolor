@@ -1,4 +1,4 @@
-package flagutil
+package command
 
 import (
 	"encoding"
@@ -26,14 +26,6 @@ func (s *FlagSet) NewBool(name, desc string) *Flag {
 		Name:        name,
 		Description: desc,
 		Enum:        []string{"true", "false"},
-	})
-}
-
-func (s *FlagSet) NewUnmarshaller(name, desc string, value encoding.TextUnmarshaler) *Flag {
-	return s.add(&Flag{
-		Name:         name,
-		Description:  desc,
-		Unmarshaller: value,
 	})
 }
 
@@ -68,12 +60,24 @@ func (s *FlagSet) ParseArg(arg string) (*Flag, error) {
 }
 
 type Flag struct {
-	Name         string
-	Description  string
-	Enum         []string
-	Unmarshaller encoding.TextUnmarshaler
+	Name        string
+	Description string
+
+	Enum          []string
+	Unmarshaller  encoding.TextUnmarshaler
+	RequiresValue bool
 
 	Value string
+}
+
+func (f *Flag) WithUnmarshaller(value encoding.TextUnmarshaler) *Flag {
+	f.Unmarshaller = value
+	return f
+}
+
+func (f *Flag) WithRequiresValue() *Flag {
+	f.RequiresValue = true
+	return f
 }
 
 func (f *Flag) BoolValue() bool {

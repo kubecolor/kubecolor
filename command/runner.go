@@ -11,7 +11,6 @@ import (
 
 	"github.com/gookit/color"
 	"github.com/kubecolor/kubecolor/config"
-	"github.com/kubecolor/kubecolor/internal/flagutil"
 	"github.com/kubecolor/kubecolor/kubectl"
 	"github.com/kubecolor/kubecolor/printer"
 	"github.com/mattn/go-colorable"
@@ -35,14 +34,13 @@ type pagerPipe struct {
 }
 
 // This is defined here to be replaced in test
-var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, cfg *config.Config, flags flagutil.FlagSet) *Printers {
+var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, cfg *config.Config) *Printers {
 	return &Printers{
 		FullColoredPrinter: &printer.KubectlOutputColoredPrinter{
 			SubcommandInfo:    subcommandInfo,
 			Recursive:         subcommandInfo.Recursive,
 			ObjFreshThreshold: cfg.ObjFreshThreshold,
 			Theme:             &cfg.Theme,
-			Flags:             flags,
 		},
 		ErrorPrinter: &printer.WithFuncPrinter{
 			Fn: func(line string) config.Color {
@@ -56,19 +54,25 @@ var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, cfg *config.Confi
 	}
 }
 
-func Run(args []string, version string) error {
-	cfg, err := ResolveConfig(args)
+func Run(rawArgs []string, version string) error {
+	cfg, err := ResolveConfig(rawArgs)
 	if err != nil {
 		return fmt.Errorf("resolve config: %w", err)
 	}
-	args = cfg.ArgsPassthrough
+	args := cfg.ArgsPassthrough
 
+	subcommandInfo := kubectl.InspectSubcommandInfo(args, kubectl.DefaultPluginHandler{})
+
+	if subcommandInfo.Subcommand == kubectl.Complete ||
+		subcommandInfo.Subcommand == kubectl.CompleteNoDesc {
+		return InjectKubecolorCompletions(rawArgs, cfg, subcommandInfo)
+	}
+
+	// Run this after injecting completions, so our completions on --kubecolor-version works
 	if cfg.ShowKubecolorVersion {
 		fmt.Fprintf(os.Stdout, "%s\n", version)
 		return nil
 	}
-
-	subcommandInfo := kubectl.InspectSubcommandInfo(args, kubectl.DefaultPluginHandler{})
 
 	if cfg.Paging == config.PagingAuto && isOutputTerminal() && subcommandInfo.SupportsPager() {
 		pipe, err := runPager(cfg.Pager)
@@ -126,7 +130,7 @@ func Run(args []string, version string) error {
 	errBuf := new(bytes.Buffer)
 	errBufReader := io.TeeReader(stderrReader, errBuf)
 
-	printers := getPrinters(subcommandInfo, cfg.Config, cfg.Flags)
+	printers := getPrinters(subcommandInfo, cfg.Config)
 
 	wg := &sync.WaitGroup{}
 

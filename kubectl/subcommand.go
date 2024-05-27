@@ -277,8 +277,7 @@ func (sci *SubcommandInfo) SupportsColoring() bool {
 		return sci.Help
 
 	case KubectlPlugin,
-		Complete,
-		CompleteNoDesc:
+		Complete, CompleteNoDesc:
 		return false
 
 	// oc (OpenShift CLI) specific subcommands
