@@ -644,7 +644,7 @@ Example file (the values shows the default values):
 kubectl: kubectl # path to kubectl executable
 preset: dark # color theme preset
 objFreshThreshold: 0 # ages below this uses theme.data.durationfresh coloring
-paging: auto # whether to pipe supported subcommands to a pager ("auto" or "never")
+paging: never # whether to pipe supported subcommands to a pager ("auto" or "never")
 pager: # the command to use as pager; default uses $PAGER, less, or more
 
 # Color theme options
