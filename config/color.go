@@ -32,7 +32,20 @@ func (c Color) String() string {
 
 // Render returns the string wrapped in color codes from this color.
 func (c Color) Render(s string) string {
+	if strings.ContainsRune(s, '\033') {
+		return c.renderInject(s)
+	}
 	return color.RenderString(c.Code, s)
+}
+
+var afterResetRegex = regexp.MustCompile("\033\\[0m[^\033]")
+
+func (c Color) renderInject(s string) string {
+	updated := afterResetRegex.ReplaceAllStringFunc(s, func(orig string) string {
+		lastByte := orig[len(orig)-1]
+		return fmt.Sprintf("\033[0m\033[%sm%c", c.Code, lastByte)
+	})
+	return color.RenderString(c.Code, updated)
 }
 
 // Sprint returns the stringified args (concatenated right after each other)

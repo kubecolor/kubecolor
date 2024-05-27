@@ -31,7 +31,7 @@ func ResolveSubcommand(args []string, config *Config) (bool, *kubectl.Subcommand
 	}
 
 	colorsSupported := isColoringSupported(subcommandInfo.Subcommand)
-	if !colorsSupported {
+	if !colorsSupported && !subcommandInfo.Help {
 		return false, subcommandInfo
 	}
 

@@ -12,7 +12,6 @@ import (
 
 // ExplainPrinter is a specific printer to print kubectl explain format.
 type ExplainPrinter struct {
-	DarkBackground bool
 	Theme          *config.Theme
 	Recursive      bool
 }
