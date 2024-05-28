@@ -1,5 +1,8 @@
 GO_FILES=$(wildcard *.go */*.go */*/*.go */*/*/*.go)
 
+# Can be overriden by for example: make test GO_TEST_CMD='gotestsum --'
+GO_TEST_CMD=go test
+
 help: ## Print usage
 	@sed -r '/^(\w[^:]+):[^#]*##/!d;s/^([^:]+):[^#]*##\s*(.*)/\x1b[36m\1\t:\x1b[m \2/g' ${MAKEFILE_LIST} | column -t -s $$'\t'
 .PHONY: help
@@ -9,7 +12,7 @@ build: ## build package
 .PHONY: build
 
 test: ## run test and generate coverage report
-	go test -race -coverprofile=coverage.txt -covermode=atomic -v ./... && \
+	${GO_TEST_CMD} -race -coverprofile=coverage.txt -covermode=atomic -v ./... && \
 	go tool cover -html=coverage.txt -o cover.html
 .PHONY: test
 
@@ -22,7 +25,7 @@ corpus-update: ## update test files in ./test/corpus with the current kubecolor 
 .PHONY: corpus-update
 
 testshort: ## run test and generate short report
-	go test -timeout 30s -count=1 ./... -test.short
+	${GO_TEST_CMD} -timeout 30s -count=1 ./... -test.short
 .PHONY: testshort
 
 fmt: ## format code
