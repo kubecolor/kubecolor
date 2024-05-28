@@ -27,10 +27,13 @@ jobs:
         with:
           go-version-file: go.mod
 
+      - name: install gotestsum
+        run: go install gotest.tools/gotestsum@latest
+
       - name: test
         env:
           FORCE_COLOR: "true"
-        run: make test corpus
+        run: make test GO_TEST_CMD='gotestsum --' corpus
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
