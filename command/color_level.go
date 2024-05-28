@@ -50,7 +50,19 @@ func (c ColorLevel) String() string {
 	return string(c)
 }
 
-func parseColorLevel(s string) (ColorLevel, bool, error) {
+// UnmarshalText implements [encoding.TextUnmarshaller]
+func (c *ColorLevel) UnmarshalText(text []byte) error {
+	parsed, ok, err := ParseColorLevel(string(text))
+	if err != nil {
+		return err
+	}
+	if ok {
+		*c = parsed
+	}
+	return nil
+}
+
+func ParseColorLevel(s string) (ColorLevel, bool, error) {
 	switch strings.ToLower(strings.TrimSpace(s)) {
 	case "":
 		return ColorLevelUnset, false, nil
@@ -79,20 +91,8 @@ func parseColorLevel(s string) (ColorLevel, bool, error) {
 	}
 }
 
-func parseColorLevelFlag(flag, value string) (result ColorLevel, err error) {
-	result, ok, err := parseColorLevel(value)
-	if err != nil {
-		return ColorLevelNone, fmt.Errorf("flag %s: %w", flag, err)
-	}
-	if !ok {
-		// treat no value as "auto" (e.g "--plain" is same as "--plain=auto")
-		return ColorLevelAuto, nil
-	}
-	return result, nil
-}
-
 func parseColorLevelEnv(env string) (result ColorLevel, ok bool, err error) {
-	result, ok, err = parseColorLevel(os.Getenv(env))
+	result, ok, err = ParseColorLevel(os.Getenv(env))
 	if err != nil {
 		return ColorLevelNone, false, fmt.Errorf("parse env %s: %w", env, err)
 	}

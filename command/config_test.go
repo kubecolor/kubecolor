@@ -21,24 +21,30 @@ func Test_ResolveConfig(t *testing.T) {
 			name: "no config",
 			args: []string{"get", "pods"},
 			expectedConf: &Config{
-				Paging:            config.PagingDefault,
-				ForceColor:        ColorLevelUnset,
-				KubectlCmd:        "kubectl",
-				ObjFreshThreshold: time.Duration(0),
-				Theme:             testconfig.DarkTheme,
-				ArgsPassthrough:   []string{"get", "pods"},
+				Config: &config.Config{
+					Kubectl:           "kubectl",
+					ObjFreshThreshold: time.Duration(0),
+					Paging:            config.PagingDefault,
+					Theme:             *testconfig.DarkTheme,
+					Preset:            config.PresetDark,
+				},
+				ArgsPassthrough: []string{"get", "pods"},
+				ForceColor:      ColorLevelUnset,
 			},
 		},
 		{
 			name: "plain, light, force",
 			args: []string{"get", "pods", "--plain", "--light-background", "--force-colors"},
 			expectedConf: &Config{
-				Paging:            config.PagingDefault,
-				ForceColor:        ColorLevelAuto,
-				KubectlCmd:        "kubectl",
-				ObjFreshThreshold: time.Duration(0),
-				Theme:             testconfig.LightTheme,
-				ArgsPassthrough:   []string{"get", "pods"},
+				Config: &config.Config{
+					Kubectl:           "kubectl",
+					ObjFreshThreshold: time.Duration(0),
+					Paging:            config.PagingDefault,
+					Theme:             *testconfig.LightTheme,
+					Preset:            config.PresetLight,
+				},
+				ForceColor:      ColorLevelAuto,
+				ArgsPassthrough: []string{"get", "pods"},
 			},
 		},
 		{
@@ -46,12 +52,15 @@ func Test_ResolveConfig(t *testing.T) {
 			args: []string{"get", "pods", "--plain"},
 			env:  map[string]string{"KUBECTL_COMMAND": "kubectl.1.19"},
 			expectedConf: &Config{
-				Paging:            config.PagingDefault,
-				ForceColor:        ColorLevelNone,
-				KubectlCmd:        "kubectl.1.19",
-				ObjFreshThreshold: time.Duration(0),
-				Theme:             testconfig.DarkTheme,
-				ArgsPassthrough:   []string{"get", "pods"},
+				Config: &config.Config{
+					Kubectl:           "kubectl.1.19",
+					ObjFreshThreshold: time.Duration(0),
+					Paging:            config.PagingDefault,
+					Theme:             *testconfig.DarkTheme,
+					Preset:            config.PresetDark,
+				},
+				ForceColor:      ColorLevelNone,
+				ArgsPassthrough: []string{"get", "pods"},
 			},
 		},
 		{
@@ -59,12 +68,15 @@ func Test_ResolveConfig(t *testing.T) {
 			args: []string{"get", "pods"},
 			env:  map[string]string{"KUBECOLOR_OBJ_FRESH": "1m"},
 			expectedConf: &Config{
-				Paging:            config.PagingDefault,
-				ForceColor:        ColorLevelUnset,
-				KubectlCmd:        "kubectl",
-				ObjFreshThreshold: time.Minute,
-				Theme:             testconfig.DarkTheme,
-				ArgsPassthrough:   []string{"get", "pods"},
+				Config: &config.Config{
+					Kubectl:           "kubectl",
+					ObjFreshThreshold: time.Minute,
+					Paging:            config.PagingDefault,
+					Theme:             *testconfig.DarkTheme,
+					Preset:            config.PresetDark,
+				},
+				ForceColor:      ColorLevelUnset,
+				ArgsPassthrough: []string{"get", "pods"},
 			},
 		},
 		{
@@ -72,10 +84,13 @@ func Test_ResolveConfig(t *testing.T) {
 			args: []string{"get", "pods"},
 			env:  map[string]string{"KUBECOLOR_LIGHT_BACKGROUND": "true"},
 			expectedConf: &Config{
-				Paging:          config.PagingDefault,
+				Config: &config.Config{
+					Kubectl: "kubectl",
+					Paging:  config.PagingDefault,
+					Theme:   *testconfig.LightTheme,
+					Preset:  config.PresetLight,
+				},
 				ForceColor:      ColorLevelUnset,
-				KubectlCmd:      "kubectl",
-				Theme:           testconfig.LightTheme,
 				ArgsPassthrough: []string{"get", "pods"},
 			},
 		},
@@ -84,10 +99,13 @@ func Test_ResolveConfig(t *testing.T) {
 			args: []string{"get", "pods"},
 			env:  map[string]string{"KUBECOLOR_FORCE_COLORS": "true"},
 			expectedConf: &Config{
-				Paging:          config.PagingDefault,
+				Config: &config.Config{
+					Kubectl: "kubectl",
+					Paging:  config.PagingDefault,
+					Theme:   *testconfig.DarkTheme,
+					Preset:  config.PresetDark,
+				},
 				ForceColor:      ColorLevelAuto,
-				KubectlCmd:      "kubectl",
-				Theme:           testconfig.DarkTheme,
 				ArgsPassthrough: []string{"get", "pods"},
 			},
 		},
@@ -96,10 +114,13 @@ func Test_ResolveConfig(t *testing.T) {
 			args: []string{"get", "pods"},
 			env:  map[string]string{"KUBECOLOR_FORCE_COLORS": "truecolor"},
 			expectedConf: &Config{
-				Paging:          config.PagingDefault,
+				Config: &config.Config{
+					Kubectl: "kubectl",
+					Paging:  config.PagingDefault,
+					Theme:   *testconfig.DarkTheme,
+					Preset:  config.PresetDark,
+				},
 				ForceColor:      ColorLevelTrueColor,
-				KubectlCmd:      "kubectl",
-				Theme:           testconfig.DarkTheme,
 				ArgsPassthrough: []string{"get", "pods"},
 			},
 		},
@@ -111,11 +132,14 @@ func Test_ResolveConfig(t *testing.T) {
 				"KUBECOLOR_PAGER":  "more",
 			},
 			expectedConf: &Config{
+				Config: &config.Config{
+					Kubectl: "kubectl",
+					Pager:   "most",
+					Paging:  config.PagingAuto,
+					Theme:   *testconfig.DarkTheme,
+					Preset:  config.PresetDark,
+				},
 				ArgsPassthrough: []string{"get", "pods"},
-				KubectlCmd:      "kubectl",
-				Theme:           testconfig.DarkTheme,
-				Pager:           "most",
-				Paging:          config.PagingAuto,
 			},
 		},
 		{
@@ -125,10 +149,13 @@ func Test_ResolveConfig(t *testing.T) {
 				"KUBECOLOR_PAGING": string(config.PagingAuto),
 			},
 			expectedConf: &Config{
+				Config: &config.Config{
+					Kubectl: "kubectl",
+					Paging:  config.PagingNever,
+					Theme:   *testconfig.DarkTheme,
+					Preset:  config.PresetDark,
+				},
 				ArgsPassthrough: []string{"get", "pods"},
-				KubectlCmd:      "kubectl",
-				Theme:           testconfig.DarkTheme,
-				Paging:          config.PagingNever,
 			},
 		},
 	}
@@ -142,6 +169,10 @@ func Test_ResolveConfig(t *testing.T) {
 
 			conf, err := ResolveConfig(tt.args)
 			testutil.MustNoError(t, err)
+
+			// Don't test flags field
+			tt.expectedConf.Flags = conf.Flags
+
 			testutil.MustEqual(t, tt.expectedConf, conf)
 		})
 	}

@@ -1,26 +1,24 @@
 package command
 
 import (
+	"cmp"
 	"fmt"
 	"os"
 	"strings"
-	"time"
 
 	"github.com/kubecolor/kubecolor/config"
 	"github.com/spf13/viper"
 )
 
 type Config struct {
+	*config.Config
+
 	ForceColor           ColorLevel
 	ShowKubecolorVersion bool
-	KubectlCmd           string
 	StdinOverride        string
-	ObjFreshThreshold    time.Duration
-	Theme                *config.Theme
-	Pager                string
-	Paging               config.Paging
 
 	ArgsPassthrough []string
+	Flags           FlagSet
 }
 
 func ResolveConfig(inputArgs []string) (*Config, error) {
@@ -50,61 +48,69 @@ func ResolveConfigViper(inputArgs []string, v *viper.Viper) (*Config, error) {
 		cfg.ForceColor = c
 	}
 
+	var (
+		flagPlain = cfg.Flags.NewBool("--plain", "Disable colored output.")
+
+		flagLightBg = cfg.Flags.NewBool("--light-background", "Switches to light theme, or dark when --light-background=false. Same as doing --kubecolor-theme=light or --kubecolor-theme=dark.")
+
+		flagForceVal = ColorLevelAuto // value used when no flag value
+		flagForce    = cfg.Flags.NewString("--force-colors", "Overrides the automatic color support detection. Overrides the KUBECOLOR_FORCE_COLORS env var.").
+				WithUnmarshaller(&flagForceVal)
+
+		flagVersion = cfg.Flags.NewBool("--kubecolor-version", "Print the kubecolor version and then exit.")
+
+		flagStdin = cfg.Flags.NewString("--kubecolor-stdin", "Read command input from stdin or file instead of executing kubectl.")
+
+		flagTheme = cfg.Flags.NewString("--kubecolor-theme", "Set kubecolor theme preset, e.g dark or light. Overrides the KUBECOLOR_PRESET env var.").
+				WithRequiresValue()
+
+		flagPager = cfg.Flags.NewString("--pager", `Set kubecolor pager, e.g "less -RF" or "more". Overrides the KUBECOLOR_PAGER and PAGER env vars.`).
+				WithRequiresValue()
+
+		flagPagingVal = config.PagingAuto // value used when no flag value
+		flagPaging    = cfg.Flags.NewString("--paging", `Pipe kubecolor output into pager.`).
+				WithUnmarshaller(&flagPagingVal)
+
+		flagNoPaging = cfg.Flags.NewBool("--no-paging", `Disable paging. Alias to --paging=never.`)
+	)
+
 	for _, s := range inputArgs {
-		flag, value, _ := strings.Cut(s, "=")
-		switch flag {
-		case "--plain":
-			b, err := parseBoolFlag(flag, value)
-			if err != nil {
-				return nil, err
-			}
-			if b {
+		f, err := cfg.Flags.ParseArg(s)
+		if err != nil {
+			return nil, err
+		}
+		switch f {
+		case flagPlain:
+			if f.BoolValue() {
 				cfg.ForceColor = ColorLevelNone
 			}
-		case "--light-background":
-			b, err := parseBoolFlag(flag, value)
-			if err != nil {
-				return nil, err
-			}
-			if b {
+		case flagLightBg:
+			if f.BoolValue() {
 				v.Set(config.PresetKey, "light")
 			} else {
 				v.Set(config.PresetKey, "dark")
 			}
-		case "--force-colors":
-			c, err := parseColorLevelFlag(flag, value)
-			if err != nil {
-				return nil, err
-			}
-			cfg.ForceColor = c
-		case "--kubecolor-version":
-			b, err := parseBoolFlag(flag, value)
-			if err != nil {
-				return nil, err
-			}
-			cfg.ShowKubecolorVersion = b
-		case "--kubecolor-stdin":
+		case flagForce:
+			cfg.ForceColor = flagForceVal
+		case flagVersion:
+			cfg.ShowKubecolorVersion = f.BoolValue()
+		case flagStdin:
 			// Value means "read from file"
 			// Dash "-" means "read from stdin"
 			// Empty, as in just "--kubecolor-stdin", means "read from stdin"
-			if value == "" {
-				value = "-"
+			cfg.StdinOverride = cmp.Or(f.Value, "-")
+		case flagTheme:
+			v.Set(config.PresetKey, f.Value)
+		case flagPager:
+			v.Set("pager", f.Value)
+		case flagPaging:
+			// mapstructure doesn't like "type X string" values,
+			// so we have to convert it via string(...)
+			v.Set("paging", string(flagPagingVal))
+		case flagNoPaging:
+			if f.BoolValue() {
+				v.Set("paging", string(config.PagingNever))
 			}
-			cfg.StdinOverride = value
-		case "--kubecolor-theme":
-			v.Set(config.PresetKey, value)
-		case "--pager":
-			v.Set("pager", value)
-		case "--paging":
-			if value == "" {
-				// mapstructure doesn't like "type X string" values,
-				// so we have to convert it via string(...)
-				v.Set("paging", string(config.PagingAuto))
-			} else {
-				v.Set("paging", value)
-			}
-		case "--no-paging":
-			v.Set("paging", string(config.PagingNever))
 		default:
 			cfg.ArgsPassthrough = append(cfg.ArgsPassthrough, s)
 		}
@@ -114,11 +120,7 @@ func ResolveConfigViper(inputArgs []string, v *viper.Viper) (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
-	cfg.KubectlCmd = newCfg.Kubectl
-	cfg.ObjFreshThreshold = newCfg.ObjFreshThreshold
-	cfg.Theme = &newCfg.Theme
-	cfg.Paging = newCfg.Paging
-	cfg.Pager = newCfg.Pager
+	cfg.Config = newCfg
 
 	return cfg, nil
 }
@@ -134,18 +136,6 @@ func parseBool(value string) (result bool, ok bool, err error) {
 	default:
 		return false, false, fmt.Errorf(`must be either "true" or "false"`)
 	}
-}
-
-func parseBoolFlag(flag, value string) (result bool, err error) {
-	result, ok, err := parseBool(value)
-	if err != nil {
-		return false, fmt.Errorf("flag %s: %w", flag, err)
-	}
-	if !ok {
-		// bool flags treat no value as true (e.g "--plain" is same as "--plain=true")
-		return true, nil
-	}
-	return result, nil
 }
 
 func parseBoolEnv(env string) (result bool, ok bool, err error) {
