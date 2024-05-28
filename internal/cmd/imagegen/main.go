@@ -266,7 +266,7 @@ func runKubecolorCommand(cmd Command, env *EnvStore) (string, error) {
 		SubcommandInfo:    subcommandInfo,
 		Recursive:         subcommandInfo.Recursive,
 		ObjFreshThreshold: cfg.ObjFreshThreshold,
-		Theme:             cfg.Theme,
+		Theme:             &cfg.Theme,
 	}
 	p.Print(strings.NewReader(cmd.Input), &buf)
 	return buf.String(), nil

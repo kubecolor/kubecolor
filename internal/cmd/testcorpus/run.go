@@ -116,7 +116,7 @@ func printCommand(args []string, input string, env []EnvVar) string {
 		SubcommandInfo:    subcommandInfo,
 		Recursive:         subcommandInfo.Recursive,
 		ObjFreshThreshold: cfg.ObjFreshThreshold,
-		Theme:             cfg.Theme,
+		Theme:             &cfg.Theme,
 		KubecolorVersion:  "dev",
 	}
 	var buf bytes.Buffer

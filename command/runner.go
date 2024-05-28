@@ -8,7 +8,6 @@ import (
 	"os/exec"
 	"strings"
 	"sync"
-	"time"
 
 	"github.com/gookit/color"
 	"github.com/kubecolor/kubecolor/config"
@@ -35,40 +34,46 @@ type pagerPipe struct {
 }
 
 // This is defined here to be replaced in test
-var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, objFreshThreshold time.Duration, theme *config.Theme, version string) *Printers {
+var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, cfg *config.Config, version string) *Printers {
 	return &Printers{
 		FullColoredPrinter: &printer.KubectlOutputColoredPrinter{
 			SubcommandInfo:    subcommandInfo,
 			Recursive:         subcommandInfo.Recursive,
-			ObjFreshThreshold: objFreshThreshold,
-			Theme:             theme,
+			ObjFreshThreshold: cfg.ObjFreshThreshold,
+			Theme:             &cfg.Theme,
 			KubecolorVersion:  version,
 		},
 		ErrorPrinter: &printer.WithFuncPrinter{
 			Fn: func(line string) config.Color {
 				if strings.HasPrefix(strings.ToLower(line), "error") {
-					return theme.Stderr.Error
+					return cfg.Theme.Stderr.Error
 				}
 
-				return theme.Stderr.Default
+				return cfg.Theme.Stderr.Default
 			},
 		},
 	}
 }
 
-func Run(args []string, version string) error {
-	cfg, err := ResolveConfig(args)
+func Run(rawArgs []string, version string) error {
+	cfg, err := ResolveConfig(rawArgs)
 	if err != nil {
 		return fmt.Errorf("resolve config: %w", err)
 	}
-	args = cfg.ArgsPassthrough
+	args := cfg.ArgsPassthrough
 
+	subcommandInfo := kubectl.InspectSubcommandInfo(args, kubectl.DefaultPluginHandler{})
+
+	if subcommandInfo.Subcommand == kubectl.Complete ||
+		subcommandInfo.Subcommand == kubectl.CompleteNoDesc {
+		return InjectKubecolorCompletions(rawArgs, cfg, subcommandInfo)
+	}
+
+	// Run this after injecting completions, so our completions on --kubecolor-version works
 	if cfg.ShowKubecolorVersion {
 		fmt.Fprintf(os.Stdout, "%s\n", version)
 		return nil
 	}
-
-	subcommandInfo := kubectl.InspectSubcommandInfo(args, kubectl.DefaultPluginHandler{})
 
 	if cfg.Paging == config.PagingAuto && isOutputTerminal() && subcommandInfo.SupportsPager() {
 		pipe, err := runPager(cfg.Pager)
@@ -126,7 +131,7 @@ func Run(args []string, version string) error {
 	errBuf := new(bytes.Buffer)
 	errBufReader := io.TeeReader(stderrReader, errBuf)
 
-	printers := getPrinters(subcommandInfo, cfg.ObjFreshThreshold, cfg.Theme, version)
+	printers := getPrinters(subcommandInfo, cfg.Config, version)
 
 	wg := &sync.WaitGroup{}
 
@@ -167,7 +172,7 @@ func execWithoutColors(config *Config, args []string) error {
 		return err
 	}
 
-	cmd := exec.Command(config.KubectlCmd, args...)
+	cmd := exec.Command(config.Kubectl, args...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = Stdout
 	cmd.Stderr = Stderr
@@ -186,7 +191,7 @@ func execWithReaders(config *Config, args []string) (io.ReadCloser, io.ReadClose
 		return stdout, nopReadCloser{}, err
 	}
 
-	cmd := exec.Command(config.KubectlCmd, args...)
+	cmd := exec.Command(config.Kubectl, args...)
 	cmd.Stdin = os.Stdin
 
 	// when colorize, capture stdout and err then colorize it

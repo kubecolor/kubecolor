@@ -20,9 +20,8 @@ func main() {
 		var ke *command.KubectlError
 		if errors.As(err, &ke) {
 			os.Exit(ke.ExitCode)
-		} else {
-			fmt.Fprintf(os.Stderr, "[ERROR] [kubecolor] %s\n", err)
 		}
+		fmt.Fprintf(os.Stderr, "[ERROR] [kubecolor] %s\n", err)
 		os.Exit(1)
 	}
 }

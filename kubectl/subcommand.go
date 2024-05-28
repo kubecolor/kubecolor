@@ -27,54 +27,54 @@ const (
 type Subcommand string
 
 const (
-	Unknown          Subcommand = ""
-	KubectlPlugin    Subcommand = "(plugin)"
-	InternalComplete Subcommand = "__complete"
-
-	APIResources Subcommand = "api-resources"
-	APIVersions  Subcommand = "api-versions"
-	Annotate     Subcommand = "annotate"
-	Apply        Subcommand = "apply"
-	Attach       Subcommand = "attach"
-	Auth         Subcommand = "auth"
-	Autoscale    Subcommand = "autoscale"
-	Certificate  Subcommand = "certificate"
-	ClusterInfo  Subcommand = "cluster-info"
-	Completion   Subcommand = "completion"
-	Config       Subcommand = "config"
-	Convert      Subcommand = "convert"
-	Cordon       Subcommand = "cordon"
-	Cp           Subcommand = "cp"
-	Create       Subcommand = "create"
-	Debug        Subcommand = "debug"
-	Delete       Subcommand = "delete"
-	Describe     Subcommand = "describe"
-	Diff         Subcommand = "diff"
-	Drain        Subcommand = "drain"
-	Edit         Subcommand = "edit"
-	Events       Subcommand = "events"
-	Exec         Subcommand = "exec"
-	Explain      Subcommand = "explain"
-	Expose       Subcommand = "expose"
-	Get          Subcommand = "get"
-	Kustomize    Subcommand = "kustomize"
-	Label        Subcommand = "label"
-	Logs         Subcommand = "logs"
-	Options      Subcommand = "options"
-	Patch        Subcommand = "patch"
-	Plugin       Subcommand = "plugin"
-	PortForward  Subcommand = "port-forward"
-	Proxy        Subcommand = "proxy"
-	Replace      Subcommand = "replace"
-	Rollout      Subcommand = "rollout"
-	Run          Subcommand = "run"
-	Scale        Subcommand = "scale"
-	Set          Subcommand = "set"
-	Taint        Subcommand = "taint"
-	Top          Subcommand = "top"
-	Uncordon     Subcommand = "uncordon"
-	Version      Subcommand = "version"
-	Wait         Subcommand = "wait"
+	APIResources   Subcommand = "api-resources"
+	APIVersions    Subcommand = "api-versions"
+	Annotate       Subcommand = "annotate"
+	Apply          Subcommand = "apply"
+	Attach         Subcommand = "attach"
+	Auth           Subcommand = "auth"
+	Autoscale      Subcommand = "autoscale"
+	Certificate    Subcommand = "certificate"
+	ClusterInfo    Subcommand = "cluster-info"
+	Complete       Subcommand = "__complete"
+	CompleteNoDesc Subcommand = "__completeNoDesc"
+	Completion     Subcommand = "completion"
+	Config         Subcommand = "config"
+	Convert        Subcommand = "convert"
+	Cordon         Subcommand = "cordon"
+	Cp             Subcommand = "cp"
+	Create         Subcommand = "create"
+	Debug          Subcommand = "debug"
+	Delete         Subcommand = "delete"
+	Describe       Subcommand = "describe"
+	Diff           Subcommand = "diff"
+	Drain          Subcommand = "drain"
+	Edit           Subcommand = "edit"
+	Events         Subcommand = "events"
+	Exec           Subcommand = "exec"
+	Explain        Subcommand = "explain"
+	Expose         Subcommand = "expose"
+	Get            Subcommand = "get"
+	KubectlPlugin  Subcommand = "(plugin)"
+	Kustomize      Subcommand = "kustomize"
+	Label          Subcommand = "label"
+	Logs           Subcommand = "logs"
+	Options        Subcommand = "options"
+	Patch          Subcommand = "patch"
+	Plugin         Subcommand = "plugin"
+	PortForward    Subcommand = "port-forward"
+	Proxy          Subcommand = "proxy"
+	Replace        Subcommand = "replace"
+	Rollout        Subcommand = "rollout"
+	Run            Subcommand = "run"
+	Scale          Subcommand = "scale"
+	Set            Subcommand = "set"
+	Taint          Subcommand = "taint"
+	Top            Subcommand = "top"
+	Uncordon       Subcommand = "uncordon"
+	Unknown        Subcommand = ""
+	Version        Subcommand = "version"
+	Wait           Subcommand = "wait"
 
 	// oc (OpenShift CLI) specific subcommands
 	Rsh Subcommand = "rsh"
@@ -96,6 +96,8 @@ func InspectSubcommand(cmdArgs []string, pluginHandler PluginHandler) (Subcomman
 		Autoscale,
 		Certificate,
 		ClusterInfo,
+		Complete,
+		CompleteNoDesc,
 		Completion,
 		Config,
 		Convert,
@@ -134,11 +136,6 @@ func InspectSubcommand(cmdArgs []string, pluginHandler PluginHandler) (Subcomman
 		Wait:
 		return Subcommand(cmd), true
 	default:
-		// Catch __complete, __completeNoDesc, etc
-		if strings.HasPrefix(cmd, "__complete") {
-			return InternalComplete, true
-		}
-
 		if IsPlugin(cmdArgs, pluginHandler) {
 			return KubectlPlugin, true
 		}
@@ -280,7 +277,7 @@ func (sci *SubcommandInfo) SupportsColoring() bool {
 		return sci.Help
 
 	case KubectlPlugin,
-		InternalComplete:
+		Complete, CompleteNoDesc:
 		return false
 
 	// oc (OpenShift CLI) specific subcommands
