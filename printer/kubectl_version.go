@@ -45,7 +45,7 @@ func (vp *VersionPrinter) Print(r io.Reader, w io.Writer) {
 		val := vp.KubecolorVersion
 		fmt.Fprintf(w, "%s: %s\n",
 			getColorByKeyIndent(0, 2, vp.Theme.Version.Key).Render(key),
-			getColorByValueType("", vp.Theme).Render(val),
+			getColorByValueType(val, vp.Theme).Render(val),
 		)
 	}
 }
