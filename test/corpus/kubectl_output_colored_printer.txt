@@ -306,6 +306,7 @@ Kustomize Version: v5.0.4-0.20230601165947-6ce0bf390ce3
 
 [96mClient Version[0m: [93mv1.29.0[0m
 [96mKustomize Version[0m: [93mv5.0.4-0.20230601165947-6ce0bf390ce3[0m
+[96mKubecolor Version[0m: [93mdev[0m
 
 ================================================================================
 $ kubectl apply -o json

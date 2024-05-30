@@ -34,13 +34,14 @@ type pagerPipe struct {
 }
 
 // This is defined here to be replaced in test
-var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, cfg *config.Config) *Printers {
+var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, cfg *config.Config, version string) *Printers {
 	return &Printers{
 		FullColoredPrinter: &printer.KubectlOutputColoredPrinter{
 			SubcommandInfo:    subcommandInfo,
 			Recursive:         subcommandInfo.Recursive,
 			ObjFreshThreshold: cfg.ObjFreshThreshold,
 			Theme:             &cfg.Theme,
+			KubecolorVersion:  version,
 		},
 		ErrorPrinter: &printer.WithFuncPrinter{
 			Fn: func(line string) config.Color {
@@ -130,7 +131,7 @@ func Run(rawArgs []string, version string) error {
 	errBuf := new(bytes.Buffer)
 	errBufReader := io.TeeReader(stderrReader, errBuf)
 
-	printers := getPrinters(subcommandInfo, cfg.Config)
+	printers := getPrinters(subcommandInfo, cfg.Config, version)
 
 	wg := &sync.WaitGroup{}
 
