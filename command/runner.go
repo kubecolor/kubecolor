@@ -298,7 +298,6 @@ func runPager(pager string) (*pagerPipe, error) {
 		if err != nil {
 			panic(err)
 		}
-		os.Exit(0)
 	}()
 
 	return &pagerPipe{
