@@ -260,7 +260,8 @@ func (sci *SubcommandInfo) SupportsPager() bool {
 	case Describe,
 		Explain,
 		APIResources,
-		APIVersions:
+		APIVersions,
+		Config:
 		return true
 	}
 	return false
