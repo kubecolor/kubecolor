@@ -54,24 +54,27 @@ func LoadViper() (*viper.Viper, error) {
 	v := NewViper()
 
 	if path := os.Getenv("KUBECOLOR_CONFIG"); path != "" {
-		v.AddConfigPath(path)
-	}
-	if homeDir, err := os.UserHomeDir(); err == nil {
+		v.SetConfigFile(path)
+		if v.GetBool("debug") {
+			fmt.Fprintf(os.Stderr, "[kubecolor] [debug] overriding config path with environment variable KUBECOLOR_CONFIG=%q\n", path)
+		}
+	} else if homeDir, err := os.UserHomeDir(); err == nil {
 		// ~/.kube/color.yaml
 		v.AddConfigPath(filepath.Join(homeDir, ".kube"))
 	}
 
 	if err := v.ReadInConfig(); err != nil {
-		if errors.As(err, &viper.ConfigFileNotFoundError{}) {
+		if errors.As(err, &viper.ConfigFileNotFoundError{}) || os.IsNotExist(err) {
+			fmt.Fprintf(os.Stderr, "[kubecolor] [debug] no config file found: %s\n", err)
 			// continue
 		} else {
 			return nil, err
 		}
-	}
-
-	if v.GetBool("debug") {
-		if fileUsed := v.ConfigFileUsed(); fileUsed != "" {
-			fmt.Fprintf(os.Stderr, "[kubecolor] [debug] using config: %s\n", fileUsed)
+	} else {
+		if v.GetBool("debug") {
+			if fileUsed := v.ConfigFileUsed(); fileUsed != "" {
+				fmt.Fprintf(os.Stderr, "[kubecolor] [debug] using config: %s\n", fileUsed)
+			}
 		}
 	}
 
