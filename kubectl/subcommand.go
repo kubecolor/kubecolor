@@ -258,7 +258,10 @@ func (sci *SubcommandInfo) SupportsPager() bool {
 	case Logs:
 		return !sci.Follow
 	case Describe,
-		Explain:
+		Explain,
+		APIResources,
+		APIVersions,
+		Config:
 		return true
 	}
 	return false
