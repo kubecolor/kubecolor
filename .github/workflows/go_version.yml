@@ -1,0 +1,55 @@
+name: Go version
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - go.mod
+      - Dockerfile
+      - .github/workflows/go_version.yml
+  pull_request:
+    paths:
+      - go.mod
+      - Dockerfile
+      - .github/workflows/go_version.yml
+
+jobs:
+  go-version:
+    runs-on: ubuntu-latest
+    name: Check Go version
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compare versions
+        run: |
+          GO_MOD_MATCH="$(grep --max-count=1 --only-matching --perl-regexp --line-number '^go \K.*' go.mod)"
+          GO_MOD_LINE="$(echo "$GO_MOD_MATCH" | cut -d: -f1)"
+          GO_MOD_VERSION="$(echo "$GO_MOD_MATCH" | cut -d: -f2)"
+
+          DOCKERFILE_MATCH="$(grep --max-count=1 --only-matching --perl-regexp --line-number '^FROM .*golang:\K[0-9\.]*' Dockerfile)"
+          DOCKERFILE_LINE="$(echo "$DOCKERFILE_MATCH" | cut -d: -f1)"
+          DOCKERFILE_VERSION="$(echo "$DOCKERFILE_MATCH" | cut -d: -f2)"
+
+          function err() {
+            local file="$1"
+            local line="$2"
+            shift 2
+            local msg="$*"
+            echo "::error file=$file,line=$line::$msg" >&2
+            exit 1
+          }
+
+          if [[ -z "$GO_MOD_VERSION" ]]; then
+            err go.mod "$GO_MOD_LINE" "Unable to find version in go.mod"
+          fi
+
+          if [[ -z "$DOCKERFILE_VERSION" ]]; then
+            err Dockerfile "$DOCKERFILE_LINE" "Unable to find version in Dockerfile"
+          fi
+
+          if [[ "$GO_MOD_VERSION" != "$DOCKERFILE_VERSION" ]]; then
+            err Dockerfile "$DOCKERFILE_LINE" "Version of image does not match Go version in go.mod"
+          fi
+
+          echo "OK"
