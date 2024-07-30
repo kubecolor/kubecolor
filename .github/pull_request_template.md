@@ -1,20 +1,33 @@
 # Description
 
-<!--  Please include a summary of the change and which issue is fixed. Please also include relevant motivation and context. List any dependencies that are required for this change. -->
+<!-- Summarize your PR. Give some context and introduction to the changes -->
 
 ## Type of change
 
-Please delete options that are not relevant.
+<!-- Please delete options that are not relevant. -->
 
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] This change requires a documentation update
+- [x] Bug fix (fixes an issue)
+- [x] New feature (added functionality)
+- [x] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [x] Chore (doesn't directly affect users, e.g refactoring or CI/CD changes)
+- [x] Is a documentation update
+- [x] Requires further documentation updates (on https://kubecolor.github.io/)
 
-## What you changed
+## Changes
 
+<!-- What was changed, technically? -->
 
-## Why you think we should change it
+- Added thing
+- Removed thing
+- Changed thing
+- Fixed thing
 
+## Motivation
+
+<!-- Why you think we should change it? -->
 
 ## Related issue (if exists)
+
+<!-- remove if no related issue -->
+
+Closes #XXX
