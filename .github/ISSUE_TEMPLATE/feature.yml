@@ -1,0 +1,25 @@
+name: Feature request
+description: Share an idea of some new functionality
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this feature request!
+  - type: textarea
+    attributes:
+      label: Description
+      description: A concise description of your requested feature. (Example mockups/drawings of how you expect kubecolor to behave are highly appreciated)
+    validations:
+      required: true
+  - type: textarea
+    id: version
+    attributes:
+      label: Kubectl and kubecolor version
+      description: Paste the output of running `kubecolor version --client` (nice info to have as reference when looking at older feature requests)
+      render: yaml
+  - type: textarea
+    id: extra
+    attributes:
+      label: Additional context
+      description: Any extra info you might have about the feature?

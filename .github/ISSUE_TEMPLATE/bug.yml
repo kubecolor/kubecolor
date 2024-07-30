@@ -1,0 +1,58 @@
+name: Bug Report
+description: File a bug report.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    attributes:
+      label: Expected behavior
+      description: A concise description of what you expected to happen.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Current behavior
+      description: A concise description of what you're experiencing. (Screenshots are highly appreciated)
+    validations:
+      required: false
+  - type: dropdown
+    id: packagemanager
+    attributes:
+      label: Package manager
+      description: How did you install kubecolor?
+      options:
+        - Homebrew
+        - Scoop
+        - Nix
+        - AUR (Arch User Repositories)
+        - Termux (Android)
+        - Downloaded binary from releases
+        - Compiled from source using `go install`
+        - Other (please specify in "Additional context" section)
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: What operating system are you running?
+      multiple: true
+      options:
+        - Windows
+        - Linux
+        - Mac
+        - Android
+        - Other (please specify in "Additional context" section)
+  - type: textarea
+    id: version
+    attributes:
+      label: Kubectl and kubecolor version
+      description: Paste the output of running `kubecolor version --client`
+      render: yaml
+  - type: textarea
+    id: extra
+    attributes:
+      label: Additional context
+      description: Any extra info you might have about the bug?
