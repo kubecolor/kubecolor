@@ -18,9 +18,7 @@ func ColorDataKey(indent int, basicIndentWidth int, colors config.ColorSlice) co
 	return colors[indent/basicIndentWidth%len(colors)]
 }
 
-var (
-	isQuantityRegex = regexp.MustCompile(`^[\+\-]?(?:\d+|\.\d+|\d+\.|\d+\.\d+)?(?:m|[kMGTPE]i?)$`)
-)
+var isQuantityRegex = regexp.MustCompile(`^[\+\-]?(?:\d+|\.\d+|\d+\.|\d+\.\d+)?(?:m|[kMGTPE]i?)$`)
 
 // ColorDataValue returns a color by value.
 // This is intended to be used to colorize any structured data e.g. JSON, YAML.

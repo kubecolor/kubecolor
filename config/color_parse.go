@@ -106,8 +106,7 @@ func parseColorFgName(s string) color.Color {
 		return color.FgGray
 	case "hired", "lightred":
 		return color.FgLightRed
-	case "higreen", "lightgreen",
-		"lime":
+	case "higreen", "lightgreen", "lime":
 		return color.FgLightGreen
 	case "hibrown", "lightbrown",
 		"hiyellow", "lightyellow",
@@ -167,8 +166,7 @@ func parseColorBgName(s string) color.Color {
 		return color.BgGray
 	case "hired", "lightred":
 		return color.BgLightRed
-	case "higreen", "lightgreen",
-		"lime":
+	case "higreen", "lightgreen", "lime":
 		return color.BgLightGreen
 	case "hibrown", "lightbrown",
 		"hiyellow", "lightyellow",

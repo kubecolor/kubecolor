@@ -105,7 +105,6 @@ func (p *YAMLPrinter) toColorizedYamlValue(value string) string {
 }
 
 func (p *YAMLPrinter) toColorizedStringValue(value string) string {
-
 	isDoubleQuoted := strings.HasPrefix(value, `"`) && strings.HasSuffix(value, `"`)
 	trimmedValue := strings.TrimRight(strings.TrimLeft(value, `"`), `"`)
 

@@ -27,9 +27,7 @@ import (
 	"strings"
 )
 
-var (
-	validPluginPrefixes = []string{"kubectl"}
-)
+var validPluginPrefixes = []string{"kubectl"}
 
 type PluginHandler interface {
 	Lookup(filename string) (string, bool)

@@ -8,8 +8,10 @@ import (
 	"github.com/kubecolor/kubecolor/config"
 )
 
-var DarkTheme *config.Theme
-var LightTheme *config.Theme
+var (
+	DarkTheme  *config.Theme
+	LightTheme *config.Theme
+)
 
 func init() {
 	os.Clearenv()

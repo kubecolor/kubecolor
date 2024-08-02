@@ -41,7 +41,6 @@ func (p *YAMLPrinter) printCategory(category Category, path []string) error {
 }
 
 func (p *YAMLPrinter) printField(field Field, typeString string, path []string) error {
-
 	fallback := p.formatFallback(field)
 	desc := strings.ReplaceAll(field.Comment, "\n", " ")
 	if fallback != "" {
