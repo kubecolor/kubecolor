@@ -9,15 +9,15 @@ import (
 	"github.com/kubecolor/kubecolor/config"
 )
 
-type JsonPrinter struct {
+type JSONPrinter struct {
 	Theme *config.Theme
 }
 
-func (jp *JsonPrinter) Print(r io.Reader, w io.Writer) {
+func (p *JSONPrinter) Print(r io.Reader, w io.Writer) {
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
 		line := scanner.Text()
-		printLineAsJsonFormat(line, w, jp.Theme)
+		printLineAsJsonFormat(line, w, p.Theme)
 	}
 }
 
@@ -77,7 +77,7 @@ func toColorizedJsonKey(key string, indentCnt, basicWidth int, theme *config.The
 		format += ":"
 	}
 
-	return fmt.Sprintf(format, getColorByKeyIndent(indentCnt, basicWidth, theme.Data.Key).Render(doubleQuoteTrimmed))
+	return fmt.Sprintf(format, ColorDataKey(indentCnt, basicWidth, theme.Data.Key).Render(doubleQuoteTrimmed))
 }
 
 // toColorizedJsonValue returns colored json value.
@@ -119,5 +119,5 @@ func toColorizedJsonValue(value string, theme *config.Theme) string {
 		format = `%s`
 	}
 
-	return fmt.Sprintf(format, getColorByValueType(value, theme).Render(doubleQuoteTrimmedValue))
+	return fmt.Sprintf(format, ColorDataValue(value, theme).Render(doubleQuoteTrimmedValue))
 }

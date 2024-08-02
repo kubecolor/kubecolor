@@ -21,7 +21,7 @@ type VersionPrinter struct {
 // Client Version: v1.29.0
 // Kustomize Version: v5.0.4-0.20230601165947-6ce0bf390ce3
 // Server Version: v1.27.5-gke.200
-func (vp *VersionPrinter) Print(r io.Reader, w io.Writer) {
+func (p *VersionPrinter) Print(r io.Reader, w io.Writer) {
 	scanner := bufio.NewScanner(r)
 	any := false
 	for scanner.Scan() {
@@ -32,8 +32,8 @@ func (vp *VersionPrinter) Print(r io.Reader, w io.Writer) {
 			continue
 		}
 		fmt.Fprintf(w, "%s: %s\n",
-			getColorByKeyIndent(0, 2, vp.Theme.Version.Key).Render(key),
-			getColorByValueType(val, vp.Theme).Render(val),
+			ColorDataKey(0, 2, p.Theme.Version.Key).Render(key),
+			ColorDataValue(val, p.Theme).Render(val),
 		)
 		any = true
 	}
@@ -42,16 +42,16 @@ func (vp *VersionPrinter) Print(r io.Reader, w io.Writer) {
 	// 	error: invalid argument "foo" for "--client" flag: strconv.ParseBool: parsing "foo": invalid syntax
 	if any {
 		key := "Kubecolor Version"
-		val := vp.KubecolorVersion
+		val := p.KubecolorVersion
 		fmt.Fprintf(w, "%s: %s\n",
-			getColorByKeyIndent(0, 2, vp.Theme.Version.Key).Render(key),
-			getColorByValueType(val, vp.Theme).Render(val),
+			ColorDataKey(0, 2, p.Theme.Version.Key).Render(key),
+			ColorDataValue(val, p.Theme).Render(val),
 		)
 	}
 }
 
 type VersionJSONInjectorPrinter struct {
-	JsonPrinter      *JsonPrinter
+	JsonPrinter      *JSONPrinter
 	KubecolorVersion string
 }
 
@@ -75,7 +75,7 @@ func (vp *VersionJSONInjectorPrinter) Print(r io.Reader, w io.Writer) {
 }
 
 type VersionYAMLInjectorPrinter struct {
-	YamlPrinter      *YamlPrinter
+	YamlPrinter      *YAMLPrinter
 	KubecolorVersion string
 }
 

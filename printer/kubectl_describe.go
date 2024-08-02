@@ -12,16 +12,20 @@ import (
 	"github.com/kubecolor/kubecolor/scanner/describe"
 )
 
-// DescribePrinter is a specific printer to print kubectl describe format.
+// DescribePrinter is used on "kubectl describe" output
 type DescribePrinter struct {
 	TablePrinter *TablePrinter
 
 	tableBytes *bytes.Buffer
 }
 
+// ensures it implements the interface
+var _ Printer = &DescribePrinter{}
+
 var onlyValuePathToColor = regexp.MustCompile(`^(Labels|Annotations|(Init )?Containers/[^/]+/Environment Variables from)/.+`)
 
-func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
+// Print implements [Printer.Print]
+func (p *DescribePrinter) Print(r io.Reader, w io.Writer) {
 	scanner := describe.NewScanner(r)
 	const basicIndentWidth = 2 // according to kubectl describe format
 	for scanner.Scan() {
@@ -32,19 +36,19 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 			line.Key = nil
 			line.Spacing = nil
 		} else if bytesutil.CountColumns(line.Value, " \t") >= 3 { // when there are multiple columns, treat is as table format
-			if dp.tableBytes == nil {
-				dp.tableBytes = &bytes.Buffer{}
+			if p.tableBytes == nil {
+				p.tableBytes = &bytes.Buffer{}
 			}
-			fmt.Fprintln(dp.tableBytes, line.String())
+			fmt.Fprintln(p.tableBytes, line.String())
 			continue
-		} else if dp.tableBytes != nil {
-			dp.TablePrinter.Print(dp.tableBytes, w)
-			dp.tableBytes = nil
+		} else if p.tableBytes != nil {
+			p.TablePrinter.Print(p.tableBytes, w)
+			p.tableBytes = nil
 		}
 
 		fmt.Fprintf(w, "%s", line.Indent)
 		if len(line.Key) > 0 {
-			keyColor := getColorByKeyIndent(line.KeyIndent(), basicIndentWidth, dp.TablePrinter.Theme.Describe.Key)
+			keyColor := ColorDataKey(line.KeyIndent(), basicIndentWidth, p.TablePrinter.Theme.Describe.Key)
 			key := string(line.Key)
 			if withoutColon, ok := strings.CutSuffix(key, ":"); ok {
 				fmt.Fprint(w, keyColor.Render(withoutColon), ":")
@@ -56,35 +60,35 @@ func (dp *DescribePrinter) Print(r io.Reader, w io.Writer) {
 		if len(line.Value) > 0 {
 			val := string(line.Value)
 			if k, v, ok := strings.Cut(val, ": "); ok { // split annotation and env from
-				vColor := dp.colorize(scanner.Path(), v)
+				vColor := p.colorize(scanner.Path(), v)
 				fmt.Fprint(w, k, ": ", vColor.Render(v))
 			} else if k, v, ok := strings.Cut(val, "="); ok { // split label
-				vColor := dp.colorize(scanner.Path(), v)
+				vColor := p.colorize(scanner.Path(), v)
 				fmt.Fprint(w, k, "=", vColor.Render(v))
 			} else {
-				valColor := dp.colorize(scanner.Path(), val)
+				valColor := p.colorize(scanner.Path(), val)
 				fmt.Fprint(w, valColor.Render(val))
 			}
 		}
 		fmt.Fprintf(w, "%s\n", line.Trailing)
 	}
 
-	if dp.tableBytes != nil {
-		dp.TablePrinter.Print(dp.tableBytes, w)
-		dp.tableBytes = nil
+	if p.tableBytes != nil {
+		p.TablePrinter.Print(p.tableBytes, w)
+		p.tableBytes = nil
 	}
 }
 
-func (dp *DescribePrinter) colorize(path describe.Path, value string) config.Color {
+func (p *DescribePrinter) colorize(path describe.Path, value string) config.Color {
 	value = strings.TrimSpace(value)
 	pathStr := path.String()
-	if col, ok := dp.colorizeStatus(value, pathStr); ok {
+	if col, ok := p.colorizeStatus(value, pathStr); ok {
 		return col
 	}
-	if col, ok := dp.colorizeArgs(value, pathStr); ok {
+	if col, ok := p.colorizeArgs(value, pathStr); ok {
 		return col
 	}
-	return getColorByValueType(value, dp.TablePrinter.Theme)
+	return ColorDataValue(value, p.TablePrinter.Theme)
 }
 
 var describePathsToColor = []*regexp.Regexp{
@@ -93,11 +97,11 @@ var describePathsToColor = []*regexp.Regexp{
 	regexp.MustCompile(`^Containers/[^/]*/Last State(/Reason)?$`),
 }
 
-func (dp *DescribePrinter) colorizeStatus(value, pathStr string) (config.Color, bool) {
+func (p *DescribePrinter) colorizeStatus(value, pathStr string) (config.Color, bool) {
 	if !matchesAnyRegex(pathStr, describePathsToColor) {
 		return config.Color{}, false
 	}
-	col, ok := ColorStatus(value, dp.TablePrinter.Theme)
+	col, ok := ColorStatus(value, p.TablePrinter.Theme)
 	if !ok {
 		return config.Color{}, false
 	}
@@ -108,7 +112,7 @@ var describePathsToArgs = []*regexp.Regexp{
 	regexp.MustCompile(`^(Init )?Containers/[^/]*/Args$`),
 }
 
-func (dp *DescribePrinter) colorizeArgs(value, pathStr string) (config.Color, bool) {
+func (p *DescribePrinter) colorizeArgs(value, pathStr string) (config.Color, bool) {
 	if !matchesAnyRegex(pathStr, describePathsToArgs) {
 		return config.Color{}, false
 	}

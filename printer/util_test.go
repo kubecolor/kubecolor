@@ -30,7 +30,7 @@ func Test_getColorByKeyIndent(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got := getColorByKeyIndent(tt.indent, tt.basicIndentWidth, tt.theme.Base.Key)
+			got := ColorDataKey(tt.indent, tt.basicIndentWidth, tt.theme.Base.Key)
 			if got.String() != tt.expected {
 				t.Errorf("fail: got: %q, expected: %q", got, tt.expected)
 			}
@@ -64,7 +64,7 @@ func Test_getColorByValueType(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got := getColorByValueType(tt.val, tt.theme)
+			got := ColorDataValue(tt.val, tt.theme)
 			if got.String() != tt.expected {
 				t.Errorf("fail: got: %v, expected: %v", got, tt.expected)
 			}
