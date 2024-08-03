@@ -5,7 +5,6 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
-	"strings"
 )
 
 type File struct {
@@ -72,10 +71,8 @@ func ParseFileFS(fsys fs.FS, path string) (File, error) {
 		return File{}, err
 	}
 
-	base := filepath.Base(path)
-	name := strings.TrimSuffix(base, filepath.Ext(base))
 	return File{
-		Name:  name,
+		Name:  filepath.Base(path),
 		Path:  path,
 		Tests: tests,
 	}, nil

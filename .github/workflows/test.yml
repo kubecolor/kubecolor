@@ -33,7 +33,7 @@ jobs:
       - name: test
         env:
           FORCE_COLOR: "true"
-        run: make test GO_TEST_CMD='gotestsum --' corpus
+        run: make test GO_TEST_CMD='gotestsum --'
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4

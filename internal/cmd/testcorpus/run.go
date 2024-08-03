@@ -31,23 +31,8 @@ func RunTests(files []File) {
 		}
 		for _, test := range file.Tests {
 			if err := ExecuteTest(test); err != nil {
-				fmt.Printf("    ❌ %s\n", colorErrorPrefix.Render(test.Name))
-				for _, env := range test.Env {
-					fmt.Printf("     %s %s\n", colorErrorPrefix.Render("│"), colorMuted.Render(fmt.Sprintf("(env %s=%q)", env.Key, env.Value)))
-				}
-				lines := strings.Split(err.Error(), "\n")
-				for i, line := range lines {
-					switch {
-					case i == 0:
-						fmt.Printf("     %s %s\n", colorErrorPrefix.Render("│"), colorErrorText.Render(line))
-					case i == len(lines)-1:
-						fmt.Printf("     %s%s\n", colorErrorPrefix.Render("└─"), line)
-					default:
-						fmt.Printf("     %s %s\n", colorErrorPrefix.Render("│"), line)
-					}
-				}
 				testsFail++
-				fmt.Println()
+				fmt.Println(indent(FormatTestError(test, err), "    "))
 			} else {
 				fmt.Printf("    ✅ %s\n", colorSuccess.Render(test.Name))
 				testsPass++
@@ -94,6 +79,31 @@ func ExecuteTest(test Test) error {
 		return fmt.Errorf("input does not match output:\n%s", createColoredDiff(test.Name, test.Output, gotOutput))
 	}
 	return nil
+}
+
+func FormatTestError(test Test, err error) string {
+	var buf bytes.Buffer
+	fmt.Fprintf(&buf, "❌ %s\n", colorErrorPrefix.Render(test.Name))
+	for _, env := range test.Env {
+		fmt.Fprintf(&buf, "%s %s\n", colorErrorPrefix.Render("│"), colorMuted.Render(fmt.Sprintf("(env %s=%q)", env.Key, env.Value)))
+	}
+	lines := strings.Split(err.Error(), "\n")
+	for i, line := range lines {
+		switch {
+		case i == 0:
+			fmt.Fprintf(&buf, "%s %s\n", colorErrorPrefix.Render("│"), colorErrorText.Render(line))
+		case i == len(lines)-1:
+			fmt.Fprintf(&buf, "%s%s\n", colorErrorPrefix.Render("└─"), line)
+		default:
+			fmt.Fprintf(&buf, "%s %s\n", colorErrorPrefix.Render("│"), line)
+		}
+	}
+	fmt.Fprintln(&buf)
+	return buf.String()
+}
+
+func indent(s, indent string) string {
+	return indent + strings.ReplaceAll(s, "\n", "\n"+indent)
 }
 
 func printCommand(args []string, input string, env []EnvVar) string {
