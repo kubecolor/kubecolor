@@ -140,6 +140,11 @@ func printCommand(args []string, input string, env []EnvVar) string {
 	cfg.ForceColor = command.ColorLevelTrueColor
 
 	subcommandInfo := kubectl.InspectSubcommandInfo(args, kubectl.NoopPluginHandler{})
+
+	if !subcommandInfo.SupportsColoring() {
+		return input
+	}
+
 	p := &printer.KubectlOutputColoredPrinter{
 		SubcommandInfo:    subcommandInfo,
 		Recursive:         subcommandInfo.Recursive,
