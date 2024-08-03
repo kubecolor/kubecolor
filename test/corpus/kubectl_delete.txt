@@ -1,0 +1,15 @@
+================================================================================
+$ kubectl delete deploy nginx
+================================================================================
+
+deployment.apps/nginx deleted
+deployment.apps/nginx deleted (dry run)
+deployment.apps/nginx deleted (server dry run)
+deployment.apps/nginx unknown
+
+--------------------------------------------------------------------------------
+
+deployment.apps/nginx [31mdeleted[0m
+deployment.apps/nginx [31mdeleted[0m [36m(dry run)[0m
+deployment.apps/nginx [31mdeleted[0m [36m(server dry run)[0m
+[31mdeployment.apps/nginx unknown[0m

@@ -1,0 +1,15 @@
+================================================================================
+$ kubectl patch deploy nginx --patch-file=foo.json
+================================================================================
+
+deployment.apps/nginx patched
+deployment.apps/nginx patched (dry run)
+deployment.apps/nginx patched (server dry run)
+deployment.apps/nginx unknown
+
+--------------------------------------------------------------------------------
+
+deployment.apps/nginx [33mpatched[0m
+deployment.apps/nginx [33mpatched[0m [36m(dry run)[0m
+deployment.apps/nginx [33mpatched[0m [36m(server dry run)[0m
+[33mdeployment.apps/nginx unknown[0m
