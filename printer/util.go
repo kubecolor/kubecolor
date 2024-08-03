@@ -69,6 +69,25 @@ func ColorDataValue(val string, theme *config.Theme) config.Color {
 
 // ColorStatus returns the color that should be used for a given status text.
 func ColorStatus(status string, theme *config.Theme) (string, bool) {
+	if strings.ContainsRune(status, ',') {
+		statuses := strings.Split(status, ",")
+		any := false
+		for i, s := range statuses {
+			if colored, ok := colorSingleStatus(s, theme); ok {
+				statuses[i] = colored
+				any = true
+			}
+		}
+		if !any {
+			return status, false
+		}
+		return strings.Join(statuses, ","), true
+	}
+
+	return colorSingleStatus(status, theme)
+}
+
+func colorSingleStatus(status string, theme *config.Theme) (string, bool) {
 	switch strings.TrimPrefix(status, "Init:") {
 	case
 		// from https://github.com/kubernetes/kubernetes/blob/master/pkg/kubelet/events/event.go
@@ -115,6 +134,7 @@ func ColorStatus(status string, theme *config.Theme) (string, bool) {
 		// Node status list
 		"NotReady",
 		"NetworkUnavailable",
+		"SchedulingDisabled",
 
 		// some other status
 		"ContainerStatusUnknown",

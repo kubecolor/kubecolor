@@ -143,4 +143,4 @@ worker003   Ready,SchedulingDisabled   worker          474d   v1.28.8
 --------------------------------------------------------------------------------
 
 [1mNAME        STATUS                     ROLES           AGE    VERSION[0m
-[37mworker003[0m   [36mReady,SchedulingDisabled[0m   [37mworker[0m          [36m474d[0m   [37mv1.28.8[0m
+[37mworker003[0m   [36m[32mReady[0m[36m,[31mSchedulingDisabled[0m[0m   [37mworker[0m          [36m474d[0m   [37mv1.28.8[0m
