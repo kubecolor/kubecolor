@@ -1,4 +1,4 @@
-package main
+package testcorpus
 
 import (
 	"bytes"
@@ -20,17 +20,17 @@ func UpdateTests(files []File) {
 	anyErr := false
 	for _, file := range files {
 		if len(file.Tests) == 0 {
-			fmt.Printf("    %s %s\n", colorHeader.Render(file.Name+":"), colorMuted.Render(file.Name+": no tests found"))
+			fmt.Printf("    %s %s\n", ColorHeader.Render(file.Name+":"), ColorMuted.Render(file.Name+": no tests found"))
 			continue
 		}
 		changed, err := updateFile(file)
 		if err != nil {
-			fmt.Printf("    %s %s %s\n", colorHeader.Render(file.Name+":"), colorErrorPrefix.Render("error:"), colorErrorText.Render(err.Error()))
+			fmt.Printf("    %s %s %s\n", ColorHeader.Render(file.Name+":"), ColorErrorPrefix.Render("error:"), ColorErrorText.Render(err.Error()))
 			anyErr = true
 		} else if changed {
-			fmt.Printf("    %s %s\n", colorHeader.Render(file.Name+":"), colorSuccess.Render("updated"))
+			fmt.Printf("    %s %s\n", ColorHeader.Render(file.Name+":"), ColorSuccess.Render("updated"))
 		} else {
-			fmt.Printf("    %s %s\n", colorHeader.Render(file.Name+":"), colorMuted.Render("unchanged"))
+			fmt.Printf("    %s %s\n", ColorHeader.Render(file.Name+":"), ColorMuted.Render("unchanged"))
 		}
 	}
 	if anyErr {
