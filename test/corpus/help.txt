@@ -1,0 +1,399 @@
+================================================================================
+# basic help text
+$ kubectl
+================================================================================
+
+kubectl controls the Kubernetes cluster manager.
+
+ Find more information at: https://kubernetes.io/docs/reference/kubectl/
+
+Basic Commands (Beginner):
+  create          Create a resource from a file or from stdin
+  expose          Take a replication controller, service, deployment or pod and expose it as a new Kubernetes service
+  run             Run a particular image on the cluster
+  set             Set specific features on objects
+
+Basic Commands (Intermediate):
+  explain         Get documentation for a resource
+  get             Display one or many resources
+  edit            Edit a resource on the server
+  delete          Delete resources by file names, stdin, resources and names, or by resources and label selector
+
+Deploy Commands:
+  rollout         Manage the rollout of a resource
+  scale           Set a new size for a deployment, replica set, or replication controller
+  autoscale       Auto-scale a deployment, replica set, stateful set, or replication controller
+
+Cluster Management Commands:
+  certificate     Modify certificate resources
+  cluster-info    Display cluster information
+  top             Display resource (CPU/memory) usage
+  cordon          Mark node as unschedulable
+  uncordon        Mark node as schedulable
+  drain           Drain node in preparation for maintenance
+  taint           Update the taints on one or more nodes
+
+Troubleshooting and Debugging Commands:
+  describe        Show details of a specific resource or group of resources
+  logs            Print the logs for a container in a pod
+  attach          Attach to a running container
+  exec            Execute a command in a container
+  port-forward    Forward one or more local ports to a pod
+  proxy           Run a proxy to the Kubernetes API server
+  cp              Copy files and directories to and from containers
+  auth            Inspect authorization
+  debug           Create debugging sessions for troubleshooting workloads and nodes
+  events          List events
+
+Advanced Commands:
+  diff            Diff the live version against a would-be applied version
+  apply           Apply a configuration to a resource by file name or stdin
+  patch           Update fields of a resource
+  replace         Replace a resource by file name or stdin
+  wait            Experimental: Wait for a specific condition on one or many resources
+  kustomize       Build a kustomization target from a directory or URL
+
+Settings Commands:
+  label           Update the labels on a resource
+  annotate        Update the annotations on a resource
+  completion      Output shell completion code for the specified shell (bash, zsh, fish, or powershell)
+
+Subcommands provided by plugins:
+  cnpg          The command cnpg is a plugin installed by the user
+  klock         The command klock is a plugin installed by the user
+  oidc-login    The command oidc-login is a plugin installed by the user
+
+Other Commands:
+  api-resources   Print the supported API resources on the server
+  api-versions    Print the supported API versions on the server, in the form of "group/version"
+  config          Modify kubeconfig files
+  plugin          Provides utilities for interacting with plugins
+  version         Print the client and server version information
+
+Usage:
+  kubectl [flags] [options]
+
+Use "kubectl <command> --help" for more information about a given command.
+Use "kubectl options" for a list of global command-line options (applies to all commands).
+
+--------------------------------------------------------------------------------
+
+[37mkubectl controls the Kubernetes cluster manager.[0m
+
+ [37mFind more information at: [36mhttps://kubernetes.io/docs/reference/kubectl/[0m[0m
+
+[1mBasic Commands (Beginner):[0m
+  [37mcreate          Create a resource from a file or from stdin[0m
+  [37mexpose          Take a replication controller, service, deployment or pod and expose it as a new Kubernetes service[0m
+  [37mrun             Run a particular image on the cluster[0m
+  [37mset             Set specific features on objects[0m
+
+[1mBasic Commands (Intermediate):[0m
+  [37mexplain         Get documentation for a resource[0m
+  [37mget             Display one or many resources[0m
+  [37medit            Edit a resource on the server[0m
+  [37mdelete          Delete resources by file names, stdin, resources and names, or by resources and label selector[0m
+
+[1mDeploy Commands:[0m
+  [37mrollout         Manage the rollout of a resource[0m
+  [37mscale           Set a new size for a deployment, replica set, or replication controller[0m
+  [37mautoscale       Auto-scale a deployment, replica set, stateful set, or replication controller[0m
+
+[1mCluster Management Commands:[0m
+  [37mcertificate     Modify certificate resources[0m
+  [37mcluster-info    Display cluster information[0m
+  [37mtop             Display resource (CPU/memory) usage[0m
+  [37mcordon          Mark node as unschedulable[0m
+  [37muncordon        Mark node as schedulable[0m
+  [37mdrain           Drain node in preparation for maintenance[0m
+  [37mtaint           Update the taints on one or more nodes[0m
+
+[1mTroubleshooting and Debugging Commands:[0m
+  [37mdescribe        Show details of a specific resource or group of resources[0m
+  [37mlogs            Print the logs for a container in a pod[0m
+  [37mattach          Attach to a running container[0m
+  [37mexec            Execute a command in a container[0m
+  [37mport-forward    Forward one or more local ports to a pod[0m
+  [37mproxy           Run a proxy to the Kubernetes API server[0m
+  [37mcp              Copy files and directories to and from containers[0m
+  [37mauth            Inspect authorization[0m
+  [37mdebug           Create debugging sessions for troubleshooting workloads and nodes[0m
+  [37mevents          List events[0m
+
+[1mAdvanced Commands:[0m
+  [37mdiff            Diff the live version against a would-be applied version[0m
+  [37mapply           Apply a configuration to a resource by file name or stdin[0m
+  [37mpatch           Update fields of a resource[0m
+  [37mreplace         Replace a resource by file name or stdin[0m
+  [37mwait            Experimental: Wait for a specific condition on one or many resources[0m
+  [37mkustomize       Build a kustomization target from a directory or URL[0m
+
+[1mSettings Commands:[0m
+  [37mlabel           Update the labels on a resource[0m
+  [37mannotate        Update the annotations on a resource[0m
+  [37mcompletion      Output shell completion code for the specified shell (bash, zsh, fish, or powershell)[0m
+
+[1mSubcommands provided by plugins:[0m
+  [37mcnpg          The command cnpg is a plugin installed by the user[0m
+  [37mklock         The command klock is a plugin installed by the user[0m
+  [37moidc-login    The command oidc-login is a plugin installed by the user[0m
+
+[1mOther Commands:[0m
+  [37mapi-resources   Print the supported API resources on the server[0m
+  [37mapi-versions    Print the supported API versions on the server, in the form of "group/version"[0m
+  [37mconfig          Modify kubeconfig files[0m
+  [37mplugin          Provides utilities for interacting with plugins[0m
+  [37mversion         Print the client and server version information[0m
+
+[1mUsage:[0m
+  [32mkubectl[0m [37m[flags][0m [37m[options][0m
+
+[37mUse "kubectl <command> --help" for more information about a given command.[0m
+[37mUse "kubectl options" for a list of global command-line options (applies to all commands).[0m
+
+================================================================================
+# help with flags and code examples
+$ kubectl get --help
+================================================================================
+
+Display one or many resources.
+
+ Prints a table of the most important information about the specified resources. You can filter the list using a label selector and the --selector flag. If the desired resource type is namespaced you will only see results in your current namespace unless you pass --all-namespaces.
+
+ By specifying the output as 'template' and providing a Go template as the value of the --template flag, you can filter the attributes of the fetched resources.
+
+Use "kubectl api-resources" for a complete list of supported resources.
+
+Examples:
+  # List all pods in ps output format
+  kubectl get pods
+
+  # List all pods in ps output format with more information (such as node name)
+  kubectl get pods -o wide
+
+  # List a single replication controller with specified NAME in ps output format
+  kubectl get replicationcontroller web
+
+  # List deployments in JSON output format, in the "v1" version of the "apps" API group
+  kubectl get deployments.v1.apps -o json
+
+  # List a single pod in JSON output format
+  kubectl get -o json pod web-pod-13je7
+
+  # List a pod identified by type and name specified in "pod.yaml" in JSON output format
+  kubectl get -f pod.yaml -o json
+
+  # List resources from a directory with kustomization.yaml - e.g. dir/kustomization.yaml
+  kubectl get -k dir/
+
+  # Return only the phase value of the specified pod
+  kubectl get -o template pod/web-pod-13je7 --template={{.status.phase}}
+
+  # List resource information in custom columns
+  kubectl get pod test-pod -o custom-columns=CONTAINER:.spec.containers[0].name,IMAGE:.spec.containers[0].image
+
+  # List all replication controllers and services together in ps output format
+  kubectl get rc,services
+
+  # List one or more resources by their type and names
+  kubectl get rc/web service/frontend pods/web-pod-13je7
+
+  # List the 'status' subresource for a single pod
+  kubectl get pod web-pod-13je7 --subresource status
+
+Options:
+    -A, --all-namespaces=false:
+	If present, list the requested object(s) across all namespaces. Namespace in current context is ignored even if specified with --namespace.
+
+    --allow-missing-template-keys=true:
+	If true, ignore any errors in templates when a field or map key is missing in the template. Only applies to golang and jsonpath output formats.
+
+    --chunk-size=500:
+	Return large lists in chunks rather than all at once. Pass 0 to disable. This flag is beta and may change in the future.
+
+    --field-selector='':
+	Selector (field query) to filter on, supports '=', '==', and '!='.(e.g. --field-selector key1=value1,key2=value2). The server only supports a limited number of field queries per type.
+
+    -f, --filename=[]:
+	Filename, directory, or URL to files identifying the resource to get from a server.
+
+    --ignore-not-found=false:
+	If the requested object does not exist the command will return exit code 0.
+
+    -k, --kustomize='':
+	Process the kustomization directory. This flag can't be used together with -f or -R.
+
+    -L, --label-columns=[]:
+	Accepts a comma separated list of labels that are going to be presented as columns. Names are case-sensitive. You can also use multiple flag options like -L label1 -L label2...
+
+    --no-headers=false:
+	When using the default or custom-column output format, don't print headers (default print headers).
+
+    -o, --output='':
+	Output format. One of: (json, yaml, name, go-template, go-template-file, template, templatefile, jsonpath, jsonpath-as-json, jsonpath-file, custom-columns, custom-columns-file, wide). See custom columns [https://kubernetes.io/docs/reference/kubectl/#custom-columns], golang template [http://golang.org/pkg/text/template/#pkg-overview] and jsonpath template [https://kubernetes.io/docs/reference/kubectl/jsonpath/].
+
+    --output-watch-events=false:
+	Output watch event objects when --watch or --watch-only is used. Existing objects are output as initial ADDED events.
+
+    --raw='':
+	Raw URI to request from the server.  Uses the transport specified by the kubeconfig file.
+
+    -R, --recursive=false:
+	Process the directory used in -f, --filename recursively. Useful when you want to manage related manifests organized within the same directory.
+
+    -l, --selector='':
+	Selector (label query) to filter on, supports '=', '==', and '!='.(e.g. -l key1=value1,key2=value2). Matching objects must satisfy all of the specified label constraints.
+
+    --server-print=true:
+	If true, have the server return the appropriate table output. Supports extension APIs and CRDs.
+
+    --show-kind=false:
+	If present, list the resource type for the requested object(s).
+
+    --show-labels=false:
+	When printing, show all labels as the last column (default hide labels column)
+
+    --show-managed-fields=false:
+	If true, keep the managedFields when printing objects in JSON or YAML format.
+
+    --sort-by='':
+	If non-empty, sort list types using this field specification.  The field specification is expressed as a JSONPath expression (e.g. '{.metadata.name}'). The field in the API resource specified by this JSONPath expression must be an integer or a string.
+
+    --subresource='':
+	If specified, gets the subresource of the requested object. Must be one of [status scale]. This flag is beta and may change in the future.
+
+    --template='':
+	Template string or path to template file to use when -o=go-template, -o=go-template-file. The template format is golang templates [http://golang.org/pkg/text/template/#pkg-overview].
+
+    -w, --watch=false:
+	After listing/getting the requested object, watch for changes.
+
+    --watch-only=false:
+	Watch for changes to the requested object(s), without listing/getting first.
+
+Usage:
+  kubectl get [(-o|--output=)json|yaml|name|go-template|go-template-file|template|templatefile|jsonpath|jsonpath-as-json|jsonpath-file|custom-columns|custom-columns-file|wide] (TYPE[.VERSION][.GROUP] [NAME | -l label] | TYPE[.VERSION][.GROUP]/NAME ...) [flags] [options]
+
+Use "kubectl options" for a list of global command-line options (applies to all commands).
+
+--------------------------------------------------------------------------------
+
+[37mDisplay one or many resources.[0m
+
+ [37mPrints a table of the most important information about the specified resources. You can filter the list using a label selector and the --selector flag. If the desired resource type is namespaced you will only see results in your current namespace unless you pass --all-namespaces.[0m
+
+ [37mBy specifying the output as 'template' and providing a Go template as the value of the --template flag, you can filter the attributes of the fetched resources.[0m
+
+[37mUse "kubectl api-resources" for a complete list of supported resources.[0m
+
+[1mExamples:[0m
+  [90;3m# List all pods in ps output format[0m
+  [32mkubectl[0m [37mget[0m [37mpods[0m
+
+  [90;3m# List all pods in ps output format with more information (such as node name)[0m
+  [32mkubectl[0m [37mget[0m [37mpods[0m [36m-o[0m [37mwide[0m
+
+  [90;3m# List a single replication controller with specified NAME in ps output format[0m
+  [32mkubectl[0m [37mget[0m [37mreplicationcontroller[0m [37mweb[0m
+
+  [90;3m# List deployments in JSON output format, in the "v1" version of the "apps" API group[0m
+  [32mkubectl[0m [37mget[0m [37mdeployments.v1.apps[0m [36m-o[0m [37mjson[0m
+
+  [90;3m# List a single pod in JSON output format[0m
+  [32mkubectl[0m [37mget[0m [36m-o[0m [37mjson[0m [37mpod[0m [37mweb-pod-13je7[0m
+
+  [90;3m# List a pod identified by type and name specified in "pod.yaml" in JSON output format[0m
+  [32mkubectl[0m [37mget[0m [36m-f[0m [37mpod.yaml[0m [36m-o[0m [37mjson[0m
+
+  [90;3m# List resources from a directory with kustomization.yaml - e.g. dir/kustomization.yaml[0m
+  [32mkubectl[0m [37mget[0m [36m-k[0m [37mdir/[0m
+
+  [90;3m# Return only the phase value of the specified pod[0m
+  [32mkubectl[0m [37mget[0m [36m-o[0m [37mtemplate[0m [37mpod/web-pod-13je7[0m [36m--template=[0m[93m{{.status.phase}}[0m
+
+  [90;3m# List resource information in custom columns[0m
+  [32mkubectl[0m [37mget[0m [37mpod[0m [37mtest-pod[0m [36m-o[0m [37mcustom-columns=[0m[93mCONTAINER:.spec.containers[0].name,IMAGE:.spec.containers[0].image[0m
+
+  [90;3m# List all replication controllers and services together in ps output format[0m
+  [32mkubectl[0m [37mget[0m [37mrc,services[0m
+
+  [90;3m# List one or more resources by their type and names[0m
+  [32mkubectl[0m [37mget[0m [37mrc/web[0m [37mservice/frontend[0m [37mpods/web-pod-13je7[0m
+
+  [90;3m# List the 'status' subresource for a single pod[0m
+  [32mkubectl[0m [37mget[0m [37mpod[0m [37mweb-pod-13je7[0m [36m--subresource[0m [37mstatus[0m
+
+[1mOptions:[0m
+    [36m-A, --all-namespaces[0m=[31mfalse[0m:
+	[37mIf present, list the requested object(s) across all namespaces. Namespace in current context is ignored even if specified with --namespace.[0m
+
+    [36m--allow-missing-template-keys[0m=[32mtrue[0m:
+	[37mIf true, ignore any errors in templates when a field or map key is missing in the template. Only applies to golang and jsonpath output formats.[0m
+
+    [36m--chunk-size[0m=[35m500[0m:
+	[37mReturn large lists in chunks rather than all at once. Pass 0 to disable. This flag is beta and may change in the future.[0m
+
+    [36m--field-selector[0m=[93m''[0m:
+	[37mSelector (field query) to filter on, supports '=', '==', and '!='.(e.g. --field-selector key1=value1,key2=value2). The server only supports a limited number of field queries per type.[0m
+
+    [36m-f, --filename[0m=[93m[][0m:
+	[37mFilename, directory, or URL to files identifying the resource to get from a server.[0m
+
+    [36m--ignore-not-found[0m=[31mfalse[0m:
+	[37mIf the requested object does not exist the command will return exit code 0.[0m
+
+    [36m-k, --kustomize[0m=[93m''[0m:
+	[37mProcess the kustomization directory. This flag can't be used together with -f or -R.[0m
+
+    [36m-L, --label-columns[0m=[93m[][0m:
+	[37mAccepts a comma separated list of labels that are going to be presented as columns. Names are case-sensitive. You can also use multiple flag options like -L label1 -L label2...[0m
+
+    [36m--no-headers[0m=[31mfalse[0m:
+	[37mWhen using the default or custom-column output format, don't print headers (default print headers).[0m
+
+    [36m-o, --output[0m=[93m''[0m:
+	[37mOutput format. One of: (json, yaml, name, go-template, go-template-file, template, templatefile, jsonpath, jsonpath-as-json, jsonpath-file, custom-columns, custom-columns-file, wide). See custom columns [[36mhttps://kubernetes.io/docs/reference/kubectl/#custom-column[0m[37m], golang template [[36mhttp://golang.org/pkg/text/template/#pkg-overvie[0m[37m] and jsonpath template [[36mhttps://kubernetes.io/docs/reference/kubectl/jsonpath[0m[37m].[0m
+
+    [36m--output-watch-events[0m=[31mfalse[0m:
+	[37mOutput watch event objects when --watch or --watch-only is used. Existing objects are output as initial ADDED events.[0m
+
+    [36m--raw[0m=[93m''[0m:
+	[37mRaw URI to request from the server.  Uses the transport specified by the kubeconfig file.[0m
+
+    [36m-R, --recursive[0m=[31mfalse[0m:
+	[37mProcess the directory used in -f, --filename recursively. Useful when you want to manage related manifests organized within the same directory.[0m
+
+    [36m-l, --selector[0m=[93m''[0m:
+	[37mSelector (label query) to filter on, supports '=', '==', and '!='.(e.g. -l key1=value1,key2=value2). Matching objects must satisfy all of the specified label constraints.[0m
+
+    [36m--server-print[0m=[32mtrue[0m:
+	[37mIf true, have the server return the appropriate table output. Supports extension APIs and CRDs.[0m
+
+    [36m--show-kind[0m=[31mfalse[0m:
+	[37mIf present, list the resource type for the requested object(s).[0m
+
+    [36m--show-labels[0m=[31mfalse[0m:
+	[37mWhen printing, show all labels as the last column (default hide labels column)[0m
+
+    [36m--show-managed-fields[0m=[31mfalse[0m:
+	[37mIf true, keep the managedFields when printing objects in JSON or YAML format.[0m
+
+    [36m--sort-by[0m=[93m''[0m:
+	[37mIf non-empty, sort list types using this field specification.  The field specification is expressed as a JSONPath expression (e.g. '{.metadata.name}'). The field in the API resource specified by this JSONPath expression must be an integer or a string.[0m
+
+    [36m--subresource[0m=[93m''[0m:
+	[37mIf specified, gets the subresource of the requested object. Must be one of [status scale]. This flag is beta and may change in the future.[0m
+
+    [36m--template[0m=[93m''[0m:
+	[37mTemplate string or path to template file to use when -o=go-template, -o=go-template-file. The template format is golang templates [[36mhttp://golang.org/pkg/text/template/#pkg-overvie[0m[37m].[0m
+
+    [36m-w, --watch[0m=[31mfalse[0m:
+	[37mAfter listing/getting the requested object, watch for changes.[0m
+
+    [36m--watch-only[0m=[31mfalse[0m:
+	[37mWatch for changes to the requested object(s), without listing/getting first.[0m
+
+[1mUsage:[0m
+  [32mkubectl[0m [37mget[0m [36m[(-o|--output=[0m[93m)json|yaml|name|go-template|go-template-file|template|templatefile|jsonpath|jsonpath-as-json|jsonpath-file|custom-columns|custom-columns-file|wide][0m [37m(TYPE[.VERSION][.GROUP][0m [37m[NAME[0m | [32m-l[0m [37mlabel][0m | [32mTYPE[.VERSION][.GROUP]/NAME[0m [37m...)[0m [37m[flags][0m [37m[options][0m
+
+[37mUse "kubectl options" for a list of global command-line options (applies to all commands).[0m
