@@ -1,4 +1,4 @@
-package main
+package testcorpus
 
 import (
 	"bytes"
@@ -19,46 +19,23 @@ import (
 	"github.com/kubecolor/kubecolor/printer"
 )
 
-func RunTests(files []File) {
-	var (
-		testsPass int
-		testsFail int
-	)
-	for _, file := range files {
-		fmt.Printf("  %s:\n", colorHeader.Render(file.Name))
-		if len(file.Tests) == 0 {
-			fmt.Printf("    %s\n", colorMuted.Render("no tests found"))
-		}
-		for _, test := range file.Tests {
-			if err := ExecuteTest(test); err != nil {
-				testsFail++
-				fmt.Println(indent(FormatTestError(test, err), "    "))
-			} else {
-				fmt.Printf("    ✅ %s\n", colorSuccess.Render(test.Name))
-				testsPass++
-			}
-		}
-	}
-	fmt.Println()
-	fmt.Printf("  %s\n", colorMuted.Render("---"))
-	fmt.Println()
-	fmt.Printf("  %s\n", colorHeader.Render("Results:"))
-	if testsPass > 0 {
-		fmt.Printf("    Passed: %s\n", colorSuccess.Render(strconv.Itoa(testsPass)))
-	} else {
-		fmt.Printf("    Passed: %s\n", colorMuted.Render(strconv.Itoa(testsPass)))
-	}
-	if testsFail > 0 {
-		fmt.Printf("    Failed: %s\n", colorErrorText.Render(strconv.Itoa(testsFail)))
-	} else {
-		fmt.Printf("    Failed: %s\n", colorMuted.Render(strconv.Itoa(testsFail)))
-	}
-	fmt.Println()
+var (
+	ColorErrorPrefix = config.MustParseColor("hi-red:bold")
+	ColorErrorText   = config.MustParseColor("red")
+	ColorWarnPrefix  = config.MustParseColor("hi-yellow:bold")
+	ColorWarnText    = config.MustParseColor("yellow")
 
-	if testsFail > 0 {
-		os.Exit(1)
-	}
-}
+	ColorHeader  = config.MustParseColor("bold")
+	ColorMuted   = config.MustParseColor("gray")
+	ColorSuccess = config.MustParseColor("green")
+
+	ColorDiffAddPrefix      = config.MustParseColor("fg=green:bg=22:bold")
+	ColorDiffAdd            = config.MustParseColor("bg=22") // dark green
+	ColorDiffDelPrefix      = config.MustParseColor("fg=red:bg=52:bold")
+	ColorDiffDel            = config.MustParseColor("bg=52") // dark red
+	ColorDiffEqual          = config.MustParseColor("gray:italic")
+	ColorDiffColorHighlight = config.MustParseColor(`magenta`)
+)
 
 func ExecuteTest(test Test) error {
 	args := strings.Fields(test.Command)
@@ -83,23 +60,64 @@ func ExecuteTest(test Test) error {
 
 func FormatTestError(test Test, err error) string {
 	var buf bytes.Buffer
-	fmt.Fprintf(&buf, "❌ %s\n", colorErrorPrefix.Render(test.Name))
+	fmt.Fprintf(&buf, "❌ %s\n", ColorErrorPrefix.Render(test.Name))
 	for _, env := range test.Env {
-		fmt.Fprintf(&buf, "%s %s\n", colorErrorPrefix.Render("│"), colorMuted.Render(fmt.Sprintf("(env %s=%q)", env.Key, env.Value)))
+		fmt.Fprintf(&buf, "%s %s\n", ColorErrorPrefix.Render("│"), ColorMuted.Render(fmt.Sprintf("(env %s=%q)", env.Key, env.Value)))
 	}
 	lines := strings.Split(err.Error(), "\n")
 	for i, line := range lines {
 		switch {
 		case i == 0:
-			fmt.Fprintf(&buf, "%s %s\n", colorErrorPrefix.Render("│"), colorErrorText.Render(line))
+			fmt.Fprintf(&buf, "%s %s\n", ColorErrorPrefix.Render("│"), ColorErrorText.Render(line))
 		case i == len(lines)-1:
-			fmt.Fprintf(&buf, "%s%s\n", colorErrorPrefix.Render("└─"), line)
+			fmt.Fprintf(&buf, "%s%s\n", ColorErrorPrefix.Render("└─"), line)
 		default:
-			fmt.Fprintf(&buf, "%s %s\n", colorErrorPrefix.Render("│"), line)
+			fmt.Fprintf(&buf, "%s %s\n", ColorErrorPrefix.Render("│"), line)
 		}
 	}
 	fmt.Fprintln(&buf)
 	return buf.String()
+}
+
+func RunTests(files []File) {
+	var (
+		testsPass int
+		testsFail int
+	)
+	for _, file := range files {
+		fmt.Printf("  %s:\n", ColorHeader.Render(file.Name))
+		if len(file.Tests) == 0 {
+			fmt.Printf("    %s\n", ColorMuted.Render("no tests found"))
+		}
+		for _, test := range file.Tests {
+			if err := ExecuteTest(test); err != nil {
+				testsFail++
+				fmt.Println(indent(FormatTestError(test, err), "    "))
+			} else {
+				fmt.Printf("    ✅ %s\n", ColorSuccess.Render(test.Name))
+				testsPass++
+			}
+		}
+	}
+	fmt.Println()
+	fmt.Printf("  %s\n", ColorMuted.Render("---"))
+	fmt.Println()
+	fmt.Printf("  %s\n", ColorHeader.Render("Results:"))
+	if testsPass > 0 {
+		fmt.Printf("    Passed: %s\n", ColorSuccess.Render(strconv.Itoa(testsPass)))
+	} else {
+		fmt.Printf("    Passed: %s\n", ColorMuted.Render(strconv.Itoa(testsPass)))
+	}
+	if testsFail > 0 {
+		fmt.Printf("    Failed: %s\n", ColorErrorText.Render(strconv.Itoa(testsFail)))
+	} else {
+		fmt.Printf("    Failed: %s\n", ColorMuted.Render(strconv.Itoa(testsFail)))
+	}
+	fmt.Println()
+
+	if testsFail > 0 {
+		os.Exit(1)
+	}
 }
 
 func indent(s, indent string) string {
@@ -145,31 +163,31 @@ func createColoredDiff(path, want, got string) string {
 	for _, line := range lines {
 		switch line.Kind {
 		case gotextdiff.Equal:
-			fmt.Fprintf(&buf, "  %s\n", colorDiffEqual.Render(color.ClearCode(line.Content)))
+			fmt.Fprintf(&buf, "  %s\n", ColorDiffEqual.Render(color.ClearCode(line.Content)))
 		case gotextdiff.Insert:
-			fmt.Fprintf(&buf, "%s%s\n", colorDiffAddPrefix.Render("+ "), injectColor(line.Content, colorDiffAdd))
+			fmt.Fprintf(&buf, "%s%s\n", ColorDiffAddPrefix.Render("+ "), injectColor(line.Content, ColorDiffAdd))
 		case gotextdiff.Delete:
-			fmt.Fprintf(&buf, "%s%s\n", colorDiffDelPrefix.Render("- "), injectColor(line.Content, colorDiffDel))
+			fmt.Fprintf(&buf, "%s%s\n", ColorDiffDelPrefix.Render("- "), injectColor(line.Content, ColorDiffDel))
 		}
 	}
 
-	fmt.Fprintf(&buf, "\n%s\n\n", colorMuted.Render("-----"))
+	fmt.Fprintf(&buf, "\n%s\n\n", ColorMuted.Render("-----"))
 
 	tabbedLines := quoteAndTabWrite(lines)
 	for _, diff := range tabbedLines {
 		switch diff.Kind {
 		case gotextdiff.Equal:
-			fmt.Fprintf(&buf, "  %s\n", colorDiffEqual.Render(diff.Content))
+			fmt.Fprintf(&buf, "  %s\n", ColorDiffEqual.Render(diff.Content))
 		case gotextdiff.Insert:
-			text := injectColor(highlightEscapedColorCodes(diff.Content, colorDiffColorHighlight), colorDiffAdd)
-			fmt.Fprintf(&buf, "%s%s\n", colorDiffAddPrefix.Render("+ "), text)
+			text := injectColor(highlightEscapedColorCodes(diff.Content, ColorDiffColorHighlight), ColorDiffAdd)
+			fmt.Fprintf(&buf, "%s%s\n", ColorDiffAddPrefix.Render("+ "), text)
 		case gotextdiff.Delete:
-			text := injectColor(highlightEscapedColorCodes(diff.Content, colorDiffColorHighlight), colorDiffDel)
-			fmt.Fprintf(&buf, "%s%s\n", colorDiffDelPrefix.Render("- "), text)
+			text := injectColor(highlightEscapedColorCodes(diff.Content, ColorDiffColorHighlight), ColorDiffDel)
+			fmt.Fprintf(&buf, "%s%s\n", ColorDiffDelPrefix.Render("- "), text)
 		}
 	}
 
-	fmt.Fprintf(&buf, "\n%s %s\n", colorSuccess.Render("(+want)"), colorErrorText.Render("(-got)"))
+	fmt.Fprintf(&buf, "\n%s %s\n", ColorSuccess.Render("(+want)"), ColorErrorText.Render("(-got)"))
 
 	return buf.String()
 }

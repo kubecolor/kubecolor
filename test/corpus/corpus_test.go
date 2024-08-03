@@ -3,13 +3,14 @@ package main
 import (
 	"os"
 	"testing"
+
+	"github.com/kubecolor/kubecolor/internal/testcorpus"
 )
 
 func TestCorpus(t *testing.T) {
-	const glob = "test/corpus/*.txt"
-	repoRoot := os.DirFS("../../..")
+	const glob = "*.txt"
 
-	files, err := ParseGlobFS(repoRoot, glob)
+	files, err := testcorpus.ParseGlob(glob)
 	if err != nil {
 		t.Fatalf("Error parsing corpus test file glob: %s", err)
 	}
@@ -27,8 +28,8 @@ func TestCorpus(t *testing.T) {
 			}
 			for _, test := range file.Tests {
 				t.Run(test.Name, func(t *testing.T) {
-					if err := ExecuteTest(test); err != nil {
-						t.Error(FormatTestError(test, err))
+					if err := testcorpus.ExecuteTest(test); err != nil {
+						t.Error(testcorpus.FormatTestError(test, err))
 					}
 				})
 			}
