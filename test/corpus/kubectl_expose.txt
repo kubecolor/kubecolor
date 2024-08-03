@@ -1,0 +1,15 @@
+================================================================================
+$ kubectl expose deploy nginx
+================================================================================
+
+deployment.apps/nginx exposed
+deployment.apps/nginx exposed (dry run)
+deployment.apps/nginx exposed (server dry run)
+deployment.apps/nginx unknown
+
+--------------------------------------------------------------------------------
+
+deployment.apps/nginx [35mexposed[0m
+deployment.apps/nginx [35mexposed[0m [36m(dry run)[0m
+deployment.apps/nginx [35mexposed[0m [36m(server dry run)[0m
+[35mdeployment.apps/nginx unknown[0m

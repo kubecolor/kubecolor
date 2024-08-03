@@ -1,0 +1,63 @@
+================================================================================
+$ kubectl rollout restart deploy nginx
+================================================================================
+
+deployment.apps/nginx restarted
+deployment.apps/nginx restarted (dry run)
+deployment.apps/nginx restarted (server dry run)
+deployment.apps/nginx unknown
+
+--------------------------------------------------------------------------------
+
+deployment.apps/nginx [33mrestarted[0m
+deployment.apps/nginx [33mrestarted[0m [36m(dry run)[0m
+deployment.apps/nginx [33mrestarted[0m [36m(server dry run)[0m
+[33mdeployment.apps/nginx unknown[0m
+
+================================================================================
+$ kubectl rollout pause deploy nginx
+================================================================================
+
+deployment.apps/nginx paused
+deployment.apps/nginx paused (dry run)
+deployment.apps/nginx paused (server dry run)
+deployment.apps/nginx unknown
+
+--------------------------------------------------------------------------------
+
+deployment.apps/nginx [35mpaused[0m
+deployment.apps/nginx [35mpaused[0m [36m(dry run)[0m
+deployment.apps/nginx [35mpaused[0m [36m(server dry run)[0m
+[33mdeployment.apps/nginx unknown[0m
+
+================================================================================
+$ kubectl rollout resume deploy nginx
+================================================================================
+
+deployment.apps/nginx resumed
+deployment.apps/nginx resumed (dry run)
+deployment.apps/nginx resumed (server dry run)
+deployment.apps/nginx unknown
+
+--------------------------------------------------------------------------------
+
+deployment.apps/nginx [36mresumed[0m
+deployment.apps/nginx [36mresumed[0m [36m(dry run)[0m
+deployment.apps/nginx [36mresumed[0m [36m(server dry run)[0m
+[33mdeployment.apps/nginx unknown[0m
+
+================================================================================
+$ kubectl rollout undo deploy nginx
+================================================================================
+
+deployment.apps/nginx rolled back
+deployment.apps/nginx rolled back (dry run)
+deployment.apps/nginx rolled back (server dry run)
+deployment.apps/nginx unknown
+
+--------------------------------------------------------------------------------
+
+deployment.apps/nginx [33mrolled back[0m
+deployment.apps/nginx [33mrolled back[0m [36m(dry run)[0m
+deployment.apps/nginx [33mrolled back[0m [36m(server dry run)[0m
+[33mdeployment.apps/nginx unknown[0m

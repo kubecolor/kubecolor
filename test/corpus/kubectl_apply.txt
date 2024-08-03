@@ -17,3 +17,123 @@ deployment.apps/foo [35munchanged[0m
 deployment.apps/foo [35munchanged[0m [36m(dry run)[0m
 deployment.apps/foo [35munchanged[0m [36m(server dry run)[0m
 [32mdeployment.apps/foo bar[0m
+
+================================================================================
+$ kubectl apply -f deploy.yaml -o yaml
+================================================================================
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+
+--------------------------------------------------------------------------------
+
+[96mapiVersion[0m: [93mapps/v1[0m
+[96mkind[0m: [93mDeployment[0m
+[96mmetadata[0m:
+  [36mlabels[0m:
+    [96mapp[0m: [93mnginx[0m
+  [36mname[0m: [93mnginx[0m
+[96mspec[0m:
+  [36mreplicas[0m: [35m1[0m
+  [36mselector[0m:
+    [96mmatchLabels[0m:
+      [36mapp[0m: [93mnginx[0m
+  [36mtemplate[0m:
+    [96mmetadata[0m:
+      [36mlabels[0m:
+        [96mapp[0m: [93mnginx[0m
+    [96mspec[0m:
+      [36mcontainers[0m:
+      - [96mimage[0m: [93mnginx[0m
+        [96mname[0m: [93mnginx[0m
+
+================================================================================
+$ kubectl apply -f deploy.yaml -o json
+================================================================================
+
+{
+    "kind": "Deployment",
+    "apiVersion": "apps/v1",
+    "metadata": {
+        "name": "nginx",
+        "labels": {
+            "app": "nginx"
+        }
+    },
+    "spec": {
+        "replicas": 1,
+        "selector": {
+            "matchLabels": {
+                "app": "nginx"
+            }
+        },
+        "template": {
+            "metadata": {
+                "labels": {
+                    "app": "nginx"
+                }
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "name": "nginx",
+                        "image": "nginx"
+                    }
+                ]
+            }
+        }
+    }
+}
+
+--------------------------------------------------------------------------------
+
+{
+    "[36mkind[0m": "[93mDeployment[0m",
+    "[36mapiVersion[0m": "[93mapps/v1[0m",
+    "[36mmetadata[0m": {
+        "[96mname[0m": "[93mnginx[0m",
+        "[96mlabels[0m": {
+            "[36mapp[0m": "[93mnginx[0m"
+        }
+    },
+    "[36mspec[0m": {
+        "[96mreplicas[0m": [35m1[0m,
+        "[96mselector[0m": {
+            "[36mmatchLabels[0m": {
+                "[96mapp[0m": "[93mnginx[0m"
+            }
+        },
+        "[96mtemplate[0m": {
+            "[36mmetadata[0m": {
+                "[96mlabels[0m": {
+                    "[36mapp[0m": "[93mnginx[0m"
+                }
+            },
+            "[36mspec[0m": {
+                "[96mcontainers[0m": [
+                    {
+                        "[96mname[0m": "[93mnginx[0m",
+                        "[96mimage[0m": "[93mnginx[0m"
+                    }
+                ]
+            }
+        }
+    }
+}
