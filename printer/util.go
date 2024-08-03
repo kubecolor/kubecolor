@@ -69,7 +69,7 @@ func ColorDataValue(val string, theme *config.Theme) config.Color {
 
 // ColorStatus returns the color that should be used for a given status text.
 func ColorStatus(status string, theme *config.Theme) (string, bool) {
-	switch status {
+	switch strings.TrimPrefix(status, "Init:") {
 	case
 		// from https://github.com/kubernetes/kubernetes/blob/master/pkg/kubelet/events/event.go
 		// Container event reason list

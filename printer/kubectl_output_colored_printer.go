@@ -53,8 +53,6 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 				withHeader,
 				p.Theme,
 				func(_ int, column string) string {
-					column = strings.TrimPrefix(column, "Init:")
-
 					// first try to match a status
 					colored, matched := ColorStatus(column, p.Theme)
 					if matched {
@@ -62,9 +60,9 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 					}
 
 					// When Readiness is "n/m" then yellow
-					if left, right, ok := stringutil.ParseRatio(column); ok {
+					if left, right, ok := stringutil.ParseRatio(strings.TrimPrefix(column, "Init:")); ok {
 						switch {
-						case column == "0/0":
+						case left == "0" && right == "0":
 							return p.Theme.Data.Ratio.Zero.Render(column)
 						case left == right:
 							return p.Theme.Data.Ratio.Equal.Render(column)
