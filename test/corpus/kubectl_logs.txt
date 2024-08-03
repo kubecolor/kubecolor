@@ -136,15 +136,15 @@ $ kubectl logs traefik-6fd95988f4-4fq74
 
 --------------------------------------------------------------------------------
 
-{"level":"info","version":"3.0.4","time":"2024-08-03T22:00:34Z","message":"Traefik version 3.0.4 built on [90;3m2024-07-02T13:46:37Z[0m"}
-{"level":"info","time":"2024-08-03T22:00:34Z","message":"Stats collection is enabled."}
-{"level":"info","time":"2024-08-03T22:00:34Z","message":"Help us improve Traefik by leaving this feature on :)"}
-{"level":"info","time":"2024-08-03T22:00:34Z","message":"Starting provider aggregator aggregator.ProviderAggregator"}
-{"level":"info","time":"2024-08-03T22:00:34Z","message":"Starting provider *traefik.Provider"}
-{"level":"info","time":"2024-08-03T22:00:34Z","message":"Starting provider *crd.Provider"}
-{"level":"info","providerName":"kubernetescrd","time":"2024-08-03T22:00:34Z","message":"label selector is: \"\""}
-{"level":"info","providerName":"kubernetescrd","time":"2024-08-03T22:00:34Z","message":"Creating in-cluster Provider client"}
-{"level":"info","time":"2024-08-03T22:00:34Z","message":"Starting provider *ingress.Provider"}
-{"level":"info","providerName":"kubernetes","time":"2024-08-03T22:00:34Z","message":"ingress label selector is: \"\""}
-{"level":"info","providerName":"kubernetes","time":"2024-08-03T22:00:34Z","message":"Creating in-cluster Provider client"}
-{"level":"info","time":"2024-08-03T22:00:34Z","message":"Starting provider *acme.ChallengeTLSALPN"}
+{[96m"level"[0m:[32m"info"[0m,[36m"version"[0m:[93m"3.0.4"[0m,[96m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[36m"message"[0m:[93m"Traefik version 3.0.4 built on 2024-07-02T13:46:37Z"[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[96m"message"[0m:[93m"Stats collection is enabled."[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[96m"message"[0m:[93m"Help us improve Traefik by leaving this feature on :)"[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[96m"message"[0m:[93m"Starting provider aggregator aggregator.ProviderAggregator"[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[96m"message"[0m:[93m"Starting provider *traefik.Provider"[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[96m"message"[0m:[93m"Starting provider *crd.Provider"[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"providerName"[0m:[93m"kubernetescrd"[0m,[96m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[36m"message"[0m:[93m"label selector is: \"\""[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"providerName"[0m:[93m"kubernetescrd"[0m,[96m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[36m"message"[0m:[93m"Creating in-cluster Provider client"[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[96m"message"[0m:[93m"Starting provider *ingress.Provider"[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"providerName"[0m:[93m"kubernetes"[0m,[96m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[36m"message"[0m:[93m"ingress label selector is: \"\""[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"providerName"[0m:[93m"kubernetes"[0m,[96m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[36m"message"[0m:[93m"Creating in-cluster Provider client"[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[96m"message"[0m:[93m"Starting provider *acme.ChallengeTLSALPN"[0m}
