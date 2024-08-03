@@ -110,29 +110,49 @@
           "$ref": "#/$defs/themeStderr",
           "description": "used in kubectl's stderr output"
         },
-        "describe": {
-          "$ref": "#/$defs/themeDescribe",
-          "description": "used in \"kubectl describe\""
-        },
         "apply": {
           "$ref": "#/$defs/themeApply",
           "description": "used in \"kubectl apply\""
+        },
+        "create": {
+          "$ref": "#/$defs/themeCreate",
+          "description": "used in \"kubectl create\""
+        },
+        "delete": {
+          "$ref": "#/$defs/themeDelete",
+          "description": "used in \"kubectl delete\""
+        },
+        "describe": {
+          "$ref": "#/$defs/themeDescribe",
+          "description": "used in \"kubectl describe\""
         },
         "explain": {
           "$ref": "#/$defs/themeExplain",
           "description": "used in \"kubectl explain\""
         },
-        "options": {
-          "$ref": "#/$defs/themeOptions",
-          "description": "used in \"kubectl options\""
-        },
-        "version": {
-          "$ref": "#/$defs/themeVersion",
-          "description": "used in \"kubectl version\""
+        "expose": {
+          "$ref": "#/$defs/themeExpose",
+          "description": "used in \"kubectl expose\""
         },
         "help": {
           "$ref": "#/$defs/themeHelp",
           "description": "used in \"kubectl --help\""
+        },
+        "options": {
+          "$ref": "#/$defs/themeOptions",
+          "description": "used in \"kubectl options\""
+        },
+        "patch": {
+          "$ref": "#/$defs/themePatch",
+          "description": "used in \"kubectl patch\""
+        },
+        "rollout": {
+          "$ref": "#/$defs/themeRollout",
+          "description": "used in \"kubectl rollout\""
+        },
+        "version": {
+          "$ref": "#/$defs/themeVersion",
+          "description": "used in \"kubectl version\""
         }
       },
       "additionalProperties": false,
@@ -155,11 +175,11 @@
         },
         "dryRun": {
           "$ref": "#/$defs/color",
-          "description": "used on \"deployment.apps/quux created (dry-run)\""
+          "description": "used on \"(dry run)\" and \"(server dry run)\""
         },
         "fallback": {
           "$ref": "#/$defs/color",
-          "description": "used when \"kubectl apply\" outputs unknown format"
+          "description": "used when outputs unknown format"
         }
       },
       "additionalProperties": false,
@@ -204,6 +224,25 @@
       "additionalProperties": false,
       "type": "object",
       "description": "ThemeBase contains base colors that other theme fields can default to, just to make overriding themes easier."
+    },
+    "themeCreate": {
+      "properties": {
+        "created": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"deployment.apps/foo created\""
+        },
+        "dryRun": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"(dry run)\" and \"(server dry run)\""
+        },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when outputs unknown format"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeCreate holds colors for the \"kubectl create\" output."
     },
     "themeData": {
       "properties": {
@@ -269,6 +308,25 @@
       "additionalProperties": false,
       "type": "object"
     },
+    "themeDelete": {
+      "properties": {
+        "deleted": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"deployment.apps \"nginx\" deleted\""
+        },
+        "dryRun": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"(dry run)\" and \"(server dry run)\""
+        },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when outputs unknown format"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeDelete holds colors for the \"kubectl delete\" output."
+    },
     "themeDescribe": {
       "properties": {
         "key": {
@@ -294,6 +352,25 @@
       "additionalProperties": false,
       "type": "object",
       "description": "ThemeExplain holds colors for the \"kubectl explain\" output."
+    },
+    "themeExpose": {
+      "properties": {
+        "exposed": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"deployment.apps/foo created\""
+        },
+        "dryRun": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"(dry run)\" and \"(server dry run)\""
+        },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when outputs unknown format"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeExpose holds colors for the \"kubectl expose\" output."
     },
     "themeHelp": {
       "properties": {
@@ -332,6 +409,56 @@
       "additionalProperties": false,
       "type": "object",
       "description": "ThemeOptions holds colors for the \"kubectl options\" output."
+    },
+    "themePatch": {
+      "properties": {
+        "patched": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"deployment.apps/foo patched\""
+        },
+        "dryRun": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"(dry run)\" and \"(server dry run)\""
+        },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when outputs unknown format"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemePatch holds colors for the \"kubectl patch\" output."
+    },
+    "themeRollout": {
+      "properties": {
+        "rolledBack": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"deployment.apps/foo rolled back\""
+        },
+        "paused": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"deployment.apps/foo paused\""
+        },
+        "resumed": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"deployment.apps/foo resumed\""
+        },
+        "restarted": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"deployment.apps/foo restarted\""
+        },
+        "dryRun": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"(dry run)\" and \"(server dry run)\""
+        },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when outputs unknown format"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeRollout holds colors for the \"kubectl rollout\" output."
     },
     "themeShell": {
       "properties": {
