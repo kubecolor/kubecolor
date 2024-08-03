@@ -158,7 +158,9 @@ func (s *Scanner) scan(rest []byte) int {
 			return s.pushToken(KindQuote, string(quoted))
 		}
 	case '{':
-		// TODO: Try read JSON
+		if written := s.scanJSON(rest); written > 0 {
+			return written
+		}
 	}
 
 	if key, _, ok := bytes.Cut(word, []byte("=")); ok {
@@ -295,7 +297,9 @@ func (s *Scanner) scanKeyValue(key, valueAndRest []byte) int {
 		}
 
 	case '{':
-		// TODO: parse JSON
+		if written := s.scanJSON(valueAndRest); written > 0 {
+			return written
+		}
 	}
 
 	if dateMatch := dateRegex.Find(word); dateMatch != nil {
@@ -319,6 +323,157 @@ func (s *Scanner) scanKeyValue(key, valueAndRest []byte) int {
 
 	s.pushToken(KindValue, string(word))
 	return len(key) + 1 + len(word)
+}
+
+func (s *Scanner) scanJSON(rest []byte) int {
+	firstRune, _ := utf8.DecodeRune(rest)
+	if firstRune == utf8.RuneError {
+		return 0
+	}
+
+	switch firstRune {
+	case '"':
+		quoted := readQuoted(rest)
+		if quoted == nil {
+			return 0
+		}
+		if len(quoted) > 2 {
+			unquotedNaiively := quoted[1 : len(quoted)-1]
+
+			if dateMatch := dateRegex.Find(unquotedNaiively); len(dateMatch) == len(unquotedNaiively) {
+				return s.pushToken(KindDate, string(quoted))
+			}
+
+			if severityKind := severityKindFromName(string(unquotedNaiively)); severityKind != KindUnknown {
+				return s.pushToken(severityKind, string(quoted))
+			}
+		}
+		return s.pushToken(KindValue, string(quoted))
+
+	case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.':
+		number := readJSONNumber(rest)
+		return s.pushToken(KindValue, string(number))
+
+	case 't', 'f', 'n':
+		letters := readLetters(rest)
+		lettersString := string(letters)
+		switch lettersString {
+		case "true", "false", "null":
+			return s.pushToken(KindValue, lettersString)
+		}
+
+	case '{':
+		jsonObjectSize := s.pushToken(KindParenthases, string("{"))
+
+		closingRune, _ := utf8.DecodeRune(rest[jsonObjectSize:])
+		if closingRune == '}' {
+			// empty object
+			jsonObjectSize += s.pushToken(KindParenthases, string("}"))
+			return jsonObjectSize
+		}
+
+		for {
+			// {"key":"value"}
+			//  ^^^^^^
+			key, delimiter, afterColon := readJSONKeyValue(rest[jsonObjectSize:])
+			if key == nil {
+				return jsonObjectSize
+			}
+			jsonObjectSize += s.pushToken(KindKey, string(key))
+			jsonObjectSize += s.pushToken(KindUnknown, string(delimiter))
+
+			// {"key":"value"}
+			//        ^^^^^^^
+			nestedSize := s.scanJSON(afterColon)
+			jsonObjectSize += nestedSize
+
+			afterNested := afterColon[nestedSize:]
+
+			closingRune, _ := utf8.DecodeRune(afterNested)
+			if closingRune == utf8.RuneError {
+				return jsonObjectSize
+			}
+			switch closingRune {
+			case ',':
+				// next key
+				jsonObjectSize += s.pushToken(KindUnknown, ",")
+				// continue to next for loop iteration
+			case '}':
+				// close object
+				jsonObjectSize += s.pushToken(KindParenthases, "}")
+				return jsonObjectSize
+			default:
+				// unknown
+				return jsonObjectSize
+			}
+		}
+
+	case '[':
+		jsonArraySize := s.pushToken(KindParenthases, string("["))
+
+		closingRune, _ := utf8.DecodeRune(rest[jsonArraySize:])
+		if closingRune == ']' {
+			// empty object
+			jsonArraySize += s.pushToken(KindParenthases, string("]"))
+			return jsonArraySize
+		}
+
+		for {
+			// ["value1","value2"]
+			//  ^^^^^^^^
+			itemSize := s.scanJSON(rest[jsonArraySize:])
+			if itemSize == 0 {
+				return jsonArraySize
+			}
+			jsonArraySize += itemSize
+			afterItem := rest[jsonArraySize:]
+
+			closingRune, _ := utf8.DecodeRune(afterItem)
+			if closingRune == utf8.RuneError {
+				return jsonArraySize
+			}
+			switch closingRune {
+			case ',':
+				// next item
+				jsonArraySize += s.pushToken(KindUnknown, ",")
+				// continue to next for loop iteration
+			case ']':
+				// close array
+				jsonArraySize += s.pushToken(KindParenthases, "]")
+				return jsonArraySize
+			default:
+				// unknown
+				return jsonArraySize
+			}
+		}
+	}
+
+	return 0
+}
+
+func readJSONKeyValue(b []byte) (key, delimiter, rest []byte) {
+	// {"key":"value"}
+	//  ^^^^^
+	key = readQuoted(b)
+	if key == nil {
+		return nil, nil, nil
+	}
+
+	afterKey := b[len(key):]
+	// {"key":"value"}
+	//       ^
+	colonRune, colonSize := utf8.DecodeRune(afterKey)
+	if colonRune == utf8.RuneError || colonRune != ':' {
+		return nil, nil, nil
+	}
+
+	delimiter = afterKey[:colonSize]
+
+	// {"key":"value"}
+	//        ^^^^^^^
+	rest = afterKey[colonSize:]
+
+	return key, delimiter, rest
 }
 
 func readParenthases(lineBuffer []byte, open, close rune) []byte {
@@ -390,6 +545,38 @@ func readWord(lineBuffer []byte) []byte {
 		nextRune, size := utf8.DecodeRune(lineBuffer[index:])
 		if nextRune == utf8.RuneError || unicode.IsSpace(nextRune) {
 			return lineBuffer[:index]
+		}
+		index += size
+	}
+}
+
+func readLetters(rest []byte) []byte {
+	var index int
+	for {
+		r, size := utf8.DecodeRune(rest[index:])
+		if r == utf8.RuneError {
+			return rest[:index]
+		}
+		if !unicode.IsLetter(r) {
+			return rest[:index]
+		}
+		index += size
+	}
+}
+
+func readJSONNumber(rest []byte) []byte {
+	var index int
+	var hasDot bool
+	for {
+		r, size := utf8.DecodeRune(rest[index:])
+		if r == utf8.RuneError {
+			return rest[:index]
+		}
+		if (!unicode.IsDigit(r) && r != '.') || (r == '.' && hasDot) {
+			return rest[:index]
+		}
+		if r == '.' {
+			hasDot = true
 		}
 		index += size
 	}

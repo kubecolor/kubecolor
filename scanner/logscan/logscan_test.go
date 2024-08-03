@@ -143,6 +143,112 @@ func TestScanner_tokens(t *testing.T) {
 				{Kind: KindNewline, Text: "\n"},
 			},
 		},
+
+		// JSON
+		{
+			name:  "json empty object",
+			input: "{}\n",
+			want: []Token{
+				{Kind: KindParenthases, Text: "{"},
+				{Kind: KindParenthases, Text: "}"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "json object with single key",
+			input: `{"key":"value"}` + "\n",
+			want: []Token{
+				{Kind: KindParenthases, Text: "{"},
+				{Kind: KindKey, Text: `"key"`},
+				{Kind: KindUnknown, Text: ":"},
+				{Kind: KindValue, Text: `"value"`},
+				{Kind: KindParenthases, Text: "}"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "json object with two keys",
+			input: `{"key":"value","key2":"value2"}` + "\n",
+			want: []Token{
+				{Kind: KindParenthases, Text: "{"},
+				{Kind: KindKey, Text: `"key"`},
+				{Kind: KindUnknown, Text: ":"},
+				{Kind: KindValue, Text: `"value"`},
+				{Kind: KindUnknown, Text: ","},
+				{Kind: KindKey, Text: `"key2"`},
+				{Kind: KindUnknown, Text: ":"},
+				{Kind: KindValue, Text: `"value2"`},
+				{Kind: KindParenthases, Text: "}"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "json object with boolean",
+			input: `{"key":true}` + "\n",
+			want: []Token{
+				{Kind: KindParenthases, Text: "{"},
+				{Kind: KindKey, Text: `"key"`},
+				{Kind: KindUnknown, Text: ":"},
+				{Kind: KindValue, Text: `true`},
+				{Kind: KindParenthases, Text: "}"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "json object with number",
+			input: `{"key":123.456}` + "\n",
+			want: []Token{
+				{Kind: KindParenthases, Text: "{"},
+				{Kind: KindKey, Text: `"key"`},
+				{Kind: KindUnknown, Text: ":"},
+				{Kind: KindValue, Text: `123.456`},
+				{Kind: KindParenthases, Text: "}"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "json empty array",
+			input: `{"key":[]}` + "\n",
+			want: []Token{
+				{Kind: KindParenthases, Text: "{"},
+				{Kind: KindKey, Text: `"key"`},
+				{Kind: KindUnknown, Text: ":"},
+				{Kind: KindParenthases, Text: "["},
+				{Kind: KindParenthases, Text: "]"},
+				{Kind: KindParenthases, Text: "}"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "json array with single item",
+			input: `{"key":[1]}` + "\n",
+			want: []Token{
+				{Kind: KindParenthases, Text: "{"},
+				{Kind: KindKey, Text: `"key"`},
+				{Kind: KindUnknown, Text: ":"},
+				{Kind: KindParenthases, Text: "["},
+				{Kind: KindValue, Text: "1"},
+				{Kind: KindParenthases, Text: "]"},
+				{Kind: KindParenthases, Text: "}"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "json array with two items",
+			input: `{"key":[1,2]}` + "\n",
+			want: []Token{
+				{Kind: KindParenthases, Text: "{"},
+				{Kind: KindKey, Text: `"key"`},
+				{Kind: KindUnknown, Text: ":"},
+				{Kind: KindParenthases, Text: "["},
+				{Kind: KindValue, Text: "1"},
+				{Kind: KindUnknown, Text: ","},
+				{Kind: KindValue, Text: "2"},
+				{Kind: KindParenthases, Text: "]"},
+				{Kind: KindParenthases, Text: "}"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
 	}
 
 	for _, tc := range tests {
@@ -302,6 +408,42 @@ func TestReadQuoted(t *testing.T) {
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			quoted := readQuoted([]byte(tc.input))
+			testutil.MustEqual(t, tc.want, string(quoted), "input: "+tc.input)
+		})
+	}
+}
+
+func TestReadLetters(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+		want  string
+	}{
+		{
+			name:  "empty string",
+			input: "",
+			want:  "",
+		},
+		{
+			name:  "single word",
+			input: `foo`,
+			want:  `foo`,
+		},
+		{
+			name:  "up until numbers",
+			input: `foo123`,
+			want:  `foo`,
+		},
+		{
+			name:  "up until symbol",
+			input: `foo}`,
+			want:  `foo`,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			quoted := readLetters([]byte(tc.input))
 			testutil.MustEqual(t, tc.want, string(quoted), "input: "+tc.input)
 		})
 	}
