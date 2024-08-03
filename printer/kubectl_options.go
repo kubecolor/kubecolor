@@ -9,11 +9,16 @@ import (
 	"github.com/kubecolor/kubecolor/scanner/describe"
 )
 
+// OptionsPrinter is used in "kubectl options" output
 type OptionsPrinter struct {
 	Theme *config.Theme
 }
 
-func (op *OptionsPrinter) Print(r io.Reader, w io.Writer) {
+// ensures it implements the interface
+var _ Printer = &OptionsPrinter{}
+
+// Print implements [Printer.Print]
+func (p *OptionsPrinter) Print(r io.Reader, w io.Writer) {
 	scanner := describe.NewScanner(r)
 	for scanner.Scan() {
 		line := scanner.Line()
@@ -27,16 +32,16 @@ func (op *OptionsPrinter) Print(r io.Reader, w io.Writer) {
 			val := string(line.Value)
 			fmt.Fprintf(w, "%s%s%s%s%s\n",
 				line.Indent,
-				op.Theme.Options.Flag.Render(string(line.Key)),
+				p.Theme.Options.Flag.Render(string(line.Key)),
 				line.Spacing,
-				getColorByValueType(val, op.Theme).Render(val),
+				ColorDataValue(val, p.Theme).Render(val),
 				line.Trailing)
 			continue
 		}
 
 		fmt.Fprintf(w, "%s%s%s\n",
 			line.Indent,
-			op.Theme.Data.String.Render(string(slices.Concat(line.Key, line.Spacing, line.Value))),
+			p.Theme.Data.String.Render(string(slices.Concat(line.Key, line.Spacing, line.Value))),
 			line.Trailing)
 	}
 }

@@ -56,7 +56,7 @@ func updateFile(file File) (bool, error) {
 		return false, nil
 	}
 
-	if err := os.WriteFile(file.Path, buf.Bytes(), 0644); err != nil {
+	if err := os.WriteFile(file.Path, buf.Bytes(), 0o644); err != nil {
 		return false, err
 	}
 	return true, nil

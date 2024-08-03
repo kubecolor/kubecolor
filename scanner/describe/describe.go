@@ -9,9 +9,11 @@ import (
 	"github.com/kubecolor/kubecolor/internal/bytesutil"
 )
 
-var spaceCharset = " \t"
-var doubleSpace = []byte{' ', ' '}
-var tabBytes = []byte{'\t'}
+var (
+	spaceCharset = " \t"
+	doubleSpace  = []byte{' ', ' '}
+	tabBytes     = []byte{'\t'}
+)
 
 type Line struct {
 	Indent   []byte

@@ -12,7 +12,7 @@ import (
 	"github.com/kubecolor/kubecolor/scanner/describe"
 )
 
-// HelpPrinter is a specific printer to print kubectl explain format.
+// HelpPrinter is used on "kubectl --help" output
 type HelpPrinter struct {
 	Theme *config.Theme
 
@@ -20,11 +20,15 @@ type HelpPrinter struct {
 	lastCommandWasContinued bool
 }
 
+// ensures it implements the interface
+var _ Printer = &HelpPrinter{}
+
 var urlRegex = regexp.MustCompile(`\[(https?://[a-zA-Z0-9][-a-zA-Z0-9]*\.[^\]]+)\]|(https?://[a-zA-Z0-9][-a-zA-Z0-9\.@:%_\+~#=/\?]*)`)
 
-func (hp *HelpPrinter) Print(r io.Reader, w io.Writer) {
+// Print implements [Printer.Print]
+func (p *HelpPrinter) Print(r io.Reader, w io.Writer) {
 	scanner := describe.NewScanner(r)
-	hp.commandBuf = &bytes.Buffer{}
+	p.commandBuf = &bytes.Buffer{}
 
 	for scanner.Scan() {
 		line := scanner.Line()
@@ -39,14 +43,14 @@ func (hp *HelpPrinter) Print(r io.Reader, w io.Writer) {
 			strings.HasSuffix(line.String(), ":") {
 			fmt.Fprintf(w, "%s%s%s%s\n",
 				line.Indent,
-				hp.Theme.Help.Header.Render(string(line.Key)),
+				p.Theme.Help.Header.Render(string(line.Key)),
 				line.Spacing,
 				line.Trailing)
 			continue
 		}
 
 		if (scanner.Path().HasPrefix("Examples") || scanner.Path().HasPrefix("Usage")) &&
-			hp.printCommandLine(w, line.String()) {
+			p.printCommandLine(w, line.String()) {
 			continue
 		}
 
@@ -54,30 +58,30 @@ func (hp *HelpPrinter) Print(r io.Reader, w io.Writer) {
 			val := string(line.Value)
 			fmt.Fprintf(w, "%s%s%s%s%s\n",
 				line.Indent,
-				hp.Theme.Help.Flag.Render(string(line.Key)),
+				p.Theme.Help.Flag.Render(string(line.Key)),
 				line.Spacing,
-				getColorByValueType(val, hp.Theme).Render(val),
+				ColorDataValue(val, p.Theme).Render(val),
 				line.Trailing)
 			continue
 		}
 
 		text := string(slices.Concat(line.Key, line.Spacing, line.Value))
-		text = hp.colorizeUrls(text)
+		text = p.colorizeUrls(text)
 		if scanner.Path().HasPrefix("Options") {
 			fmt.Fprintf(w, "%s%s%s\n",
 				line.Indent,
-				hp.Theme.Help.FlagDesc.Render(text),
+				p.Theme.Help.FlagDesc.Render(text),
 				line.Trailing)
 		} else {
 			fmt.Fprintf(w, "%s%s%s\n",
 				line.Indent,
-				hp.Theme.Help.Text.Render(text),
+				p.Theme.Help.Text.Render(text),
 				line.Trailing)
 		}
 	}
 }
 
-func (hp *HelpPrinter) printCommandLine(w io.Writer, line string) bool {
+func (p *HelpPrinter) printCommandLine(w io.Writer, line string) bool {
 	withoutIndent, ok := strings.CutPrefix(line, "  ")
 	if !ok {
 		return false
@@ -86,68 +90,68 @@ func (hp *HelpPrinter) printCommandLine(w io.Writer, line string) bool {
 		return false
 	}
 	if withoutIndent[0] == '#' {
-		fmt.Fprintf(w, "  %s\n", hp.Theme.Shell.Comment.Render(withoutIndent))
+		fmt.Fprintf(w, "  %s\n", p.Theme.Shell.Comment.Render(withoutIndent))
 		return true
 	}
 
-	hp.commandBuf.Reset()
+	p.commandBuf.Reset()
 
 	for pipeIdx, pipe := range strings.Split(withoutIndent, " | ") {
 		if pipeIdx > 0 {
-			hp.commandBuf.WriteString(" | ")
+			p.commandBuf.WriteString(" | ")
 		}
 
 		// Don't want to use [strings.Fields], as that trims away double-spaces
 		fields := strings.Split(pipe, " ")
 		for i, field := range fields {
 			if i > 0 {
-				hp.commandBuf.WriteByte(' ')
+				p.commandBuf.WriteByte(' ')
 			}
 			switch {
 			case field == "":
 				// Empty, do nothing
 
 				// First arg: it's the executable
-			case i == 0 && !hp.lastCommandWasContinued,
+			case i == 0 && !p.lastCommandWasContinued,
 				// First arg after "kubectl exec --"
 				len(fields) > 3 && fields[0] == "kubectl" && fields[1] == "exec" && fields[i-1] == "--":
-				hp.commandBuf.WriteString(hp.Theme.Shell.Command.Render(field))
+				p.commandBuf.WriteString(p.Theme.Shell.Command.Render(field))
 			case field[0] == '-',
 				strings.HasPrefix(field, "[(-") && strings.HasSuffix(field, "]"):
 
 				if flag, value, ok := strings.Cut(field, "="); ok {
-					hp.commandBuf.WriteString(hp.Theme.Shell.Flag.Render(flag + "="))
-					c := getColorByValueType(value, hp.Theme)
-					hp.commandBuf.WriteString(c.Render(value))
+					p.commandBuf.WriteString(p.Theme.Shell.Flag.Render(flag + "="))
+					c := ColorDataValue(value, p.Theme)
+					p.commandBuf.WriteString(c.Render(value))
 				} else {
-					hp.commandBuf.WriteString(hp.Theme.Shell.Flag.Render(field))
+					p.commandBuf.WriteString(p.Theme.Shell.Flag.Render(field))
 				}
 			case isQuoted(field):
-				hp.commandBuf.WriteString(hp.Theme.Data.String.Render(field))
+				p.commandBuf.WriteString(p.Theme.Data.String.Render(field))
 			default:
 				if flag, value, ok := strings.Cut(field, "="); ok {
-					hp.commandBuf.WriteString(hp.Theme.Shell.Arg.Render(flag + "="))
-					c := getColorByValueType(value, hp.Theme)
-					hp.commandBuf.WriteString(c.Render(value))
+					p.commandBuf.WriteString(p.Theme.Shell.Arg.Render(flag + "="))
+					c := ColorDataValue(value, p.Theme)
+					p.commandBuf.WriteString(c.Render(value))
 				} else {
-					hp.commandBuf.WriteString(hp.Theme.Shell.Arg.Render(field))
+					p.commandBuf.WriteString(p.Theme.Shell.Arg.Render(field))
 				}
 			}
 		}
 	}
 
-	fmt.Fprint(w, "  ", hp.commandBuf.String(), "\n")
-	hp.lastCommandWasContinued = strings.HasSuffix(withoutIndent, "\\")
+	fmt.Fprint(w, "  ", p.commandBuf.String(), "\n")
+	p.lastCommandWasContinued = strings.HasSuffix(withoutIndent, "\\")
 
 	return true
 }
 
-func (hp *HelpPrinter) colorizeUrls(s string) string {
+func (p *HelpPrinter) colorizeUrls(s string) string {
 	return urlRegex.ReplaceAllStringFunc(s, func(url string) string {
 		if url[0] == '[' {
-			return fmt.Sprintf("[%s]", hp.Theme.Help.Url.Render(url[1:len(url)-2]))
+			return fmt.Sprintf("[%s]", p.Theme.Help.Url.Render(url[1:len(url)-2]))
 		}
-		return hp.Theme.Help.Url.Render(url)
+		return p.Theme.Help.Url.Render(url)
 	})
 }
 

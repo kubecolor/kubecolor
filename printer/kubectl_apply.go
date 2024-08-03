@@ -9,15 +9,21 @@ import (
 	"github.com/kubecolor/kubecolor/config"
 )
 
+// ApplyPrinter is used in "kubectl apply" output:
+//
+//	kubectl apply
+//	deployment.apps/foo unchanged
+//	deployment.apps/bar created
+//	deployment.apps/quux configured
 type ApplyPrinter struct {
 	Theme *config.Theme
 }
 
-// kubectl apply
-// deployment.apps/foo unchanged
-// deployment.apps/bar created
-// deployment.apps/quux configured
-func (ap *ApplyPrinter) Print(r io.Reader, w io.Writer) {
+// ensures it implements the interface
+var _ Printer = &ApplyPrinter{}
+
+// Print implements [Printer.Print]
+func (p *ApplyPrinter) Print(r io.Reader, w io.Writer) {
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -26,9 +32,9 @@ func (ap *ApplyPrinter) Print(r io.Reader, w io.Writer) {
 			continue
 		}
 
-		formatted := ap.formatColoredLine(line)
+		formatted := p.formatColoredLine(line)
 		if formatted == "" {
-			fmt.Fprintln(w, ap.Theme.Apply.Fallback.Render(line))
+			fmt.Fprintln(w, p.Theme.Apply.Fallback.Render(line))
 			continue
 		}
 
@@ -57,16 +63,16 @@ func (ap *ApplyPrinter) formatColoredLine(line string) string {
 	return fmt.Sprintf("%s %s %s", resource, actionColor.Render(action), dryRunColor.Render(dryRun))
 }
 
-func (ap *ApplyPrinter) getColorFor(action string) (config.Color, bool) {
+func (p *ApplyPrinter) getColorFor(action string) (config.Color, bool) {
 	switch action {
 	case "created":
-		return ap.Theme.Apply.Created, true
+		return p.Theme.Apply.Created, true
 	case "configured":
-		return ap.Theme.Apply.Configured, true
+		return p.Theme.Apply.Configured, true
 	case "unchanged":
-		return ap.Theme.Apply.Unchanged, true
+		return p.Theme.Apply.Unchanged, true
 	case "(dry run)", "(server dry run)":
-		return ap.Theme.Apply.DryRun, true
+		return p.Theme.Apply.DryRun, true
 	default:
 		return config.Color{}, false
 	}
