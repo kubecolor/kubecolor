@@ -46,6 +46,9 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 	case kubectl.APIVersions:
 		return NewTablePrinter(false, p.Theme, nil) // api-versions always doesn't have header
 
+	case kubectl.Logs:
+		return &LogsPrinter{Theme: p.Theme}
+
 	case kubectl.Get, kubectl.Events:
 		switch p.SubcommandInfo.FormatOption {
 		case kubectl.None, kubectl.Wide:
