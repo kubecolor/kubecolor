@@ -133,6 +133,10 @@
         "help": {
           "$ref": "#/$defs/themeHelp",
           "description": "used in \"kubectl --help\""
+        },
+        "logs": {
+          "$ref": "#/$defs/themeLogs",
+          "description": "used in \"kubectl logs\""
         }
       },
       "additionalProperties": false,
@@ -321,6 +325,60 @@
       "additionalProperties": false,
       "type": "object",
       "description": "ThemeHelp holds colors for the \"kubectl --help\" output."
+    },
+    "themeLogs": {
+      "properties": {
+        "key": {
+          "$ref": "#/$defs/colorSlice"
+        },
+        "quotedString": {
+          "$ref": "#/$defs/color",
+          "description": "Used on quoted strings that are not part of a `key=\"value\"`"
+        },
+        "date": {
+          "$ref": "#/$defs/color"
+        },
+        "sourceRef": {
+          "$ref": "#/$defs/color"
+        },
+        "gUID": {
+          "$ref": "#/$defs/color"
+        },
+        "severity": {
+          "$ref": "#/$defs/themeLogsSeverity"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeLogs holds colors for the \"kubectl logs\" output."
+    },
+    "themeLogsSeverity": {
+      "properties": {
+        "trace": {
+          "$ref": "#/$defs/color"
+        },
+        "debug": {
+          "$ref": "#/$defs/color"
+        },
+        "info": {
+          "$ref": "#/$defs/color"
+        },
+        "warn": {
+          "$ref": "#/$defs/color"
+        },
+        "error": {
+          "$ref": "#/$defs/color"
+        },
+        "fatal": {
+          "$ref": "#/$defs/color"
+        },
+        "panic": {
+          "$ref": "#/$defs/color"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeLogsSeverity holds colors for \"log level severity\" found in \"kubectl logs\" output"
     },
     "themeOptions": {
       "properties": {
