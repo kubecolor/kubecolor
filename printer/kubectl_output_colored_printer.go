@@ -52,36 +52,36 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 			return NewTablePrinter(
 				withHeader,
 				p.Theme,
-				func(_ int, column string) (config.Color, bool) {
+				func(_ int, column string) string {
 					column = strings.TrimPrefix(column, "Init:")
 
 					// first try to match a status
-					col, matched := ColorStatus(column, p.Theme)
+					colored, matched := ColorStatus(column, p.Theme)
 					if matched {
-						return col, true
+						return colored
 					}
 
 					// When Readiness is "n/m" then yellow
 					if left, right, ok := stringutil.ParseRatio(column); ok {
 						switch {
 						case column == "0/0":
-							return p.Theme.Data.Ratio.Zero, true
+							return p.Theme.Data.Ratio.Zero.Render(column)
 						case left == right:
-							return p.Theme.Data.Ratio.Equal, true
+							return p.Theme.Data.Ratio.Equal.Render(column)
 						default:
-							return p.Theme.Data.Ratio.Unequal, true
+							return p.Theme.Data.Ratio.Unequal.Render(column)
 						}
 					}
 
 					// Object age when fresh then green
 					if age, ok := stringutil.ParseHumanDuration(column); ok {
 						if age < p.ObjFreshThreshold {
-							return p.Theme.Data.DurationFresh, true
+							return p.Theme.Data.DurationFresh.Render(column)
 						}
-						return p.Theme.Data.Duration, true
+						return p.Theme.Data.Duration.Render(column)
 					}
 
-					return config.Color{}, false
+					return column
 				},
 			)
 		case kubectl.Json:
@@ -92,8 +92,11 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 
 	case kubectl.Describe:
 		return &DescribePrinter{
-			TablePrinter: NewTablePrinter(false, p.Theme, func(_ int, column string) (config.Color, bool) {
-				return ColorStatus(column, p.Theme)
+			TablePrinter: NewTablePrinter(false, p.Theme, func(_ int, column string) string {
+				if colored, ok := ColorStatus(column, p.Theme); ok {
+					return colored
+				}
+				return column
 			}),
 		}
 

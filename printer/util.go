@@ -68,7 +68,7 @@ func ColorDataValue(val string, theme *config.Theme) config.Color {
 }
 
 // ColorStatus returns the color that should be used for a given status text.
-func ColorStatus(status string, theme *config.Theme) (config.Color, bool) {
+func ColorStatus(status string, theme *config.Theme) (string, bool) {
 	switch status {
 	case
 		// from https://github.com/kubernetes/kubernetes/blob/master/pkg/kubelet/events/event.go
@@ -127,7 +127,7 @@ func ColorStatus(status string, theme *config.Theme) (config.Color, bool) {
 		"OOMKilled",
 		// PVC status
 		"Lost":
-		return theme.Status.Error, true
+		return theme.Status.Error.Render(status), true
 	case
 		// from https://github.com/kubernetes/kubernetes/blob/master/pkg/kubelet/events/event.go
 		// Container event reason list
@@ -167,7 +167,7 @@ func ColorStatus(status string, theme *config.Theme) (config.Color, bool) {
 		"Released",
 
 		"ScalingReplicaSet":
-		return theme.Status.Warning, true
+		return theme.Status.Warning.Render(status), true
 	case
 		"Running",
 		"Completed",
@@ -188,9 +188,9 @@ func ColorStatus(status string, theme *config.Theme) (config.Color, bool) {
 
 		// PVC status
 		"Bound":
-		return theme.Status.Success, true
+		return theme.Status.Success.Render(status), true
 	}
-	return config.Color{}, false
+	return status, false
 }
 
 // toSpaces returns repeated spaces whose length is n.
