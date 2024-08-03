@@ -426,6 +426,8 @@ type ThemeLogs struct {
 	Key          ColorSlice `defaultFrom:"theme.data.key"`
 	QuotedString Color      `defaultFrom:"theme.data.string"` // Used on quoted strings that are not part of a `key="value"`
 	Date         Color      `defaultFrom:"theme.base.muted"`
+	SourceRef    Color      `defaultFrom:"theme.base.muted"`
+	GUID         Color      `defaultFrom:"theme.base.muted"`
 
 	Severity ThemeLogsSeverity
 }

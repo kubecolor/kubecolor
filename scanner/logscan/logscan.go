@@ -4,11 +4,29 @@ import (
 	"bufio"
 	"bytes"
 	"io"
+	"regexp"
 	"unicode"
 	"unicode/utf8"
 
 	"github.com/kubecolor/kubecolor/internal/bytesutil"
 )
+
+// klogLevelAndDateRegex is for parsing Kubernetes klog line: https://github.com/kubernetes/klog/blob/75663bb798999a49e3e4c0f2375ed5cca8164194/klog.go#L637-L650
+//
+//	Lmmdd hh:mm:ss.uuuuuu threadid file:line] msg...
+var klogLevelAndDateRegex = regexp.MustCompile(`^([IWEF])(\d{4} \d\d:\d\d:\d\d\.\d+)(\s*\d+\s*)([\w\._]+:\d+)\]`)
+
+// dateRegex is for parsing dates. E.g:
+//
+//	2024-08-03T19:57:19.446242
+//	2024-08-03 20:04:28.614 GMT
+var dateRegex = regexp.MustCompile(`^\d{4}-\d\d-\d\dT\d\d:\d\d(:\d\d(\.\d+)?)?(Z|\+\d\d:\d\d|\+\d{4})?\b|^(\d{4}-\d\d-\d\d|\d\d ([a-zA-Z][a-z]+) \d{4}|\d\d/([a-zA-Z][a-z]+)/\d{4})[ :]\d\d:\d\d(:\d\d(\.\d+)?)?( ?(GMT|UTC|\+\d\d:\d\d|\+\d\d\d\d))?\b`)
+
+// guidRegex is for matching on GUIDs and UUIDs. E.g:
+//
+//	70d5707e-b07b-41c3-9411-cad84c6db764
+//	70d5707eb07b41c39411cad84c6db764
+var guidRegex = regexp.MustCompile(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$|^[0-9a-fA-F]{32}$`)
 
 type Token struct {
 	Kind Kind
@@ -24,6 +42,7 @@ const (
 	KindPreformatted // e.g "\e[33mAlready with some colors\e[0m"
 
 	KindDate        // e.g "2024-08-03T12:38:44.049832713Z"
+	KindGUID        // e.g "70d5707e-b07b-41c3-9411-cad84c6db764"
 	KindSourceRef   // e.g "reconciler.go:142]" or "[main.py:10]"
 	KindQuote       // double-quoted or single-quoted string, e.g `"Updated object"`
 	KindParenthases // e.g "(" + some other token + ")"
@@ -47,6 +66,7 @@ type Scanner struct {
 	lineScanner *bufio.Scanner
 
 	newlineBeforeScan bool
+	hasFoundSeverity  bool
 }
 
 func NewScanner(reader io.Reader) *Scanner {
@@ -95,6 +115,7 @@ func (s *Scanner) tryScan() bool {
 			return false
 		}
 		s.newlineBeforeScan = true
+		s.hasFoundSeverity = false
 		s.lineBuffer = s.lineScanner.Bytes()
 
 		if bytes.Contains(s.lineBuffer, []byte("\033[")) {
@@ -142,32 +163,97 @@ func (s *Scanner) scan(rest []byte) int {
 		return s.scanKeyValue(key, rest[len(key)+1:]) // +1 to skip the "=" sign
 	}
 
-	// Kubernetes "klog" style source mapping
+	// Kubernetes "klog" style source mapping, e.g "dynamic_source.go:290]"
 	if word[len(word)-1] == ']' && bytes.ContainsRune(word, '.') && bytes.ContainsRune(word, ':') {
 		return s.pushToken(KindSourceRef, string(word))
 	}
 
-	severity := bytes.TrimRight(word, ":")
-	if bytesutil.IsOnlyLetters(severity) {
-		switch string(severity) {
-		case "TRACE", "TRC", "trace", "trc":
-			return s.pushToken(KindSeverityTrace, string(severity))
-		case "DEBUG", "DBG", "debug", "dbg":
-			return s.pushToken(KindSeverityDebug, string(severity))
-		case "INFORMATION", "INFO", "INF", "info", "inf":
-			return s.pushToken(KindSeverityInfo, string(severity))
-		case "WARNING", "WARN", "WRN", "warning", "warn", "wrn":
-			return s.pushToken(KindSeverityWarn, string(severity))
-		case "ERROR", "ERRO", "ERR", "error", "erro", "err":
-			return s.pushToken(KindSeverityError, string(severity))
-		case "FATAL", "fatal":
-			return s.pushToken(KindSeverityFatal, string(severity))
-		case "PANIC", "panic":
-			return s.pushToken(KindSeverityPanic, string(severity))
+	// Kubernetes "klog" header, which follows the format: https://github.com/kubernetes/klog/blob/75663bb798999a49e3e4c0f2375ed5cca8164194/klog.go#L637-L650
+	//
+	//	Lmmdd hh:mm:ss.uuuuuu threadid file:line] msg...
+	if klogMatches := klogLevelAndDateRegex.FindSubmatch(rest); klogMatches != nil {
+		fullMatch := klogMatches[0]
+		severity := klogMatches[1]
+		date := klogMatches[2]
+		threadIDWithPadding := klogMatches[3]
+		sourceRef := klogMatches[4]
+
+		var severityKind Kind
+		switch firstRune {
+		case 'I':
+			severityKind = KindSeverityInfo
+		case 'W':
+			severityKind = KindSeverityWarn
+		case 'E':
+			severityKind = KindSeverityError
+		case 'F':
+			severityKind = KindSeverityFatal
+		}
+
+		s.hasFoundSeverity = true
+		s.pushToken(severityKind, string(severity))
+		s.pushToken(KindDate, string(date))
+		s.pushToken(KindUnknown, string(threadIDWithPadding))
+		s.pushToken(KindSourceRef, string(sourceRef))
+		s.pushToken(KindParenthases, "]")
+		return len(fullMatch)
+	}
+
+	if dateMatch := dateRegex.Find(rest); dateMatch != nil {
+		return s.pushToken(KindDate, string(dateMatch))
+	}
+
+	if guidRegex.Match(word) {
+		return s.pushToken(KindGUID, string(word))
+	}
+
+	if !s.hasFoundSeverity {
+		severity := bytes.TrimRight(word, ":!,")
+		if bytesutil.IsOnlyLetters(severity) {
+			severityKind := severityKindFromName(string(severity))
+			if severityKind != KindUnknown {
+				s.hasFoundSeverity = true
+				return s.pushToken(severityKind, string(severity))
+			}
 		}
 	}
 
 	return s.pushToken(KindUnknown, string(word))
+}
+
+func severityKindFromName(severity string) Kind {
+	switch severity {
+	case "TRACE", "TRC",
+		"Trace", "Trc",
+		"trace", "trc":
+		return KindSeverityTrace
+	case "DEBUG", "DBG",
+		"Debug", "Dbg",
+		"debug", "dbg":
+		return KindSeverityDebug
+	case "INFORMATION", "INFO", "INF",
+		"Information", "Info", "Inf",
+		"information", "info", "inf",
+		"NOTE", "Note", "note",
+		"SUCCESSFULLY", "Successfully", "successfully",
+		"SUCCESS", "Success", "success":
+		return KindSeverityInfo
+	case "WARNING", "WARN", "WRN",
+		"Warning", "Warn", "Wrn",
+		"warning", "warn", "wrn":
+		return KindSeverityWarn
+	case "ERROR", "ERRO", "ERR",
+		"Error", "Erro", "Err",
+		"error", "erro", "err",
+		"FAILED", "Failed", "failed":
+		return KindSeverityError
+	case "FATAL", "Fatal", "fatal":
+		return KindSeverityFatal
+	case "PANIC", "Panic", "panic":
+		return KindSeverityPanic
+	default:
+		return KindUnknown
+	}
 }
 
 func (s *Scanner) pushToken(kind Kind, text string) int {
@@ -191,25 +277,44 @@ func (s *Scanner) scanKeyValue(key, valueAndRest []byte) int {
 	firstRune, _ := utf8.DecodeRune(word)
 	switch firstRune {
 	case '(':
-		if group := readParenthases(valueAndRest, '(', ')'); len(group) != 0 {
+		if group := readParenthases(valueAndRest, '(', ')'); len(group) != 0 && len(group) >= len(word) {
 			s.pushToken(KindValue, string(group))
 			return len(key) + 1 + len(group)
 		}
 	case '[':
-		if group := readParenthases(valueAndRest, '[', ']'); len(group) != 0 {
+		if group := readParenthases(valueAndRest, '[', ']'); len(group) != 0 && len(group) >= len(word) {
 			s.pushToken(KindValue, string(group))
 			return len(key) + 1 + len(group)
 		}
 	case '"', '\'', '`':
-		if quoted := readQuoted(valueAndRest); len(quoted) != 0 {
+		if quoted := readQuoted(valueAndRest); len(quoted) != 0 && len(quoted) >= len(word) {
 			s.pushToken(KindValue, string(quoted))
 			return len(key) + 1 + len(quoted)
 		}
 
 	case '{':
 		// TODO: parse JSON
-
 	}
+
+	if dateMatch := dateRegex.Find(word); dateMatch != nil {
+		s.pushToken(KindDate, string(word))
+		return len(key) + 1 + len(word)
+	}
+
+	switch string(key) {
+	case "level", "lvl", "severity", "l", "s":
+		severityKind := severityKindFromName(string(word))
+		if severityKind != KindUnknown {
+			s.hasFoundSeverity = true
+			s.pushToken(severityKind, string(word))
+			return len(key) + 1 + len(word)
+		}
+
+	case "caller", "source":
+		s.pushToken(KindSourceRef, string(word))
+		return len(key) + 1 + len(word)
+	}
+
 	s.pushToken(KindValue, string(word))
 	return len(key) + 1 + len(word)
 }

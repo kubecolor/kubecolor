@@ -111,6 +111,38 @@ func TestScanner_tokens(t *testing.T) {
 				{Kind: KindNewline, Text: "\n"},
 			},
 		},
+		{
+			name:  "date UTC",
+			input: "2024-08-03T12:38:44.049832713Z\n",
+			want: []Token{
+				{Kind: KindDate, Text: "2024-08-03T12:38:44.049832713Z"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "date timezone",
+			input: "2024-08-03T12:38:44.049832713+02:00\n",
+			want: []Token{
+				{Kind: KindDate, Text: "2024-08-03T12:38:44.049832713+02:00"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "guid dashes",
+			input: "70d5707e-b07b-41c3-9411-cad84c6db764\n",
+			want: []Token{
+				{Kind: KindGUID, Text: "70d5707e-b07b-41c3-9411-cad84c6db764"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "guid no dashes",
+			input: "70d5707eb07b41c39411cad84c6db764\n",
+			want: []Token{
+				{Kind: KindGUID, Text: "70d5707eb07b41c39411cad84c6db764"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
 	}
 
 	for _, tc := range tests {

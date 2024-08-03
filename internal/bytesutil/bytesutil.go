@@ -49,6 +49,27 @@ func CountColumns(b []byte, spaceCharset string) int {
 	return count
 }
 
+func IsOnlyDigits(b []byte) bool {
+	if len(b) == 0 {
+		return false
+	}
+	var index int
+	for {
+		r, size := utf8.DecodeRune(b[index:])
+		if size == 0 {
+			// EOF
+			return true
+		}
+		if r == utf8.RuneError {
+			return false
+		}
+		index += size
+		if !unicode.IsDigit(r) {
+			return false
+		}
+	}
+}
+
 func IsOnlyLetters(b []byte) bool {
 	if len(b) == 0 {
 		return false

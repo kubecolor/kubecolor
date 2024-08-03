@@ -40,6 +40,13 @@ func (p *LogsPrinter) Print(r io.Reader, w io.Writer) {
 		case logscan.KindQuote:
 			lineBuffer.WriteString(p.Theme.Data.String.Render(token.Text))
 
+		case logscan.KindDate:
+			lineBuffer.WriteString(p.Theme.Logs.Date.Render(token.Text))
+		case logscan.KindGUID:
+			lineBuffer.WriteString(p.Theme.Logs.GUID.Render(token.Text))
+		case logscan.KindSourceRef:
+			lineBuffer.WriteString(p.Theme.Logs.SourceRef.Render(token.Text))
+
 		case logscan.KindSeverityTrace:
 			lineBuffer.WriteString(p.Theme.Logs.Severity.Trace.Render(token.Text))
 		case logscan.KindSeverityDebug:
