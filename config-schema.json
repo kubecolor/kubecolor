@@ -341,7 +341,7 @@
         "sourceRef": {
           "$ref": "#/$defs/color"
         },
-        "gUID": {
+        "guid": {
           "$ref": "#/$defs/color"
         },
         "severity": {
