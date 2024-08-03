@@ -65,7 +65,9 @@ func LoadViper() (*viper.Viper, error) {
 
 	if err := v.ReadInConfig(); err != nil {
 		if errors.As(err, &viper.ConfigFileNotFoundError{}) || os.IsNotExist(err) {
-			fmt.Fprintf(os.Stderr, "[kubecolor] [debug] no config file found: %s\n", err)
+			if v.GetBool("debug") {
+				fmt.Fprintf(os.Stderr, "[kubecolor] [debug] no config file found: %s\n", err)
+			}
 			// continue
 		} else {
 			return nil, err
