@@ -68,8 +68,27 @@ func ColorDataValue(val string, theme *config.Theme) config.Color {
 }
 
 // ColorStatus returns the color that should be used for a given status text.
-func ColorStatus(status string, theme *config.Theme) (config.Color, bool) {
-	switch status {
+func ColorStatus(status string, theme *config.Theme) (string, bool) {
+	if strings.ContainsRune(status, ',') {
+		statuses := strings.Split(status, ",")
+		any := false
+		for i, s := range statuses {
+			if colored, ok := colorSingleStatus(s, theme); ok {
+				statuses[i] = colored
+				any = true
+			}
+		}
+		if !any {
+			return status, false
+		}
+		return strings.Join(statuses, ","), true
+	}
+
+	return colorSingleStatus(status, theme)
+}
+
+func colorSingleStatus(status string, theme *config.Theme) (string, bool) {
+	switch strings.TrimPrefix(status, "Init:") {
 	case
 		// from https://github.com/kubernetes/kubernetes/blob/master/pkg/kubelet/events/event.go
 		// Container event reason list
@@ -127,7 +146,7 @@ func ColorStatus(status string, theme *config.Theme) (config.Color, bool) {
 		"OOMKilled",
 		// PVC status
 		"Lost":
-		return theme.Status.Error, true
+		return theme.Status.Error.Render(status), true
 	case
 		// from https://github.com/kubernetes/kubernetes/blob/master/pkg/kubelet/events/event.go
 		// Container event reason list
@@ -144,6 +163,7 @@ func ColorStatus(status string, theme *config.Theme) (config.Color, bool) {
 		"SuccessfulAttachVolume",
 		"SuccessfulMountVolume",
 		"NodeAllocatableEnforced",
+		"SchedulingDisabled",
 		// Image manager event reason list
 		// Probe event reason list
 		"ProbeWarning",
@@ -167,7 +187,7 @@ func ColorStatus(status string, theme *config.Theme) (config.Color, bool) {
 		"Released",
 
 		"ScalingReplicaSet":
-		return theme.Status.Warning, true
+		return theme.Status.Warning.Render(status), true
 	case
 		"Running",
 		"Completed",
@@ -188,9 +208,9 @@ func ColorStatus(status string, theme *config.Theme) (config.Color, bool) {
 
 		// PVC status
 		"Bound":
-		return theme.Status.Success, true
+		return theme.Status.Success.Render(status), true
 	}
-	return config.Color{}, false
+	return status, false
 }
 
 // toSpaces returns repeated spaces whose length is n.

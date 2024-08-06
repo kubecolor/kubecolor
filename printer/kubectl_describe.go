@@ -7,7 +7,6 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/internal/bytesutil"
 	"github.com/kubecolor/kubecolor/scanner/describe"
 )
@@ -60,14 +59,11 @@ func (p *DescribePrinter) Print(r io.Reader, w io.Writer) {
 		if len(line.Value) > 0 {
 			val := string(line.Value)
 			if k, v, ok := strings.Cut(val, ": "); ok { // split annotation and env from
-				vColor := p.colorize(scanner.Path(), v)
-				fmt.Fprint(w, k, ": ", vColor.Render(v))
+				fmt.Fprint(w, k, ": ", p.colorize(scanner.Path(), v))
 			} else if k, v, ok := strings.Cut(val, "="); ok { // split label
-				vColor := p.colorize(scanner.Path(), v)
-				fmt.Fprint(w, k, "=", vColor.Render(v))
+				fmt.Fprint(w, k, "=", p.colorize(scanner.Path(), v))
 			} else {
-				valColor := p.colorize(scanner.Path(), val)
-				fmt.Fprint(w, valColor.Render(val))
+				fmt.Fprint(w, p.colorize(scanner.Path(), val))
 			}
 		}
 		fmt.Fprintf(w, "%s\n", line.Trailing)
@@ -79,7 +75,7 @@ func (p *DescribePrinter) Print(r io.Reader, w io.Writer) {
 	}
 }
 
-func (p *DescribePrinter) colorize(path describe.Path, value string) config.Color {
+func (p *DescribePrinter) colorize(path describe.Path, value string) string {
 	value = strings.TrimSpace(value)
 	pathStr := path.String()
 	if col, ok := p.colorizeStatus(value, pathStr); ok {
@@ -88,7 +84,7 @@ func (p *DescribePrinter) colorize(path describe.Path, value string) config.Colo
 	if col, ok := p.colorizeArgs(value, pathStr); ok {
 		return col
 	}
-	return ColorDataValue(value, p.TablePrinter.Theme)
+	return ColorDataValue(value, p.TablePrinter.Theme).Render(value)
 }
 
 var describePathsToColor = []*regexp.Regexp{
@@ -97,13 +93,13 @@ var describePathsToColor = []*regexp.Regexp{
 	regexp.MustCompile(`^Containers/[^/]*/Last State(/Reason)?$`),
 }
 
-func (p *DescribePrinter) colorizeStatus(value, pathStr string) (config.Color, bool) {
+func (p *DescribePrinter) colorizeStatus(value, pathStr string) (string, bool) {
 	if !matchesAnyRegex(pathStr, describePathsToColor) {
-		return config.Color{}, false
+		return value, false
 	}
 	col, ok := ColorStatus(value, p.TablePrinter.Theme)
 	if !ok {
-		return config.Color{}, false
+		return value, false
 	}
 	return col, true
 }
@@ -112,17 +108,17 @@ var describePathsToArgs = []*regexp.Regexp{
 	regexp.MustCompile(`^(Init )?Containers/[^/]*/Args$`),
 }
 
-func (p *DescribePrinter) colorizeArgs(value, pathStr string) (config.Color, bool) {
+func (p *DescribePrinter) colorizeArgs(value, pathStr string) (string, bool) {
 	if !matchesAnyRegex(pathStr, describePathsToArgs) {
-		return config.Color{}, false
+		return value, false
 	}
 	if !strings.HasPrefix(value, "-") {
-		return config.Color{}, false
+		return value, false
 	}
 	// Intentionally empty color, so it gets the same color as keys
 	// where "--my-flag=123" args has no coloring on "--my-flag=",
 	// so "--my-bool-flag" should also not be colored.
-	return config.Color{}, true
+	return value, true
 }
 
 func matchesAnyRegex(s string, regexes []*regexp.Regexp) bool {

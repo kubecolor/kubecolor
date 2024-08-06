@@ -65,6 +65,12 @@ func (c Color) Render(s string) string {
 var afterResetRegex = regexp.MustCompile("\033\\[0m[^\033]")
 
 func (c Color) renderInject(s string) string {
+	if strings.HasPrefix(s, "\033[") &&
+		strings.HasSuffix(s, "\033[0m") &&
+		strings.Count(s, "\033[") == 2 {
+		// If full string is colored, then doesn't matter if we add colors
+		return s
+	}
 	updated := afterResetRegex.ReplaceAllStringFunc(s, func(orig string) string {
 		lastByte := orig[len(orig)-1]
 		return fmt.Sprintf("\033[0m\033[%sm%c", c.cachedCode, lastByte)
