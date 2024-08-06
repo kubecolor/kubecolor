@@ -365,6 +365,10 @@ func (s *Scanner) scanJSON(rest []byte) int {
 	case '{':
 		jsonObjectSize := s.pushToken(KindParenthases, string("{"))
 
+		if spaces := readSpaces(rest[jsonObjectSize:]); len(spaces) > 0 {
+			jsonObjectSize += s.pushToken(KindUnknown, string(spaces))
+		}
+
 		closingRune, _ := utf8.DecodeRune(rest[jsonObjectSize:])
 		if closingRune == '}' {
 			// empty object
@@ -373,23 +377,39 @@ func (s *Scanner) scanJSON(rest []byte) int {
 		}
 
 		for {
-			// {"key":"value"}
-			//  ^^^^^^
-			key, delimiter, afterColon := readJSONKeyValue(rest[jsonObjectSize:])
+			// {  "key":"value"  }
+			//  ^^
+			if spaces := readSpaces(rest[jsonObjectSize:]); len(spaces) > 0 {
+				jsonObjectSize += s.pushToken(KindUnknown, string(spaces))
+			}
+
+			// {  "key":"value"  }
+			//    ^^^^^^
+			key, delimiter, _ := readJSONKeyValue(rest[jsonObjectSize:])
 			if key == nil {
 				return jsonObjectSize
 			}
 			jsonObjectSize += s.pushToken(KindKey, string(key))
 			jsonObjectSize += s.pushToken(KindUnknown, string(delimiter))
 
-			// {"key":"value"}
-			//        ^^^^^^^
-			nestedSize := s.scanJSON(afterColon)
+			// {  "key":  "value"  }
+			//          ^^
+			if spaces := readSpaces(rest[jsonObjectSize:]); len(spaces) > 0 {
+				jsonObjectSize += s.pushToken(KindUnknown, string(spaces))
+			}
+
+			// {  "key":  "value"  }
+			//            ^^^^^^^
+			nestedSize := s.scanJSON(rest[jsonObjectSize:])
 			jsonObjectSize += nestedSize
 
-			afterNested := afterColon[nestedSize:]
+			// {  "key":  "value"  }
+			//                   ^^
+			if spaces := readSpaces(rest[jsonObjectSize:]); len(spaces) > 0 {
+				jsonObjectSize += s.pushToken(KindUnknown, string(spaces))
+			}
 
-			closingRune, _ := utf8.DecodeRune(afterNested)
+			closingRune, _ := utf8.DecodeRune(rest[jsonObjectSize:])
 			if closingRune == utf8.RuneError {
 				return jsonObjectSize
 			}
@@ -411,6 +431,10 @@ func (s *Scanner) scanJSON(rest []byte) int {
 	case '[':
 		jsonArraySize := s.pushToken(KindParenthases, string("["))
 
+		if spaces := readSpaces(rest[jsonArraySize:]); len(spaces) > 0 {
+			jsonArraySize += s.pushToken(KindUnknown, string(spaces))
+		}
+
 		closingRune, _ := utf8.DecodeRune(rest[jsonArraySize:])
 		if closingRune == ']' {
 			// empty object
@@ -419,6 +443,10 @@ func (s *Scanner) scanJSON(rest []byte) int {
 		}
 
 		for {
+			if spaces := readSpaces(rest[jsonArraySize:]); len(spaces) > 0 {
+				jsonArraySize += s.pushToken(KindUnknown, string(spaces))
+			}
+
 			// ["value1","value2"]
 			//  ^^^^^^^^
 			itemSize := s.scanJSON(rest[jsonArraySize:])
@@ -426,9 +454,12 @@ func (s *Scanner) scanJSON(rest []byte) int {
 				return jsonArraySize
 			}
 			jsonArraySize += itemSize
-			afterItem := rest[jsonArraySize:]
 
-			closingRune, _ := utf8.DecodeRune(afterItem)
+			if spaces := readSpaces(rest[jsonArraySize:]); len(spaces) > 0 {
+				jsonArraySize += s.pushToken(KindUnknown, string(spaces))
+			}
+
+			closingRune, _ := utf8.DecodeRune(rest[jsonArraySize:])
 			if closingRune == utf8.RuneError {
 				return jsonArraySize
 			}
@@ -462,16 +493,19 @@ func readJSONKeyValue(b []byte) (key, delimiter, rest []byte) {
 	afterKey := b[len(key):]
 	// {"key":"value"}
 	//       ^
-	colonRune, colonSize := utf8.DecodeRune(afterKey)
+	spaces := readSpaces(afterKey)
+	afterSpaces := afterKey[len(spaces):]
+
+	colonRune, colonSize := utf8.DecodeRune(afterSpaces)
 	if colonRune == utf8.RuneError || colonRune != ':' {
 		return nil, nil, nil
 	}
 
-	delimiter = afterKey[:colonSize]
+	delimiter = afterKey[:len(spaces)+colonSize]
 
 	// {"key":"value"}
 	//        ^^^^^^^
-	rest = afterKey[colonSize:]
+	rest = afterSpaces[colonSize:]
 
 	return key, delimiter, rest
 }
@@ -577,6 +611,20 @@ func readJSONNumber(rest []byte) []byte {
 		}
 		if r == '.' {
 			hasDot = true
+		}
+		index += size
+	}
+}
+
+func readSpaces(rest []byte) []byte {
+	var index int
+	for {
+		r, size := utf8.DecodeRune(rest[index:])
+		if r == utf8.RuneError {
+			return rest[:index]
+		}
+		if !unicode.IsSpace(r) {
+			return rest[:index]
 		}
 		index += size
 	}
