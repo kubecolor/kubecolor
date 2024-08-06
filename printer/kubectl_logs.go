@@ -69,7 +69,11 @@ func (p *LogsPrinter) Print(r io.Reader, w io.Writer) {
 			keyIndex = 0
 
 		default:
-			lineBuffer.WriteString(token.Text)
+			if c, ok := TryColorDataValue(token.Text, p.Theme); ok {
+				lineBuffer.WriteString(c.Render(token.Text))
+			} else {
+				lineBuffer.WriteString(token.Text)
+			}
 		}
 	}
 }
