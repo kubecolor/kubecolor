@@ -33,38 +33,43 @@ var isQuantityRegex = regexp.MustCompile(`^[\+\-]?(?:\d+|\.\d+|\d+\.|\d+\.\d+)?(
 // - "15m10s" return "data.duration" theme color
 // - otherwise, return "data.string" theme color
 func ColorDataValue(val string, theme *config.Theme) config.Color {
+	c, _ := TryColorDataValue(val, theme)
+	return c
+}
+
+func TryColorDataValue(val string, theme *config.Theme) (config.Color, bool) {
 	switch val {
 	case "null", "<none>", "<unknown>", "<unset>", "<nil>", "<invalid>":
-		return theme.Data.Null
+		return theme.Data.Null, true
 	case "true", "True":
-		return theme.Data.True
+		return theme.Data.True, true
 	case "false", "False":
-		return theme.Data.False
+		return theme.Data.False, true
 	}
 
 	// Ints: 123
 	if stringutil.IsOnlyDigits(val) {
-		return theme.Data.Number
+		return theme.Data.Number, true
 	}
 
 	// Floats: 123.456
 	if left, right, ok := strings.Cut(val, "."); ok {
 		if stringutil.IsOnlyDigits(left) && stringutil.IsOnlyDigits(right) {
-			return theme.Data.Number
+			return theme.Data.Number, true
 		}
 	}
 
 	// Quantity: 100m, 5Gi
 	if isQuantityRegex.MatchString(val) {
-		return theme.Data.Quantity
+		return theme.Data.Quantity, true
 	}
 
 	// Duration: 15m10s
 	if _, ok := stringutil.ParseHumanDuration(val); ok {
-		return theme.Data.Duration
+		return theme.Data.Duration, true
 	}
 
-	return theme.Data.String
+	return theme.Data.String, false
 }
 
 // ColorStatus returns the color that should be used for a given status text.

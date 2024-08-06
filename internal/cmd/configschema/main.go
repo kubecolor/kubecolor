@@ -154,6 +154,10 @@ func Lookup(t reflect.Type) jsonschema.ID {
 
 // Namer allows customizing of type names.
 func Namer(s string) string {
+	switch s {
+	case "GUID":
+		return "guid"
+	}
 	var sb strings.Builder
 	sb.Grow(len(s))
 	firstRune, size := utf8.DecodeRuneInString(s)
