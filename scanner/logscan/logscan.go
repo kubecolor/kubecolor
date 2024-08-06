@@ -321,6 +321,16 @@ func (s *Scanner) scanKeyValue(key, valueAndRest []byte) int {
 		return len(key) + 1 + len(word)
 	}
 
+	// handle cases like:
+	// 	some-key=true, next-key=false
+	// then treat "true" as value instead of "true,"
+	// as we have special coloring of "true", "false", "null", and numbers
+	if len(word) > 1 && bytes.HasSuffix(word, []byte(",")) {
+		s.pushToken(KindValue, string(word[:len(word)-1]))
+		s.pushToken(KindUnknown, string(word[len(word)-1:]))
+		return len(key) + 1 + len(word)
+	}
+
 	s.pushToken(KindValue, string(word))
 	return len(key) + 1 + len(word)
 }
