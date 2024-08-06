@@ -82,14 +82,14 @@ $ kubectl logs postgresql-0
 
 --------------------------------------------------------------------------------
 
-[90;3m2024-08-03 21:39:14.850 GMT[0m [91] LOG:  checkpoint starting: time
-[90;3m2024-08-03 21:39:17.409 GMT[0m [91] LOG:  checkpoint complete: wrote 26 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; [96mwrite[0m=[35m2.515[0m s, [36msync[0m=[35m0.013[0m s, [96mtotal[0m=[35m2.560[0m s; sync [36mfiles[0m=[93m24,[0m [96mlongest[0m=[35m0.009[0m s, [36maverage[0m=[35m0.001[0m s; [96mdistance[0m=[35m121[0m kB, [36mestimate[0m=[35m904[0m kB; [96mlsn[0m=[93m5/DBA2B8,[0m redo [36mlsn[0m=[93m5/DBA280[0m
-[90;3m2024-08-03 21:44:14.508 GMT[0m [91] LOG:  checkpoint starting: time
-[90;3m2024-08-03 21:44:18.372 GMT[0m [91] LOG:  checkpoint complete: wrote 39 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; [96mwrite[0m=[35m3.821[0m s, [36msync[0m=[35m0.015[0m s, [96mtotal[0m=[35m3.865[0m s; sync [36mfiles[0m=[93m30,[0m [96mlongest[0m=[35m0.011[0m s, [36maverage[0m=[35m0.001[0m s; [96mdistance[0m=[35m190[0m kB, [36mestimate[0m=[35m833[0m kB; [96mlsn[0m=[93m5/DE9BD8,[0m redo [36mlsn[0m=[93m5/DE9BA0[0m
-[90;3m2024-08-03 21:49:14.461 GMT[0m [91] LOG:  checkpoint starting: time
-[90;3m2024-08-03 21:49:25.139 GMT[0m [91] LOG:  checkpoint complete: wrote 107 buffers (0.7%); 0 WAL file(s) added, 0 removed, 0 recycled; [96mwrite[0m=[35m10.636[0m s, [36msync[0m=[35m0.018[0m s, [96mtotal[0m=[35m10.678[0m s; sync [36mfiles[0m=[93m54,[0m [96mlongest[0m=[35m0.008[0m s, [36maverage[0m=[35m0.001[0m s; [96mdistance[0m=[35m622[0m kB, [36mestimate[0m=[35m811[0m kB; [96mlsn[0m=[93m5/E854A0,[0m redo [36mlsn[0m=[93m5/E85468[0m
-[90;3m2024-08-03 21:54:14.233 GMT[0m [91] LOG:  checkpoint starting: time
-[90;3m2024-08-03 21:54:17.388 GMT[0m [91] LOG:  checkpoint complete: wrote 32 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; [96mwrite[0m=[35m3.115[0m s, [36msync[0m=[35m0.014[0m s, [96mtotal[0m=[35m3.156[0m s; sync [36mfiles[0m=[93m22,[0m [96mlongest[0m=[35m0.010[0m s, [36maverage[0m=[35m0.001[0m s; [96mdistance[0m=[35m185[0m kB, [36mestimate[0m=[35m749[0m kB; [96mlsn[0m=[93m5/EB3998,[0m redo [36mlsn[0m=[93m5/EB3960[0m
+[90;3m2024-08-03 21:39:14.850 GMT[0m [[35m91[0m] LOG:  checkpoint starting: time
+[90;3m2024-08-03 21:39:17.409 GMT[0m [[35m91[0m] LOG:  checkpoint complete: wrote [35m26[0m buffers (0.2%); [35m0[0m WAL file(s) added, [35m0[0m removed, [35m0[0m recycled; [96mwrite[0m=[35m2.515[0m s, [36msync[0m=[35m0.013[0m s, [96mtotal[0m=[35m2.560[0m s; sync [36mfiles[0m=[35m24[0m, [96mlongest[0m=[35m0.009[0m s, [36maverage[0m=[35m0.001[0m s; [96mdistance[0m=[35m121[0m kB, [36mestimate[0m=[35m904[0m kB; [96mlsn[0m=[93m5/DBA2B8[0m, redo [36mlsn[0m=[93m5/DBA280[0m
+[90;3m2024-08-03 21:44:14.508 GMT[0m [[35m91[0m] LOG:  checkpoint starting: time
+[90;3m2024-08-03 21:44:18.372 GMT[0m [[35m91[0m] LOG:  checkpoint complete: wrote [35m39[0m buffers (0.2%); [35m0[0m WAL file(s) added, [35m0[0m removed, [35m0[0m recycled; [96mwrite[0m=[35m3.821[0m s, [36msync[0m=[35m0.015[0m s, [96mtotal[0m=[35m3.865[0m s; sync [36mfiles[0m=[35m30[0m, [96mlongest[0m=[35m0.011[0m s, [36maverage[0m=[35m0.001[0m s; [96mdistance[0m=[35m190[0m kB, [36mestimate[0m=[35m833[0m kB; [96mlsn[0m=[93m5/DE9BD8[0m, redo [36mlsn[0m=[93m5/DE9BA0[0m
+[90;3m2024-08-03 21:49:14.461 GMT[0m [[35m91[0m] LOG:  checkpoint starting: time
+[90;3m2024-08-03 21:49:25.139 GMT[0m [[35m91[0m] LOG:  checkpoint complete: wrote [35m107[0m buffers (0.7%); [35m0[0m WAL file(s) added, [35m0[0m removed, [35m0[0m recycled; [96mwrite[0m=[35m10.636[0m s, [36msync[0m=[35m0.018[0m s, [96mtotal[0m=[35m10.678[0m s; sync [36mfiles[0m=[35m54[0m, [96mlongest[0m=[35m0.008[0m s, [36maverage[0m=[35m0.001[0m s; [96mdistance[0m=[35m622[0m kB, [36mestimate[0m=[35m811[0m kB; [96mlsn[0m=[93m5/E854A0[0m, redo [36mlsn[0m=[93m5/E85468[0m
+[90;3m2024-08-03 21:54:14.233 GMT[0m [[35m91[0m] LOG:  checkpoint starting: time
+[90;3m2024-08-03 21:54:17.388 GMT[0m [[35m91[0m] LOG:  checkpoint complete: wrote [35m32[0m buffers (0.2%); [35m0[0m WAL file(s) added, [35m0[0m removed, [35m0[0m recycled; [96mwrite[0m=[35m3.115[0m s, [36msync[0m=[35m0.014[0m s, [96mtotal[0m=[35m3.156[0m s; sync [36mfiles[0m=[35m22[0m, [96mlongest[0m=[35m0.010[0m s, [36maverage[0m=[35m0.001[0m s; [96mdistance[0m=[35m185[0m kB, [36mestimate[0m=[35m749[0m kB; [96mlsn[0m=[93m5/EB3998[0m, redo [36mlsn[0m=[93m5/EB3960[0m
 
 ================================================================================
 # redis logs
@@ -107,9 +107,9 @@ $ kubectl logs redis-master-0
 
 --------------------------------------------------------------------------------
 
-1:M [90;3m02 Aug 2024 13:21:03.348[0m # [33mWarning[0m, detected child with unmatched pid: 2896794
-1:M [90;3m02 Aug 2024 13:21:03.448[0m # [33mWarning[0m, detected child with unmatched pid: 2896802
-1:M [90;3m02 Aug 2024 13:21:03.549[0m # [33mWarning[0m, detected child with unmatched pid: 2896818
+1:M [90;3m02 Aug 2024 13:21:03.348[0m # [33mWarning[0m, detected child with unmatched pid: [35m2896794[0m
+1:M [90;3m02 Aug 2024 13:21:03.448[0m # [33mWarning[0m, detected child with unmatched pid: [35m2896802[0m
+1:M [90;3m02 Aug 2024 13:21:03.549[0m # [33mWarning[0m, detected child with unmatched pid: [35m2896818[0m
 1:M [90;3m02 Aug 2024 13:21:03.649[0m * Background AOF rewrite terminated with [32msuccess[0m
 1:M [90;3m02 Aug 2024 13:21:03.650[0m * [32mSuccessfully[0m renamed the temporary AOF base file temp-rewriteaof-bg-3214215.aof into appendonly.aof.17.base.rdb
 1:M [90;3m02 Aug 2024 13:21:03.651[0m * Removing the history file appendonly.aof.16.incr.aof in the background
