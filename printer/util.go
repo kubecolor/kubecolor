@@ -134,7 +134,6 @@ func colorSingleStatus(status string, theme *config.Theme) (string, bool) {
 		// Node status list
 		"NotReady",
 		"NetworkUnavailable",
-		"SchedulingDisabled",
 
 		// some other status
 		"ContainerStatusUnknown",
@@ -164,6 +163,7 @@ func colorSingleStatus(status string, theme *config.Theme) (string, bool) {
 		"SuccessfulAttachVolume",
 		"SuccessfulMountVolume",
 		"NodeAllocatableEnforced",
+		"SchedulingDisabled",
 		// Image manager event reason list
 		// Probe event reason list
 		"ProbeWarning",
