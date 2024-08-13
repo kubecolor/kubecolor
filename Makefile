@@ -11,10 +11,18 @@ build: ## build package
 	go build -v .
 .PHONY: build
 
-test: ## run test and generate coverage report
-	${GO_TEST_CMD} -race -coverprofile=coverage.txt -covermode=atomic -v ./... && \
-	go tool cover -html=coverage.txt -o cover.html
+test: ## run tests
+	${GO_TEST_CMD} -v -race ./...
 .PHONY: test
+
+testcover: ## run tests and generate coverage report
+	${GO_TEST_CMD} -v -coverprofile=coverage.txt -coverpkg=./... ./... && \
+	go tool cover -html=coverage.txt -o cover.html
+.PHONY: testcover
+
+testshort: ## run test and generate short report
+	${GO_TEST_CMD} -timeout 30s -count=1 ./... -test.short
+.PHONY: testshort
 
 corpus: ## run corpus tests on files in ./test/corpus
 	go run ./internal/cmd/testcorpus
@@ -23,10 +31,6 @@ corpus: ## run corpus tests on files in ./test/corpus
 corpus-update: ## update test files in ./test/corpus with the current kubecolor output
 	go run ./internal/cmd/testcorpus -update
 .PHONY: corpus-update
-
-testshort: ## run test and generate short report
-	${GO_TEST_CMD} -timeout 30s -count=1 ./... -test.short
-.PHONY: testshort
 
 fmt: ## format code
 	go fmt ./...
