@@ -1,0 +1,150 @@
+================================================================================
+# kubernetes operator logs using klog
+$ kubectl logs cert-manager-webhook-8656b957f-l6s6j
+================================================================================
+
+W0803 18:55:31.034936       1 client_config.go:659] Neither --kubeconfig nor --master was specified.  Using the inClusterConfig.  This might not work.
+I0803 18:55:31.046043       1 webhook.go:128] "using dynamic certificate generating using CA stored in Secret resource" logger="cert-manager.webhook.webhook" secret_namespace="cert-manager" secret_name="cert-manager-webhook-ca"
+I0803 18:55:31.048138       1 server.go:152] "listening for insecure healthz connections" logger="cert-manager.webhook" address=6080
+I0803 18:55:31.049288       1 server.go:183] "Registering webhook" logger="cert-manager.controller-runtime.webhook" path="/mutate"
+I0803 18:55:31.049507       1 server.go:183] "Registering webhook" logger="cert-manager.controller-runtime.webhook" path="/validate"
+I0803 18:55:31.051023       1 server.go:191] "Starting webhook server" logger="cert-manager.controller-runtime.webhook"
+E0803 18:55:31.053882       1 dynamic_source.go:221] "Failed to generate serving certificate, retrying..." err="failed verifying CA keypair: tls: failed to find any PEM data in certificate input" logger="cert-manager" interval="1s"
+I0803 18:55:31.054382       1 server.go:242] "Serving webhook server" logger="cert-manager.controller-runtime.webhook" host="" port=10250
+I0803 18:55:31.270244       1 reflector.go:359] Caches populated for *v1.Secret from k8s.io/client-go@v0.30.1/tools/cache/reflector.go:232
+I0803 18:55:32.082650       1 dynamic_source.go:290] "Updated cert-manager TLS certificate" logger="cert-manager" DNSNames=["cert-manager-webhook","cert-manager-webhook.cert-manager","cert-manager-webhook.cert-manager.svc"]
+I0803 18:55:32.082898       1 dynamic_source.go:172] "Detected root CA rotation - regenerating serving certificates" logger="cert-manager"
+I0803 18:55:32.086191       1 dynamic_source.go:290] "Updated cert-manager TLS certificate" logger="cert-manager" DNSNames=["cert-manager-webhook","cert-manager-webhook.cert-manager","cert-manager-webhook.cert-manager.svc"]
+
+--------------------------------------------------------------------------------
+
+[33mW[0m[90;3m0803 18:55:31.034936[0m       1 [90;3mclient_config.go:659[0m] Neither --kubeconfig nor --master was specified.  Using the inClusterConfig.  This might not work.
+[32mI[0m[90;3m0803 18:55:31.046043[0m       1 [90;3mwebhook.go:128[0m] [93m"using dynamic certificate generating using CA stored in Secret resource"[0m [96mlogger[0m=[93m"cert-manager.webhook.webhook"[0m [36msecret_namespace[0m=[93m"cert-manager"[0m [96msecret_name[0m=[93m"cert-manager-webhook-ca"[0m
+[32mI[0m[90;3m0803 18:55:31.048138[0m       1 [90;3mserver.go:152[0m] [93m"listening for insecure healthz connections"[0m [96mlogger[0m=[93m"cert-manager.webhook"[0m [36maddress[0m=[35m6080[0m
+[32mI[0m[90;3m0803 18:55:31.049288[0m       1 [90;3mserver.go:183[0m] [93m"Registering webhook"[0m [96mlogger[0m=[93m"cert-manager.controller-runtime.webhook"[0m [36mpath[0m=[93m"/mutate"[0m
+[32mI[0m[90;3m0803 18:55:31.049507[0m       1 [90;3mserver.go:183[0m] [93m"Registering webhook"[0m [96mlogger[0m=[93m"cert-manager.controller-runtime.webhook"[0m [36mpath[0m=[93m"/validate"[0m
+[32mI[0m[90;3m0803 18:55:31.051023[0m       1 [90;3mserver.go:191[0m] [93m"Starting webhook server"[0m [96mlogger[0m=[93m"cert-manager.controller-runtime.webhook"[0m
+[31mE[0m[90;3m0803 18:55:31.053882[0m       1 [90;3mdynamic_source.go:221[0m] [93m"Failed to generate serving certificate, retrying..."[0m [96merr[0m=[93m"failed verifying CA keypair: tls: failed to find any PEM data in certificate input"[0m [36mlogger[0m=[93m"cert-manager"[0m [96minterval[0m=[93m"1s"[0m
+[32mI[0m[90;3m0803 18:55:31.054382[0m       1 [90;3mserver.go:242[0m] [93m"Serving webhook server"[0m [96mlogger[0m=[93m"cert-manager.controller-runtime.webhook"[0m [36mhost[0m=[93m""[0m [96mport[0m=[35m10250[0m
+[32mI[0m[90;3m0803 18:55:31.270244[0m       1 [90;3mreflector.go:359[0m] Caches populated for *v1.Secret from k8s.io/client-go@v0.30.1/tools/cache/reflector.go:232
+[32mI[0m[90;3m0803 18:55:32.082650[0m       1 [90;3mdynamic_source.go:290[0m] [93m"Updated cert-manager TLS certificate"[0m [96mlogger[0m=[93m"cert-manager"[0m [36mDNSNames[0m=[93m["cert-manager-webhook","cert-manager-webhook.cert-manager","cert-manager-webhook.cert-manager.svc"][0m
+[32mI[0m[90;3m0803 18:55:32.082898[0m       1 [90;3mdynamic_source.go:172[0m] [93m"Detected root CA rotation - regenerating serving certificates"[0m [96mlogger[0m=[93m"cert-manager"[0m
+[32mI[0m[90;3m0803 18:55:32.086191[0m       1 [90;3mdynamic_source.go:290[0m] [93m"Updated cert-manager TLS certificate"[0m [96mlogger[0m=[93m"cert-manager"[0m [36mDNSNames[0m=[93m["cert-manager-webhook","cert-manager-webhook.cert-manager","cert-manager-webhook.cert-manager.svc"][0m
+
+================================================================================
+# ruby sidekiq logs
+$ kubectl logs mastodon-sidekiq-5bfd7c88d-5gvk2
+================================================================================
+
+2024-08-03T21:54:41.930Z pid=1 tid=96iad class=Scheduler::IndexingScheduler jid=1455b81ed08b6163ba975fa5 INFO: start
+2024-08-03T21:54:41.931Z pid=1 tid=94wth class=Scheduler::SuspendedUserCleanupScheduler jid=9478d0012ff13db87ff8a6ea INFO: start
+2024-08-03T21:54:41.934Z pid=1 tid=96iad class=Scheduler::IndexingScheduler jid=1455b81ed08b6163ba975fa5 elapsed=0.005 INFO: done
+2024-08-03T21:54:41.937Z pid=1 tid=94wth class=Scheduler::SuspendedUserCleanupScheduler jid=9478d0012ff13db87ff8a6ea elapsed=0.006 INFO: done
+2024-08-03T21:55:41.404Z pid=1 tid=12w9h INFO: queueing Scheduler::AccountsStatusesCleanupScheduler (accounts_statuses_cleanup_scheduler)
+2024-08-03T21:55:41.415Z pid=1 tid=94qi9 class=Scheduler::AccountsStatusesCleanupScheduler jid=fb546330a01367970085fec9 INFO: start
+2024-08-03T21:55:41.431Z pid=1 tid=94qi9 class=Scheduler::AccountsStatusesCleanupScheduler jid=fb546330a01367970085fec9 elapsed=0.016 INFO: done
+2024-08-03T21:55:42.002Z pid=1 tid=32qp INFO: queueing Scheduler::IndexingScheduler (indexing_scheduler)
+2024-08-03T21:55:42.002Z pid=1 tid=1vugd INFO: queueing Scheduler::SuspendedUserCleanupScheduler (suspended_user_cleanup_scheduler)
+2024-08-03T21:55:42.005Z pid=1 tid=96iad class=Scheduler::IndexingScheduler jid=5dd95eb87f1c815c0fb82cb1 INFO: start
+2024-08-03T21:55:42.007Z pid=1 tid=94wth class=Scheduler::SuspendedUserCleanupScheduler jid=a8c9e2b7449c145a0b711fa8 INFO: start
+2024-08-03T21:55:42.010Z pid=1 tid=96iad class=Scheduler::IndexingScheduler jid=5dd95eb87f1c815c0fb82cb1 elapsed=0.004 INFO: done
+2024-08-03T21:55:42.013Z pid=1 tid=94wth class=Scheduler::SuspendedUserCleanupScheduler jid=a8c9e2b7449c145a0b711fa8 elapsed=0.005 INFO: done
+
+--------------------------------------------------------------------------------
+
+[90;3m2024-08-03T21:54:41.930Z[0m [96mpid[0m=[35m1[0m [36mtid[0m=[93m96iad[0m [96mclass[0m=[93mScheduler::IndexingScheduler[0m [36mjid[0m=[93m1455b81ed08b6163ba975fa5[0m [32mINFO[0m: start
+[90;3m2024-08-03T21:54:41.931Z[0m [96mpid[0m=[35m1[0m [36mtid[0m=[93m94wth[0m [96mclass[0m=[93mScheduler::SuspendedUserCleanupScheduler[0m [36mjid[0m=[93m9478d0012ff13db87ff8a6ea[0m [32mINFO[0m: start
+[90;3m2024-08-03T21:54:41.934Z[0m [96mpid[0m=[35m1[0m [36mtid[0m=[93m96iad[0m [96mclass[0m=[93mScheduler::IndexingScheduler[0m [36mjid[0m=[93m1455b81ed08b6163ba975fa5[0m [96melapsed[0m=[35m0.005[0m [32mINFO[0m: done
+[90;3m2024-08-03T21:54:41.937Z[0m [96mpid[0m=[35m1[0m [36mtid[0m=[93m94wth[0m [96mclass[0m=[93mScheduler::SuspendedUserCleanupScheduler[0m [36mjid[0m=[93m9478d0012ff13db87ff8a6ea[0m [96melapsed[0m=[35m0.006[0m [32mINFO[0m: done
+[90;3m2024-08-03T21:55:41.404Z[0m [96mpid[0m=[35m1[0m [36mtid[0m=[93m12w9h[0m [32mINFO[0m: queueing Scheduler::AccountsStatusesCleanupScheduler (accounts_statuses_cleanup_scheduler)
+[90;3m2024-08-03T21:55:41.415Z[0m [96mpid[0m=[35m1[0m [36mtid[0m=[93m94qi9[0m [96mclass[0m=[93mScheduler::AccountsStatusesCleanupScheduler[0m [36mjid[0m=[93mfb546330a01367970085fec9[0m [32mINFO[0m: start
+[90;3m2024-08-03T21:55:41.431Z[0m [96mpid[0m=[35m1[0m [36mtid[0m=[93m94qi9[0m [96mclass[0m=[93mScheduler::AccountsStatusesCleanupScheduler[0m [36mjid[0m=[93mfb546330a01367970085fec9[0m [96melapsed[0m=[35m0.016[0m [32mINFO[0m: done
+[90;3m2024-08-03T21:55:42.002Z[0m [96mpid[0m=[35m1[0m [36mtid[0m=[93m32qp[0m [32mINFO[0m: queueing Scheduler::IndexingScheduler (indexing_scheduler)
+[90;3m2024-08-03T21:55:42.002Z[0m [96mpid[0m=[35m1[0m [36mtid[0m=[93m1vugd[0m [32mINFO[0m: queueing Scheduler::SuspendedUserCleanupScheduler (suspended_user_cleanup_scheduler)
+[90;3m2024-08-03T21:55:42.005Z[0m [96mpid[0m=[35m1[0m [36mtid[0m=[93m96iad[0m [96mclass[0m=[93mScheduler::IndexingScheduler[0m [36mjid[0m=[93m5dd95eb87f1c815c0fb82cb1[0m [32mINFO[0m: start
+[90;3m2024-08-03T21:55:42.007Z[0m [96mpid[0m=[35m1[0m [36mtid[0m=[93m94wth[0m [96mclass[0m=[93mScheduler::SuspendedUserCleanupScheduler[0m [36mjid[0m=[93ma8c9e2b7449c145a0b711fa8[0m [32mINFO[0m: start
+[90;3m2024-08-03T21:55:42.010Z[0m [96mpid[0m=[35m1[0m [36mtid[0m=[93m96iad[0m [96mclass[0m=[93mScheduler::IndexingScheduler[0m [36mjid[0m=[93m5dd95eb87f1c815c0fb82cb1[0m [96melapsed[0m=[35m0.004[0m [32mINFO[0m: done
+[90;3m2024-08-03T21:55:42.013Z[0m [96mpid[0m=[35m1[0m [36mtid[0m=[93m94wth[0m [96mclass[0m=[93mScheduler::SuspendedUserCleanupScheduler[0m [36mjid[0m=[93ma8c9e2b7449c145a0b711fa8[0m [96melapsed[0m=[35m0.005[0m [32mINFO[0m: done
+
+================================================================================
+# postgres logs
+$ kubectl logs postgresql-0
+================================================================================
+
+2024-08-03 21:39:14.850 GMT [91] LOG:  checkpoint starting: time
+2024-08-03 21:39:17.409 GMT [91] LOG:  checkpoint complete: wrote 26 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=2.515 s, sync=0.013 s, total=2.560 s; sync files=24, longest=0.009 s, average=0.001 s; distance=121 kB, estimate=904 kB; lsn=5/DBA2B8, redo lsn=5/DBA280
+2024-08-03 21:44:14.508 GMT [91] LOG:  checkpoint starting: time
+2024-08-03 21:44:18.372 GMT [91] LOG:  checkpoint complete: wrote 39 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.821 s, sync=0.015 s, total=3.865 s; sync files=30, longest=0.011 s, average=0.001 s; distance=190 kB, estimate=833 kB; lsn=5/DE9BD8, redo lsn=5/DE9BA0
+2024-08-03 21:49:14.461 GMT [91] LOG:  checkpoint starting: time
+2024-08-03 21:49:25.139 GMT [91] LOG:  checkpoint complete: wrote 107 buffers (0.7%); 0 WAL file(s) added, 0 removed, 0 recycled; write=10.636 s, sync=0.018 s, total=10.678 s; sync files=54, longest=0.008 s, average=0.001 s; distance=622 kB, estimate=811 kB; lsn=5/E854A0, redo lsn=5/E85468
+2024-08-03 21:54:14.233 GMT [91] LOG:  checkpoint starting: time
+2024-08-03 21:54:17.388 GMT [91] LOG:  checkpoint complete: wrote 32 buffers (0.2%); 0 WAL file(s) added, 0 removed, 0 recycled; write=3.115 s, sync=0.014 s, total=3.156 s; sync files=22, longest=0.010 s, average=0.001 s; distance=185 kB, estimate=749 kB; lsn=5/EB3998, redo lsn=5/EB3960
+
+--------------------------------------------------------------------------------
+
+[90;3m2024-08-03 21:39:14.850 GMT[0m [[35m91[0m] LOG:  checkpoint starting: time
+[90;3m2024-08-03 21:39:17.409 GMT[0m [[35m91[0m] LOG:  checkpoint complete: wrote [35m26[0m buffers (0.2%); [35m0[0m WAL file(s) added, [35m0[0m removed, [35m0[0m recycled; [96mwrite[0m=[35m2.515[0m s, [36msync[0m=[35m0.013[0m s, [96mtotal[0m=[35m2.560[0m s; sync [36mfiles[0m=[35m24[0m, [96mlongest[0m=[35m0.009[0m s, [36maverage[0m=[35m0.001[0m s; [96mdistance[0m=[35m121[0m kB, [36mestimate[0m=[35m904[0m kB; [96mlsn[0m=[93m5/DBA2B8[0m, redo [36mlsn[0m=[93m5/DBA280[0m
+[90;3m2024-08-03 21:44:14.508 GMT[0m [[35m91[0m] LOG:  checkpoint starting: time
+[90;3m2024-08-03 21:44:18.372 GMT[0m [[35m91[0m] LOG:  checkpoint complete: wrote [35m39[0m buffers (0.2%); [35m0[0m WAL file(s) added, [35m0[0m removed, [35m0[0m recycled; [96mwrite[0m=[35m3.821[0m s, [36msync[0m=[35m0.015[0m s, [96mtotal[0m=[35m3.865[0m s; sync [36mfiles[0m=[35m30[0m, [96mlongest[0m=[35m0.011[0m s, [36maverage[0m=[35m0.001[0m s; [96mdistance[0m=[35m190[0m kB, [36mestimate[0m=[35m833[0m kB; [96mlsn[0m=[93m5/DE9BD8[0m, redo [36mlsn[0m=[93m5/DE9BA0[0m
+[90;3m2024-08-03 21:49:14.461 GMT[0m [[35m91[0m] LOG:  checkpoint starting: time
+[90;3m2024-08-03 21:49:25.139 GMT[0m [[35m91[0m] LOG:  checkpoint complete: wrote [35m107[0m buffers (0.7%); [35m0[0m WAL file(s) added, [35m0[0m removed, [35m0[0m recycled; [96mwrite[0m=[35m10.636[0m s, [36msync[0m=[35m0.018[0m s, [96mtotal[0m=[35m10.678[0m s; sync [36mfiles[0m=[35m54[0m, [96mlongest[0m=[35m0.008[0m s, [36maverage[0m=[35m0.001[0m s; [96mdistance[0m=[35m622[0m kB, [36mestimate[0m=[35m811[0m kB; [96mlsn[0m=[93m5/E854A0[0m, redo [36mlsn[0m=[93m5/E85468[0m
+[90;3m2024-08-03 21:54:14.233 GMT[0m [[35m91[0m] LOG:  checkpoint starting: time
+[90;3m2024-08-03 21:54:17.388 GMT[0m [[35m91[0m] LOG:  checkpoint complete: wrote [35m32[0m buffers (0.2%); [35m0[0m WAL file(s) added, [35m0[0m removed, [35m0[0m recycled; [96mwrite[0m=[35m3.115[0m s, [36msync[0m=[35m0.014[0m s, [96mtotal[0m=[35m3.156[0m s; sync [36mfiles[0m=[35m22[0m, [96mlongest[0m=[35m0.010[0m s, [36maverage[0m=[35m0.001[0m s; [96mdistance[0m=[35m185[0m kB, [36mestimate[0m=[35m749[0m kB; [96mlsn[0m=[93m5/EB3998[0m, redo [36mlsn[0m=[93m5/EB3960[0m
+
+================================================================================
+# redis logs
+$ kubectl logs redis-master-0
+================================================================================
+
+1:M 02 Aug 2024 13:21:03.348 # Warning, detected child with unmatched pid: 2896794
+1:M 02 Aug 2024 13:21:03.448 # Warning, detected child with unmatched pid: 2896802
+1:M 02 Aug 2024 13:21:03.549 # Warning, detected child with unmatched pid: 2896818
+1:M 02 Aug 2024 13:21:03.649 * Background AOF rewrite terminated with success
+1:M 02 Aug 2024 13:21:03.650 * Successfully renamed the temporary AOF base file temp-rewriteaof-bg-3214215.aof into appendonly.aof.17.base.rdb
+1:M 02 Aug 2024 13:21:03.651 * Removing the history file appendonly.aof.16.incr.aof in the background
+1:M 02 Aug 2024 13:21:03.652 * Removing the history file appendonly.aof.16.base.rdb in the background
+1:M 02 Aug 2024 13:21:03.654 * Background AOF rewrite finished successfully
+
+--------------------------------------------------------------------------------
+
+1:M [90;3m02 Aug 2024 13:21:03.348[0m # [33mWarning[0m, detected child with unmatched pid: [35m2896794[0m
+1:M [90;3m02 Aug 2024 13:21:03.448[0m # [33mWarning[0m, detected child with unmatched pid: [35m2896802[0m
+1:M [90;3m02 Aug 2024 13:21:03.549[0m # [33mWarning[0m, detected child with unmatched pid: [35m2896818[0m
+1:M [90;3m02 Aug 2024 13:21:03.649[0m * Background AOF rewrite terminated with [32msuccess[0m
+1:M [90;3m02 Aug 2024 13:21:03.650[0m * [32mSuccessfully[0m renamed the temporary AOF base file temp-rewriteaof-bg-3214215.aof into appendonly.aof.17.base.rdb
+1:M [90;3m02 Aug 2024 13:21:03.651[0m * Removing the history file appendonly.aof.16.incr.aof in the background
+1:M [90;3m02 Aug 2024 13:21:03.652[0m * Removing the history file appendonly.aof.16.base.rdb in the background
+1:M [90;3m02 Aug 2024 13:21:03.654[0m * Background AOF rewrite finished [32msuccessfully[0m
+
+================================================================================
+# traefik json logs
+$ kubectl logs traefik-6fd95988f4-4fq74
+================================================================================
+
+{"level":"info","version":"3.0.4","time":"2024-08-03T22:00:34Z","message":"Traefik version 3.0.4 built on 2024-07-02T13:46:37Z"}
+{"level":"info","time":"2024-08-03T22:00:34Z","message":"Stats collection is enabled."}
+{"level":"info","time":"2024-08-03T22:00:34Z","message":"Help us improve Traefik by leaving this feature on :)"}
+{"level":"info","time":"2024-08-03T22:00:34Z","message":"Starting provider aggregator aggregator.ProviderAggregator"}
+{"level":"info","time":"2024-08-03T22:00:34Z","message":"Starting provider *traefik.Provider"}
+{"level":"info","time":"2024-08-03T22:00:34Z","message":"Starting provider *crd.Provider"}
+{"level":"info","providerName":"kubernetescrd","time":"2024-08-03T22:00:34Z","message":"label selector is: \"\""}
+{"level":"info","providerName":"kubernetescrd","time":"2024-08-03T22:00:34Z","message":"Creating in-cluster Provider client"}
+{"level":"info","time":"2024-08-03T22:00:34Z","message":"Starting provider *ingress.Provider"}
+{"level":"info","providerName":"kubernetes","time":"2024-08-03T22:00:34Z","message":"ingress label selector is: \"\""}
+{"level":"info","providerName":"kubernetes","time":"2024-08-03T22:00:34Z","message":"Creating in-cluster Provider client"}
+{"level":"info","time":"2024-08-03T22:00:34Z","message":"Starting provider *acme.ChallengeTLSALPN"}
+
+--------------------------------------------------------------------------------
+
+{[96m"level"[0m:[32m"info"[0m,[36m"version"[0m:[93m"3.0.4"[0m,[96m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[36m"message"[0m:[93m"Traefik version 3.0.4 built on 2024-07-02T13:46:37Z"[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[96m"message"[0m:[93m"Stats collection is enabled."[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[96m"message"[0m:[93m"Help us improve Traefik by leaving this feature on :)"[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[96m"message"[0m:[93m"Starting provider aggregator aggregator.ProviderAggregator"[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[96m"message"[0m:[93m"Starting provider *traefik.Provider"[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[96m"message"[0m:[93m"Starting provider *crd.Provider"[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"providerName"[0m:[93m"kubernetescrd"[0m,[96m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[36m"message"[0m:[93m"label selector is: \"\""[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"providerName"[0m:[93m"kubernetescrd"[0m,[96m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[36m"message"[0m:[93m"Creating in-cluster Provider client"[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[96m"message"[0m:[93m"Starting provider *ingress.Provider"[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"providerName"[0m:[93m"kubernetes"[0m,[96m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[36m"message"[0m:[93m"ingress label selector is: \"\""[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"providerName"[0m:[93m"kubernetes"[0m,[96m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[36m"message"[0m:[93m"Creating in-cluster Provider client"[0m}
+{[96m"level"[0m:[32m"info"[0m,[36m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[96m"message"[0m:[93m"Starting provider *acme.ChallengeTLSALPN"[0m}

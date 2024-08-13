@@ -306,6 +306,7 @@ type Theme struct {
 	Options  ThemeOptions  // used in "kubectl options"
 	Version  ThemeVersion  // used in "kubectl version"
 	Help     ThemeHelp     // used in "kubectl --help"
+	Logs     ThemeLogs     // used in "kubectl logs"
 }
 
 func (t *Theme) ComputeCache() {
@@ -418,6 +419,28 @@ type ThemeHelp struct {
 	FlagDesc Color `defaultFrom:"theme.base.info"`      // Flag descripion under "Options:" heading
 	Url      Color `defaultFrom:"theme.base.secondary"` // e.g `[https://example.com]`
 	Text     Color `defaultFrom:"theme.base.info"`      // Fallback text color
+}
+
+// ThemeLogs holds colors for the "kubectl logs" output.
+type ThemeLogs struct {
+	Key          ColorSlice `defaultFrom:"theme.data.key"`
+	QuotedString Color      `defaultFrom:"theme.data.string"` // Used on quoted strings that are not part of a `key="value"`
+	Date         Color      `defaultFrom:"theme.base.muted"`
+	SourceRef    Color      `defaultFrom:"theme.base.muted"`
+	GUID         Color      `defaultFrom:"theme.base.muted"`
+
+	Severity ThemeLogsSeverity
+}
+
+// ThemeLogsSeverity holds colors for "log level severity" found in "kubectl logs" output
+type ThemeLogsSeverity struct {
+	Trace Color `defaultFrom:"theme.base.muted"`
+	Debug Color `defaultFrom:"theme.base.muted"`
+	Info  Color `defaultFrom:"theme.base.success"`
+	Warn  Color `defaultFrom:"theme.base.warning"`
+	Error Color `defaultFrom:"theme.base.danger"`
+	Fatal Color `defaultFrom:"theme.base.danger"`
+	Panic Color `defaultFrom:"theme.base.danger"`
 }
 
 func applyViperDefaults(theme *Theme, v *viper.Viper) {
