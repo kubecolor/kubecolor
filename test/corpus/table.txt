@@ -131,3 +131,16 @@ nginx-qdf9b   0/2     Init:ErrImagePull       0          2m3s
 [37mnginx-dnmv5[0m   [33m0/2[0m     [31mInit:ImagePullBackOff[0m   [36m0[0m          [37m2m3s[0m
 [37mnginx-m8pbc[0m   [33m0/2[0m     [33mInit:0/1[0m                [36m0[0m          [37m2m3s[0m
 [37mnginx-qdf9b[0m   [33m0/2[0m     [31mInit:ErrImagePull[0m       [36m0[0m          [37m2m3s[0m
+
+================================================================================
+# multiple statuses
+$ kubectl get node
+================================================================================
+
+NAME        STATUS                     ROLES           AGE    VERSION
+worker003   Ready,SchedulingDisabled   worker          474d   v1.28.8
+
+--------------------------------------------------------------------------------
+
+[1mNAME        STATUS                     ROLES           AGE    VERSION[0m
+[37mworker003[0m   [36m[32mReady[0m[36m,[33mSchedulingDisabled[0m[0m   [37mworker[0m          [36m474d[0m   [37mv1.28.8[0m

@@ -15,7 +15,7 @@ type TablePrinter struct {
 	WithHeader     bool
 	DarkBackground bool
 	Theme          *config.Theme
-	ColorDeciderFn func(index int, column string) (config.Color, bool)
+	ColumnFilter   func(columnIndex int, column string) string
 
 	hasLeadingNamespaceColumn bool
 }
@@ -23,11 +23,11 @@ type TablePrinter struct {
 // ensures it implements the interface
 var _ Printer = &TablePrinter{}
 
-func NewTablePrinter(withHeader bool, theme *config.Theme, colorDeciderFn func(index int, column string) (config.Color, bool)) *TablePrinter {
+func NewTablePrinter(withHeader bool, theme *config.Theme, columnFilter func(columnIndex int, column string) string) *TablePrinter {
 	return &TablePrinter{
-		WithHeader:     withHeader,
-		Theme:          theme,
-		ColorDeciderFn: colorDeciderFn,
+		WithHeader:   withHeader,
+		Theme:        theme,
+		ColumnFilter: columnFilter,
 	}
 }
 
@@ -77,14 +77,13 @@ func (p *TablePrinter) printLineAsTableFormat(w io.Writer, cells []tablescan.Cel
 	for i, cell := range cells {
 		c := p.getColumnBaseColor(i, colorsPreset)
 
-		if p.ColorDeciderFn != nil {
-			if cc, ok := p.ColorDeciderFn(i, cell.Trimmed); ok && !cc.IsNoop() {
-				c = cc // prior injected deciderFn result
-			}
+		cellText := cell.Trimmed
+		if p.ColumnFilter != nil {
+			cellText = p.ColumnFilter(i, cellText)
 		}
 		// Write colored column
-		if cell.Trimmed != "" {
-			fmt.Fprint(w, c.Render(cell.Trimmed))
+		if cellText != "" {
+			fmt.Fprint(w, c.Render(cellText))
 		}
 		fmt.Fprint(w, cell.TrailingSpaces)
 	}
