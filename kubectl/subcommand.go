@@ -20,8 +20,8 @@ type FormatOption int
 const (
 	None FormatOption = iota
 	Wide
-	Json
-	Yaml
+	JSON
+	YAML
 )
 
 type Subcommand string
@@ -152,9 +152,9 @@ func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 		if strings.HasPrefix(args[i], "--output") {
 			switch args[i] {
 			case "--output=json":
-				info.FormatOption = Json
+				info.FormatOption = JSON
 			case "--output=yaml":
-				info.FormatOption = Yaml
+				info.FormatOption = YAML
 			case "--output=wide":
 				info.FormatOption = Wide
 			default:
@@ -162,9 +162,9 @@ func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 					formatOption := args[i+1]
 					switch formatOption {
 					case "json":
-						info.FormatOption = Json
+						info.FormatOption = JSON
 					case "yaml":
-						info.FormatOption = Yaml
+						info.FormatOption = YAML
 					case "wide":
 						info.FormatOption = Wide
 					default:
@@ -176,9 +176,9 @@ func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 			switch args[i] {
 			// both '-ojson' and '-o=json' works
 			case "-ojson", "-o=json":
-				info.FormatOption = Json
+				info.FormatOption = JSON
 			case "-oyaml", "-o=yaml":
-				info.FormatOption = Yaml
+				info.FormatOption = YAML
 			case "-owide", "-o=wide":
 				info.FormatOption = Wide
 			default:
@@ -187,9 +187,9 @@ func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 					formatOption := args[i+1]
 					switch formatOption {
 					case "json":
-						info.FormatOption = Json
+						info.FormatOption = JSON
 					case "yaml":
-						info.FormatOption = Yaml
+						info.FormatOption = YAML
 					case "wide":
 						info.FormatOption = Wide
 					default:

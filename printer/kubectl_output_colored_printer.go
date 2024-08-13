@@ -85,9 +85,9 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 					return column
 				},
 			)
-		case kubectl.Json:
+		case kubectl.JSON:
 			return &JSONPrinter{Theme: p.Theme}
-		case kubectl.Yaml:
+		case kubectl.YAML:
 			return &YAMLPrinter{Theme: p.Theme}
 		}
 
@@ -108,9 +108,9 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 		}
 	case kubectl.Version:
 		switch {
-		case p.SubcommandInfo.FormatOption == kubectl.Json:
+		case p.SubcommandInfo.FormatOption == kubectl.JSON:
 			return &VersionJSONInjectorPrinter{KubecolorVersion: p.KubecolorVersion, JsonPrinter: &JSONPrinter{Theme: p.Theme}}
-		case p.SubcommandInfo.FormatOption == kubectl.Yaml:
+		case p.SubcommandInfo.FormatOption == kubectl.YAML:
 			return &VersionYAMLInjectorPrinter{KubecolorVersion: p.KubecolorVersion, YamlPrinter: &YAMLPrinter{Theme: p.Theme}}
 		default:
 			return &VersionPrinter{
@@ -122,14 +122,74 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 		return &OptionsPrinter{
 			Theme: p.Theme,
 		}
-	case kubectl.Apply:
+
+	case
+		kubectl.Apply,
+		kubectl.Create,
+		kubectl.Delete,
+		kubectl.Expose,
+		kubectl.Patch,
+		kubectl.Rollout:
 		switch p.SubcommandInfo.FormatOption {
-		case kubectl.Json:
+		case kubectl.JSON:
 			return &JSONPrinter{Theme: p.Theme}
-		case kubectl.Yaml:
+		case kubectl.YAML:
 			return &YAMLPrinter{Theme: p.Theme}
-		default:
-			return &ApplyPrinter{Theme: p.Theme}
+		}
+		switch p.SubcommandInfo.Subcommand {
+		case kubectl.Apply:
+			return &VerbPrinter{
+				DryRunColor:   p.Theme.Apply.DryRun,
+				FallbackColor: p.Theme.Apply.Fallback,
+				VerbColor: map[string]config.Color{
+					"created":    p.Theme.Apply.Created,
+					"configured": p.Theme.Apply.Configured,
+					"unchanged":  p.Theme.Apply.Unchanged,
+				},
+			}
+		case kubectl.Create:
+			return &VerbPrinter{
+				DryRunColor:   p.Theme.Create.DryRun,
+				FallbackColor: p.Theme.Create.Fallback,
+				VerbColor: map[string]config.Color{
+					"created": p.Theme.Create.Created,
+				},
+			}
+		case kubectl.Delete:
+			return &VerbPrinter{
+				DryRunColor:   p.Theme.Delete.DryRun,
+				FallbackColor: p.Theme.Delete.Fallback,
+				VerbColor: map[string]config.Color{
+					"deleted": p.Theme.Delete.Deleted,
+				},
+			}
+		case kubectl.Expose:
+			return &VerbPrinter{
+				DryRunColor:   p.Theme.Expose.DryRun,
+				FallbackColor: p.Theme.Expose.Fallback,
+				VerbColor: map[string]config.Color{
+					"exposed": p.Theme.Expose.Exposed,
+				},
+			}
+		case kubectl.Patch:
+			return &VerbPrinter{
+				DryRunColor:   p.Theme.Patch.DryRun,
+				FallbackColor: p.Theme.Patch.Fallback,
+				VerbColor: map[string]config.Color{
+					"patched": p.Theme.Patch.Patched,
+				},
+			}
+		case kubectl.Rollout:
+			return &VerbPrinter{
+				DryRunColor:   p.Theme.Rollout.DryRun,
+				FallbackColor: p.Theme.Rollout.Fallback,
+				VerbColor: map[string]config.Color{
+					"rolled back": p.Theme.Rollout.RolledBack,
+					"paused":      p.Theme.Rollout.Paused,
+					"resumed":     p.Theme.Rollout.Resumed,
+					"restarted":   p.Theme.Rollout.Restarted,
+				},
+			}
 		}
 	}
 

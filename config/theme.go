@@ -300,10 +300,15 @@ type Theme struct {
 	Table  ThemeTable  // used in table output, e.g "kubectl get" and parts of "kubectl describe"
 	Stderr ThemeStderr // used in kubectl's stderr output
 
-	Describe ThemeDescribe // used in "kubectl describe"
 	Apply    ThemeApply    // used in "kubectl apply"
+	Create   ThemeCreate   // used in "kubectl create"
+	Delete   ThemeDelete   // used in "kubectl delete"
+	Describe ThemeDescribe // used in "kubectl describe"
 	Explain  ThemeExplain  // used in "kubectl explain"
+	Expose   ThemeExpose   // used in "kubectl expose"
 	Options  ThemeOptions  // used in "kubectl options"
+	Patch    ThemePatch    // used in "kubectl patch"
+	Rollout  ThemeRollout  // used in "kubectl rollout"
 	Version  ThemeVersion  // used in "kubectl version"
 	Help     ThemeHelp     // used in "kubectl --help"
 	Logs     ThemeLogs     // used in "kubectl logs"
@@ -389,11 +394,55 @@ type ThemeDescribe struct {
 
 // ThemeApply holds colors for the "kubectl apply" output.
 type ThemeApply struct {
-	Created    Color `defaultFrom:"theme.base.success"`   // used on "deployment.apps/foo created"
-	Configured Color `defaultFrom:"theme.base.warning"`   // used on "deployment.apps/bar configured"
-	Unchanged  Color `defaultFrom:"theme.base.primary"`   // used on "deployment.apps/quux unchanged"
-	DryRun     Color `defaultFrom:"theme.base.secondary"` // used on "deployment.apps/quux created (dry-run)"
-	Fallback   Color `defaultFrom:"theme.base.success"`   // used when "kubectl apply" outputs unknown format
+	Created    Color `defaultFrom:"theme.base.success"` // used on "deployment.apps/foo created"
+	Configured Color `defaultFrom:"theme.base.warning"` // used on "deployment.apps/bar configured"
+	Unchanged  Color `defaultFrom:"theme.base.primary"` // used on "deployment.apps/quux unchanged"
+
+	DryRun   Color `defaultFrom:"theme.base.secondary"` // used on "(dry run)" and "(server dry run)"
+	Fallback Color `defaultFrom:"theme.base.success"`   // used when outputs unknown format
+}
+
+// ThemeDelete holds colors for the "kubectl delete" output.
+type ThemeDelete struct {
+	Deleted Color `defaultFrom:"theme.base.danger"` // used on "deployment.apps "nginx" deleted"
+
+	DryRun   Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+	Fallback Color `defaultFrom:"theme.base.danger"`  // used when outputs unknown format
+}
+
+// ThemeCreate holds colors for the "kubectl create" output.
+type ThemeCreate struct {
+	Created Color `defaultFrom:"theme.base.success"` // used on "deployment.apps/foo created"
+
+	DryRun   Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+	Fallback Color `defaultFrom:"theme.base.success"` // used when outputs unknown format
+}
+
+// ThemeExpose holds colors for the "kubectl expose" output.
+type ThemeExpose struct {
+	Exposed Color `defaultFrom:"theme.base.primary"` // used on "deployment.apps/foo created"
+
+	DryRun   Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+	Fallback Color `defaultFrom:"theme.base.primary"` // used when outputs unknown format
+}
+
+// ThemeRollout holds colors for the "kubectl rollout" output.
+type ThemeRollout struct {
+	RolledBack Color `defaultFrom:"theme.base.warning"`   // used on "deployment.apps/foo rolled back"
+	Paused     Color `defaultFrom:"theme.base.primary"`   // used on "deployment.apps/foo paused"
+	Resumed    Color `defaultFrom:"theme.base.secondary"` // used on "deployment.apps/foo resumed"
+	Restarted  Color `defaultFrom:"theme.base.warning"`   // used on "deployment.apps/foo restarted"
+
+	DryRun   Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+	Fallback Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format
+}
+
+// ThemePatch holds colors for the "kubectl patch" output.
+type ThemePatch struct {
+	Patched Color `defaultFrom:"theme.base.warning"` // used on "deployment.apps/foo patched"
+
+	DryRun   Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+	Fallback Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format
 }
 
 // ThemeExplain holds colors for the "kubectl explain" output.

@@ -1,0 +1,15 @@
+================================================================================
+$ kubectl create deploy nginx --image nginx
+================================================================================
+
+deployment.apps/nginx created
+deployment.apps/nginx created (dry run)
+deployment.apps/nginx created (server dry run)
+deployment.apps/nginx unknown
+
+--------------------------------------------------------------------------------
+
+deployment.apps/nginx [32mcreated[0m
+deployment.apps/nginx [32mcreated[0m [36m(dry run)[0m
+deployment.apps/nginx [32mcreated[0m [36m(server dry run)[0m
+[32mdeployment.apps/nginx unknown[0m

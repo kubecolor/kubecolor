@@ -21,18 +21,18 @@ func TestInspectSubcommandInfo(t *testing.T) {
 		{"get pod -o=wide", &SubcommandInfo{Subcommand: Get, FormatOption: Wide}},
 		{"get pod -owide", &SubcommandInfo{Subcommand: Get, FormatOption: Wide}},
 
-		{"get pod -o json", &SubcommandInfo{Subcommand: Get, FormatOption: Json}},
-		{"get pod -o=json", &SubcommandInfo{Subcommand: Get, FormatOption: Json}},
-		{"get pod -ojson", &SubcommandInfo{Subcommand: Get, FormatOption: Json}},
+		{"get pod -o json", &SubcommandInfo{Subcommand: Get, FormatOption: JSON}},
+		{"get pod -o=json", &SubcommandInfo{Subcommand: Get, FormatOption: JSON}},
+		{"get pod -ojson", &SubcommandInfo{Subcommand: Get, FormatOption: JSON}},
 
-		{"get pod -o yaml", &SubcommandInfo{Subcommand: Get, FormatOption: Yaml}},
-		{"get pod -o=yaml", &SubcommandInfo{Subcommand: Get, FormatOption: Yaml}},
-		{"get pod -oyaml", &SubcommandInfo{Subcommand: Get, FormatOption: Yaml}},
+		{"get pod -o yaml", &SubcommandInfo{Subcommand: Get, FormatOption: YAML}},
+		{"get pod -o=yaml", &SubcommandInfo{Subcommand: Get, FormatOption: YAML}},
+		{"get pod -oyaml", &SubcommandInfo{Subcommand: Get, FormatOption: YAML}},
 
-		{"get pod --output json", &SubcommandInfo{Subcommand: Get, FormatOption: Json}},
-		{"get pod --output=json", &SubcommandInfo{Subcommand: Get, FormatOption: Json}},
-		{"get pod --output yaml", &SubcommandInfo{Subcommand: Get, FormatOption: Yaml}},
-		{"get pod --output=yaml", &SubcommandInfo{Subcommand: Get, FormatOption: Yaml}},
+		{"get pod --output json", &SubcommandInfo{Subcommand: Get, FormatOption: JSON}},
+		{"get pod --output=json", &SubcommandInfo{Subcommand: Get, FormatOption: JSON}},
+		{"get pod --output yaml", &SubcommandInfo{Subcommand: Get, FormatOption: YAML}},
+		{"get pod --output=yaml", &SubcommandInfo{Subcommand: Get, FormatOption: YAML}},
 		{"get pod --output wide", &SubcommandInfo{Subcommand: Get, FormatOption: Wide}},
 		{"get pod --output=wide", &SubcommandInfo{Subcommand: Get, FormatOption: Wide}},
 
@@ -54,8 +54,8 @@ func TestInspectSubcommandInfo(t *testing.T) {
 
 		{"version", &SubcommandInfo{Subcommand: Version}},
 		{"version --client", &SubcommandInfo{Subcommand: Version, Client: true}},
-		{"version -o json", &SubcommandInfo{Subcommand: Version, FormatOption: Json}},
-		{"version -o yaml", &SubcommandInfo{Subcommand: Version, FormatOption: Yaml}},
+		{"version -o json", &SubcommandInfo{Subcommand: Version, FormatOption: JSON}},
+		{"version -o yaml", &SubcommandInfo{Subcommand: Version, FormatOption: YAML}},
 
 		{"apply", &SubcommandInfo{Subcommand: Apply}},
 
