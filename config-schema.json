@@ -134,10 +134,6 @@
           "$ref": "#/$defs/themeExpose",
           "description": "used in \"kubectl expose\""
         },
-        "help": {
-          "$ref": "#/$defs/themeHelp",
-          "description": "used in \"kubectl --help\""
-        },
         "options": {
           "$ref": "#/$defs/themeOptions",
           "description": "used in \"kubectl options\""
