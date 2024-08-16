@@ -309,6 +309,7 @@ type Theme struct {
 	Options  ThemeOptions  // used in "kubectl options"
 	Patch    ThemePatch    // used in "kubectl patch"
 	Rollout  ThemeRollout  // used in "kubectl rollout"
+	Scale    ThemeScale    // used in "kubectl scale"
 	Version  ThemeVersion  // used in "kubectl version"
 	Help     ThemeHelp     // used in "kubectl --help"
 	Logs     ThemeLogs     // used in "kubectl logs"
@@ -424,6 +425,14 @@ type ThemeExpose struct {
 
 	DryRun   Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
 	Fallback Color `defaultFrom:"theme.base.primary"` // used when outputs unknown format
+}
+
+// ThemeScale holds colors for the "kubectl scale" output.
+type ThemeScale struct {
+	Scaled Color `defaultFrom:"theme.base.warning"` // used on "deployment.apps/foo scaled"
+
+	DryRun   Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+	Fallback Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format
 }
 
 // ThemeRollout holds colors for the "kubectl rollout" output.
