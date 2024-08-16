@@ -126,6 +126,10 @@
           "$ref": "#/$defs/themeDescribe",
           "description": "used in \"kubectl describe\""
         },
+        "drain": {
+          "$ref": "#/$defs/themeDrain",
+          "description": "used in \"kubectl drain\""
+        },
         "explain": {
           "$ref": "#/$defs/themeExplain",
           "description": "used in \"kubectl explain\""
@@ -145,6 +149,10 @@
         "rollout": {
           "$ref": "#/$defs/themeRollout",
           "description": "used in \"kubectl rollout\""
+        },
+        "uncordon": {
+          "$ref": "#/$defs/themeUncordon",
+          "description": "used in \"kubectl uncordon\""
         },
         "version": {
           "$ref": "#/$defs/themeVersion",
@@ -341,6 +349,37 @@
       "additionalProperties": false,
       "type": "object",
       "description": "ThemeApply holds colors for the \"kubectl apply\" output."
+    },
+    "themeDrain": {
+      "properties": {
+        "cordoned": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"node/my-worker-node-01 cordoned\""
+        },
+        "evictingPod": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"evicting pod my-namespace/my-pod\""
+        },
+        "evicted": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"pod/my-pod evicted\""
+        },
+        "drained": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"node/my-worker-node-01 drained\""
+        },
+        "dryRun": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"(dry run)\" and \"(server dry run)\""
+        },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when outputs unknown format"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeDrain holds colors for the \"kubectl drain\" output."
     },
     "themeExplain": {
       "properties": {
@@ -589,6 +628,25 @@
       "additionalProperties": false,
       "type": "object",
       "description": "ThemeTable holds colors for table output"
+    },
+    "themeUncordon": {
+      "properties": {
+        "uncordoned": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"node/my-worker-node-01 uncordoned\""
+        },
+        "dryRun": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"(dry run)\" and \"(server dry run)\""
+        },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when outputs unknown format"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeUncordon holds colors for the \"kubectl uncordon\" output."
     },
     "themeVersion": {
       "properties": {
