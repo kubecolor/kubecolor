@@ -43,14 +43,8 @@ var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, cfg *config.Confi
 			Theme:             &cfg.Theme,
 			KubecolorVersion:  version,
 		},
-		ErrorPrinter: &printer.WithFuncPrinter{
-			Fn: func(line string) config.Color {
-				if strings.HasPrefix(strings.ToLower(line), "error") {
-					return cfg.Theme.Stderr.Error
-				}
-
-				return cfg.Theme.Stderr.Default
-			},
+		ErrorPrinter: &printer.StderrPrinter{
+			Theme: &cfg.Theme,
 		},
 	}
 }
