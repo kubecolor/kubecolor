@@ -127,10 +127,11 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 		kubectl.Apply,
 		kubectl.Create,
 		kubectl.Delete,
+		kubectl.Drain,
 		kubectl.Expose,
 		kubectl.Patch,
 		kubectl.Rollout,
-		kubectl.Drain,
+		kubectl.Scale,
 		kubectl.Uncordon:
 		switch p.SubcommandInfo.FormatOption {
 		case kubectl.JSON:
@@ -179,6 +180,14 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 				FallbackColor: p.Theme.Patch.Fallback,
 				VerbColor: map[string]config.Color{
 					"patched": p.Theme.Patch.Patched,
+				},
+			}
+		case kubectl.Scale:
+			return &VerbPrinter{
+				DryRunColor:   p.Theme.Scale.DryRun,
+				FallbackColor: p.Theme.Scale.Fallback,
+				VerbColor: map[string]config.Color{
+					"scaled": p.Theme.Scale.Scaled,
 				},
 			}
 		case kubectl.Rollout:

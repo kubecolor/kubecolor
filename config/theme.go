@@ -310,6 +310,7 @@ type Theme struct {
 	Options  ThemeOptions  // used in "kubectl options"
 	Patch    ThemePatch    // used in "kubectl patch"
 	Rollout  ThemeRollout  // used in "kubectl rollout"
+	Scale    ThemeScale    // used in "kubectl scale"
 	Uncordon ThemeUncordon // used in "kubectl uncordon"
 	Version  ThemeVersion  // used in "kubectl version"
 	Help     ThemeHelp     // used in "kubectl --help"
@@ -387,6 +388,9 @@ type ThemeTable struct {
 type ThemeStderr struct {
 	Default Color `defaultFrom:"theme.base.info"`   // default when no specific mapping is found for the output line
 	Error   Color `defaultFrom:"theme.base.danger"` // e.g when text contains "error"
+
+	NoneFound          Color `defaultFrom:"theme.data.null"`   // used on table output like "No resources found"
+	NoneFoundNamespace Color `defaultFrom:"theme.data.string"` // used on the namespace name of "No resources found in my-ns namespace"
 }
 
 // ThemeApply holds colors for the "kubectl apply" output.
@@ -426,6 +430,14 @@ type ThemeExpose struct {
 
 	DryRun   Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
 	Fallback Color `defaultFrom:"theme.base.primary"` // used when outputs unknown format
+}
+
+// ThemeScale holds colors for the "kubectl scale" output.
+type ThemeScale struct {
+	Scaled Color `defaultFrom:"theme.base.warning"` // used on "deployment.apps/foo scaled"
+
+	DryRun   Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+	Fallback Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format
 }
 
 // ThemeRollout holds colors for the "kubectl rollout" output.

@@ -150,6 +150,10 @@
           "$ref": "#/$defs/themeRollout",
           "description": "used in \"kubectl rollout\""
         },
+        "scale": {
+          "$ref": "#/$defs/themeScale",
+          "description": "used in \"kubectl scale\""
+        },
         "uncordon": {
           "$ref": "#/$defs/themeUncordon",
           "description": "used in \"kubectl uncordon\""
@@ -557,6 +561,25 @@
       "type": "object",
       "description": "ThemeRollout holds colors for the \"kubectl rollout\" output."
     },
+    "themeScale": {
+      "properties": {
+        "scaled": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"deployment.apps/foo scaled\""
+        },
+        "dryRun": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"(dry run)\" and \"(server dry run)\""
+        },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when outputs unknown format"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeScale holds colors for the \"kubectl scale\" output."
+    },
     "themeShell": {
       "properties": {
         "comment": {
@@ -608,6 +631,14 @@
         "error": {
           "$ref": "#/$defs/color",
           "description": "e.g when text contains \"error\""
+        },
+        "noneFound": {
+          "$ref": "#/$defs/color",
+          "description": "used on table output like \"No resources found\""
+        },
+        "noneFoundNamespace": {
+          "$ref": "#/$defs/color",
+          "description": "used on the namespace name of \"No resources found in my-ns namespace\""
         }
       },
       "additionalProperties": false,
