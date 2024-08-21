@@ -146,6 +146,10 @@
           "$ref": "#/$defs/themeRollout",
           "description": "used in \"kubectl rollout\""
         },
+        "scale": {
+          "$ref": "#/$defs/themeScale",
+          "description": "used in \"kubectl scale\""
+        },
         "version": {
           "$ref": "#/$defs/themeVersion",
           "description": "used in \"kubectl version\""
@@ -517,6 +521,25 @@
       "additionalProperties": false,
       "type": "object",
       "description": "ThemeRollout holds colors for the \"kubectl rollout\" output."
+    },
+    "themeScale": {
+      "properties": {
+        "scaled": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"deployment.apps/foo scaled\""
+        },
+        "dryRun": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"(dry run)\" and \"(server dry run)\""
+        },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when outputs unknown format"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeScale holds colors for the \"kubectl scale\" output."
     },
     "themeShell": {
       "properties": {
