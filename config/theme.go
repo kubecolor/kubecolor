@@ -386,11 +386,16 @@ type ThemeTable struct {
 
 // ThemeStderr holds generic colors for kubectl's stderr output.
 type ThemeStderr struct {
-	Default Color `defaultFrom:"theme.base.info"`   // default when no specific mapping is found for the output line
-	Error   Color `defaultFrom:"theme.base.danger"` // e.g when text contains "error"
+	Error Color `defaultFrom:"theme.base.danger"` // e.g when text contains "error"
 
 	NoneFound          Color `defaultFrom:"theme.data.null"`   // used on table output like "No resources found"
 	NoneFoundNamespace Color `defaultFrom:"theme.data.string"` // used on the namespace name of "No resources found in my-ns namespace"
+
+	// default when no specific mapping is found for the output line
+	//
+	// Deprecated: This field is no longer used (since v0.4.0),
+	// as the stderr logs now uses the "kubectl logs" behavior as a fallback/default coloring.
+	Default Color `jsonschema_extras:"deprecated=true"`
 }
 
 // ThemeApply holds colors for the "kubectl apply" output.

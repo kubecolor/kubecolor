@@ -10,7 +10,7 @@ See 'kubectl --help' for usage.
 --------------------------------------------------------------------------------
 
 [31merror: unknown flag: --foo[0m
-[37mSee 'kubectl --help' for usage.[0m
+See [93m'kubectl --help'[0m for usage.
 
 ================================================================================
 # no resources in namespace
@@ -35,3 +35,39 @@ No resources found
 --------------------------------------------------------------------------------
 
 [90;3mNo resources found[0m
+
+================================================================================
+# no such host errors
+INPUT_IS_STDERR="true"
+$ kubectl get pods
+================================================================================
+
+E0820 21:53:58.659780  149013 memcache.go:265] couldn't get current server API group list: Get "https://kubeapi.example.com:6443/api?timeout=32s": dial tcp: lookup kubeapi.example.com on 192.168.1.2:53: no such host
+E0820 21:53:58.668420  149013 memcache.go:265] couldn't get current server API group list: Get "https://kubeapi.example.com:6443/api?timeout=32s": dial tcp: lookup kubeapi.example.com on 192.168.1.2:53: no such host
+E0820 21:53:58.674577  149013 memcache.go:265] couldn't get current server API group list: Get "https://kubeapi.example.com:6443/api?timeout=32s": dial tcp: lookup kubeapi.example.com on 192.168.1.2:53: no such host
+E0820 21:53:58.682673  149013 memcache.go:265] couldn't get current server API group list: Get "https://kubeapi.example.com:6443/api?timeout=32s": dial tcp: lookup kubeapi.example.com on 192.168.1.2:53: no such host
+E0820 21:53:58.687983  149013 memcache.go:265] couldn't get current server API group list: Get "https://kubeapi.example.com:6443/api?timeout=32s": dial tcp: lookup kubeapi.example.com on 192.168.1.2:53: no such host
+Unable to connect to the server: dial tcp: lookup kubeapi.example.com on 192.168.1.2:53: no such host
+
+--------------------------------------------------------------------------------
+
+[31mE[0m[90;3m0820 21:53:58.659780[0m  149013 [90;3mmemcache.go:265[0m] couldn't get current server API group list: Get [93m"https://kubeapi.example.com:6443/api?timeout=32s"[0m: dial tcp: lookup kubeapi.example.com on 192.168.1.2:53: no such host
+[31mE[0m[90;3m0820 21:53:58.668420[0m  149013 [90;3mmemcache.go:265[0m] couldn't get current server API group list: Get [93m"https://kubeapi.example.com:6443/api?timeout=32s"[0m: dial tcp: lookup kubeapi.example.com on 192.168.1.2:53: no such host
+[31mE[0m[90;3m0820 21:53:58.674577[0m  149013 [90;3mmemcache.go:265[0m] couldn't get current server API group list: Get [93m"https://kubeapi.example.com:6443/api?timeout=32s"[0m: dial tcp: lookup kubeapi.example.com on 192.168.1.2:53: no such host
+[31mE[0m[90;3m0820 21:53:58.682673[0m  149013 [90;3mmemcache.go:265[0m] couldn't get current server API group list: Get [93m"https://kubeapi.example.com:6443/api?timeout=32s"[0m: dial tcp: lookup kubeapi.example.com on 192.168.1.2:53: no such host
+[31mE[0m[90;3m0820 21:53:58.687983[0m  149013 [90;3mmemcache.go:265[0m] couldn't get current server API group list: Get [93m"https://kubeapi.example.com:6443/api?timeout=32s"[0m: dial tcp: lookup kubeapi.example.com on 192.168.1.2:53: no such host
+Unable to connect to the server: dial tcp: lookup kubeapi.example.com on 192.168.1.2:53: no such host
+
+================================================================================
+# verbose logging
+INPUT_IS_STDERR="true"
+$ kubectl get pods -v6
+================================================================================
+
+I0820 21:55:27.250435  151288 loader.go:395] Config loaded from file:  /home/kalle/.kube/config
+I0820 21:55:27.352712  151288 round_trippers.go:553] GET https://kubeapi.example.com:6443/api/v1/namespaces/default/pods?limit=500 200 OK in 96 milliseconds
+
+--------------------------------------------------------------------------------
+
+[32mI[0m[90;3m0820 21:55:27.250435[0m  151288 [90;3mloader.go:395[0m] Config loaded from file:  /home/kalle/.kube/config
+[32mI[0m[90;3m0820 21:55:27.352712[0m  151288 [90;3mround_trippers.go:553[0m] GET [96mhttps://kubeapi.example.com:6443/api/v1/namespaces/default/pods?limit[0m=[35m500[0m [35m200[0m OK in [35m96[0m milliseconds
