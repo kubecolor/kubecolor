@@ -395,7 +395,7 @@ type ThemeStderr struct {
 	//
 	// Deprecated: This field is no longer used (since v0.4.0),
 	// as the stderr logs now uses the "kubectl logs" behavior as a fallback/default coloring.
-	Default Color `jsonschema_extras:"deprecated=true"`
+	Default Color `jsonschema_extras:"deprecated=true"` // *deprecated: this field is no longer used (since v0.4.0)*
 }
 
 // ThemeApply holds colors for the "kubectl apply" output.
