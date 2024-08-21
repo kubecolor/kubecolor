@@ -1,0 +1,37 @@
+================================================================================
+# unknown flag
+INPUT_IS_STDERR="true"
+$ kubectl --foo
+================================================================================
+
+error: unknown flag: --foo
+See 'kubectl --help' for usage.
+
+--------------------------------------------------------------------------------
+
+[31merror: unknown flag: --foo[0m
+[37mSee 'kubectl --help' for usage.[0m
+
+================================================================================
+# no resources in namespace
+INPUT_IS_STDERR="true"
+$ kubectl get pods -n empty-namespace
+================================================================================
+
+No resources found in empty-namespace namespace.
+
+--------------------------------------------------------------------------------
+
+[90;3mNo resources found in [93mempty-namespace[0m[90;3m namespace.[0m
+
+================================================================================
+# no resources cluster wide
+INPUT_IS_STDERR="true"
+$ kubectl get clusterrole -l foo=bar
+================================================================================
+
+No resources found
+
+--------------------------------------------------------------------------------
+
+[90;3mNo resources found[0m

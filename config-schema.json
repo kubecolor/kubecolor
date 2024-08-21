@@ -569,6 +569,14 @@
         "error": {
           "$ref": "#/$defs/color",
           "description": "e.g when text contains \"error\""
+        },
+        "noneFound": {
+          "$ref": "#/$defs/color",
+          "description": "used on table output like \"No resources found\""
+        },
+        "noneFoundNamespace": {
+          "$ref": "#/$defs/color",
+          "description": "used on the namespace name of \"No resources found in my-ns namespace\""
         }
       },
       "additionalProperties": false,

@@ -385,6 +385,9 @@ type ThemeTable struct {
 type ThemeStderr struct {
 	Default Color `defaultFrom:"theme.base.info"`   // default when no specific mapping is found for the output line
 	Error   Color `defaultFrom:"theme.base.danger"` // e.g when text contains "error"
+
+	NoneFound          Color `defaultFrom:"theme.data.null"`   // used on table output like "No resources found"
+	NoneFoundNamespace Color `defaultFrom:"theme.data.string"` // used on the namespace name of "No resources found in my-ns namespace"
 }
 
 // ThemeApply holds colors for the "kubectl apply" output.
