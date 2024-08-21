@@ -127,10 +127,12 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 		kubectl.Apply,
 		kubectl.Create,
 		kubectl.Delete,
+		kubectl.Drain,
 		kubectl.Expose,
 		kubectl.Patch,
+		kubectl.Rollout,
 		kubectl.Scale,
-		kubectl.Rollout:
+		kubectl.Uncordon:
 		switch p.SubcommandInfo.FormatOption {
 		case kubectl.JSON:
 			return &JSONPrinter{Theme: p.Theme}
@@ -197,6 +199,27 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 					"paused":      p.Theme.Rollout.Paused,
 					"resumed":     p.Theme.Rollout.Resumed,
 					"restarted":   p.Theme.Rollout.Restarted,
+				},
+			}
+		case kubectl.Drain:
+			return &VerbPrinter{
+				DryRunColor:   p.Theme.Drain.DryRun,
+				FallbackColor: p.Theme.Drain.Fallback,
+				VerbColor: map[string]config.Color{
+					"cordoned": p.Theme.Drain.Cordoned,
+					"evicted":  p.Theme.Drain.Evicted,
+					"drained":  p.Theme.Drain.Drained,
+				},
+				PrefixVerbColor: map[string]config.Color{
+					"evicting pod": p.Theme.Drain.EvictingPod,
+				},
+			}
+		case kubectl.Uncordon:
+			return &VerbPrinter{
+				DryRunColor:   p.Theme.Uncordon.DryRun,
+				FallbackColor: p.Theme.Uncordon.Fallback,
+				VerbColor: map[string]config.Color{
+					"uncordoned": p.Theme.Uncordon.Uncordoned,
 				},
 			}
 		}

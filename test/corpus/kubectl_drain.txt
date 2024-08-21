@@ -1,0 +1,25 @@
+================================================================================
+$ kubectl drain my-worker-node-01 --ignore-daemonsets --delete-emptydir-data
+================================================================================
+
+node/my-worker-node-01 cordoned
+evicting pod nginx/nginx-28729634-nh2vc
+evicting pod nginx/nginx-28728194-bj728
+evicting pod nginx/nginx-28726754-7d2p4
+pod/nginx-28729634-nh2vc evicted
+pod/nginx-28728194-bj728 evicted
+pod/nginx-28726754-7d2p4 evicted
+node/my-worker-node-01 drained
+node/my-worker-node-01 unknown
+
+--------------------------------------------------------------------------------
+
+node/my-worker-node-01 [35mcordoned[0m
+[90;3mevicting pod[0m nginx/nginx-28729634-nh2vc
+[90;3mevicting pod[0m nginx/nginx-28728194-bj728
+[90;3mevicting pod[0m nginx/nginx-28726754-7d2p4
+pod/nginx-28729634-nh2vc [33mevicted[0m
+pod/nginx-28728194-bj728 [33mevicted[0m
+pod/nginx-28726754-7d2p4 [33mevicted[0m
+node/my-worker-node-01 [32mdrained[0m
+[33mnode/my-worker-node-01 unknown[0m

@@ -304,12 +304,14 @@ type Theme struct {
 	Create   ThemeCreate   // used in "kubectl create"
 	Delete   ThemeDelete   // used in "kubectl delete"
 	Describe ThemeDescribe // used in "kubectl describe"
+	Drain    ThemeDrain    // used in "kubectl drain"
 	Explain  ThemeExplain  // used in "kubectl explain"
 	Expose   ThemeExpose   // used in "kubectl expose"
 	Options  ThemeOptions  // used in "kubectl options"
 	Patch    ThemePatch    // used in "kubectl patch"
 	Rollout  ThemeRollout  // used in "kubectl rollout"
 	Scale    ThemeScale    // used in "kubectl scale"
+	Uncordon ThemeUncordon // used in "kubectl uncordon"
 	Version  ThemeVersion  // used in "kubectl version"
 	Help     ThemeHelp     // used in "kubectl --help"
 	Logs     ThemeLogs     // used in "kubectl logs"
@@ -452,6 +454,25 @@ type ThemeRollout struct {
 // ThemePatch holds colors for the "kubectl patch" output.
 type ThemePatch struct {
 	Patched Color `defaultFrom:"theme.base.warning"` // used on "deployment.apps/foo patched"
+
+	DryRun   Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+	Fallback Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format
+}
+
+// ThemeUncordon holds colors for the "kubectl uncordon" output.
+type ThemeUncordon struct {
+	Uncordoned Color `defaultFrom:"theme.base.secondary"` // used on "node/my-worker-node-01 uncordoned"
+
+	DryRun   Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+	Fallback Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format
+}
+
+// ThemeDrain holds colors for the "kubectl drain" output.
+type ThemeDrain struct {
+	Cordoned    Color `defaultFrom:"theme.base.primary"` // used on "node/my-worker-node-01 cordoned"
+	EvictingPod Color `defaultFrom:"theme.base.muted"`   // used on "evicting pod my-namespace/my-pod"
+	Evicted     Color `defaultFrom:"theme.base.warning"` // used on "pod/my-pod evicted"
+	Drained     Color `defaultFrom:"theme.base.success"` // used on "node/my-worker-node-01 drained"
 
 	DryRun   Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
 	Fallback Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format
