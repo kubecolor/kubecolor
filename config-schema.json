@@ -624,10 +624,6 @@
     },
     "themeStderr": {
       "properties": {
-        "default": {
-          "$ref": "#/$defs/color",
-          "description": "default when no specific mapping is found for the output line"
-        },
         "error": {
           "$ref": "#/$defs/color",
           "description": "e.g when text contains \"error\""
@@ -639,6 +635,11 @@
         "noneFoundNamespace": {
           "$ref": "#/$defs/color",
           "description": "used on the namespace name of \"No resources found in my-ns namespace\""
+        },
+        "default": {
+          "$ref": "#/$defs/color",
+          "description": "default when no specific mapping is found for the output line\n\nDeprecated: This field is no longer used (since v0.4.0),\nas the stderr logs now uses the \"kubectl logs\" behavior as a fallback/default coloring.",
+          "deprecated": true
         }
       },
       "additionalProperties": false,
