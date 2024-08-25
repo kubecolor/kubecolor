@@ -145,7 +145,7 @@ func castToAnySlice[E any](s []E) []any {
 // types to Schema IDs.
 func Lookup(t reflect.Type) jsonschema.ID {
 	switch t.Name() {
-	case "Color", "ColorSlice", "Preset", "Paging", "Duration":
+	case "Color", "Slice", "Preset", "Paging", "Duration":
 		return jsonschema.ID("#/$defs/" + Namer(t.Name()))
 	default:
 		return ""
@@ -157,6 +157,8 @@ func Namer(s string) string {
 	switch s {
 	case "GUID":
 		return "guid"
+	case "Slice":
+		return "colorSlice"
 	}
 	var sb strings.Builder
 	sb.Grow(len(s))
