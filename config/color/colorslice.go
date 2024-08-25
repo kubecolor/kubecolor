@@ -6,26 +6,26 @@ import (
 	"strings"
 )
 
-type ColorSlice []Color
+type Slice []Color
 
 var (
-	_ encoding.TextMarshaler   = ColorSlice{}
-	_ encoding.TextUnmarshaler = &ColorSlice{}
+	_ encoding.TextMarshaler   = Slice{}
+	_ encoding.TextUnmarshaler = &Slice{}
 )
 
-func MustParseColorSlice(s string) ColorSlice {
-	c, err := ParseColorSlice(s)
+func MustParseSlice(s string) Slice {
+	c, err := ParseSlice(s)
 	if err != nil {
 		panic(fmt.Errorf("parse color slice: %w", err))
 	}
 	return c
 }
 
-func ParseColorSlice(s string) (ColorSlice, error) {
+func ParseSlice(s string) (Slice, error) {
 	split := strings.Split(s, "/")
-	slice := make(ColorSlice, len(split))
+	slice := make(Slice, len(split))
 	for i, sub := range split {
-		col, err := ParseColor(strings.TrimSpace(sub))
+		col, err := Parse(strings.TrimSpace(sub))
 		if err != nil {
 			return nil, err
 		}
@@ -34,7 +34,7 @@ func ParseColorSlice(s string) (ColorSlice, error) {
 	return slice, nil
 }
 
-func (s ColorSlice) String() string {
+func (s Slice) String() string {
 	strs := make([]string, len(s))
 	for i, c := range s {
 		strs[i] = c.String()
@@ -43,8 +43,8 @@ func (s ColorSlice) String() string {
 }
 
 // UnmarshalText implements [encoding.TextUnmarshaler].
-func (s *ColorSlice) UnmarshalText(text []byte) error {
-	newSlice, err := ParseColorSlice(string(text))
+func (s *Slice) UnmarshalText(text []byte) error {
+	newSlice, err := ParseSlice(string(text))
 	if err != nil {
 		return err
 	}
@@ -53,11 +53,11 @@ func (s *ColorSlice) UnmarshalText(text []byte) error {
 }
 
 // MarshalText implements [encoding.TextMarshaler].
-func (s ColorSlice) MarshalText() (text []byte, err error) {
+func (s Slice) MarshalText() (text []byte, err error) {
 	return []byte(s.String()), nil
 }
 
-func (s ColorSlice) ComputeCache() {
+func (s Slice) ComputeCache() {
 	for i := range s {
 		s[i].ComputeCache()
 	}

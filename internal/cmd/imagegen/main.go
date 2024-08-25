@@ -40,13 +40,13 @@ var flags = struct {
 	width:        100,
 
 	prompt:       "❯",
-	promptColor:  color.MustParseColor("green"),
+	promptColor:  color.MustParse("green"),
 	cmd:          "kubectl",
-	cmdColor:     color.MustParseColor("green"),
-	argColor:     color.MustParseColor("none"),
-	valueColor:   color.MustParseColor("yellow"),
-	keywordColor: color.MustParseColor("magenta"),
-	flagColor:    color.MustParseColor("cyan"),
+	cmdColor:     color.MustParse("green"),
+	argColor:     color.MustParse("none"),
+	valueColor:   color.MustParse("yellow"),
+	keywordColor: color.MustParse("magenta"),
+	flagColor:    color.MustParse("cyan"),
 }
 
 func init() {

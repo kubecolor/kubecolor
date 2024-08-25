@@ -20,21 +20,21 @@ import (
 )
 
 var (
-	ColorErrorPrefix = color.MustParseColor("hi-red:bold")
-	ColorErrorText   = color.MustParseColor("red")
-	ColorWarnPrefix  = color.MustParseColor("hi-yellow:bold")
-	ColorWarnText    = color.MustParseColor("yellow")
+	ColorErrorPrefix = color.MustParse("hi-red:bold")
+	ColorErrorText   = color.MustParse("red")
+	ColorWarnPrefix  = color.MustParse("hi-yellow:bold")
+	ColorWarnText    = color.MustParse("yellow")
 
-	ColorHeader  = color.MustParseColor("bold")
-	ColorMuted   = color.MustParseColor("gray")
-	ColorSuccess = color.MustParseColor("green")
+	ColorHeader  = color.MustParse("bold")
+	ColorMuted   = color.MustParse("gray")
+	ColorSuccess = color.MustParse("green")
 
-	ColorDiffAddPrefix      = color.MustParseColor("fg=green:bg=22:bold")
-	ColorDiffAdd            = color.MustParseColor("bg=22") // dark green
-	ColorDiffDelPrefix      = color.MustParseColor("fg=red:bg=52:bold")
-	ColorDiffDel            = color.MustParseColor("bg=52") // dark red
-	ColorDiffEqual          = color.MustParseColor("gray:italic")
-	ColorDiffColorHighlight = color.MustParseColor(`magenta`)
+	ColorDiffAddPrefix      = color.MustParse("fg=green:bg=22:bold")
+	ColorDiffAdd            = color.MustParse("bg=22") // dark green
+	ColorDiffDelPrefix      = color.MustParse("fg=red:bg=52:bold")
+	ColorDiffDel            = color.MustParse("bg=52") // dark red
+	ColorDiffEqual          = color.MustParse("gray:italic")
+	ColorDiffColorHighlight = color.MustParse(`magenta`)
 )
 
 func ExecuteTest(test Test) error {

@@ -12,7 +12,7 @@ import (
 
 // ColorDataKey returns a color based on the given indent.
 // When you want to change key color based on indent depth (e.g. Json, Yaml), use this function
-func ColorDataKey(indent int, basicIndentWidth int, colors color.ColorSlice) color.Color {
+func ColorDataKey(indent int, basicIndentWidth int, colors color.Slice) color.Color {
 	if len(colors) == 0 {
 		return color.Color{}
 	}

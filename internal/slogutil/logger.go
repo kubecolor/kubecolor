@@ -15,14 +15,14 @@ import (
 )
 
 var (
-	colorPrefix  = color.MustParseColor("gray:italic")
-	colorDebug   = color.MustParseColor("gray:italic")
-	colorInfo    = color.MustParseColor("green")
-	colorWarn    = color.MustParseColor("yellow")
-	colorError   = color.MustParseColor("red")
-	colorMessage = color.MustParseColor("white")
-	colorKey     = color.MustParseColor("cyan")
-	colorValue   = color.MustParseColor("light-yellow")
+	colorPrefix  = color.MustParse("gray:italic")
+	colorDebug   = color.MustParse("gray:italic")
+	colorInfo    = color.MustParse("green")
+	colorWarn    = color.MustParse("yellow")
+	colorError   = color.MustParse("red")
+	colorMessage = color.MustParse("white")
+	colorKey     = color.MustParse("cyan")
+	colorValue   = color.MustParse("light-yellow")
 )
 
 type SlogHandler struct {

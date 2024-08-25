@@ -15,270 +15,270 @@ func NewBaseTheme(preset Preset) *Theme {
 	switch preset {
 	case PresetDark:
 		return &Theme{
-			Default: color.MustParseColor("green"),
+			Default: color.MustParse("green"),
 			Base: ThemeBase{
-				Key:       color.MustParseColorSlice("hicyan / cyan"),
-				Info:      color.MustParseColor("white"),
-				Primary:   color.MustParseColor("magenta"),
-				Secondary: color.MustParseColor("cyan"),
-				Success:   color.MustParseColor("green"),
-				Warning:   color.MustParseColor("yellow"),
-				Danger:    color.MustParseColor("red"),
-				Muted:     color.MustParseColor("gray:italic"),
+				Key:       color.MustParseSlice("hicyan / cyan"),
+				Info:      color.MustParse("white"),
+				Primary:   color.MustParse("magenta"),
+				Secondary: color.MustParse("cyan"),
+				Success:   color.MustParse("green"),
+				Warning:   color.MustParse("yellow"),
+				Danger:    color.MustParse("red"),
+				Muted:     color.MustParse("gray:italic"),
 			},
 			Table: ThemeTable{
-				Header: color.MustParseColor("bold"),
+				Header: color.MustParse("bold"),
 			},
 			Data: ThemeData{
-				String: color.MustParseColor("hiyellow"),
+				String: color.MustParse("hiyellow"),
 			},
 		}
 
 	case PresetLight:
 		return &Theme{
-			Default: color.MustParseColor("green"),
+			Default: color.MustParse("green"),
 			Base: ThemeBase{
-				Key:       color.MustParseColorSlice("hiblue / blue"),
-				Info:      color.MustParseColor("black"),
-				Primary:   color.MustParseColor("magenta"),
-				Secondary: color.MustParseColor("blue"),
-				Success:   color.MustParseColor("green"),
-				Warning:   color.MustParseColor("yellow"),
-				Danger:    color.MustParseColor("red"),
-				Muted:     color.MustParseColor("gray:italic"),
+				Key:       color.MustParseSlice("hiblue / blue"),
+				Info:      color.MustParse("black"),
+				Primary:   color.MustParse("magenta"),
+				Secondary: color.MustParse("blue"),
+				Success:   color.MustParse("green"),
+				Warning:   color.MustParse("yellow"),
+				Danger:    color.MustParse("red"),
+				Muted:     color.MustParse("gray:italic"),
 			},
 			Table: ThemeTable{
-				Header: color.MustParseColor("bold"),
+				Header: color.MustParse("bold"),
 			},
 			Data: ThemeData{
-				String: color.MustParseColor("yellow"),
+				String: color.MustParse("yellow"),
 			},
 		}
 
 	// Special Preset for Protanopias
 	case PresetProtDark:
 		return &Theme{
-			Default: color.MustParseColor("white"),
+			Default: color.MustParse("white"),
 			Base: ThemeBase{
-				Key:       color.MustParseColorSlice("#feb927 / #fe6e1a"),
-				Info:      color.MustParseColor("white"),
-				Primary:   color.MustParseColor("#4860e6"),             // magenta
-				Secondary: color.MustParseColor("#2aabee"),             // cyan
-				Success:   color.MustParseColor("#6afd6a:bold"),        // bold green
-				Warning:   color.MustParseColor("#feb927:italic"),      // yellow
-				Danger:    color.MustParseColor("fg=white:bg=#c2270a"), // red background
-				Muted:     color.MustParseColor("#2ee5ae:italic"),      // white-ish
+				Key:       color.MustParseSlice("#feb927 / #fe6e1a"),
+				Info:      color.MustParse("white"),
+				Primary:   color.MustParse("#4860e6"),             // magenta
+				Secondary: color.MustParse("#2aabee"),             // cyan
+				Success:   color.MustParse("#6afd6a:bold"),        // bold green
+				Warning:   color.MustParse("#feb927:italic"),      // yellow
+				Danger:    color.MustParse("fg=white:bg=#c2270a"), // red background
+				Muted:     color.MustParse("#2ee5ae:italic"),      // white-ish
 			},
 			Data: ThemeData{
-				String: color.MustParseColor("#2aabee"),
+				String: color.MustParse("#2aabee"),
 			},
 			Table: ThemeTable{
-				Header:  color.MustParseColor("white:bold"),
-				Columns: color.MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / white / #feb927"),
+				Header:  color.MustParse("white:bold"),
+				Columns: color.MustParseSlice("#2aabee / #6afd6a:bold / #4860e6 / white / #feb927"),
 			},
 		}
 
 	case PresetProtLight:
 		return &Theme{
-			Default: color.MustParseColor("black"),
+			Default: color.MustParse("black"),
 			Base: ThemeBase{
-				Key:       color.MustParseColorSlice("#feb927 / #fe6e1a"),
-				Info:      color.MustParseColor("black"),
-				Primary:   color.MustParseColor("#4860e6"),
-				Secondary: color.MustParseColor("#2aabee"),
-				Success:   color.MustParseColor("#6afd6a:bold"),
-				Warning:   color.MustParseColor("#feb927:italic"),
-				Danger:    color.MustParseColor("fg=black:bg=#c2270a"),
-				Muted:     color.MustParseColor("#2ee5ae:italic"),
+				Key:       color.MustParseSlice("#feb927 / #fe6e1a"),
+				Info:      color.MustParse("black"),
+				Primary:   color.MustParse("#4860e6"),
+				Secondary: color.MustParse("#2aabee"),
+				Success:   color.MustParse("#6afd6a:bold"),
+				Warning:   color.MustParse("#feb927:italic"),
+				Danger:    color.MustParse("fg=black:bg=#c2270a"),
+				Muted:     color.MustParse("#2ee5ae:italic"),
 			},
 			Data: ThemeData{
-				String: color.MustParseColor("#2aabee"),
+				String: color.MustParse("#2aabee"),
 			},
 			Table: ThemeTable{
-				Header:  color.MustParseColor("black:bold"),
-				Columns: color.MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / black / #feb927"),
+				Header:  color.MustParse("black:bold"),
+				Columns: color.MustParseSlice("#2aabee / #6afd6a:bold / #4860e6 / black / #feb927"),
 			},
 		}
 
 	// Special Preset for Deuteranopia
 	case PresetDeutDark:
 		return &Theme{
-			Default: color.MustParseColor("white"),
+			Default: color.MustParse("white"),
 			Base: ThemeBase{
-				Key:       color.MustParseColorSlice("#feb927 / #fe6e1a"),
-				Info:      color.MustParseColor("white"),
-				Primary:   color.MustParseColor("#4860e6"),
-				Secondary: color.MustParseColor("#2aabee"),
-				Success:   color.MustParseColor("#6afd6a:bold"),
-				Warning:   color.MustParseColor("#feb927:italic"),
-				Danger:    color.MustParseColor("fg=white:bg=#c2270a"),
-				Muted:     color.MustParseColor("#2ee5ae"),
+				Key:       color.MustParseSlice("#feb927 / #fe6e1a"),
+				Info:      color.MustParse("white"),
+				Primary:   color.MustParse("#4860e6"),
+				Secondary: color.MustParse("#2aabee"),
+				Success:   color.MustParse("#6afd6a:bold"),
+				Warning:   color.MustParse("#feb927:italic"),
+				Danger:    color.MustParse("fg=white:bg=#c2270a"),
+				Muted:     color.MustParse("#2ee5ae"),
 			},
 			Data: ThemeData{
-				String: color.MustParseColor("#2aabee"),
+				String: color.MustParse("#2aabee"),
 			},
 			Table: ThemeTable{
-				Header:  color.MustParseColor("white:bold"),
-				Columns: color.MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / white / #feb927"),
+				Header:  color.MustParse("white:bold"),
+				Columns: color.MustParseSlice("#2aabee / #6afd6a:bold / #4860e6 / white / #feb927"),
 			},
 		}
 
 	case PresetDeutLight:
 		return &Theme{
-			Default: color.MustParseColor("black"),
+			Default: color.MustParse("black"),
 			Base: ThemeBase{
-				Key:       color.MustParseColorSlice("#feb927 / #fe6e1a"),
-				Info:      color.MustParseColor("black"),
-				Primary:   color.MustParseColor("#4860e6"),
-				Secondary: color.MustParseColor("#2aabee"),
-				Success:   color.MustParseColor("#6afd6a:bold"),
-				Warning:   color.MustParseColor("#feb927:italic"),
-				Danger:    color.MustParseColor("fg=black:bg=#c2270a"),
-				Muted:     color.MustParseColor("#2ee5ae:italic"),
+				Key:       color.MustParseSlice("#feb927 / #fe6e1a"),
+				Info:      color.MustParse("black"),
+				Primary:   color.MustParse("#4860e6"),
+				Secondary: color.MustParse("#2aabee"),
+				Success:   color.MustParse("#6afd6a:bold"),
+				Warning:   color.MustParse("#feb927:italic"),
+				Danger:    color.MustParse("fg=black:bg=#c2270a"),
+				Muted:     color.MustParse("#2ee5ae:italic"),
 			},
 			Data: ThemeData{
-				String: color.MustParseColor("#2aabee"),
+				String: color.MustParse("#2aabee"),
 			},
 			Table: ThemeTable{
-				Header:  color.MustParseColor("black:bold"),
-				Columns: color.MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / black / #feb927"),
+				Header:  color.MustParse("black:bold"),
+				Columns: color.MustParseSlice("#2aabee / #6afd6a:bold / #4860e6 / black / #feb927"),
 			},
 		}
 
 	// Special Preset for Tritanopia
 	case PresetTritDark:
 		return &Theme{
-			Default: color.MustParseColor("white"),
+			Default: color.MustParse("white"),
 			Base: ThemeBase{
-				Key:       color.MustParseColorSlice("#feb927 / #fe6e1a"),
-				Info:      color.MustParseColor("white"),
-				Primary:   color.MustParseColor("#4860e6"),
-				Secondary: color.MustParseColor("#2aabee"),
-				Success:   color.MustParseColor("#6afd6a:bold"),
-				Warning:   color.MustParseColor("#feb927:italic"),
-				Danger:    color.MustParseColor("fg=white:bg=#c2270a"),
-				Muted:     color.MustParseColor("#2ee5ae"),
+				Key:       color.MustParseSlice("#feb927 / #fe6e1a"),
+				Info:      color.MustParse("white"),
+				Primary:   color.MustParse("#4860e6"),
+				Secondary: color.MustParse("#2aabee"),
+				Success:   color.MustParse("#6afd6a:bold"),
+				Warning:   color.MustParse("#feb927:italic"),
+				Danger:    color.MustParse("fg=white:bg=#c2270a"),
+				Muted:     color.MustParse("#2ee5ae"),
 			},
 			Data: ThemeData{
-				String: color.MustParseColor("#2aabee"),
+				String: color.MustParse("#2aabee"),
 			},
 			Table: ThemeTable{
-				Header:  color.MustParseColor("white:bold"),
-				Columns: color.MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / white / #feb927"),
+				Header:  color.MustParse("white:bold"),
+				Columns: color.MustParseSlice("#2aabee / #6afd6a:bold / #4860e6 / white / #feb927"),
 			},
 		}
 
 	case PresetTritLight:
 		return &Theme{
-			Default: color.MustParseColor("black"),
+			Default: color.MustParse("black"),
 			Base: ThemeBase{
-				Key:       color.MustParseColorSlice("#feb927 / #fe6e1a"),
-				Info:      color.MustParseColor("black"),
-				Primary:   color.MustParseColor("#4860e6"),
-				Secondary: color.MustParseColor("#2aabee"),
-				Success:   color.MustParseColor("#6afd6a:bold"),
-				Warning:   color.MustParseColor("#feb927:italic"),
-				Danger:    color.MustParseColor("fg=black:bg=#c2270a"),
-				Muted:     color.MustParseColor("#2ee5ae:italic"),
+				Key:       color.MustParseSlice("#feb927 / #fe6e1a"),
+				Info:      color.MustParse("black"),
+				Primary:   color.MustParse("#4860e6"),
+				Secondary: color.MustParse("#2aabee"),
+				Success:   color.MustParse("#6afd6a:bold"),
+				Warning:   color.MustParse("#feb927:italic"),
+				Danger:    color.MustParse("fg=black:bg=#c2270a"),
+				Muted:     color.MustParse("#2ee5ae:italic"),
 			},
 			Data: ThemeData{
-				String: color.MustParseColor("#2aabee"),
+				String: color.MustParse("#2aabee"),
 			},
 			Table: ThemeTable{
-				Header:  color.MustParseColor("black:bold"),
-				Columns: color.MustParseColorSlice("#2aabee / #6afd6a:bold / #4860e6 / black / #feb927"),
+				Header:  color.MustParse("black:bold"),
+				Columns: color.MustParseSlice("#2aabee / #6afd6a:bold / #4860e6 / black / #feb927"),
 			},
 		}
 
 	// Pre-v0.3.0
 	case PresetPre030Dark:
 		return &Theme{
-			Default: color.MustParseColor("green"),
+			Default: color.MustParse("green"),
 			Base: ThemeBase{
-				Key:       color.MustParseColorSlice("yellow / white"),
-				Info:      color.MustParseColor("white"),
-				Primary:   color.MustParseColor("magenta"),
-				Secondary: color.MustParseColor("cyan"),
-				Success:   color.MustParseColor("green"),
-				Warning:   color.MustParseColor("yellow"),
-				Danger:    color.MustParseColor("red"),
-				Muted:     color.MustParseColor("yellow"),
+				Key:       color.MustParseSlice("yellow / white"),
+				Info:      color.MustParse("white"),
+				Primary:   color.MustParse("magenta"),
+				Secondary: color.MustParse("cyan"),
+				Success:   color.MustParse("green"),
+				Warning:   color.MustParse("yellow"),
+				Danger:    color.MustParse("red"),
+				Muted:     color.MustParse("yellow"),
 			},
 			Options: ThemeOptions{
-				Flag: color.MustParseColor("yellow"),
+				Flag: color.MustParse("yellow"),
 			},
 		}
 
 	case PresetPre030Light:
 		return &Theme{
-			Default: color.MustParseColor("green"),
+			Default: color.MustParse("green"),
 			Base: ThemeBase{
-				Key:       color.MustParseColorSlice("yellow / black"),
-				Info:      color.MustParseColor("black"),
-				Primary:   color.MustParseColor("magenta"),
-				Secondary: color.MustParseColor("blue"),
-				Success:   color.MustParseColor("green"),
-				Warning:   color.MustParseColor("yellow"),
-				Danger:    color.MustParseColor("red"),
-				Muted:     color.MustParseColor("yellow"),
+				Key:       color.MustParseSlice("yellow / black"),
+				Info:      color.MustParse("black"),
+				Primary:   color.MustParse("magenta"),
+				Secondary: color.MustParse("blue"),
+				Success:   color.MustParse("green"),
+				Warning:   color.MustParse("yellow"),
+				Danger:    color.MustParse("red"),
+				Muted:     color.MustParse("yellow"),
 			},
 			Options: ThemeOptions{
-				Flag: color.MustParseColor("yellow"),
+				Flag: color.MustParse("yellow"),
 			},
 		}
 
 	// Pre-v0.0.21
 	case PresetPre0021Dark:
 		return &Theme{
-			Default: color.MustParseColor("green"),
+			Default: color.MustParse("green"),
 			Base: ThemeBase{
-				Key:       color.MustParseColorSlice("yellow / white"),
-				Info:      color.MustParseColor("white"),
-				Primary:   color.MustParseColor("magenta"),
-				Secondary: color.MustParseColor("cyan"),
-				Success:   color.MustParseColor("green"),
-				Warning:   color.MustParseColor("yellow"),
-				Danger:    color.MustParseColor("red"),
-				Muted:     color.MustParseColor("yellow"),
+				Key:       color.MustParseSlice("yellow / white"),
+				Info:      color.MustParse("white"),
+				Primary:   color.MustParse("magenta"),
+				Secondary: color.MustParse("cyan"),
+				Success:   color.MustParse("green"),
+				Warning:   color.MustParse("yellow"),
+				Danger:    color.MustParse("red"),
+				Muted:     color.MustParse("yellow"),
 			},
 			Data: ThemeData{
-				String: color.MustParseColor("cyan"),
+				String: color.MustParse("cyan"),
 			},
 			Table: ThemeTable{
-				Columns: color.MustParseColorSlice("cyan / green / magenta / white / yellow"),
+				Columns: color.MustParseSlice("cyan / green / magenta / white / yellow"),
 			},
 			Status: ThemeStatus{
-				Success: color.MustParseColor("none"),
+				Success: color.MustParse("none"),
 			},
 			Options: ThemeOptions{
-				Flag: color.MustParseColor("yellow"),
+				Flag: color.MustParse("yellow"),
 			},
 		}
 
 	case PresetPre0021Light:
 		return &Theme{
-			Default: color.MustParseColor("green"),
+			Default: color.MustParse("green"),
 			Base: ThemeBase{
-				Key:       color.MustParseColorSlice("yellow / black"),
-				Info:      color.MustParseColor("white"),
-				Primary:   color.MustParseColor("magenta"),
-				Secondary: color.MustParseColor("cyan"),
-				Success:   color.MustParseColor("green"),
-				Warning:   color.MustParseColor("yellow"),
-				Danger:    color.MustParseColor("red"),
-				Muted:     color.MustParseColor("yellow"),
+				Key:       color.MustParseSlice("yellow / black"),
+				Info:      color.MustParse("white"),
+				Primary:   color.MustParse("magenta"),
+				Secondary: color.MustParse("cyan"),
+				Success:   color.MustParse("green"),
+				Warning:   color.MustParse("yellow"),
+				Danger:    color.MustParse("red"),
+				Muted:     color.MustParse("yellow"),
 			},
 			Data: ThemeData{
-				String: color.MustParseColor("blue"),
+				String: color.MustParse("blue"),
 			},
 			Table: ThemeTable{
-				Columns: color.MustParseColorSlice("cyan / green / magenta / black / yellow / blue"),
+				Columns: color.MustParseSlice("cyan / green / magenta / black / yellow / blue"),
 			},
 			Status: ThemeStatus{
-				Success: color.MustParseColor("none"),
+				Success: color.MustParse("none"),
 			},
 			Options: ThemeOptions{
-				Flag: color.MustParseColor("yellow"),
+				Flag: color.MustParse("yellow"),
 			},
 		}
 
@@ -337,7 +337,7 @@ type ThemeBase struct {
 	Danger    color.Color // general color for when things are bad
 	Muted     color.Color // general color for when things are less relevant
 
-	Key color.ColorSlice `defaultFromMany:"theme.base.secondary"` // general color for keys
+	Key color.Slice `defaultFromMany:"theme.base.secondary"` // general color for keys
 }
 
 // ThemeShell holds colors for when representing shell commands (bash, zsh, etc)
@@ -351,12 +351,12 @@ type ThemeShell struct {
 // ThemeData holds colors for when representing parsed data.
 // Such as in YAML, JSON, and even some "kubectl describe" values
 type ThemeData struct {
-	Key    color.ColorSlice `defaultFrom:"theme.base.key"`     // used for the key
-	String color.Color      `defaultFrom:"theme.base.info"`    // used when value is a string
-	True   color.Color      `defaultFrom:"theme.base.success"` // used when value is true
-	False  color.Color      `defaultFrom:"theme.base.danger"`  // used when value is false
-	Number color.Color      `defaultFrom:"theme.base.primary"` // used when the value is a number
-	Null   color.Color      `defaultFrom:"theme.base.muted"`   // used when the value is null, nil, or none
+	Key    color.Slice `defaultFrom:"theme.base.key"`     // used for the key
+	String color.Color `defaultFrom:"theme.base.info"`    // used when value is a string
+	True   color.Color `defaultFrom:"theme.base.success"` // used when value is true
+	False  color.Color `defaultFrom:"theme.base.danger"`  // used when value is false
+	Number color.Color `defaultFrom:"theme.base.primary"` // used when the value is a number
+	Null   color.Color `defaultFrom:"theme.base.muted"`   // used when the value is null, nil, or none
 
 	Quantity      color.Color `defaultFrom:"theme.data.number"`  // used when the value is a quantity, e.g "100m" or "5Gi"
 	Duration      color.Color ``                                 // used when the value is a duration, e.g "12m" or "1d12h"
@@ -381,8 +381,8 @@ type ThemeStatus struct {
 
 // ThemeTable holds colors for table output
 type ThemeTable struct {
-	Header  color.Color      `defaultFrom:"theme.base.info"`                          // used on table headers
-	Columns color.ColorSlice `defaultFromMany:"theme.base.info,theme.base.secondary"` // used on table columns when no other coloring applies such as status or duration coloring. The multiple colors are cycled based on column ID, from left to right.
+	Header  color.Color `defaultFrom:"theme.base.info"`                          // used on table headers
+	Columns color.Slice `defaultFromMany:"theme.base.info,theme.base.secondary"` // used on table columns when no other coloring applies such as status or duration coloring. The multiple colors are cycled based on column ID, from left to right.
 }
 
 // ThemeStderr holds generic colors for kubectl's stderr output.
@@ -401,7 +401,7 @@ type ThemeStderr struct {
 
 // ThemeApply holds colors for the "kubectl apply" output.
 type ThemeDescribe struct {
-	Key color.ColorSlice `defaultFrom:"theme.base.key"` // used on keys. The multiple colors are cycled based on indentation.
+	Key color.Slice `defaultFrom:"theme.base.key"` // used on keys. The multiple colors are cycled based on indentation.
 }
 
 // ThemeApply holds colors for the "kubectl apply" output.
@@ -486,8 +486,8 @@ type ThemeDrain struct {
 
 // ThemeExplain holds colors for the "kubectl explain" output.
 type ThemeExplain struct {
-	Key      color.ColorSlice `defaultFrom:"theme.base.key"`    // used on keys. The multiple colors are cycled based on indentation.
-	Required color.Color      `defaultFrom:"theme.base.danger"` // used on the trailing "-required-" string
+	Key      color.Slice `defaultFrom:"theme.base.key"`    // used on keys. The multiple colors are cycled based on indentation.
+	Required color.Color `defaultFrom:"theme.base.danger"` // used on the trailing "-required-" string
 }
 
 // ThemeOptions holds colors for the "kubectl options" output.
@@ -497,7 +497,7 @@ type ThemeOptions struct {
 
 // ThemeVersion holds colors for the "kubectl version" output.
 type ThemeVersion struct {
-	Key color.ColorSlice `defaultFrom:"theme.base.key"` // used on the key
+	Key color.Slice `defaultFrom:"theme.base.key"` // used on the key
 }
 
 // ThemeHelp holds colors for the "kubectl --help" output.
@@ -511,11 +511,11 @@ type ThemeHelp struct {
 
 // ThemeLogs holds colors for the "kubectl logs" output.
 type ThemeLogs struct {
-	Key          color.ColorSlice `defaultFrom:"theme.data.key"`
-	QuotedString color.Color      `defaultFrom:"theme.data.string"` // Used on quoted strings that are not part of a `key="value"`
-	Date         color.Color      `defaultFrom:"theme.base.muted"`
-	SourceRef    color.Color      `defaultFrom:"theme.base.muted"`
-	GUID         color.Color      `defaultFrom:"theme.base.muted"`
+	Key          color.Slice `defaultFrom:"theme.data.key"`
+	QuotedString color.Color `defaultFrom:"theme.data.string"` // Used on quoted strings that are not part of a `key="value"`
+	Date         color.Color `defaultFrom:"theme.base.muted"`
+	SourceRef    color.Color `defaultFrom:"theme.base.muted"`
+	GUID         color.Color `defaultFrom:"theme.base.muted"`
 
 	Severity ThemeLogsSeverity
 }
@@ -563,7 +563,7 @@ func visitorComputeCache(viperKey string, value reflect.Value, _ reflect.StructT
 	switch value := value.Addr().Interface().(type) {
 	case *color.Color:
 		value.ComputeCache()
-	case *color.ColorSlice:
+	case *color.Slice:
 		value.ComputeCache()
 	default:
 		panic(fmt.Errorf("%s: unsupported field type: %T", viperKey, value))
@@ -581,7 +581,7 @@ func (t themeViperVisitor) visitorApplyDefaults(viperKey string, value reflect.V
 		} else {
 			t.setColor(viperKey, value)
 		}
-	case color.ColorSlice:
+	case color.Slice:
 		if defaultFrom, ok := tags.Lookup("defaultFrom"); ok {
 			t.setColorSliceOrKey(viperKey, value, defaultFrom)
 		} else if defaultFromMany, ok := tags.Lookup("defaultFromMany"); ok {
@@ -611,23 +611,23 @@ func (t themeViperVisitor) setColor(key string, value color.Color) bool {
 	return true
 }
 
-func (t themeViperVisitor) setColorSliceOrKey(key string, value color.ColorSlice, otherKey string) {
+func (t themeViperVisitor) setColorSliceOrKey(key string, value color.Slice, otherKey string) {
 	if t.setColorSlice(key, value) {
 		return
 	}
 	t.viper.SetDefault(key, t.viper.Get(otherKey))
 }
 
-func (t themeViperVisitor) setColorSliceOrManyKeys(key string, value color.ColorSlice, otherKeys []string) {
+func (t themeViperVisitor) setColorSliceOrManyKeys(key string, value color.Slice, otherKeys []string) {
 	if t.setColorSlice(key, value) {
 		return
 	}
-	values := make(color.ColorSlice, 0, len(otherKeys))
+	values := make(color.Slice, 0, len(otherKeys))
 	for _, k := range otherKeys {
 		val := t.viper.Get(k)
 		col, ok := val.(color.Color)
 		if !ok {
-			col = color.MustParseColor(fmt.Sprint(val))
+			col = color.MustParse(fmt.Sprint(val))
 		}
 		if val != nil {
 			values = append(values, col)
@@ -638,9 +638,9 @@ func (t themeViperVisitor) setColorSliceOrManyKeys(key string, value color.Color
 	}
 }
 
-func (t themeViperVisitor) setColorSlice(key string, value color.ColorSlice) bool {
+func (t themeViperVisitor) setColorSlice(key string, value color.Slice) bool {
 	if len(value) == 0 {
-		t.viper.SetDefault(key, color.ColorSlice{})
+		t.viper.SetDefault(key, color.Slice{})
 		return false
 	}
 	t.viper.SetDefault(key, value)

@@ -11,7 +11,7 @@ import (
 func Test_SingleColoredPrinter_Print(t *testing.T) {
 	input := "hello\nworld\nfoo\nbar"
 	var w bytes.Buffer
-	printer := SingleColoredPrinter{Color: color.MustParseColor("yellow")}
+	printer := SingleColoredPrinter{Color: color.MustParse("yellow")}
 	printer.Print(strings.NewReader(input), &w)
 	got := w.String()
 	if got == input {

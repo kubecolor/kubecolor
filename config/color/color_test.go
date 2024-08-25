@@ -102,7 +102,7 @@ func TestParseColor(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			got, err := ParseColor(tc.input)
+			got, err := Parse(tc.input)
 			testutil.MustNoError(t, err)
 			testutil.Equalf(t, tc.wantCode, got.ANSICode(), "Color %q", tc.input)
 		})
@@ -110,12 +110,12 @@ func TestParseColor(t *testing.T) {
 }
 
 func TestRender_onColoredText(t *testing.T) {
-	highlight := MustParseColor("cyan")
+	highlight := MustParse("cyan")
 
 	s := fmt.Sprintf("prefix %s suffix", highlight.Render("highlighted"))
 	testutil.Equal(t, "prefix \033[36mhighlighted\033[0m suffix", s, "only highlight")
 
-	surrounding := MustParseColor("yellow")
+	surrounding := MustParse("yellow")
 	s2 := surrounding.Render(s)
 	testutil.Equal(t, "\033[33mprefix \033[36mhighlighted\033[0m\033[33m suffix\033[0m", s2, "with surrounding color")
 }
