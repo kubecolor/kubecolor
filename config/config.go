@@ -71,7 +71,7 @@ func LoadViper() (*viper.Viper, error) {
 
 	if err := v.ReadInConfig(); err != nil {
 		if errors.As(err, &viper.ConfigFileNotFoundError{}) || os.IsNotExist(err) {
-			slog.Debug("No config file found. ", "error", err.Error())
+			slog.Debug("No config file found. " + err.Error())
 			// continue
 		} else {
 			return nil, err
