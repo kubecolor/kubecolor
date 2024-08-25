@@ -301,7 +301,7 @@ func (s *Scanner) scanKeyValue(key, valueAndRest []byte) int {
 
 	case '{':
 		if written := s.scanJSON(valueAndRest); written > 0 {
-			return written
+			return len(key) + 1 + written
 		}
 	}
 
@@ -541,7 +541,7 @@ func readQuoted(lineBuffer []byte) []byte {
 		return nil
 	}
 	index := size
-	for {
+	for index < len(lineBuffer) {
 		nextRune, size := utf8.DecodeRune(lineBuffer[index:])
 		if nextRune == utf8.RuneError {
 			return nil
@@ -555,6 +555,7 @@ func readQuoted(lineBuffer []byte) []byte {
 			return lineBuffer[:index]
 		}
 	}
+	return nil
 }
 
 func readWord(lineBuffer []byte) []byte {
