@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log/slog"
 	"os"
 	"path/filepath"
 
@@ -25,7 +26,7 @@ func main() {
 
 	prog := Program{}
 	if err := prog.Run(); err != nil {
-		fmt.Fprintf(os.Stderr, "Error: %s\n", err)
+		slog.Error("Error: " + err.Error())
 		os.Exit(1)
 	}
 }

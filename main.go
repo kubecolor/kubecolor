@@ -2,17 +2,22 @@ package main
 
 import (
 	"errors"
-	"fmt"
+	"log/slog"
 	"os"
 	"runtime/debug"
 
 	"github.com/kubecolor/kubecolor/command"
+	"github.com/kubecolor/kubecolor/internal/slogutil"
 )
 
 //go:generate make config-schema.json
 
 // this is overridden on build time by GoReleaser
 var Version string
+
+func init() {
+	slog.SetDefault(slog.New(slogutil.NewSlogHandler(nil)))
+}
 
 func main() {
 	err := command.Run(os.Args[1:], getVersion())
@@ -21,7 +26,7 @@ func main() {
 		if errors.As(err, &ke) {
 			os.Exit(ke.ExitCode)
 		}
-		fmt.Fprintf(os.Stderr, "[ERROR] [kubecolor] %s\n", err)
+		slog.Error(err.Error())
 		os.Exit(1)
 	}
 }

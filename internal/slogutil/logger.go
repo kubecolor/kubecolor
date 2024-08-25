@@ -22,7 +22,7 @@ var (
 	colorError   = color.MustParseColor("red")
 	colorMessage = color.MustParseColor("white")
 	colorKey     = color.MustParseColor("cyan")
-	colorValue   = color.MustParseColor("yellow")
+	colorValue   = color.MustParseColor("light-yellow")
 )
 
 type SlogHandler struct {
@@ -57,7 +57,7 @@ func NewSlogHandler(opt *SlogHandlerOptions) *SlogHandler {
 
 // Enabled implements [slog.Handler].
 func (h *SlogHandler) Enabled(_ context.Context, level slog.Level) bool {
-	return h.Level >= level
+	return h.Level <= level
 }
 
 // WithAttrs implements [slog.Handler].
@@ -80,29 +80,26 @@ func (h *SlogHandler) Handle(_ context.Context, record slog.Record) error {
 	buf.WriteByte(' ')
 	switch record.Level {
 	case slog.LevelDebug:
-		buf.WriteString(colorDebug.Render("[debug]"))
-		buf.WriteByte(' ')
+		buf.WriteString(colorDebug.Render("[DEBUG]"))
 	case slog.LevelError:
-		buf.WriteString(colorError.Render("[error]"))
-		buf.WriteByte(' ')
+		buf.WriteString(colorError.Render("[ERROR]"))
 	case slog.LevelInfo:
 		buf.WriteByte(' ')
-		buf.WriteString(colorInfo.Render("[info]"))
-		buf.WriteByte(' ')
+		buf.WriteString(colorInfo.Render("[INFO]"))
 	case slog.LevelWarn:
 		buf.WriteByte(' ')
-		buf.WriteString(colorWarn.Render("[warn]"))
-		buf.WriteByte(' ')
+		buf.WriteString(colorWarn.Render("[WARN]"))
 	default:
-		fmt.Fprintf(&buf, "[Level(%d)] ", record.Level)
+		fmt.Fprintf(&buf, "[LEVEL(%d)]", record.Level)
 	}
 
 	if record.Message != "" {
-		buf.WriteString(colorMessage.Render(record.Message))
 		buf.WriteByte(' ')
+		buf.WriteString(colorMessage.Render(record.Message))
 	}
 
 	record.Attrs(func(attr slog.Attr) bool {
+		buf.WriteByte(' ')
 		switch attr.Value.Kind() {
 		case slog.KindDuration:
 			fmt.Fprintf(&buf, "%s=%s",
@@ -111,10 +108,9 @@ func (h *SlogHandler) Handle(_ context.Context, record slog.Record) error {
 		default:
 			s := attr.Value.String()
 			if needsQuoting(s) {
-				fmt.Fprintf(&buf, "%s=%s", colorKey.Render(attr.Key), colorValue.Render(s))
-			} else {
-				fmt.Fprintf(&buf, "%s=%q", colorKey.Render(attr.Key), colorValue.Render(s))
+				s = fmt.Sprintf("%q", s)
 			}
+			fmt.Fprintf(&buf, "%s=%s", colorKey.Render(attr.Key), colorValue.Render(s))
 		}
 		return true
 	})
@@ -134,6 +130,10 @@ func needsQuoting(s string) bool {
 		return true
 	}
 	for _, r := range s {
+		switch r {
+		case ' ', '"', '\'':
+			return true
+		}
 		if !unicode.IsPrint(r) {
 			return true
 		}
