@@ -68,6 +68,29 @@ func TestScanner_tokens(t *testing.T) {
 			},
 		},
 		{
+			name:  "parenthases with word",
+			input: "(foo)\n",
+			want: []Token{
+				{Kind: KindParenthases, Text: "("},
+				{Kind: KindUnknown, Text: "foo"},
+				{Kind: KindParenthases, Text: ")"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			// https://github.com/kubecolor/kubecolor/issues/167
+			name:  "parenthases with words",
+			input: "(foo bar)\n",
+			want: []Token{
+				{Kind: KindParenthases, Text: "("},
+				{Kind: KindUnknown, Text: "foo"},
+				{Kind: KindUnknown, Text: " "},
+				{Kind: KindUnknown, Text: "bar"},
+				{Kind: KindParenthases, Text: ")"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
 			name:  "key=value",
 			input: "key=value other\n",
 			want: []Token{

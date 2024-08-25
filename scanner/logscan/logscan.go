@@ -268,7 +268,10 @@ func (s *Scanner) pushToken(kind Kind, text string) int {
 func (s *Scanner) scanParenthases(group []byte) {
 	s.pushToken(KindParenthases, string(group[:1]))
 	inner := group[1 : len(group)-1]
-	s.scan(inner)
+	for len(inner) > 0 {
+		size := s.scan(inner)
+		inner = inner[size:]
+	}
 	s.pushToken(KindParenthases, string(group[len(group)-1:]))
 }
 
