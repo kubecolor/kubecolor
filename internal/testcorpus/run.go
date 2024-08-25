@@ -9,32 +9,32 @@ import (
 	"strings"
 	"text/tabwriter"
 
-	"github.com/gookit/color"
 	"github.com/hexops/gotextdiff"
 	"github.com/hexops/gotextdiff/myers"
 	"github.com/hexops/gotextdiff/span"
 	"github.com/kubecolor/kubecolor/command"
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/config/color"
 	"github.com/kubecolor/kubecolor/kubectl"
 	"github.com/kubecolor/kubecolor/printer"
 )
 
 var (
-	ColorErrorPrefix = config.MustParseColor("hi-red:bold")
-	ColorErrorText   = config.MustParseColor("red")
-	ColorWarnPrefix  = config.MustParseColor("hi-yellow:bold")
-	ColorWarnText    = config.MustParseColor("yellow")
+	ColorErrorPrefix = color.MustParseColor("hi-red:bold")
+	ColorErrorText   = color.MustParseColor("red")
+	ColorWarnPrefix  = color.MustParseColor("hi-yellow:bold")
+	ColorWarnText    = color.MustParseColor("yellow")
 
-	ColorHeader  = config.MustParseColor("bold")
-	ColorMuted   = config.MustParseColor("gray")
-	ColorSuccess = config.MustParseColor("green")
+	ColorHeader  = color.MustParseColor("bold")
+	ColorMuted   = color.MustParseColor("gray")
+	ColorSuccess = color.MustParseColor("green")
 
-	ColorDiffAddPrefix      = config.MustParseColor("fg=green:bg=22:bold")
-	ColorDiffAdd            = config.MustParseColor("bg=22") // dark green
-	ColorDiffDelPrefix      = config.MustParseColor("fg=red:bg=52:bold")
-	ColorDiffDel            = config.MustParseColor("bg=52") // dark red
-	ColorDiffEqual          = config.MustParseColor("gray:italic")
-	ColorDiffColorHighlight = config.MustParseColor(`magenta`)
+	ColorDiffAddPrefix      = color.MustParseColor("fg=green:bg=22:bold")
+	ColorDiffAdd            = color.MustParseColor("bg=22") // dark green
+	ColorDiffDelPrefix      = color.MustParseColor("fg=red:bg=52:bold")
+	ColorDiffDel            = color.MustParseColor("bg=52") // dark red
+	ColorDiffEqual          = color.MustParseColor("gray:italic")
+	ColorDiffColorHighlight = color.MustParseColor(`magenta`)
 )
 
 func ExecuteTest(test Test) error {
@@ -238,7 +238,7 @@ func quoteAndTabWrite(diffs []gotextdiff.Line) []gotextdiff.Line {
 
 var colorRegex = regexp.MustCompile(`\x1b\[[0-9;\.,]+m`)
 
-func injectColor(s string, color config.Color) string {
+func injectColor(s string, color color.Color) string {
 	newCode := strings.TrimSuffix(strings.TrimPrefix(color.ANSICode(), "\x1b["), "m")
 
 	updatedColors := colorRegex.ReplaceAllStringFunc(s, func(s string) string {
@@ -251,7 +251,7 @@ func injectColor(s string, color config.Color) string {
 
 var escapedColorRegex = regexp.MustCompile(`\\x1b\[[0-9;\.,]+m`)
 
-func highlightEscapedColorCodes(s string, color config.Color) string {
+func highlightEscapedColorCodes(s string, color color.Color) string {
 	return escapedColorRegex.ReplaceAllStringFunc(s, func(s string) string {
 		return color.Render(s)
 	})

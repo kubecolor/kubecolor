@@ -3,11 +3,10 @@ package testcorpus
 import (
 	"os"
 
-	"github.com/gookit/color"
+	"github.com/kubecolor/kubecolor/config/color"
 )
 
 func init() {
 	os.Clearenv()
 	color.ForceColor()
-	color.Enable = true
 }

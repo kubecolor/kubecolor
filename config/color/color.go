@@ -1,4 +1,4 @@
-package config
+package color
 
 import (
 	"cmp"
@@ -172,4 +172,13 @@ func (c *Color) ComputeCache() {
 	}
 	c.cachedCode = strings.Join(codes, ";")
 	c.cached = true
+}
+
+func ClearCode(s string) string {
+	return color.ClearCode(s)
+}
+
+func ForceColor() {
+	color.ForceColor()
+	color.Enable = true
 }

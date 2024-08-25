@@ -11,9 +11,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/gookit/color"
 	"github.com/kubecolor/kubecolor/command"
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/config/color"
 	"github.com/kubecolor/kubecolor/kubectl"
 	"github.com/kubecolor/kubecolor/printer"
 )
@@ -26,13 +26,13 @@ var flags = struct {
 	width        int
 
 	prompt       string
-	promptColor  config.Color
+	promptColor  color.Color
 	cmd          string
-	cmdColor     config.Color
-	argColor     config.Color
-	valueColor   config.Color
-	keywordColor config.Color
-	flagColor    config.Color
+	cmdColor     color.Color
+	argColor     color.Color
+	valueColor   color.Color
+	keywordColor color.Color
+	flagColor    color.Color
 }{
 	outputDir:    "./docs",
 	freezeConfig: "./docs/freeze-config.json",
@@ -40,13 +40,13 @@ var flags = struct {
 	width:        100,
 
 	prompt:       "❯",
-	promptColor:  config.MustParseColor("green"),
+	promptColor:  color.MustParseColor("green"),
 	cmd:          "kubectl",
-	cmdColor:     config.MustParseColor("green"),
-	argColor:     config.MustParseColor("none"),
-	valueColor:   config.MustParseColor("yellow"),
-	keywordColor: config.MustParseColor("magenta"),
-	flagColor:    config.MustParseColor("cyan"),
+	cmdColor:     color.MustParseColor("green"),
+	argColor:     color.MustParseColor("none"),
+	valueColor:   color.MustParseColor("yellow"),
+	keywordColor: color.MustParseColor("magenta"),
+	flagColor:    color.MustParseColor("cyan"),
 }
 
 func init() {

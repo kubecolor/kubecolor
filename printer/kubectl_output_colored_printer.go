@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/config/color"
 	"github.com/kubecolor/kubecolor/internal/stringutil"
 	"github.com/kubecolor/kubecolor/kubectl"
 )
@@ -144,7 +145,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 			return &VerbPrinter{
 				DryRunColor:   p.Theme.Apply.DryRun,
 				FallbackColor: p.Theme.Apply.Fallback,
-				VerbColor: map[string]config.Color{
+				VerbColor: map[string]color.Color{
 					"created":    p.Theme.Apply.Created,
 					"configured": p.Theme.Apply.Configured,
 					"unchanged":  p.Theme.Apply.Unchanged,
@@ -154,7 +155,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 			return &VerbPrinter{
 				DryRunColor:   p.Theme.Create.DryRun,
 				FallbackColor: p.Theme.Create.Fallback,
-				VerbColor: map[string]config.Color{
+				VerbColor: map[string]color.Color{
 					"created": p.Theme.Create.Created,
 				},
 			}
@@ -162,7 +163,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 			return &VerbPrinter{
 				DryRunColor:   p.Theme.Delete.DryRun,
 				FallbackColor: p.Theme.Delete.Fallback,
-				VerbColor: map[string]config.Color{
+				VerbColor: map[string]color.Color{
 					"deleted": p.Theme.Delete.Deleted,
 				},
 			}
@@ -170,7 +171,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 			return &VerbPrinter{
 				DryRunColor:   p.Theme.Expose.DryRun,
 				FallbackColor: p.Theme.Expose.Fallback,
-				VerbColor: map[string]config.Color{
+				VerbColor: map[string]color.Color{
 					"exposed": p.Theme.Expose.Exposed,
 				},
 			}
@@ -178,7 +179,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 			return &VerbPrinter{
 				DryRunColor:   p.Theme.Patch.DryRun,
 				FallbackColor: p.Theme.Patch.Fallback,
-				VerbColor: map[string]config.Color{
+				VerbColor: map[string]color.Color{
 					"patched": p.Theme.Patch.Patched,
 				},
 			}
@@ -186,7 +187,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 			return &VerbPrinter{
 				DryRunColor:   p.Theme.Scale.DryRun,
 				FallbackColor: p.Theme.Scale.Fallback,
-				VerbColor: map[string]config.Color{
+				VerbColor: map[string]color.Color{
 					"scaled": p.Theme.Scale.Scaled,
 				},
 			}
@@ -194,7 +195,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 			return &VerbPrinter{
 				DryRunColor:   p.Theme.Rollout.DryRun,
 				FallbackColor: p.Theme.Rollout.Fallback,
-				VerbColor: map[string]config.Color{
+				VerbColor: map[string]color.Color{
 					"rolled back": p.Theme.Rollout.RolledBack,
 					"paused":      p.Theme.Rollout.Paused,
 					"resumed":     p.Theme.Rollout.Resumed,
@@ -205,12 +206,12 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 			return &VerbPrinter{
 				DryRunColor:   p.Theme.Drain.DryRun,
 				FallbackColor: p.Theme.Drain.Fallback,
-				VerbColor: map[string]config.Color{
+				VerbColor: map[string]color.Color{
 					"cordoned": p.Theme.Drain.Cordoned,
 					"evicted":  p.Theme.Drain.Evicted,
 					"drained":  p.Theme.Drain.Drained,
 				},
-				PrefixVerbColor: map[string]config.Color{
+				PrefixVerbColor: map[string]color.Color{
 					"evicting pod": p.Theme.Drain.EvictingPod,
 				},
 			}
@@ -218,7 +219,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 			return &VerbPrinter{
 				DryRunColor:   p.Theme.Uncordon.DryRun,
 				FallbackColor: p.Theme.Uncordon.Fallback,
-				VerbColor: map[string]config.Color{
+				VerbColor: map[string]color.Color{
 					"uncordoned": p.Theme.Uncordon.Uncordoned,
 				},
 			}

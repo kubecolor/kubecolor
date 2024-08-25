@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/config/color"
 	"github.com/kubecolor/kubecolor/scanner/tablescan"
 )
 
@@ -73,7 +74,7 @@ func (p *TablePrinter) Print(r io.Reader, w io.Writer) {
 //	nginx-8spn9              1/1     Running   0          31h
 //	nginx-dplns              1/1     Running   0          31h
 //	nginx-lpv5x              1/1     Running   0          31h
-func (p *TablePrinter) printLineAsTableFormat(w io.Writer, cells []tablescan.Cell, colorsPreset []config.Color) {
+func (p *TablePrinter) printLineAsTableFormat(w io.Writer, cells []tablescan.Cell, colorsPreset []color.Color) {
 	for i, cell := range cells {
 		c := p.getColumnBaseColor(i, colorsPreset)
 
@@ -91,9 +92,9 @@ func (p *TablePrinter) printLineAsTableFormat(w io.Writer, cells []tablescan.Cel
 	fmt.Fprintf(w, "\n")
 }
 
-func (p *TablePrinter) getColumnBaseColor(index int, colorsPreset []config.Color) config.Color {
+func (p *TablePrinter) getColumnBaseColor(index int, colorsPreset []color.Color) color.Color {
 	if len(colorsPreset) == 0 {
-		return config.Color{}
+		return color.Color{}
 	}
 	if p.hasLeadingNamespaceColumn {
 		index--

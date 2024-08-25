@@ -58,6 +58,11 @@ func Run(rawArgs []string, version string) error {
 
 	subcommandInfo := kubectl.InspectSubcommandInfo(args, kubectl.DefaultPluginHandler{})
 
+	fmt.Fprintf(os.Stderr, "[kubecolor] [DEBUG] debug=%v\n", cfg.Debug)
+	if cfg.Debug {
+		fmt.Fprintf(os.Stderr, "[kubecolor] [DEBUG] subcommand=%s\n", subcommandInfo.Subcommand)
+	}
+
 	if subcommandInfo.Subcommand == kubectl.Complete ||
 		subcommandInfo.Subcommand == kubectl.CompleteNoDesc {
 		return InjectKubecolorCompletions(rawArgs, cfg, subcommandInfo)

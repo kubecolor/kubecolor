@@ -1,4 +1,4 @@
-package config
+package color
 
 // Raw is a color of raw ANSI codes
 type Raw string

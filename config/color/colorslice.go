@@ -1,4 +1,4 @@
-package config
+package color
 
 import (
 	"encoding"

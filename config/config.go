@@ -53,6 +53,11 @@ func NewViper() *viper.Viper {
 func LoadViper() (*viper.Viper, error) {
 	v := NewViper()
 
+	if v.GetBool("debug") {
+		// TODO: Change slog
+		//fmt.Fprintf(os.Stderr, "[kubecolor] [debug] overriding config path with environment variable KUBECOLOR_CONFIG=%q\n", path)
+	}
+
 	if path := os.Getenv("KUBECOLOR_CONFIG"); path != "" {
 		v.SetConfigFile(path)
 		if v.GetBool("debug") {
