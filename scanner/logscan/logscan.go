@@ -268,7 +268,10 @@ func (s *Scanner) pushToken(kind Kind, text string) int {
 func (s *Scanner) scanParenthases(group []byte) {
 	s.pushToken(KindParenthases, string(group[:1]))
 	inner := group[1 : len(group)-1]
-	s.scan(inner)
+	for len(inner) > 0 {
+		size := s.scan(inner)
+		inner = inner[size:]
+	}
 	s.pushToken(KindParenthases, string(group[len(group)-1:]))
 }
 
@@ -298,7 +301,7 @@ func (s *Scanner) scanKeyValue(key, valueAndRest []byte) int {
 
 	case '{':
 		if written := s.scanJSON(valueAndRest); written > 0 {
-			return written
+			return len(key) + 1 + written
 		}
 	}
 
@@ -538,7 +541,7 @@ func readQuoted(lineBuffer []byte) []byte {
 		return nil
 	}
 	index := size
-	for {
+	for index < len(lineBuffer) {
 		nextRune, size := utf8.DecodeRune(lineBuffer[index:])
 		if nextRune == utf8.RuneError {
 			return nil
@@ -552,6 +555,7 @@ func readQuoted(lineBuffer []byte) []byte {
 			return lineBuffer[:index]
 		}
 	}
+	return nil
 }
 
 func readWord(lineBuffer []byte) []byte {
