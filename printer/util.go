@@ -6,14 +6,15 @@ import (
 	"unicode"
 
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/config/color"
 	"github.com/kubecolor/kubecolor/internal/stringutil"
 )
 
 // ColorDataKey returns a color based on the given indent.
 // When you want to change key color based on indent depth (e.g. Json, Yaml), use this function
-func ColorDataKey(indent int, basicIndentWidth int, colors config.ColorSlice) config.Color {
+func ColorDataKey(indent int, basicIndentWidth int, colors color.Slice) color.Color {
 	if len(colors) == 0 {
-		return config.Color{}
+		return color.Color{}
 	}
 	return colors[indent/basicIndentWidth%len(colors)]
 }
@@ -32,12 +33,12 @@ var isQuantityRegex = regexp.MustCompile(`^[\+\-]?(?:\d+|\.\d+|\d+\.|\d+\.\d+)?(
 // - "5Gi" return "data.quantity" theme color
 // - "15m10s" return "data.duration" theme color
 // - otherwise, return "data.string" theme color
-func ColorDataValue(val string, theme *config.Theme) config.Color {
+func ColorDataValue(val string, theme *config.Theme) color.Color {
 	c, _ := TryColorDataValue(val, theme)
 	return c
 }
 
-func TryColorDataValue(val string, theme *config.Theme) (config.Color, bool) {
+func TryColorDataValue(val string, theme *config.Theme) (color.Color, bool) {
 	switch val {
 	case "null", "<none>", "<unknown>", "<unset>", "<nil>", "<invalid>":
 		return theme.Data.Null, true

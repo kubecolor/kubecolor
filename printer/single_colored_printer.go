@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/config/color"
 )
 
 // SingleColoredPrinter is a printer to print something
 // using only the single pre-configured color.
 type SingleColoredPrinter struct {
-	Color config.Color
+	Color color.Color
 }
 
 // ensures it implements the interface

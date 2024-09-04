@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"log/slog"
 	"os"
 	"os/exec"
 	"strings"
@@ -58,6 +59,10 @@ func Run(rawArgs []string, version string) error {
 
 	subcommandInfo := kubectl.InspectSubcommandInfo(args, kubectl.DefaultPluginHandler{})
 
+	slog.Debug("Parsed command", "subcommand", subcommandInfo.Subcommand,
+		"supportsColoring", subcommandInfo.SupportsColoring(),
+		"supportsPager", subcommandInfo.SupportsPager())
+
 	if subcommandInfo.Subcommand == kubectl.Complete ||
 		subcommandInfo.Subcommand == kubectl.CompleteNoDesc {
 		return InjectKubecolorCompletions(rawArgs, cfg, subcommandInfo)
@@ -73,7 +78,7 @@ func Run(rawArgs []string, version string) error {
 		pipe, err := runPager(cfg.Pager)
 		if err != nil {
 			err = fmt.Errorf("failed to run pager: %w", err)
-			fmt.Fprintf(os.Stderr, "[kubecolor] [ERROR] %v\n", err)
+			slog.Error(err.Error())
 		} else if pipe != nil {
 			Stdout = pipe.Writer()
 			defer pipe.Close()
@@ -134,8 +139,8 @@ func Run(rawArgs []string, version string) error {
 		defer wg.Done()
 		defer func() {
 			if r := recover(); r != nil {
-				fmt.Fprintf(os.Stderr, "[kubecolor] [ERROR] Recovered from panic: %v\n", r)
-				fmt.Fprint(os.Stdout, errBuf.String())
+				slog.Error("Recovered from panic", "error", r)
+				os.Stdout.Write(errBuf.Bytes())
 			}
 		}()
 

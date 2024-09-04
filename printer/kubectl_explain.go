@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/config/color"
 	"github.com/kubecolor/kubecolor/scanner/describe"
 )
 
@@ -44,7 +45,7 @@ func (p *ExplainPrinter) Print(r io.Reader, w io.Writer) {
 	}
 }
 
-func (p *ExplainPrinter) keyColor(line describe.Line, isFields bool) config.Color {
+func (p *ExplainPrinter) keyColor(line describe.Line, isFields bool) color.Color {
 	if p.Recursive && isFields {
 		return ColorDataKey(line.KeyIndent(), 2, p.Theme.Explain.Key)
 	}

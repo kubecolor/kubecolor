@@ -3,12 +3,14 @@ package config
 import (
 	"errors"
 	"fmt"
+	"log/slog"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 	"time"
 
+	"github.com/kubecolor/kubecolor/internal/slogutil"
 	"github.com/mitchellh/mapstructure"
 	"github.com/spf13/viper"
 )
@@ -53,11 +55,15 @@ func NewViper() *viper.Viper {
 func LoadViper() (*viper.Viper, error) {
 	v := NewViper()
 
+	if v.GetBool("debug") {
+		if logger, ok := slog.Default().Handler().(*slogutil.SlogHandler); ok {
+			logger.Level = slog.LevelDebug
+		}
+	}
+
 	if path := os.Getenv("KUBECOLOR_CONFIG"); path != "" {
 		v.SetConfigFile(path)
-		if v.GetBool("debug") {
-			fmt.Fprintf(os.Stderr, "[kubecolor] [debug] overriding config path with environment variable KUBECOLOR_CONFIG=%q\n", path)
-		}
+		slog.Debug("Overriding config path with environment variable", "KUBECOLOR_CONFIG", path)
 	} else if homeDir, err := os.UserHomeDir(); err == nil {
 		// ~/.kube/color.yaml
 		v.AddConfigPath(filepath.Join(homeDir, ".kube"))
@@ -65,18 +71,14 @@ func LoadViper() (*viper.Viper, error) {
 
 	if err := v.ReadInConfig(); err != nil {
 		if errors.As(err, &viper.ConfigFileNotFoundError{}) || os.IsNotExist(err) {
-			if v.GetBool("debug") {
-				fmt.Fprintf(os.Stderr, "[kubecolor] [debug] no config file found: %s\n", err)
-			}
+			slog.Debug("No config file found. " + err.Error())
 			// continue
 		} else {
 			return nil, err
 		}
 	} else {
-		if v.GetBool("debug") {
-			if fileUsed := v.ConfigFileUsed(); fileUsed != "" {
-				fmt.Fprintf(os.Stderr, "[kubecolor] [debug] using config: %s\n", fileUsed)
-			}
+		if fileUsed := v.ConfigFileUsed(); fileUsed != "" {
+			slog.Debug("Using config", "file", fileUsed)
 		}
 	}
 
@@ -104,9 +106,7 @@ func ApplyThemePreset(v *viper.Viper) error {
 	if err != nil {
 		return fmt.Errorf("parse preset: %w", err)
 	}
-	if v.GetBool("debug") {
-		fmt.Fprintf(os.Stderr, "[kubecolor] [debug] applying preset: %s\n", preset)
-	}
+	slog.Debug("Applying theme", "preset", preset)
 	theme := NewBaseTheme(preset)
 	applyViperDefaults(theme, v)
 	return nil

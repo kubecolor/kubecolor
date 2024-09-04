@@ -5,6 +5,7 @@ import (
 	"io"
 
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/config/color"
 	"github.com/kubecolor/kubecolor/scanner/logscan"
 )
 
@@ -29,7 +30,7 @@ func (p *LogsPrinter) Print(r io.Reader, w io.Writer) {
 
 		switch token.Kind {
 		case logscan.KindKey:
-			var color config.Color
+			var color color.Color
 			if len(p.Theme.Logs.Key) > 0 {
 				color = p.Theme.Logs.Key[keyIndex%len(p.Theme.Logs.Key)]
 			}

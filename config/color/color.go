@@ -1,4 +1,4 @@
-package config
+package color
 
 import (
 	"cmp"
@@ -97,15 +97,15 @@ func (c Color) Sprintf(format string, args ...any) string {
 	return c.Render(fmt.Sprintf(format, args...))
 }
 
-func MustParseColor(s string) Color {
-	c, err := ParseColor(s)
+func MustParse(s string) Color {
+	c, err := Parse(s)
 	if err != nil {
 		panic(fmt.Errorf("parse color: %w", err))
 	}
 	return c
 }
 
-func ParseColor(s string) (Color, error) {
+func Parse(s string) (Color, error) {
 	// Heavily inspired by color.ParseCodeFromAttr
 	s = strings.Trim(s, ":,")
 
@@ -143,7 +143,7 @@ func ParseColor(s string) (Color, error) {
 
 // Set implements [flag.Value].
 func (c *Color) Set(text string) error {
-	newColor, err := ParseColor(text)
+	newColor, err := Parse(text)
 	if err != nil {
 		return fmt.Errorf("parse color: %w", err)
 	}
@@ -172,4 +172,13 @@ func (c *Color) ComputeCache() {
 	}
 	c.cachedCode = strings.Join(codes, ";")
 	c.cached = true
+}
+
+func ClearCode(s string) string {
+	return color.ClearCode(s)
+}
+
+func ForceColor() {
+	color.ForceColor()
+	color.Enable = true
 }

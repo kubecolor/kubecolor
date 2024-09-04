@@ -6,7 +6,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/config/color"
 )
 
 // VerbPrinter is used in change commands like "kubectl apply" output:
@@ -28,17 +28,17 @@ type VerbPrinter struct {
 	// VerbColor is used for verbs at the end of the line (followed by optional "dry-run"), e.g:
 	// 	 pod/nginx-28729634-nh2vc evicted
 	// 	 pod "nginx-28729634-nh2vc" deleted (dry run)
-	VerbColor map[string]config.Color
+	VerbColor map[string]color.Color
 
 	// PrefixVerbColor is used for verbs that are prefixes instead of suffixes, e.g:
 	// 	 evicting pod nginx/nginx-28729634-nh2vc
-	PrefixVerbColor map[string]config.Color
+	PrefixVerbColor map[string]color.Color
 
 	// DryRunColor is used on the "(dry run)" or "(server dry run)" suffix of a line.
-	DryRunColor config.Color
+	DryRunColor color.Color
 
 	// FallbackColor is used when no verbs has matched on the output line.
-	FallbackColor config.Color
+	FallbackColor color.Color
 }
 
 // ensures it implements the interface
