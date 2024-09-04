@@ -27,6 +27,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GLOBAL_GITHUB_TOKEN: ${{ secrets.GLOBAL_GITHUB_TOKEN }}
+          FORCE_COLOR: "true"
   homebrew:
     name: Bump Homebrew formula
     # Skip this job in case of git pushes to prerelease tags
