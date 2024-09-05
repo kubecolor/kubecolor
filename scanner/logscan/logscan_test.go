@@ -151,6 +151,14 @@ func TestScanner_tokens(t *testing.T) {
 			},
 		},
 		{
+			name:  "date iso8601 negative timezone",
+			input: "2024-08-03T12:38:44.049832713-0500\n",
+			want: []Token{
+				{Kind: KindDate, Text: "2024-08-03T12:38:44.049832713-0500"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
 			name:  "guid dashes",
 			input: "70d5707e-b07b-41c3-9411-cad84c6db764\n",
 			want: []Token{
