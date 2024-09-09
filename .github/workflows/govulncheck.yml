@@ -27,8 +27,11 @@ jobs:
         id: govulncheck
         run: |
           echo "govulncheck<<GOVULNCHECK_OUTPUT" >> $GITHUB_OUTPUT
+          set +e # don't exit on error
           govulncheck ./... 2>&1 | tee --append $GITHUB_OUTPUT
+          exit_status=$?
           echo "GOVULNCHECK_OUTPUT" >> $GITHUB_OUTPUT
+          exit $exit_status
         shell: bash
 
       - name: Create GitHub issue
