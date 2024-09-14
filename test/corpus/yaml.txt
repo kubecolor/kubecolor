@@ -204,8 +204,8 @@ moreData: |
   [93mmoo: doo[0m
 [96mmoreData[0m: |
   [93mroo: |[0m
-    [93mbaz: 123[0m
-    [93mroomba: {}[0m
+  [93m  baz: 123[0m
+  [93m  roomba: {}[0m
 
 ================================================================================
 # multiline string with indent indicator
@@ -228,7 +228,7 @@ crazy: >+4
     [93mfoo: bar[0m
   [36mfoo[0m: [93mbar[0m
 [96mwithIndicator[0m: |[35m2[0m
-    [93mfoo: bar[0m
+  [93m  foo: bar[0m
   [93mfoo: bar[0m
 [96mcrazy[0m: >+[35m4[0m
     [93mfoo: bar[0m

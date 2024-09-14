@@ -43,7 +43,7 @@ func (p *YAMLPrinter) printLineAsYAMLFormat(line string, w io.Writer) {
 
 	if p.multilineStringIndent > 0 {
 		if indentLen >= p.multilineStringIndent {
-			fmt.Fprintf(w, "%s%s\n", indent, p.Theme.Data.String.Render(trimmedLine))
+			fmt.Fprintf(w, "%s%s\n", line[:p.multilineStringIndent], p.Theme.Data.String.Render(line[p.multilineStringIndent:]))
 			return
 		} else {
 			p.multilineStringIndent = 0
