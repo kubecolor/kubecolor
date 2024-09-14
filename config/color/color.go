@@ -56,6 +56,9 @@ func (c Color) Render(s string) string {
 	if !c.cached {
 		c.ComputeCache()
 	}
+	if c.cachedCode == "" {
+		return s
+	}
 	if strings.ContainsRune(s, '\033') {
 		return c.renderInject(s)
 	}
