@@ -308,3 +308,50 @@ func TestCutSurrounding(t *testing.T) {
 		})
 	}
 }
+
+func TestTruncate(t *testing.T) {
+	tests := []struct {
+		name   string
+		input  string
+		maxLen int
+		want   string
+	}{
+		{
+			name:   "empty max 2",
+			input:  "",
+			maxLen: 2,
+			want:   "",
+		},
+		{
+			name:   "empty max 0",
+			input:  "",
+			maxLen: 0,
+			want:   "",
+		},
+		{
+			name:   "empty max -2",
+			input:  "",
+			maxLen: -2,
+			want:   "",
+		},
+		{
+			name:   "no truncation",
+			input:  "123456",
+			maxLen: 10,
+			want:   "123456",
+		},
+		{
+			name:   "truncate",
+			input:  "123456",
+			maxLen: 4,
+			want:   "1234",
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got := Truncate(tc.input, tc.maxLen)
+			testutil.Equal(t, tc.want, got)
+		})
+	}
+}
