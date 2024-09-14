@@ -8,11 +8,11 @@ import (
 
 // ParseRatio attempts to parse a ratio delimited by slash, such as "1/2".
 func ParseRatio(s string) (left, right string, ok bool) {
-	if strings.Count(s, "/") != 1 {
-		return "", "", false
-	}
 	left, right, ok = strings.Cut(s, "/")
 	if !ok {
+		return "", "", false
+	}
+	if strings.ContainsRune(right, '/') {
 		return "", "", false
 	}
 	if left == "" || right == "" {

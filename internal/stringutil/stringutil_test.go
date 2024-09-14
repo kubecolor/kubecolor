@@ -81,6 +81,10 @@ func TestParseRatio_fail(t *testing.T) {
 			name:  "decimals",
 			input: "1.1/2.2",
 		},
+		{
+			name:  "multiple slashes",
+			input: "1/2/3",
+		},
 	}
 
 	for _, tc := range tests {
@@ -235,6 +239,10 @@ func TestParseHumanDuration_fail(t *testing.T) {
 		{
 			name:  "pod name",
 			input: "postgresql-0",
+		},
+		{
+			name:  "too big number",
+			input: "100000000000000000000000000000000000000000000000000000m",
 		},
 	}
 
