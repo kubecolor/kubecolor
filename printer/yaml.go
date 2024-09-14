@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"strconv"
 	"strings"
 
 	"github.com/kubecolor/kubecolor/config"
@@ -12,8 +13,10 @@ import (
 
 // YAMLPrinter is used on "kubectl get -o yaml" output
 type YAMLPrinter struct {
-	Theme    *config.Theme
-	inString bool
+	Theme                 *config.Theme
+	inString              bool
+	multilineStringIndent int
+	nextLineSetsIndent    bool
 }
 
 // ensures it implements the interface
@@ -33,6 +36,20 @@ func (p *YAMLPrinter) printLineAsYAMLFormat(line string, w io.Writer) {
 	indent := line[:indentLen]
 	trimmedLine := line[indentLen:]
 
+	if p.nextLineSetsIndent {
+		p.multilineStringIndent = indentLen
+		p.nextLineSetsIndent = false
+	}
+
+	if p.multilineStringIndent > 0 {
+		if indentLen >= p.multilineStringIndent {
+			fmt.Fprintf(w, "%s%s\n", indent, p.Theme.Data.String.Render(trimmedLine))
+			return
+		} else {
+			p.multilineStringIndent = 0
+		}
+	}
+
 	if p.inString {
 		// if inString is true, the line must be a part of a string which is broken into several lines
 		fmt.Fprintf(w, "%s%s\n", indent, p.colorizeYAMLStringValue(trimmedLine))
@@ -41,6 +58,22 @@ func (p *YAMLPrinter) printLineAsYAMLFormat(line string, w io.Writer) {
 	}
 
 	if key, val, ok := strings.Cut(trimmedLine, ": "); ok {
+		// key: |
+		//   multiline string
+
+		if prefix, after, ok := stringutil.CutPrefixAny(val, "|-", "|+", "|", ">-", ">+", ">"); ok {
+			if after == "" {
+				fmt.Fprintf(w, "%s%s: %s\n", indent, p.colorizeYAMLKey(key, indentLen, 2), prefix)
+				p.nextLineSetsIndent = true
+				return
+			}
+			if num, err := strconv.Atoi(after); err == nil {
+				fmt.Fprintf(w, "%s%s: %s%s\n", indent, p.colorizeYAMLKey(key, indentLen, 2), prefix, p.colorizeYAMLValue(after))
+				p.multilineStringIndent = indentLen + num
+				return
+			}
+		}
+
 		// key: value
 		fmt.Fprintf(w, "%s%s: %s\n", indent, p.colorizeYAMLKey(key, indentLen, 2), p.colorizeYAMLValue(val))
 		p.inString = p.isStringOpenedButNotClosed(val)

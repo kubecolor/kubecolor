@@ -118,3 +118,12 @@ func CutSurrounding(line string, surrounding byte) (inner string, ok bool) {
 	}
 	return line, false
 }
+
+func CutPrefixAny(s string, prefixes ...string) (prefix, after string, ok bool) {
+	for _, prefix := range prefixes {
+		if after, ok := strings.CutPrefix(s, prefix); ok {
+			return prefix, after, true
+		}
+	}
+	return "", s, false
+}
