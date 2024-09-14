@@ -74,9 +74,21 @@ func (p *YAMLPrinter) printLineAsYAMLFormat(line string, w io.Writer) {
 			}
 		}
 
+		if quote, afterQuote, ok := stringutil.CutPrefixAny(val, "\"", "'"); ok {
+			// key: "value"
+			if unquoted, hasClosingQuote := strings.CutSuffix(afterQuote, quote); hasClosingQuote {
+				fmt.Fprintf(w, "%s%s: %s%s%s\n", indent, p.colorizeYAMLKey(key, indentLen, 2), quote, p.Theme.Data.String.Render(unquoted), quote)
+				return
+			}
+			// key: "value
+			// (missing final quote)
+			fmt.Fprintf(w, "%s%s: %s%s\n", indent, p.colorizeYAMLKey(key, indentLen, 2), quote, p.Theme.Data.String.Render(afterQuote))
+			p.inString = true
+			return
+		}
+
 		// key: value
 		fmt.Fprintf(w, "%s%s: %s\n", indent, p.colorizeYAMLKey(key, indentLen, 2), p.colorizeYAMLValue(val))
-		p.inString = p.isStringOpenedButNotClosed(val)
 		return
 	}
 
@@ -130,17 +142,15 @@ func (p *YAMLPrinter) colorizeYAMLValue(value string) string {
 }
 
 func (p *YAMLPrinter) colorizeYAMLStringValue(value string) string {
-	if withoutQuotes, ok := stringutil.CutSurrounding(value, '"'); ok {
-		return fmt.Sprintf(`"%s"`, p.Theme.Data.String.Render(withoutQuotes))
+	if before, ok := strings.CutSuffix(value, "\""); ok {
+		return fmt.Sprintf(`%s"`, p.Theme.Data.String.Render(before))
+	}
+	if before, ok := strings.CutSuffix(value, "'"); ok {
+		return fmt.Sprintf(`%s'`, p.Theme.Data.String.Render(before))
 	}
 	return p.Theme.Data.String.Render(value)
 }
 
 func (p *YAMLPrinter) isStringClosed(line string) bool {
 	return strings.HasSuffix(line, "'") || strings.HasSuffix(line, `"`)
-}
-
-func (p *YAMLPrinter) isStringOpenedButNotClosed(line string) bool {
-	return (strings.HasPrefix(line, "'") && !strings.HasSuffix(line, "'")) ||
-		(strings.HasPrefix(line, `"`) && !strings.HasSuffix(line, `"`))
 }

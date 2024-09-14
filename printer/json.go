@@ -64,15 +64,10 @@ func (p *JSONPrinter) printLineAsJsonFormat(line string, w io.Writer) {
 
 // colorizeJSONKey returns colored json key
 func (p *JSONPrinter) colorizeJSONKey(key string, indentCnt, basicWidth int) string {
-	key, hasColon := strings.CutSuffix(key, ":")
 	key, isDoubleQuoted := stringutil.CutSurrounding(key, '"')
 	color := ColorDataKey(indentCnt, basicWidth, p.Theme.Data.Key)
 
 	switch {
-	case hasColon && isDoubleQuoted:
-		return fmt.Sprintf(`"%s":`, color.Render(key))
-	case hasColon:
-		return fmt.Sprintf(`%s:`, color.Render(key))
 	case isDoubleQuoted:
 		return fmt.Sprintf(`"%s"`, color.Render(key))
 	default:

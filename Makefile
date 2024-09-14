@@ -12,11 +12,11 @@ build: ## build package
 .PHONY: build
 
 test: ## run tests
-	${GO_TEST_CMD} -v -race ./...
+	${GO_TEST_CMD} -race ./...
 .PHONY: test
 
 testcover: ## run tests and generate coverage report
-	${GO_TEST_CMD} -v -coverprofile=coverage.txt -coverpkg=./... ./... && \
+	${GO_TEST_CMD} -coverprofile=coverage.txt -coverpkg=./... ./...
 	go tool cover -html=coverage.txt -o cover.html
 .PHONY: testcover
 
