@@ -158,3 +158,28 @@ $ kubectl get pods -o yaml
         [93mkubecolor internally calls kubectl command and try to colorizes the output so you can use kubecolor as a[0m
         [93mcomplete alternative of kubectl[0m
       [36mannotation.short.1[0m: [93mnormal length annotation[0m
+
+================================================================================
+# swallows quote character (issue #179)
+$ kubectl get configmap test -oyaml
+================================================================================
+
+apiVersion: v1
+data:
+  data: |
+    foo = "bar"
+kind: ConfigMap
+metadata:
+  name: test
+  namespace: spire
+
+--------------------------------------------------------------------------------
+
+[96mapiVersion[0m: [93mv1[0m
+[96mdata[0m:
+  [36mdata[0m: [93m|[0m
+    [93mfoo = "bar"[0m
+[96mkind[0m: [93mConfigMap[0m
+[96mmetadata[0m:
+  [36mname[0m: [93mtest[0m
+  [36mnamespace[0m: [93mspire[0m

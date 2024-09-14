@@ -11,6 +11,7 @@ import (
 var (
 	DarkTheme  *config.Theme
 	LightTheme *config.Theme
+	NullTheme  *config.Theme
 )
 
 func init() {
@@ -20,6 +21,7 @@ func init() {
 
 	DarkTheme = NewTheme(config.PresetDark)
 	LightTheme = NewTheme(config.PresetLight)
+	NullTheme = &config.Theme{}
 }
 
 // NewTheme returns a theme from a preset that's meant to be used in testing.
