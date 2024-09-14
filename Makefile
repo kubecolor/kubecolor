@@ -1,7 +1,7 @@
 GO_FILES=$(wildcard *.go */*.go */*/*.go */*/*/*.go)
 
 # Can be overriden by for example: make test GO_TEST_CMD='gotestsum --'
-GO_TEST_CMD=go test
+GO_TEST_CMD=$(if $(shell command -v gotestsum),gotestsum --,go test)
 
 help: ## Print usage
 	@sed -r '/^(\w[^:]+):[^#]*##/!d;s/^([^:]+):[^#]*##\s*(.*)/\x1b[36m\1\t:\x1b[m \2/g' ${MAKEFILE_LIST} | column -t -s $$'\t'

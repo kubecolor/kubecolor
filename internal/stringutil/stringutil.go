@@ -119,6 +119,18 @@ func CutSurrounding(line string, surrounding byte) (inner string, ok bool) {
 	return line, false
 }
 
+// CutSurroundingAny removes any of the cutset bytes at beginning and at end around a string
+//
+// NOTE: This function does not support multi-byte runes (e.g emojies), and is deemed undefined behavior.
+func CutSurroundingAny(line, cutset string) (quote byte, inner string, ok bool) {
+	for _, r := range cutset {
+		if inner, ok := CutSurrounding(line, byte(r)); ok {
+			return byte(r), inner, true
+		}
+	}
+	return 0, line, false
+}
+
 func CutPrefixAny(s string, prefixes ...string) (prefix, after string, ok bool) {
 	for _, prefix := range prefixes {
 		if after, ok := strings.CutPrefix(s, prefix); ok {

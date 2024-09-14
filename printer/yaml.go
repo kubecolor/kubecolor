@@ -74,12 +74,7 @@ func (p *YAMLPrinter) printLineAsYAMLFormat(line string, w io.Writer) {
 			}
 		}
 
-		if quote, afterQuote, ok := stringutil.CutPrefixAny(val, "\"", "'"); ok {
-			// key: "value"
-			if unquoted, hasClosingQuote := strings.CutSuffix(afterQuote, quote); hasClosingQuote {
-				fmt.Fprintf(w, "%s%s: %s%s%s\n", indent, p.colorizeYAMLKey(key, indentLen, 2), quote, p.Theme.Data.String.Render(unquoted), quote)
-				return
-			}
+		if quote, afterQuote, ok := stringutil.CutPrefixAny(val, "\"", "'"); ok && !strings.HasSuffix(afterQuote, quote) {
 			// key: "value
 			// (missing final quote)
 			fmt.Fprintf(w, "%s%s: %s%s\n", indent, p.colorizeYAMLKey(key, indentLen, 2), quote, p.Theme.Data.String.Render(afterQuote))
@@ -122,22 +117,24 @@ func (p *YAMLPrinter) colorizeYAMLKey(key string, indentCnt, basicWidth int) str
 }
 
 func (p *YAMLPrinter) colorizeYAMLValue(value string) string {
-	if value == "{}" {
-		return "{}"
+	switch value {
+	case "{}", "- {}", "[]", "- []":
+		return value
 	}
 
 	value, hasLeadingDash := strings.CutPrefix(value, "- ")
-	unquotedValue, isDoubleQuoted := stringutil.CutSurrounding(value, '"')
+	quote, unquotedValue, isDoubleQuoted := stringutil.CutSurroundingAny(value, "\"'")
+	color := ColorDataValue(value, p.Theme)
 
 	switch {
 	case hasLeadingDash && isDoubleQuoted:
-		return fmt.Sprintf(`- "%s"`, ColorDataValue(value, p.Theme).Render(unquotedValue))
+		return fmt.Sprintf(`- %c%s%c`, quote, color.Render(unquotedValue), quote)
 	case hasLeadingDash:
-		return fmt.Sprintf(`- %s`, ColorDataValue(value, p.Theme).Render(value))
+		return fmt.Sprintf(`- %s`, color.Render(value))
 	case isDoubleQuoted:
-		return fmt.Sprintf(`"%s"`, ColorDataValue(value, p.Theme).Render(unquotedValue))
+		return fmt.Sprintf(`%c%s%c`, quote, color.Render(unquotedValue), quote)
 	default:
-		return ColorDataValue(value, p.Theme).Render(value)
+		return color.Render(value)
 	}
 }
 
