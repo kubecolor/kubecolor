@@ -51,8 +51,11 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 		return &LogsPrinter{Theme: p.Theme}
 
 	case kubectl.Get, kubectl.Events:
-		switch p.SubcommandInfo.FormatOption {
-		case kubectl.None, kubectl.Wide:
+		switch p.SubcommandInfo.Output {
+		case kubectl.OutputNone,
+			kubectl.OutputWide,
+			kubectl.OutputCustomColumns,
+			kubectl.OutputCustomColumnsFile:
 			return NewTablePrinter(
 				withHeader,
 				p.Theme,
@@ -86,10 +89,12 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 					return column
 				},
 			)
-		case kubectl.JSON:
+		case kubectl.OutputJSON:
 			return &JSONPrinter{Theme: p.Theme}
-		case kubectl.YAML:
+		case kubectl.OutputYAML:
 			return &YAMLPrinter{Theme: p.Theme}
+		default:
+			return &LogsPrinter{Theme: p.Theme}
 		}
 
 	case kubectl.Describe:
@@ -109,9 +114,9 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 		}
 	case kubectl.Version:
 		switch {
-		case p.SubcommandInfo.FormatOption == kubectl.JSON:
+		case p.SubcommandInfo.Output == kubectl.OutputJSON:
 			return &VersionJSONInjectorPrinter{KubecolorVersion: p.KubecolorVersion, JsonPrinter: &JSONPrinter{Theme: p.Theme}}
-		case p.SubcommandInfo.FormatOption == kubectl.YAML:
+		case p.SubcommandInfo.Output == kubectl.OutputYAML:
 			return &VersionYAMLInjectorPrinter{KubecolorVersion: p.KubecolorVersion, YamlPrinter: &YAMLPrinter{Theme: p.Theme}}
 		default:
 			return &VersionPrinter{
@@ -134,10 +139,10 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 		kubectl.Rollout,
 		kubectl.Scale,
 		kubectl.Uncordon:
-		switch p.SubcommandInfo.FormatOption {
-		case kubectl.JSON:
+		switch p.SubcommandInfo.Output {
+		case kubectl.OutputJSON:
 			return &JSONPrinter{Theme: p.Theme}
-		case kubectl.YAML:
+		case kubectl.OutputYAML:
 			return &YAMLPrinter{Theme: p.Theme}
 		}
 		switch p.SubcommandInfo.Subcommand {

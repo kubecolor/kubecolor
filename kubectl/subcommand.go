@@ -5,24 +5,49 @@ import (
 )
 
 type SubcommandInfo struct {
-	Subcommand   Subcommand
-	FormatOption FormatOption
-	NoHeader     bool
-	Watch        bool
-	Follow       bool
-	Help         bool
-	Recursive    bool
-	Client       bool
+	Subcommand Subcommand
+	Output     Output // flag: -o, --output
+	NoHeader   bool   // flag: --no-header
+	Watch      bool   // flag: -w, --watch
+	Follow     bool   // flag: -f, --follow
+	Help       bool   // flag: -h, --help
+	Recursive  bool   // flag: --recursive
+	Client     bool   // flag: --client
 }
 
-type FormatOption int
+// Output is an enum of different "--output=..." types.
+type Output byte
 
 const (
-	None FormatOption = iota
-	Wide
-	JSON
-	YAML
+	OutputNone              Output = iota
+	OutputWide                     // -o wide
+	OutputJSON                     // -o json
+	OutputYAML                     // -o yaml
+	OutputCustomColumns            // -o custom-columns=...
+	OutputCustomColumnsFile        // -o custom-columns-file=...
+	OutputOther                    // e.g -o jsonpath=...
 )
+
+// ParseOutput parses a "--output ..." flag's type
+func ParseOutput(value string) Output {
+	// only consider value before "="
+	// e.g "--output custom-columns=..."
+	output, _, _ := strings.Cut(value, "=")
+	switch output {
+	case "wide":
+		return OutputWide
+	case "json":
+		return OutputJSON
+	case "yaml":
+		return OutputYAML
+	case "custom-columns":
+		return OutputCustomColumns
+	case "custom-columns-file":
+		return OutputCustomColumnsFile
+	default:
+		return OutputOther
+	}
+}
 
 type Subcommand string
 
@@ -149,76 +174,55 @@ func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 		if args[i] == "--" {
 			break
 		}
-		if strings.HasPrefix(args[i], "--output") {
-			switch args[i] {
-			case "--output=json":
-				info.FormatOption = JSON
-			case "--output=yaml":
-				info.FormatOption = YAML
-			case "--output=wide":
-				info.FormatOption = Wide
-			default:
-				if len(args)-1 > i {
-					formatOption := args[i+1]
-					switch formatOption {
-					case "json":
-						info.FormatOption = JSON
-					case "yaml":
-						info.FormatOption = YAML
-					case "wide":
-						info.FormatOption = Wide
-					default:
-						// custom-columns, go-template, etc are currently not supported
-					}
-				}
-			}
-		} else if strings.HasPrefix(args[i], "-o") {
-			switch args[i] {
-			// both '-ojson' and '-o=json' works
-			case "-ojson", "-o=json":
-				info.FormatOption = JSON
-			case "-oyaml", "-o=yaml":
-				info.FormatOption = YAML
-			case "-owide", "-o=wide":
-				info.FormatOption = Wide
-			default:
-				// otherwise, look for next arg because '-o json' also works
-				if len(args)-1 > i {
-					formatOption := args[i+1]
-					switch formatOption {
-					case "json":
-						info.FormatOption = JSON
-					case "yaml":
-						info.FormatOption = YAML
-					case "wide":
-						info.FormatOption = Wide
-					default:
-						// custom-columns, go-template, etc are currently not supported
-					}
-				}
-
-			}
-		} else if strings.HasPrefix(args[i], "--client") {
-			switch args[i] {
-			case "--client=true":
-				info.Client = true
-			case "--client=false":
-				info.Client = false
-			default:
-				info.Client = true
-			}
-		} else if args[i] == "--no-headers" {
+		flag, value := parseArgFlag(args[i:])
+		switch flag {
+		case "--output", "-o":
+			info.Output = ParseOutput(value)
+		case "--client":
+			info.Client = value != "false"
+		case "--no-headers":
 			info.NoHeader = true
-		} else if args[i] == "-w" || args[i] == "--watch" || args[i] == "--watch-only" {
+		case "-w", "--watch", "--watch-only":
 			info.Watch = true
-		} else if args[i] == "-f" || args[i] == "--follow" {
+		case "-f", "--follow":
 			info.Follow = true
-		} else if args[i] == "--recursive=true" || args[i] == "--recursive" {
-			info.Recursive = true
-		} else if args[i] == "-h" || args[i] == "--help" {
-			info.Help = true
+		case "--recursive":
+			info.Recursive = value != "false"
+		case "-h", "--help":
+			info.Help = value != "false"
 		}
 	}
+}
+
+func parseArgFlag(args []string) (flag, value string) {
+	if len(args) == 0 {
+		return "", ""
+	}
+	arg := args[0]
+	if strings.HasPrefix(arg, "--") {
+		if flag, value, ok := strings.Cut(arg, "="); ok {
+			// --output=wide
+			return flag, value
+		}
+		if len(args) > 1 {
+			// --output wide
+			return arg, args[1]
+		}
+	} else if strings.HasPrefix(arg, "-") && len(arg) >= 2 {
+		if flag, value, ok := strings.Cut(arg, "="); ok {
+			// -o=wide
+			return flag, value
+		}
+		if len(arg) > 2 {
+			// -owide
+			return arg[:2], arg[2:]
+		}
+		if len(arg) == 2 && len(args) > 1 {
+			// -o wide
+			return arg, args[1]
+		}
+	}
+	return arg, ""
 }
 
 func InspectSubcommandInfo(args []string, pluginHandler PluginHandler) *SubcommandInfo {

@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/kubecolor/kubecolor/testutil"
 )
 
 // func TestInspectSubcommandInfo(args []string) (*SubcommandInfo, bool) {
@@ -17,24 +18,24 @@ func TestInspectSubcommandInfo(t *testing.T) {
 		{"get pod", &SubcommandInfo{Subcommand: Get}},
 		{"get po", &SubcommandInfo{Subcommand: Get}},
 
-		{"get pod -o wide", &SubcommandInfo{Subcommand: Get, FormatOption: Wide}},
-		{"get pod -o=wide", &SubcommandInfo{Subcommand: Get, FormatOption: Wide}},
-		{"get pod -owide", &SubcommandInfo{Subcommand: Get, FormatOption: Wide}},
+		{"get pod -o wide", &SubcommandInfo{Subcommand: Get, Output: OutputWide}},
+		{"get pod -o=wide", &SubcommandInfo{Subcommand: Get, Output: OutputWide}},
+		{"get pod -owide", &SubcommandInfo{Subcommand: Get, Output: OutputWide}},
 
-		{"get pod -o json", &SubcommandInfo{Subcommand: Get, FormatOption: JSON}},
-		{"get pod -o=json", &SubcommandInfo{Subcommand: Get, FormatOption: JSON}},
-		{"get pod -ojson", &SubcommandInfo{Subcommand: Get, FormatOption: JSON}},
+		{"get pod -o json", &SubcommandInfo{Subcommand: Get, Output: OutputJSON}},
+		{"get pod -o=json", &SubcommandInfo{Subcommand: Get, Output: OutputJSON}},
+		{"get pod -ojson", &SubcommandInfo{Subcommand: Get, Output: OutputJSON}},
 
-		{"get pod -o yaml", &SubcommandInfo{Subcommand: Get, FormatOption: YAML}},
-		{"get pod -o=yaml", &SubcommandInfo{Subcommand: Get, FormatOption: YAML}},
-		{"get pod -oyaml", &SubcommandInfo{Subcommand: Get, FormatOption: YAML}},
+		{"get pod -o yaml", &SubcommandInfo{Subcommand: Get, Output: OutputYAML}},
+		{"get pod -o=yaml", &SubcommandInfo{Subcommand: Get, Output: OutputYAML}},
+		{"get pod -oyaml", &SubcommandInfo{Subcommand: Get, Output: OutputYAML}},
 
-		{"get pod --output json", &SubcommandInfo{Subcommand: Get, FormatOption: JSON}},
-		{"get pod --output=json", &SubcommandInfo{Subcommand: Get, FormatOption: JSON}},
-		{"get pod --output yaml", &SubcommandInfo{Subcommand: Get, FormatOption: YAML}},
-		{"get pod --output=yaml", &SubcommandInfo{Subcommand: Get, FormatOption: YAML}},
-		{"get pod --output wide", &SubcommandInfo{Subcommand: Get, FormatOption: Wide}},
-		{"get pod --output=wide", &SubcommandInfo{Subcommand: Get, FormatOption: Wide}},
+		{"get pod --output json", &SubcommandInfo{Subcommand: Get, Output: OutputJSON}},
+		{"get pod --output=json", &SubcommandInfo{Subcommand: Get, Output: OutputJSON}},
+		{"get pod --output yaml", &SubcommandInfo{Subcommand: Get, Output: OutputYAML}},
+		{"get pod --output=yaml", &SubcommandInfo{Subcommand: Get, Output: OutputYAML}},
+		{"get pod --output wide", &SubcommandInfo{Subcommand: Get, Output: OutputWide}},
+		{"get pod --output=wide", &SubcommandInfo{Subcommand: Get, Output: OutputWide}},
 
 		{"get pod --no-headers", &SubcommandInfo{Subcommand: Get, NoHeader: true}},
 		{"get pod -w", &SubcommandInfo{Subcommand: Get, Watch: true}},
@@ -54,8 +55,8 @@ func TestInspectSubcommandInfo(t *testing.T) {
 
 		{"version", &SubcommandInfo{Subcommand: Version}},
 		{"version --client", &SubcommandInfo{Subcommand: Version, Client: true}},
-		{"version -o json", &SubcommandInfo{Subcommand: Version, FormatOption: JSON}},
-		{"version -o yaml", &SubcommandInfo{Subcommand: Version, FormatOption: YAML}},
+		{"version -o json", &SubcommandInfo{Subcommand: Version, Output: OutputJSON}},
+		{"version -o yaml", &SubcommandInfo{Subcommand: Version, Output: OutputYAML}},
 
 		{"apply", &SubcommandInfo{Subcommand: Apply}},
 
@@ -78,15 +79,94 @@ func TestInspectSubcommandInfo(t *testing.T) {
 		"my_plugin-with-multiple-words": "/bin/my_plugin-with-multiple-words",
 	}}
 
-	for _, tt := range tests {
-		tt := tt
-		t.Run(tt.args, func(t *testing.T) {
+	for _, tc := range tests {
+		t.Run(tc.args, func(t *testing.T) {
 			t.Parallel()
-			s := InspectSubcommandInfo(strings.Fields(tt.args), pluginHandler)
+			s := InspectSubcommandInfo(strings.Fields(tc.args), pluginHandler)
 
-			if diff := cmp.Diff(s, tt.expected); diff != "" {
+			if diff := cmp.Diff(s, tc.expected); diff != "" {
 				t.Errorf(diff)
 			}
+		})
+	}
+}
+
+func TestParseArgFlag(t *testing.T) {
+	tests := []struct {
+		name      string
+		args      []string
+		wantFlag  string
+		wantValue string
+	}{
+		{
+			name:      "empty",
+			args:      nil,
+			wantFlag:  "",
+			wantValue: "",
+		},
+
+		{
+			name:      "single long",
+			args:      []string{"--output"},
+			wantFlag:  "--output",
+			wantValue: "",
+		},
+		{
+			name:      "long 2 args",
+			args:      []string{"--output", "wide"},
+			wantFlag:  "--output",
+			wantValue: "wide",
+		},
+		{
+			name:      "long equals",
+			args:      []string{"--output=wide"},
+			wantFlag:  "--output",
+			wantValue: "wide",
+		},
+		{
+			name:      "long double equals",
+			args:      []string{"--output=wide"},
+			wantFlag:  "--output",
+			wantValue: "wide",
+		},
+
+		{
+			name:      "single short",
+			args:      []string{"-o"},
+			wantFlag:  "-o",
+			wantValue: "",
+		},
+		{
+			name:      "short 2 args",
+			args:      []string{"-o", "wide"},
+			wantFlag:  "-o",
+			wantValue: "wide",
+		},
+		{
+			name:      "short smushed",
+			args:      []string{"-owide"},
+			wantFlag:  "-o",
+			wantValue: "wide",
+		},
+		{
+			name:      "short equals",
+			args:      []string{"-o=wide"},
+			wantFlag:  "-o",
+			wantValue: "wide",
+		},
+		{
+			name:      "short double equals",
+			args:      []string{"-o==wide"},
+			wantFlag:  "-o",
+			wantValue: "=wide",
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			flag, value := parseArgFlag(tc.args)
+			testutil.Equalf(t, tc.wantFlag, flag, "flag of %v", tc.args)
+			testutil.Equalf(t, tc.wantValue, value, "value of %v", tc.args)
 		})
 	}
 }
