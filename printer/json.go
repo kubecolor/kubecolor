@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/internal/stringutil"
 )
 
 type JSONPrinter struct {
@@ -17,14 +18,14 @@ func (p *JSONPrinter) Print(r io.Reader, w io.Writer) {
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
 		line := scanner.Text()
-		printLineAsJsonFormat(line, w, p.Theme)
+		p.printLineAsJsonFormat(line, w)
 	}
 }
 
-func printLineAsJsonFormat(line string, w io.Writer, theme *config.Theme) {
-	indentCnt := findIndent(line)
-	indent := toSpaces(indentCnt)
-	trimmedLine := strings.TrimLeft(line, " ")
+func (p *JSONPrinter) printLineAsJsonFormat(line string, w io.Writer) {
+	indentLen := findIndent(line)
+	indent := line[:indentLen]
+	trimmedLine := line[indentLen:]
 
 	if strings.HasPrefix(trimmedLine, "{") ||
 		strings.HasPrefix(trimmedLine, "}") ||
@@ -51,73 +52,55 @@ func printLineAsJsonFormat(line string, w io.Writer, theme *config.Theme) {
 	// "key": value,
 	// value,
 	// value
-	split := strings.SplitN(trimmedLine, ": ", 2) // if key contains ": " this works in a wrong way but it's unlikely to happen
 
-	if len(split) == 1 {
-		// when coming here, it will be a value in an array
-		fmt.Fprintf(w, "%s%s\n", indent, toColorizedJsonValue(split[0], theme))
+	if key, val, ok := strings.Cut(trimmedLine, ": "); ok {
+		fmt.Fprintf(w, "%s%s: %s\n", indent, p.colorizeJSONKey(key, indentLen, 4), p.colorizeJSONValue(val))
 		return
 	}
 
-	key := split[0]
-	val := split[1]
-
-	fmt.Fprintf(w, "%s%s: %s\n", indent, toColorizedJsonKey(key, indentCnt, 4, theme), toColorizedJsonValue(val, theme))
+	// when coming here, it will be a value in an array
+	fmt.Fprintf(w, "%s%s\n", indent, p.colorizeJSONValue(trimmedLine))
 }
 
-// toColorizedJsonKey returns colored json key
-func toColorizedJsonKey(key string, indentCnt, basicWidth int, theme *config.Theme) string {
-	hasColon := strings.HasSuffix(key, ":")
-	// remove colon and double quotations although they might not exist actually
-	key = strings.TrimRight(key, ":")
-	doubleQuoteTrimmed := strings.TrimRight(strings.TrimLeft(key, `"`), `"`)
+// colorizeJSONKey returns colored json key
+func (p *JSONPrinter) colorizeJSONKey(key string, indentCnt, basicWidth int) string {
+	key, hasColon := strings.CutSuffix(key, ":")
+	key, isDoubleQuoted := stringutil.CutSurrounding(key, '"')
+	color := ColorDataKey(indentCnt, basicWidth, p.Theme.Data.Key)
 
-	format := `"%s"`
-	if hasColon {
-		format += ":"
+	switch {
+	case hasColon && isDoubleQuoted:
+		return fmt.Sprintf(`"%s":`, color.Render(key))
+	case hasColon:
+		return fmt.Sprintf(`%s:`, color.Render(key))
+	case isDoubleQuoted:
+		return fmt.Sprintf(`"%s"`, color.Render(key))
+	default:
+		return color.Render(key)
 	}
-
-	return fmt.Sprintf(format, ColorDataKey(indentCnt, basicWidth, theme.Data.Key).Render(doubleQuoteTrimmed))
 }
 
-// toColorizedJsonValue returns colored json value.
+// colorizeJSONValue returns colored json value.
 // This function checks it trailing comma and double quotation exist
 // then colorize the given value considering them.
-func toColorizedJsonValue(value string, theme *config.Theme) string {
-	if value == "{" {
-		return "{"
+func (p *JSONPrinter) colorizeJSONValue(value string) string {
+	switch value {
+	case "{", "[", "{},", "{}":
+		return value
 	}
 
-	if value == "[" {
-		return "["
-	}
+	value, hasComma := strings.CutSuffix(value, ",")
+	unquotedValue, isDoubleQuoted := stringutil.CutSurrounding(value, '"')
+	color := ColorDataValue(value, p.Theme)
 
-	if value == "{}," {
-		return "{},"
-	}
-
-	if value == "{}" {
-		return "{}"
-	}
-
-	hasComma := strings.HasSuffix(value, ",")
-	// remove comma and double quotations although they might not exist actually
-	value = strings.TrimRight(value, ",")
-
-	isString := strings.HasPrefix(value, `"`) && strings.HasSuffix(value, `"`)
-	doubleQuoteTrimmedValue := strings.TrimRight(strings.TrimLeft(value, `"`), `"`)
-
-	var format string
 	switch {
-	case hasComma && isString:
-		format = `"%s",`
+	case hasComma && isDoubleQuoted:
+		return fmt.Sprintf(`"%s",`, color.Render(unquotedValue))
 	case hasComma:
-		format = `%s,`
-	case isString:
-		format = `"%s"`
+		return fmt.Sprintf(`%s,`, color.Render(value))
+	case isDoubleQuoted:
+		return fmt.Sprintf(`"%s"`, color.Render(unquotedValue))
 	default:
-		format = `%s`
+		return color.Render(value)
 	}
-
-	return fmt.Sprintf(format, ColorDataValue(value, theme).Render(doubleQuoteTrimmedValue))
 }

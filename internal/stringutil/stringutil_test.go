@@ -3,6 +3,8 @@ package stringutil
 import (
 	"testing"
 	"time"
+
+	"github.com/kubecolor/kubecolor/testutil"
 )
 
 func TestParseRatio_success(t *testing.T) {
@@ -242,6 +244,67 @@ func TestParseHumanDuration_fail(t *testing.T) {
 			if ok {
 				t.Fatalf("should fail\ninput: %q\nunexpected result: %s", tc.input, got)
 			}
+		})
+	}
+}
+
+func TestCutSurrounding(t *testing.T) {
+	tests := []struct {
+		name   string
+		input  string
+		quote  byte
+		want   string
+		wantOk bool
+	}{
+		{
+			name:   "empty",
+			input:  "",
+			quote:  '"',
+			want:   "",
+			wantOk: false,
+		},
+		{
+			name:   "only double quotes",
+			input:  `""`,
+			quote:  '"',
+			want:   "",
+			wantOk: true,
+		},
+		{
+			name:   "double quoted text",
+			input:  `"foo"`,
+			quote:  '"',
+			want:   "foo",
+			wantOk: true,
+		},
+		{
+			name:   "double quoted quote",
+			input:  `"""`,
+			quote:  '"',
+			want:   `"`,
+			wantOk: true,
+		},
+		{
+			name:   "single quoted text",
+			input:  `'foo'`,
+			quote:  '\'',
+			want:   "foo",
+			wantOk: true,
+		},
+		{
+			name:   "single quoted quote",
+			input:  `'''`,
+			quote:  '\'',
+			want:   "'",
+			wantOk: true,
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got, ok := CutSurrounding(tc.input, tc.quote)
+			testutil.Equal(t, tc.wantOk, ok, "ok return value")
+			testutil.Equal(t, tc.want, got, "inner return value")
 		})
 	}
 }

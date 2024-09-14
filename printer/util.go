@@ -12,7 +12,7 @@ import (
 
 // ColorDataKey returns a color based on the given indent.
 // When you want to change key color based on indent depth (e.g. Json, Yaml), use this function
-func ColorDataKey(indent int, basicIndentWidth int, colors color.Slice) color.Color {
+func ColorDataKey(indent, basicIndentWidth int, colors color.Slice) color.Color {
 	if len(colors) == 0 {
 		return color.Color{}
 	}
@@ -217,11 +217,6 @@ func colorSingleStatus(status string, theme *config.Theme) (string, bool) {
 		return theme.Status.Success.Render(status), true
 	}
 	return status, false
-}
-
-// toSpaces returns repeated spaces whose length is n.
-func toSpaces(n int) string {
-	return strings.Repeat(" ", n)
 }
 
 // findIndent returns a length of indent (spaces at left) in the given line

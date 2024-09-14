@@ -37,7 +37,7 @@ func IsDigit(r rune) bool {
 	return r >= '0' && r <= '9'
 }
 
-func CutNumber(s string) (num string, after string, found bool) {
+func CutNumber(s string) (num, after string, found bool) {
 	if s == "" {
 		return "", s, false
 	}
@@ -106,4 +106,15 @@ func SplitAndTrimSpace(s, sep string) []string {
 		split[i] = strings.TrimSpace(split[i])
 	}
 	return split
+}
+
+// CutSurrounding removes byte at beginning and at end around a string
+func CutSurrounding(line string, surrounding byte) (inner string, ok bool) {
+	if len(line) < 2 {
+		return line, false
+	}
+	if line[0] == surrounding && line[len(line)-1] == surrounding {
+		return line[1 : len(line)-1], true
+	}
+	return line, false
 }

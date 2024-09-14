@@ -9,10 +9,9 @@ import (
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
-func FuzzYAMLPrinter(f *testing.F) {
-	f.Add("key: value\n")
+func FuzzJSONPrinter(f *testing.F) {
+	f.Add("{\n  \"key\": \"value\"\n}\n")
 	f.Add("  foo = \"bar\"")
-	f.Add("key: |\n  foo = \"bar\"")
 	f.Fuzz(func(t *testing.T, input string) {
 		// treat CR as LF
 		input = strings.ReplaceAll(input, "\r", "\n")
@@ -21,7 +20,7 @@ func FuzzYAMLPrinter(f *testing.F) {
 			input += "\n"
 		}
 
-		printer := YAMLPrinter{
+		printer := JSONPrinter{
 			Theme: testconfig.NullTheme,
 		}
 		var buf bytes.Buffer
