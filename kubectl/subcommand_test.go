@@ -43,6 +43,16 @@ func TestInspectSubcommandInfo(t *testing.T) {
 		{"get pod -h", &SubcommandInfo{Subcommand: Get, Help: true}},
 		{"get pod --help", &SubcommandInfo{Subcommand: Get, Help: true}},
 
+		{"get pod --output custom-columns=NAME:.metadata.name", &SubcommandInfo{Subcommand: Get, Output: OutputCustomColumns}},
+		{"get pod --output=custom-columns=NAME:.metadata.name", &SubcommandInfo{Subcommand: Get, Output: OutputCustomColumns}},
+		{"get pod --output custom-columns-file=./foo.txt", &SubcommandInfo{Subcommand: Get, Output: OutputCustomColumnsFile}},
+		{"get pod --output=custom-columns-file=./foo.txt", &SubcommandInfo{Subcommand: Get, Output: OutputCustomColumnsFile}},
+
+		{"get pod --output name", &SubcommandInfo{Subcommand: Get, Output: OutputOther}},
+		{"get pod --output=name", &SubcommandInfo{Subcommand: Get, Output: OutputOther}},
+		{"get pod --output jsonpath=...", &SubcommandInfo{Subcommand: Get, Output: OutputOther}},
+		{"get pod --output=jsonpath=...", &SubcommandInfo{Subcommand: Get, Output: OutputOther}},
+
 		{"describe pod pod-aaa", &SubcommandInfo{Subcommand: Describe}},
 		{"top pod", &SubcommandInfo{Subcommand: Top}},
 		{"top pods", &SubcommandInfo{Subcommand: Top}},
@@ -69,6 +79,9 @@ func TestInspectSubcommandInfo(t *testing.T) {
 		{"my-plugin --hello with multiple words", &SubcommandInfo{Subcommand: Unknown, Help: true}},
 		// No plugin found, so assume it is help
 		{"my-non-existing-plugin", &SubcommandInfo{Subcommand: Unknown, Help: true}},
+
+		{"get pods -- --help", &SubcommandInfo{Subcommand: Get}},
+		{"-- --help", &SubcommandInfo{Subcommand: Unknown, Help: true}},
 
 		{"", &SubcommandInfo{Subcommand: Unknown, Help: true}},
 		{"--only-some-flag", &SubcommandInfo{Subcommand: Unknown, Help: true}},
