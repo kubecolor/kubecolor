@@ -127,3 +127,13 @@ func CutPrefixAny(s string, prefixes ...string) (prefix, after string, ok bool) 
 	}
 	return "", s, false
 }
+
+func Truncate(s string, maxLen int) string {
+	if maxLen <= 0 {
+		return ""
+	}
+	if len(s) > maxLen {
+		return s[:maxLen]
+	}
+	return s
+}
