@@ -90,10 +90,12 @@ func (vp *VersionYAMLInjectorPrinter) Print(r io.Reader, w io.Writer) {
 		return
 	}
 	output["kubecolorVersion"] = vp.KubecolorVersion
-	result, err := yaml.Marshal(output)
-	if err != nil {
+	var buf bytes.Buffer
+	enc := yaml.NewEncoder(&buf)
+	enc.SetIndent(2)
+	if err := enc.Encode(output); err != nil {
 		w.Write(b)
 		return
 	}
-	vp.YamlPrinter.Print(bytes.NewReader(result), w)
+	vp.YamlPrinter.Print(&buf, w)
 }
