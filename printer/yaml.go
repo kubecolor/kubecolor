@@ -4,15 +4,19 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"strconv"
 	"strings"
 
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/internal/stringutil"
 )
 
 // YAMLPrinter is used on "kubectl get -o yaml" output
 type YAMLPrinter struct {
-	Theme    *config.Theme
-	inString bool
+	Theme                 *config.Theme
+	inString              bool
+	multilineStringIndent int
+	nextLineSetsIndent    bool
 }
 
 // ensures it implements the interface
@@ -23,43 +27,77 @@ func (p *YAMLPrinter) Print(r io.Reader, w io.Writer) {
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
 		line := scanner.Text()
-		p.printLineAsYamlFormat(line, w)
+		p.printLineAsYAMLFormat(line, w)
 	}
 }
 
-func (p *YAMLPrinter) printLineAsYamlFormat(line string, w io.Writer) {
-	indentCnt := findIndent(line) // can be 0
-	indent := toSpaces(indentCnt) // so, can be empty
-	trimmedLine := strings.TrimLeft(line, " ")
+func (p *YAMLPrinter) printLineAsYAMLFormat(line string, w io.Writer) {
+	indentLen := findIndent(line) // can be 0
+	indent := line[:indentLen]
+	trimmedLine := line[indentLen:]
+
+	if p.nextLineSetsIndent {
+		p.multilineStringIndent = indentLen
+		p.nextLineSetsIndent = false
+	}
+
+	if p.multilineStringIndent > 0 {
+		if indentLen >= p.multilineStringIndent {
+			fmt.Fprintf(w, "%s%s\n", line[:p.multilineStringIndent], p.Theme.Data.String.Render(line[p.multilineStringIndent:]))
+			return
+		} else {
+			p.multilineStringIndent = 0
+		}
+	}
 
 	if p.inString {
 		// if inString is true, the line must be a part of a string which is broken into several lines
-		fmt.Fprintf(w, "%s%s\n", indent, p.toColorizedStringValue(trimmedLine))
+		fmt.Fprintf(w, "%s%s\n", indent, p.colorizeYAMLStringValue(trimmedLine))
 		p.inString = !p.isStringClosed(trimmedLine)
 		return
 	}
 
-	split := strings.SplitN(trimmedLine, ": ", 2) // assuming key does not contain ": " while value might do
+	if key, val, ok := strings.Cut(trimmedLine, ": "); ok {
+		// key: |
+		//   multiline string
 
-	if len(split) == 2 {
+		if prefix, after, ok := stringutil.CutPrefixAny(val, "|-", "|+", "|", ">-", ">+", ">"); ok {
+			if after == "" {
+				fmt.Fprintf(w, "%s%s: %s\n", indent, p.colorizeYAMLKey(key, indentLen, 2), prefix)
+				p.nextLineSetsIndent = true
+				return
+			}
+			if num, err := strconv.Atoi(after); err == nil {
+				fmt.Fprintf(w, "%s%s: %s%s\n", indent, p.colorizeYAMLKey(key, indentLen, 2), prefix, p.colorizeYAMLValue(after))
+				p.multilineStringIndent = indentLen + num
+				return
+			}
+		}
+
+		if quote, afterQuote, ok := stringutil.CutPrefixAny(val, "\"", "'"); ok && !strings.HasSuffix(afterQuote, quote) {
+			// key: "value
+			// (missing final quote)
+			fmt.Fprintf(w, "%s%s: %s%s\n", indent, p.colorizeYAMLKey(key, indentLen, 2), quote, p.Theme.Data.String.Render(afterQuote))
+			p.inString = true
+			return
+		}
+
 		// key: value
-		key, val := split[0], split[1]
-		fmt.Fprintf(w, "%s%s: %s\n", indent, p.toColorizedYamlKey(key, indentCnt, 2), p.toColorizedYamlValue(val))
-		p.inString = p.isStringOpenedButNotClosed(val)
+		fmt.Fprintf(w, "%s%s: %s\n", indent, p.colorizeYAMLKey(key, indentLen, 2), p.colorizeYAMLValue(val))
 		return
 	}
 
 	// when coming here, the line is just a "key:" or an element of an array
-	if strings.HasSuffix(split[0], ":") {
+	if strings.HasSuffix(trimmedLine, ":") {
 		// key:
-		fmt.Fprintf(w, "%s%s\n", indent, p.toColorizedYamlKey(split[0], indentCnt, 2))
+		fmt.Fprintf(w, "%s%s\n", indent, p.colorizeYAMLKey(trimmedLine, indentLen, 2))
 		return
 	}
 
-	fmt.Fprintf(w, "%s%s\n", indent, p.toColorizedYamlValue(split[0]))
+	fmt.Fprintf(w, "%s%s\n", indent, p.colorizeYAMLValue(trimmedLine))
 }
 
-func (p *YAMLPrinter) toColorizedYamlKey(key string, indentCnt, basicWidth int) string {
+func (p *YAMLPrinter) colorizeYAMLKey(key string, indentCnt, basicWidth int) string {
 	hasColon := strings.HasSuffix(key, ":")
 	hasLeadingDash := strings.HasPrefix(key, "- ")
 	key = strings.TrimSuffix(key, ":")
@@ -78,51 +116,38 @@ func (p *YAMLPrinter) toColorizedYamlKey(key string, indentCnt, basicWidth int) 
 	return fmt.Sprintf(format, ColorDataKey(indentCnt, basicWidth, p.Theme.Data.Key).Render(key))
 }
 
-func (p *YAMLPrinter) toColorizedYamlValue(value string) string {
-	if value == "{}" {
-		return "{}"
+func (p *YAMLPrinter) colorizeYAMLValue(value string) string {
+	switch value {
+	case "{}", "- {}", "[]", "- []":
+		return value
 	}
 
-	hasLeadingDash := strings.HasPrefix(value, "- ")
-	value = strings.TrimPrefix(value, "- ")
+	value, hasLeadingDash := strings.CutPrefix(value, "- ")
+	quote, unquotedValue, isDoubleQuoted := stringutil.CutSurroundingAny(value, "\"'")
+	color := ColorDataValue(value, p.Theme)
 
-	isDoubleQuoted := strings.HasPrefix(value, `"`) && strings.HasSuffix(value, `"`)
-	trimmedValue := strings.TrimSuffix(strings.TrimPrefix(value, `"`), `"`)
-
-	var format string
 	switch {
 	case hasLeadingDash && isDoubleQuoted:
-		format = `- "%s"`
+		return fmt.Sprintf(`- %c%s%c`, quote, color.Render(unquotedValue), quote)
 	case hasLeadingDash:
-		format = "- %s"
+		return fmt.Sprintf(`- %s`, color.Render(value))
 	case isDoubleQuoted:
-		format = `"%s"`
+		return fmt.Sprintf(`%c%s%c`, quote, color.Render(unquotedValue), quote)
 	default:
-		format = "%s"
+		return color.Render(value)
 	}
-
-	return fmt.Sprintf(format, ColorDataValue(value, p.Theme).Render(trimmedValue))
 }
 
-func (p *YAMLPrinter) toColorizedStringValue(value string) string {
-	isDoubleQuoted := strings.HasPrefix(value, `"`) && strings.HasSuffix(value, `"`)
-	trimmedValue := strings.TrimRight(strings.TrimLeft(value, `"`), `"`)
-
-	var format string
-	switch {
-	case isDoubleQuoted:
-		format = `"%s"`
-	default:
-		format = "%s"
+func (p *YAMLPrinter) colorizeYAMLStringValue(value string) string {
+	if before, ok := strings.CutSuffix(value, "\""); ok {
+		return fmt.Sprintf(`%s"`, p.Theme.Data.String.Render(before))
 	}
-	return fmt.Sprintf(format, p.Theme.Data.String.Render(trimmedValue))
+	if before, ok := strings.CutSuffix(value, "'"); ok {
+		return fmt.Sprintf(`%s'`, p.Theme.Data.String.Render(before))
+	}
+	return p.Theme.Data.String.Render(value)
 }
 
 func (p *YAMLPrinter) isStringClosed(line string) bool {
 	return strings.HasSuffix(line, "'") || strings.HasSuffix(line, `"`)
-}
-
-func (p *YAMLPrinter) isStringOpenedButNotClosed(line string) bool {
-	return (strings.HasPrefix(line, "'") && !strings.HasSuffix(line, "'")) ||
-		(strings.HasPrefix(line, `"`) && !strings.HasSuffix(line, `"`))
 }

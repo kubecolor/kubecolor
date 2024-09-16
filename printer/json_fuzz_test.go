@@ -1,16 +1,18 @@
-package logscan
+package printer
 
 import (
 	"bytes"
 	"strings"
 	"testing"
 
+	"github.com/kubecolor/kubecolor/config/testconfig"
 	"github.com/kubecolor/kubecolor/internal/stringutil"
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
-func FuzzScanner(f *testing.F) {
-	f.Add("INFO: hello world\n")
+func FuzzJSONPrinter(f *testing.F) {
+	f.Add("{\n  \"key\": \"value\"\n}\n")
+	f.Add("  foo = \"bar\"")
 	f.Fuzz(func(t *testing.T, input string) {
 		// treat CR as LF
 		input = strings.ReplaceAll(input, "\r", "\n")
@@ -21,12 +23,11 @@ func FuzzScanner(f *testing.F) {
 			input += "\n"
 		}
 
-		scanner := NewScanner(strings.NewReader(input))
-
-		var buf bytes.Buffer
-		for scanner.Scan() {
-			buf.WriteString(scanner.Token().Text)
+		printer := JSONPrinter{
+			Theme: testconfig.NullTheme,
 		}
+		var buf bytes.Buffer
+		printer.Print(strings.NewReader(input), &buf)
 
 		testutil.MustEqual(t, input, buf.String())
 	})

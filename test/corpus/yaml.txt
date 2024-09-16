@@ -1,13 +1,28 @@
 ================================================================================
-# empty
+# empty object
 $ kubectl get pod -o yaml
 ================================================================================
 
 {}
+key: {}
 
 --------------------------------------------------------------------------------
 
 {}
+[96mkey[0m: {}
+
+================================================================================
+# empty array
+$ kubectl get pod -o yaml
+================================================================================
+
+[]
+key: []
+
+--------------------------------------------------------------------------------
+
+[]
+[96mkey[0m: []
 
 ================================================================================
 # array of values
@@ -22,6 +37,7 @@ values:
   - 'single-quoted string'
   - 123
   - {}
+  - []
   - # comment
 
 --------------------------------------------------------------------------------
@@ -31,9 +47,10 @@ values:
   - [90;3mnull[0m
   - [93munquoted string[0m
   - "[93mquoted string[0m"
-  - [93m'single-quoted string'[0m
+  - '[93msingle-quoted string[0m'
   - [35m123[0m
-  - [93m{}[0m
+  - {}
+  - []
   - [93m# comment[0m
 
 ================================================================================
@@ -152,9 +169,113 @@ $ kubectl get pods -o yaml
   [36mkind[0m: [93mPod[0m
   [36mmetadata[0m:
     [96mannotations[0m:
-      [36mannotation.long.1[0m: [93m'Sometimes, you may want to specify what to command to use as kubectl.[0m
-        [93mFor example, when you want to use a versioned-kubectl kubectl.1.17, you can do that by an environment variable.'[0m
+      [36mannotation.long.1[0m: '[93mSometimes, you may want to specify what to command to use as kubectl.[0m
+        [93mFor example, when you want to use a versioned-kubectl kubectl.1.17, you can do that by an environment variable.[0m'
       [36mannotation.long.2[0m: [93mkubecolor colorizes your kubectl command output and does nothing else.[0m
         [93mkubecolor internally calls kubectl command and try to colorizes the output so you can use kubecolor as a[0m
         [93mcomplete alternative of kubectl[0m
       [36mannotation.short.1[0m: [93mnormal length annotation[0m
+
+================================================================================
+# quoted string
+$ kubectl get configmap test -oyaml
+================================================================================
+
+double: "v1"
+single: 'v1'
+doubleInDouble: "foo"bar"
+singleInSingle: 'foo'bar'
+multilineDoubleQuoted: "foo
+  bar
+  moo"
+multilineSingleQuoted: 'foo
+  bar
+  moo'
+
+--------------------------------------------------------------------------------
+
+[96mdouble[0m: "[93mv1[0m"
+[96msingle[0m: '[93mv1[0m'
+[96mdoubleInDouble[0m: "[93mfoo"bar[0m"
+[96msingleInSingle[0m: '[93mfoo'bar[0m'
+[96mmultilineDoubleQuoted[0m: "[93mfoo[0m
+  [93mbar[0m
+  [93mmoo[0m"
+[96mmultilineSingleQuoted[0m: '[93mfoo[0m
+  [93mbar[0m
+  [93mmoo[0m'
+
+================================================================================
+# does not swallow quote character (issue #179)
+$ kubectl get configmap test -oyaml
+================================================================================
+
+apiVersion: v1
+data:
+  data: |
+    foo = "bar"
+kind: ConfigMap
+metadata:
+  name: test
+  namespace: spire
+
+--------------------------------------------------------------------------------
+
+[96mapiVersion[0m: [93mv1[0m
+[96mdata[0m:
+  [36mdata[0m: |
+    [93mfoo = "bar"[0m
+[96mkind[0m: [93mConfigMap[0m
+[96mmetadata[0m:
+  [36mname[0m: [93mtest[0m
+  [36mnamespace[0m: [93mspire[0m
+
+================================================================================
+# multiline string
+$ kubectl get pod -o yaml
+================================================================================
+
+data: |
+  foo: bar
+  moo: doo
+moreData: |
+  roo: |
+    baz: 123
+    roomba: {}
+
+--------------------------------------------------------------------------------
+
+[96mdata[0m: |
+  [93mfoo: bar[0m
+  [93mmoo: doo[0m
+[96mmoreData[0m: |
+  [93mroo: |[0m
+  [93m  baz: 123[0m
+  [93m  roomba: {}[0m
+
+================================================================================
+# multiline string with indent indicator
+$ kubectl get pod -o yaml
+================================================================================
+
+withoutIndicator: |
+    foo: bar
+  foo: bar
+withIndicator: |2
+    foo: bar
+  foo: bar
+crazy: >+4
+    foo: bar
+  foo: bar
+
+--------------------------------------------------------------------------------
+
+[96mwithoutIndicator[0m: |
+    [93mfoo: bar[0m
+  [36mfoo[0m: [93mbar[0m
+[96mwithIndicator[0m: |[35m2[0m
+  [93m  foo: bar[0m
+  [93mfoo: bar[0m
+[96mcrazy[0m: >+[35m4[0m
+    [93mfoo: bar[0m
+  [36mfoo[0m: [93mbar[0m

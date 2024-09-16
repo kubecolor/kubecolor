@@ -8,11 +8,11 @@ import (
 
 // ParseRatio attempts to parse a ratio delimited by slash, such as "1/2".
 func ParseRatio(s string) (left, right string, ok bool) {
-	if strings.Count(s, "/") != 1 {
-		return "", "", false
-	}
 	left, right, ok = strings.Cut(s, "/")
 	if !ok {
+		return "", "", false
+	}
+	if strings.ContainsRune(right, '/') {
 		return "", "", false
 	}
 	if left == "" || right == "" {
@@ -37,7 +37,7 @@ func IsDigit(r rune) bool {
 	return r >= '0' && r <= '9'
 }
 
-func CutNumber(s string) (num string, after string, found bool) {
+func CutNumber(s string) (num, after string, found bool) {
 	if s == "" {
 		return "", s, false
 	}
@@ -106,4 +106,46 @@ func SplitAndTrimSpace(s, sep string) []string {
 		split[i] = strings.TrimSpace(split[i])
 	}
 	return split
+}
+
+// CutSurrounding removes byte at beginning and at end around a string
+func CutSurrounding(line string, surrounding byte) (inner string, ok bool) {
+	if len(line) < 2 {
+		return line, false
+	}
+	if line[0] == surrounding && line[len(line)-1] == surrounding {
+		return line[1 : len(line)-1], true
+	}
+	return line, false
+}
+
+// CutSurroundingAny removes any of the cutset bytes at beginning and at end around a string
+//
+// NOTE: This function does not support multi-byte runes (e.g emojies), and is deemed undefined behavior.
+func CutSurroundingAny(line, cutset string) (quote byte, inner string, ok bool) {
+	for _, r := range cutset {
+		if inner, ok := CutSurrounding(line, byte(r)); ok {
+			return byte(r), inner, true
+		}
+	}
+	return 0, line, false
+}
+
+func CutPrefixAny(s string, prefixes ...string) (prefix, after string, ok bool) {
+	for _, prefix := range prefixes {
+		if after, ok := strings.CutPrefix(s, prefix); ok {
+			return prefix, after, true
+		}
+	}
+	return "", s, false
+}
+
+func Truncate(s string, maxLen int) string {
+	if maxLen <= 0 {
+		return ""
+	}
+	if len(s) > maxLen {
+		return s[:maxLen]
+	}
+	return s
 }

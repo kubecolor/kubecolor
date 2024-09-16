@@ -7,12 +7,6 @@ import (
 	"github.com/kubecolor/kubecolor/config/testconfig"
 )
 
-func Test_toSpaces(t *testing.T) {
-	if toSpaces(3) != "   " {
-		t.Fatalf("fail")
-	}
-}
-
 func Test_getColorByKeyIndent(t *testing.T) {
 	tests := []struct {
 		name             string

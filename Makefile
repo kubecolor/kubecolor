@@ -1,7 +1,7 @@
 GO_FILES=$(wildcard *.go */*.go */*/*.go */*/*/*.go)
 
 # Can be overriden by for example: make test GO_TEST_CMD='gotestsum --'
-GO_TEST_CMD=go test
+GO_TEST_CMD=$(if $(shell command -v gotestsum),gotestsum --,go test)
 
 help: ## Print usage
 	@sed -r '/^(\w[^:]+):[^#]*##/!d;s/^([^:]+):[^#]*##\s*(.*)/\x1b[36m\1\t:\x1b[m \2/g' ${MAKEFILE_LIST} | column -t -s $$'\t'
@@ -12,11 +12,11 @@ build: ## build package
 .PHONY: build
 
 test: ## run tests
-	${GO_TEST_CMD} -v -race ./...
+	${GO_TEST_CMD} -race ./...
 .PHONY: test
 
 testcover: ## run tests and generate coverage report
-	${GO_TEST_CMD} -v -coverprofile=coverage.txt -coverpkg=./... ./... && \
+	${GO_TEST_CMD} -coverprofile=coverage.txt -coverpkg=./... ./...
 	go tool cover -html=coverage.txt -o cover.html
 .PHONY: testcover
 
