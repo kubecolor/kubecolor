@@ -36,3 +36,115 @@ $ kubectl version
 --------------------------------------------------------------------------------
 
 
+
+================================================================================
+# output yaml
+$ kubectl version -o yaml
+================================================================================
+
+clientVersion:
+    buildDate: "1980-01-01T00:00:00Z"
+    compiler: gc
+    gitCommit: 9edcffcde5595e8a5b1a35f88c421764e575afce
+    gitTreeState: archive
+    gitVersion: v1.31.0
+    goVersion: go1.23.1
+    major: "1"
+    minor: "31"
+    platform: linux/amd64
+kustomizeVersion: v5.4.2
+serverVersion:
+    buildDate: "2024-08-14T19:42:59Z"
+    compiler: gc
+    gitCommit: 234bc63696ad15dcf62584b6ba48671bf0f25fb6
+    gitTreeState: clean
+    gitVersion: v1.29.8
+    goVersion: go1.22.5
+    major: "1"
+    minor: "29"
+    platform: linux/amd64
+
+--------------------------------------------------------------------------------
+
+[96mclientVersion[0m:
+    [96mbuildDate[0m: "[93m1980-01-01T00:00:00Z[0m"
+    [96mcompiler[0m: [93mgc[0m
+    [96mgitCommit[0m: [93m9edcffcde5595e8a5b1a35f88c421764e575afce[0m
+    [96mgitTreeState[0m: [93marchive[0m
+    [96mgitVersion[0m: [93mv1.31.0[0m
+    [96mgoVersion[0m: [93mgo1.23.1[0m
+    [96mmajor[0m: "[93m1[0m"
+    [96mminor[0m: "[93m31[0m"
+    [96mplatform[0m: [93mlinux/amd64[0m
+[96mkubecolorVersion[0m: [93mdev[0m
+[96mkustomizeVersion[0m: [93mv5.4.2[0m
+[96mserverVersion[0m:
+    [96mbuildDate[0m: "[93m2024-08-14T19:42:59Z[0m"
+    [96mcompiler[0m: [93mgc[0m
+    [96mgitCommit[0m: [93m234bc63696ad15dcf62584b6ba48671bf0f25fb6[0m
+    [96mgitTreeState[0m: [93mclean[0m
+    [96mgitVersion[0m: [93mv1.29.8[0m
+    [96mgoVersion[0m: [93mgo1.22.5[0m
+    [96mmajor[0m: "[93m1[0m"
+    [96mminor[0m: "[93m29[0m"
+    [96mplatform[0m: [93mlinux/amd64[0m
+
+================================================================================
+# output json
+$ kubectl version -o json
+================================================================================
+
+{
+  "clientVersion": {
+    "buildDate": "1980-01-01T00:00:00Z",
+    "compiler": "gc",
+    "gitCommit": "9edcffcde5595e8a5b1a35f88c421764e575afce",
+    "gitTreeState": "archive",
+    "gitVersion": "v1.31.0",
+    "goVersion": "go1.23.1",
+    "major": "1",
+    "minor": "31",
+    "platform": "linux/amd64"
+  },
+  "kustomizeVersion": "v5.4.2",
+  "serverVersion": {
+    "buildDate": "2024-08-14T19:42:59Z",
+    "compiler": "gc",
+    "gitCommit": "234bc63696ad15dcf62584b6ba48671bf0f25fb6",
+    "gitTreeState": "clean",
+    "gitVersion": "v1.29.8",
+    "goVersion": "go1.22.5",
+    "major": "1",
+    "minor": "29",
+    "platform": "linux/amd64"
+  }
+}
+
+--------------------------------------------------------------------------------
+
+{
+  "[96mclientVersion[0m": {
+    "[36mbuildDate[0m": "[93m1980-01-01T00:00:00Z[0m",
+    "[36mcompiler[0m": "[93mgc[0m",
+    "[36mgitCommit[0m": "[93m9edcffcde5595e8a5b1a35f88c421764e575afce[0m",
+    "[36mgitTreeState[0m": "[93marchive[0m",
+    "[36mgitVersion[0m": "[93mv1.31.0[0m",
+    "[36mgoVersion[0m": "[93mgo1.23.1[0m",
+    "[36mmajor[0m": "[93m1[0m",
+    "[36mminor[0m": "[93m31[0m",
+    "[36mplatform[0m": "[93mlinux/amd64[0m"
+  },
+  "[96mkubecolorVersion[0m": "[93mdev[0m",
+  "[96mkustomizeVersion[0m": "[93mv5.4.2[0m",
+  "[96mserverVersion[0m": {
+    "[36mbuildDate[0m": "[93m2024-08-14T19:42:59Z[0m",
+    "[36mcompiler[0m": "[93mgc[0m",
+    "[36mgitCommit[0m": "[93m234bc63696ad15dcf62584b6ba48671bf0f25fb6[0m",
+    "[36mgitTreeState[0m": "[93mclean[0m",
+    "[36mgitVersion[0m": "[93mv1.29.8[0m",
+    "[36mgoVersion[0m": "[93mgo1.22.5[0m",
+    "[36mmajor[0m": "[93m1[0m",
+    "[36mminor[0m": "[93m29[0m",
+    "[36mplatform[0m": "[93mlinux/amd64[0m"
+  }
+}
