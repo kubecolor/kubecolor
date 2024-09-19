@@ -148,3 +148,22 @@ $ kubectl logs traefik-6fd95988f4-4fq74
 {[96m"level"[0m:[32m"info"[0m,[36m"providerName"[0m:[93m"kubernetes"[0m,[96m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[36m"message"[0m:[93m"ingress label selector is: \"\""[0m}
 {[96m"level"[0m:[32m"info"[0m,[36m"providerName"[0m:[93m"kubernetes"[0m,[96m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[36m"message"[0m:[93m"Creating in-cluster Provider client"[0m}
 {[96m"level"[0m:[32m"info"[0m,[36m"time"[0m:[90;3m"2024-08-03T22:00:34Z"[0m,[96m"message"[0m:[93m"Starting provider *acme.ChallengeTLSALPN"[0m}
+
+================================================================================
+# charmbracelet logs
+$ kubectl logs my-pod-6fd95988f4-4fq74
+================================================================================
+
+DEBU server.distmemorystore.olric: Failed to find 172.23.109.6:3320 in the cluster: member not found
+INFO server.distmemorystore.olric: Routing table has been pushed by 172.23.157.8:3320
+WARN Recieved kill signal. Stopping... signal=terminated timeout=10s
+DEBU server: Closing store before shutting down API server
+ERRO server.distmemorystore.olric: Failed to acquire semaphore: context canceled
+
+--------------------------------------------------------------------------------
+
+[90;3mDEBU[0m server.distmemorystore.olric: Failed to find 172.23.109.6:3320 in the cluster: member not found
+[32mINFO[0m server.distmemorystore.olric: Routing table has been pushed by 172.23.157.8:3320
+[33mWARN[0m Recieved kill signal. Stopping... [96msignal[0m=[93mterminated[0m [36mtimeout[0m=10s
+[90;3mDEBU[0m server: Closing store before shutting down API server
+[31mERRO[0m server.distmemorystore.olric: Failed to acquire semaphore: context canceled
