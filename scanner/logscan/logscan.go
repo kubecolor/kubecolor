@@ -231,9 +231,9 @@ func severityKindFromName(severity string) Kind {
 		"Trace", "Trc",
 		"trace", "trc":
 		return KindSeverityTrace
-	case "DEBUG", "DBG",
-		"Debug", "Dbg",
-		"debug", "dbg":
+	case "DEBUGGING", "DEBUG", "DEBU", "DBG",
+		"Debug", "Debu", "Dbg",
+		"debug", "debu", "dbg":
 		return KindSeverityDebug
 	case "INFORMATION", "INFO", "INF",
 		"Information", "Info", "Inf",
