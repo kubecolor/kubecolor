@@ -14,7 +14,7 @@ require (
 	github.com/spf13/viper v1.19.0
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e
 	gopkg.in/yaml.v3 v3.0.1
-	k8s.io/apimachinery v0.31.1
+	k8s.io/apimachinery v0.31.2
 )
 
 require (
