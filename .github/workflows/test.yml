@@ -36,7 +36,7 @@ jobs:
         run: make testcover GO_TEST_CMD='gotestsum --'
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         if: matrix.os == 'ubuntu-latest'
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # required
