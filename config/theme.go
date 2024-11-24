@@ -25,6 +25,9 @@ func NewBaseTheme(preset Preset) *Theme {
 				Warning:   color.MustParse("yellow"),
 				Danger:    color.MustParse("red"),
 				Muted:     color.MustParse("gray:italic"),
+				Added:     color.MustParse("green"),
+				Removed:   color.MustParse("red"),
+				Unchanged: color.MustParse("gray"),
 			},
 			Table: ThemeTable{
 				Header: color.MustParse("bold"),
@@ -46,6 +49,9 @@ func NewBaseTheme(preset Preset) *Theme {
 				Warning:   color.MustParse("yellow"),
 				Danger:    color.MustParse("red"),
 				Muted:     color.MustParse("gray:italic"),
+				Added:     color.MustParse("green"),
+				Removed:   color.MustParse("red"),
+				Unchanged: color.MustParse("gray"),
 			},
 			Table: ThemeTable{
 				Header: color.MustParse("bold"),
@@ -68,6 +74,9 @@ func NewBaseTheme(preset Preset) *Theme {
 				Warning:   color.MustParse("#feb927:italic"),      // yellow
 				Danger:    color.MustParse("fg=white:bg=#c2270a"), // red background
 				Muted:     color.MustParse("#2ee5ae:italic"),      // white-ish
+				Added:     color.MustParse("#6afd6a"),             // green
+				Removed:   color.MustParse("#c2270a"),             // red
+				Unchanged: color.MustParse("#2ee5ae"),             // white-ish
 			},
 			Data: ThemeData{
 				String: color.MustParse("#2aabee"),
@@ -90,6 +99,9 @@ func NewBaseTheme(preset Preset) *Theme {
 				Warning:   color.MustParse("#feb927:italic"),
 				Danger:    color.MustParse("fg=black:bg=#c2270a"),
 				Muted:     color.MustParse("#2ee5ae:italic"),
+				Added:     color.MustParse("#6afd6a"),
+				Removed:   color.MustParse("#c2270a"),
+				Unchanged: color.MustParse("#2ee5ae"),
 			},
 			Data: ThemeData{
 				String: color.MustParse("#2aabee"),
@@ -113,6 +125,9 @@ func NewBaseTheme(preset Preset) *Theme {
 				Warning:   color.MustParse("#feb927:italic"),
 				Danger:    color.MustParse("fg=white:bg=#c2270a"),
 				Muted:     color.MustParse("#2ee5ae"),
+				Added:     color.MustParse("#6afd6a"),
+				Removed:   color.MustParse("#c2270a"),
+				Unchanged: color.MustParse("#2ee5ae"),
 			},
 			Data: ThemeData{
 				String: color.MustParse("#2aabee"),
@@ -135,6 +150,9 @@ func NewBaseTheme(preset Preset) *Theme {
 				Warning:   color.MustParse("#feb927:italic"),
 				Danger:    color.MustParse("fg=black:bg=#c2270a"),
 				Muted:     color.MustParse("#2ee5ae:italic"),
+				Added:     color.MustParse("#6afd6a"),
+				Removed:   color.MustParse("#c2270a"),
+				Unchanged: color.MustParse("#2ee5ae"),
 			},
 			Data: ThemeData{
 				String: color.MustParse("#2aabee"),
@@ -158,6 +176,9 @@ func NewBaseTheme(preset Preset) *Theme {
 				Warning:   color.MustParse("#feb927:italic"),
 				Danger:    color.MustParse("fg=white:bg=#c2270a"),
 				Muted:     color.MustParse("#2ee5ae"),
+				Added:     color.MustParse("#6afd6a"),
+				Removed:   color.MustParse("#c2270a"),
+				Unchanged: color.MustParse("#2ee5ae"),
 			},
 			Data: ThemeData{
 				String: color.MustParse("#2aabee"),
@@ -178,8 +199,11 @@ func NewBaseTheme(preset Preset) *Theme {
 				Secondary: color.MustParse("#2aabee"),
 				Success:   color.MustParse("#6afd6a:bold"),
 				Warning:   color.MustParse("#feb927:italic"),
-				Danger:    color.MustParse("fg=black:bg=#c2270a"),
+				Danger:    color.MustParse("fg=black:bg=green"),
 				Muted:     color.MustParse("#2ee5ae:italic"),
+				Added:     color.MustParse("#6afd6a"),
+				Removed:   color.MustParse("#c2270a"),
+				Unchanged: color.MustParse("#2ee5ae"),
 			},
 			Data: ThemeData{
 				String: color.MustParse("#2aabee"),
@@ -203,6 +227,9 @@ func NewBaseTheme(preset Preset) *Theme {
 				Warning:   color.MustParse("yellow"),
 				Danger:    color.MustParse("red"),
 				Muted:     color.MustParse("yellow"),
+				Added:     color.MustParse("green"),
+				Removed:   color.MustParse("red"),
+				Unchanged: color.MustParse("white"),
 			},
 			Options: ThemeOptions{
 				Flag: color.MustParse("yellow"),
@@ -221,6 +248,9 @@ func NewBaseTheme(preset Preset) *Theme {
 				Warning:   color.MustParse("yellow"),
 				Danger:    color.MustParse("red"),
 				Muted:     color.MustParse("yellow"),
+				Added:     color.MustParse("green"),
+				Removed:   color.MustParse("red"),
+				Unchanged: color.MustParse("black"),
 			},
 			Options: ThemeOptions{
 				Flag: color.MustParse("yellow"),
@@ -240,6 +270,9 @@ func NewBaseTheme(preset Preset) *Theme {
 				Warning:   color.MustParse("yellow"),
 				Danger:    color.MustParse("red"),
 				Muted:     color.MustParse("yellow"),
+				Added:     color.MustParse("green"),
+				Removed:   color.MustParse("red"),
+				Unchanged: color.MustParse("white"),
 			},
 			Data: ThemeData{
 				String: color.MustParse("cyan"),
@@ -267,6 +300,9 @@ func NewBaseTheme(preset Preset) *Theme {
 				Warning:   color.MustParse("yellow"),
 				Danger:    color.MustParse("red"),
 				Muted:     color.MustParse("yellow"),
+				Added:     color.MustParse("green"),
+				Removed:   color.MustParse("red"),
+				Unchanged: color.MustParse("black"),
 			},
 			Data: ThemeData{
 				String: color.MustParse("blue"),
@@ -330,13 +366,16 @@ func (t *Theme) ComputeCache() {
 // These fields should never be referenced in the printers.
 // Instead, they should use the more specific fields, such as [ThemeApply.Created]
 type ThemeBase struct {
+	Added     color.Color // general color for when things are added in
+	Danger    color.Color // general color for when things are bad
 	Info      color.Color // general color for when things are informational
+	Muted     color.Color // general color for when things are less relevant
 	Primary   color.Color // general color for when things are focus
+	Removed   color.Color // general color for when things are removed
 	Secondary color.Color // general color for when things are secondary focus
 	Success   color.Color // general color for when things are good
+	Unchanged color.Color // general color for when things are unchanged
 	Warning   color.Color // general color for when things are wrong
-	Danger    color.Color // general color for when things are bad
-	Muted     color.Color // general color for when things are less relevant
 
 	Key color.Slice `defaultFromMany:"theme.base.secondary"` // general color for keys
 }
@@ -493,9 +532,9 @@ type ThemeExplain struct {
 
 // ThemeDiff holds colors for the "kubectl diff" output.
 type ThemeDiff struct {
-	Added     color.Color `defaultFrom:"theme.base.success"` // used on added lines
-	Removed   color.Color `defaultFrom:"theme.base.danger"`  // used on removed lines
-	Unchanged color.Color `defaultFrom:"theme.base.muted"`   // used on unchanged lines
+	Added     color.Color `defaultFrom:"theme.base.added"`     // used on added lines
+	Removed   color.Color `defaultFrom:"theme.base.removed"`   // used on removed lines
+	Unchanged color.Color `defaultFrom:"theme.base.unchanged"` // used on unchanged lines
 }
 
 // ThemeOptions holds colors for the "kubectl options" output.
