@@ -129,6 +129,9 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 			Theme: p.Theme,
 		}
 
+	case kubectl.Diff:
+		return &DiffPrinter{Theme: p.Theme}
+
 	case
 		kubectl.Apply,
 		kubectl.Create,

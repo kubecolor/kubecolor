@@ -316,6 +316,7 @@ type Theme struct {
 	Version  ThemeVersion  // used in "kubectl version"
 	Help     ThemeHelp     // used in "kubectl --help"
 	Logs     ThemeLogs     // used in "kubectl logs"
+	Diff     ThemeDiff     // used in "kubectl diff"
 }
 
 func (t *Theme) ComputeCache() {
@@ -488,6 +489,13 @@ type ThemeDrain struct {
 type ThemeExplain struct {
 	Key      color.Slice `defaultFrom:"theme.base.key"`    // used on keys. The multiple colors are cycled based on indentation.
 	Required color.Color `defaultFrom:"theme.base.danger"` // used on the trailing "-required-" string
+}
+
+// ThemeDiff holds colors for the "kubectl diff" output.
+type ThemeDiff struct {
+	Added     color.Color `defaultFrom:"theme.base.success"` // used on added lines
+	Removed   color.Color `defaultFrom:"theme.base.danger"`  // used on removed lines
+	Unchanged color.Color `defaultFrom:"theme.base.muted"`   // used on unchanged lines
 }
 
 // ThemeOptions holds colors for the "kubectl options" output.
