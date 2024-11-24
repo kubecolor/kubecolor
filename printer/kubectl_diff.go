@@ -26,9 +26,9 @@ func (p *DiffPrinter) Print(r io.Reader, w io.Writer) {
 	}
 }
 
-func (p *DiffPrinter) parseLine(line string) interface{} {
+func (p *DiffPrinter) parseLine(line string) string {
 	theme := p.Theme.Diff
-	switch true {
+	switch {
 	case strings.HasPrefix(line, "+"):
 		return theme.Added.Render(line)
 	case strings.HasPrefix(line, "-"):
