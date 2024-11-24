@@ -1,0 +1,32 @@
+================================================================================
+# only lines added
+$ kubectl diff -f deployment.yaml
+================================================================================
+
+diff -u -N /tmp/LIVE-2359820259/apps.v1.Deployment.kubecolor.nginx /tmp/MERGED-2636529718/apps.v1.Deployment.kubecolor.nginx
+
+--------------------------------------------------------------------------------
+
+[90;3mdiff -u -N /tmp/LIVE-2359820259/apps.v1.Deployment.kubecolor.nginx /tmp/MERGED-2636529718/apps.v1.Deployment.kubecolor.nginx[0m
+
+================================================================================
+# only lines removed
+$ kubectl diff -f deployment.yaml
+================================================================================
+
+diff -u -N /tmp/LIVE-3365154021/apps.v1.Deployment.kubecolor.nginx /tmp/MERGED-3382466440/apps.v1.Deployment.kubecolor.nginx
+
+--------------------------------------------------------------------------------
+
+[90;3mdiff -u -N /tmp/LIVE-3365154021/apps.v1.Deployment.kubecolor.nginx /tmp/MERGED-3382466440/apps.v1.Deployment.kubecolor.nginx[0m
+
+================================================================================
+# lines added and removed
+$ kubectl diff -f deployment.yaml
+================================================================================
+
+diff -u -N /tmp/LIVE-2028647702/apps.v1.Deployment.kubecolor.nginx /tmp/MERGED-30391469/apps.v1.Deployment.kubecolor.nginx
+
+--------------------------------------------------------------------------------
+
+[90;3mdiff -u -N /tmp/LIVE-2028647702/apps.v1.Deployment.kubecolor.nginx /tmp/MERGED-30391469/apps.v1.Deployment.kubecolor.nginx[0m
