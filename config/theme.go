@@ -199,7 +199,7 @@ func NewBaseTheme(preset Preset) *Theme {
 				Secondary: color.MustParse("#2aabee"),
 				Success:   color.MustParse("#6afd6a:bold"),
 				Warning:   color.MustParse("#feb927:italic"),
-				Danger:    color.MustParse("fg=black:bg=green"),
+				Danger:    color.MustParse("fg=black:bg=#c2270a"),
 				Muted:     color.MustParse("#2ee5ae:italic"),
 				Added:     color.MustParse("#6afd6a"),
 				Removed:   color.MustParse("#c2270a"),
@@ -229,7 +229,7 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("yellow"),
 				Added:     color.MustParse("green"),
 				Removed:   color.MustParse("red"),
-				Unchanged: color.MustParse("white"),
+				Unchanged: color.MustParse("yellow"),
 			},
 			Options: ThemeOptions{
 				Flag: color.MustParse("yellow"),
@@ -250,7 +250,7 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("yellow"),
 				Added:     color.MustParse("green"),
 				Removed:   color.MustParse("red"),
-				Unchanged: color.MustParse("black"),
+				Unchanged: color.MustParse("yellow"),
 			},
 			Options: ThemeOptions{
 				Flag: color.MustParse("yellow"),
@@ -272,7 +272,7 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("yellow"),
 				Added:     color.MustParse("green"),
 				Removed:   color.MustParse("red"),
-				Unchanged: color.MustParse("white"),
+				Unchanged: color.MustParse("yellow"),
 			},
 			Data: ThemeData{
 				String: color.MustParse("cyan"),
@@ -302,7 +302,7 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("yellow"),
 				Added:     color.MustParse("green"),
 				Removed:   color.MustParse("red"),
-				Unchanged: color.MustParse("black"),
+				Unchanged: color.MustParse("yellow"),
 			},
 			Data: ThemeData{
 				String: color.MustParse("blue"),
