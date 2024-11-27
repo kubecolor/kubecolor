@@ -37,6 +37,15 @@ func IsDigit(r rune) bool {
 	return r >= '0' && r <= '9'
 }
 
+func IsAllSameRune(s string, r rune) bool {
+	for _, elem := range s {
+		if elem != r {
+			return false
+		}
+	}
+	return true
+}
+
 func CutNumber(s string) (num, after string, found bool) {
 	if s == "" {
 		return "", s, false

@@ -5,10 +5,11 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"regexp"
 	"slices"
 	"strings"
 	"unicode/utf8"
+
+	"github.com/kubecolor/kubecolor/internal/stringutil"
 )
 
 func NewTestScanner(reader io.Reader) *TestScanner {
@@ -43,7 +44,7 @@ func (s *TestScanner) Err() error {
 func (s *TestScanner) scanErr() error {
 	if s.first {
 		s.first = false
-		if _, err := scanLinesUntilCharLine(s.scanner, "="); errors.Is(err, io.ErrUnexpectedEOF) {
+		if _, err := scanLinesUntilCharLine(s.scanner, '='); errors.Is(err, io.ErrUnexpectedEOF) {
 			// no tests found
 			s.done = true
 			return nil
@@ -70,7 +71,7 @@ func (s *TestScanner) scanErr() error {
 }
 
 func (s *TestScanner) scanHeader() error {
-	headerLines, err := scanLinesUntilCharLine(s.scanner, "=")
+	headerLines, err := scanLinesUntilCharLine(s.scanner, '=')
 	if err != nil {
 		return fmt.Errorf("scan until closing === line: %w", err)
 	}
@@ -129,7 +130,7 @@ func (s *TestScanner) readHeaderLine(line string) error {
 }
 
 func (s *TestScanner) scanInput() error {
-	inputLines, err := scanLinesUntilCharLine(s.scanner, "-")
+	inputLines, err := scanLinesUntilCharLine(s.scanner, '-')
 	if err != nil {
 		return fmt.Errorf("scan test input: %w", err)
 	}
@@ -138,7 +139,7 @@ func (s *TestScanner) scanInput() error {
 }
 
 func (s *TestScanner) scanOutput() error {
-	outputLines, err := scanLinesUntilCharLine(s.scanner, "=")
+	outputLines, err := scanLinesUntilCharLine(s.scanner, '=')
 	if err != nil && !errors.Is(err, io.ErrUnexpectedEOF) {
 		return fmt.Errorf("scan test output: %w", err)
 	}
@@ -146,15 +147,13 @@ func (s *TestScanner) scanOutput() error {
 	return nil
 }
 
-func scanLinesUntilCharLine(scanner *bufio.Scanner, char string) ([]string, error) {
+func scanLinesUntilCharLine(scanner *bufio.Scanner, char rune) ([]string, error) {
 	var lines []string
-	minNumberOfChars := 3
 
 	for scanner.Scan() {
 		line := strings.Trim(scanner.Text(), "\r")
 
-		lineFilter := regexp.MustCompile(fmt.Sprintf(`^%s{%d,}$`, regexp.QuoteMeta(char), minNumberOfChars))
-		if lineFilter.MatchString(line) {
+		if len(line) > 3 && stringutil.IsAllSameRune(line, char) {
 			return lines, nil
 		}
 
