@@ -29,15 +29,9 @@ func (p *DiffPrinter) Print(r io.Reader, w io.Writer) {
 func (p *DiffPrinter) parseLine(line string) string {
 	theme := p.Theme.Diff
 	switch {
-	// All only lines, that starts with a single "+"and anything afterward
-	// e.g. + foo
-	// not allowed: ++ foo
-	case regexp.MustCompile(`^\+[^+]+.*$`).MatchString(line):
+	case strings.HasPrefix(line, "+") && !strings.HasPrefix(line, "+++"):
 		return theme.Added.Render(line)
-	// All only lines, that starts with a single "-" and anything afterward
-	// e.g. - foo
-	// not allowed: -- foo
-	case regexp.MustCompile(`^-[^-]+.*$`).MatchString(line):
+	case strings.HasPrefix(line, "-") && !strings.HasPrefix(line, "---"):
 		return theme.Removed.Render(line)
 	default:
 		return theme.Unchanged.Render(line)
