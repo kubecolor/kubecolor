@@ -169,6 +169,10 @@
         "logs": {
           "$ref": "#/$defs/themeLogs",
           "description": "used in \"kubectl logs\""
+        },
+        "diff": {
+          "$ref": "#/$defs/themeDiff",
+          "description": "used in \"kubectl diff\""
         }
       },
       "additionalProperties": false,
@@ -204,9 +208,17 @@
     },
     "themeBase": {
       "properties": {
+        "danger": {
+          "$ref": "#/$defs/color",
+          "description": "general color for when things are bad"
+        },
         "info": {
           "$ref": "#/$defs/color",
           "description": "general color for when things are informational"
+        },
+        "muted": {
+          "$ref": "#/$defs/color",
+          "description": "general color for when things are less relevant"
         },
         "primary": {
           "$ref": "#/$defs/color",
@@ -223,14 +235,6 @@
         "warning": {
           "$ref": "#/$defs/color",
           "description": "general color for when things are wrong"
-        },
-        "danger": {
-          "$ref": "#/$defs/color",
-          "description": "general color for when things are bad"
-        },
-        "muted": {
-          "$ref": "#/$defs/color",
-          "description": "general color for when things are less relevant"
         },
         "key": {
           "$ref": "#/$defs/colorSlice",
@@ -353,6 +357,25 @@
       "additionalProperties": false,
       "type": "object",
       "description": "ThemeApply holds colors for the \"kubectl apply\" output."
+    },
+    "themeDiff": {
+      "properties": {
+        "added": {
+          "$ref": "#/$defs/color",
+          "description": "used on added lines"
+        },
+        "removed": {
+          "$ref": "#/$defs/color",
+          "description": "used on removed lines"
+        },
+        "unchanged": {
+          "$ref": "#/$defs/color",
+          "description": "used on unchanged lines"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeDiff holds colors for the \"kubectl diff\" output."
     },
     "themeDrain": {
       "properties": {

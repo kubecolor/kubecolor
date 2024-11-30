@@ -89,10 +89,13 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 					return column
 				},
 			)
+
 		case kubectl.OutputJSON:
 			return &JSONPrinter{Theme: p.Theme}
+
 		case kubectl.OutputYAML:
 			return &YAMLPrinter{Theme: p.Theme}
+
 		default:
 			return &LogsPrinter{Theme: p.Theme}
 		}
@@ -112,6 +115,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 			Theme:     p.Theme,
 			Recursive: p.Recursive,
 		}
+
 	case kubectl.Version:
 		switch {
 		case p.SubcommandInfo.Output == kubectl.OutputJSON:
@@ -124,10 +128,14 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 				KubecolorVersion: p.KubecolorVersion,
 			}
 		}
+
 	case kubectl.Options:
 		return &OptionsPrinter{
 			Theme: p.Theme,
 		}
+
+	case kubectl.Diff:
+		return &DiffPrinter{Theme: p.Theme}
 
 	case
 		kubectl.Apply,
@@ -156,6 +164,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 					"unchanged":  p.Theme.Apply.Unchanged,
 				},
 			}
+
 		case kubectl.Create:
 			return &VerbPrinter{
 				DryRunColor:   p.Theme.Create.DryRun,
@@ -164,6 +173,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 					"created": p.Theme.Create.Created,
 				},
 			}
+
 		case kubectl.Delete:
 			return &VerbPrinter{
 				DryRunColor:   p.Theme.Delete.DryRun,
@@ -172,6 +182,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 					"deleted": p.Theme.Delete.Deleted,
 				},
 			}
+
 		case kubectl.Expose:
 			return &VerbPrinter{
 				DryRunColor:   p.Theme.Expose.DryRun,
@@ -180,6 +191,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 					"exposed": p.Theme.Expose.Exposed,
 				},
 			}
+
 		case kubectl.Patch:
 			return &VerbPrinter{
 				DryRunColor:   p.Theme.Patch.DryRun,
@@ -188,6 +200,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 					"patched": p.Theme.Patch.Patched,
 				},
 			}
+
 		case kubectl.Scale:
 			return &VerbPrinter{
 				DryRunColor:   p.Theme.Scale.DryRun,
@@ -196,6 +209,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 					"scaled": p.Theme.Scale.Scaled,
 				},
 			}
+
 		case kubectl.Rollout:
 			return &VerbPrinter{
 				DryRunColor:   p.Theme.Rollout.DryRun,
@@ -207,6 +221,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 					"restarted":   p.Theme.Rollout.Restarted,
 				},
 			}
+
 		case kubectl.Drain:
 			return &VerbPrinter{
 				DryRunColor:   p.Theme.Drain.DryRun,
@@ -220,6 +235,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 					"evicting pod": p.Theme.Drain.EvictingPod,
 				},
 			}
+
 		case kubectl.Uncordon:
 			return &VerbPrinter{
 				DryRunColor:   p.Theme.Uncordon.DryRun,

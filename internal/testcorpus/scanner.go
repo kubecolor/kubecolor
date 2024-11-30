@@ -8,6 +8,8 @@ import (
 	"slices"
 	"strings"
 	"unicode/utf8"
+
+	"github.com/kubecolor/kubecolor/internal/stringutil"
 )
 
 func NewTestScanner(reader io.Reader) *TestScanner {
@@ -42,7 +44,7 @@ func (s *TestScanner) Err() error {
 func (s *TestScanner) scanErr() error {
 	if s.first {
 		s.first = false
-		if _, err := scanLinesUntil(s.scanner, "==="); errors.Is(err, io.ErrUnexpectedEOF) {
+		if _, err := scanLinesUntilCharLine(s.scanner, '='); errors.Is(err, io.ErrUnexpectedEOF) {
 			// no tests found
 			s.done = true
 			return nil
@@ -69,7 +71,7 @@ func (s *TestScanner) scanErr() error {
 }
 
 func (s *TestScanner) scanHeader() error {
-	headerLines, err := scanLinesUntil(s.scanner, "===")
+	headerLines, err := scanLinesUntilCharLine(s.scanner, '=')
 	if err != nil {
 		return fmt.Errorf("scan until closing === line: %w", err)
 	}
@@ -128,7 +130,7 @@ func (s *TestScanner) readHeaderLine(line string) error {
 }
 
 func (s *TestScanner) scanInput() error {
-	inputLines, err := scanLinesUntil(s.scanner, "---")
+	inputLines, err := scanLinesUntilCharLine(s.scanner, '-')
 	if err != nil {
 		return fmt.Errorf("scan test input: %w", err)
 	}
@@ -137,7 +139,7 @@ func (s *TestScanner) scanInput() error {
 }
 
 func (s *TestScanner) scanOutput() error {
-	outputLines, err := scanLinesUntil(s.scanner, "===")
+	outputLines, err := scanLinesUntilCharLine(s.scanner, '=')
 	if err != nil && !errors.Is(err, io.ErrUnexpectedEOF) {
 		return fmt.Errorf("scan test output: %w", err)
 	}
@@ -145,13 +147,13 @@ func (s *TestScanner) scanOutput() error {
 	return nil
 }
 
-func scanLinesUntil(scanner *bufio.Scanner, linePrefix string) ([]string, error) {
+func scanLinesUntilCharLine(scanner *bufio.Scanner, char rune) ([]string, error) {
 	var lines []string
 
 	for scanner.Scan() {
 		line := strings.Trim(scanner.Text(), "\r")
 
-		if strings.HasPrefix(line, linePrefix) {
+		if len(line) > 3 && stringutil.IsAllSameRune(line, char) {
 			return lines, nil
 		}
 
