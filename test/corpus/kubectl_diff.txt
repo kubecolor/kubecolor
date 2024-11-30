@@ -27,27 +27,27 @@ diff -u -N /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/LIVE-2513085857/apps
 
 --------------------------------------------------------------------------------
 
-[90mdiff -u -N /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/LIVE-2513085857/apps.v1.Deployment.default.test /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/MERGED-1097005791/apps.v1.Deployment.default.test[0m
-[90m--- /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/LIVE-2513085857/apps.v1.Deployment.default.test    2024-11-24 22:17:35[0m
-[90m+++ /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/MERGED-1097005791/apps.v1.Deployment.default.test  2024-11-24 22:17:35[0m
-[90m@@ -6,7 +6,7 @@[0m
-[90m     kubectl.kubernetes.io/last-applied-configuration: |[0m
-[90m       {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"test"},"name":"test","namespace":"default"},"spec":{"replicas":3,"selector":{"matchLabels":{"app":"test"}},"strategy":{},"template":{"metadata":{"labels":{"app":"test"}},"spec":{"containers":[{"image":"httpd","name":"httpd","resources":{}}]}}}}[0m
-[90m   creationTimestamp: "2024-11-24T20:26:26Z"[0m
+[90;3mdiff -u -N /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/LIVE-2513085857/apps.v1.Deployment.default.test /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/MERGED-1097005791/apps.v1.Deployment.default.test[0m
+[90;3m--- /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/LIVE-2513085857/apps.v1.Deployment.default.test    2024-11-24 22:17:35[0m
+[90;3m+++ /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/MERGED-1097005791/apps.v1.Deployment.default.test  2024-11-24 22:17:35[0m
+[90;3m@@ -6,7 +6,7 @@[0m
+[90;3m     kubectl.kubernetes.io/last-applied-configuration: |[0m
+[90;3m       {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"test"},"name":"test","namespace":"default"},"spec":{"replicas":3,"selector":{"matchLabels":{"app":"test"}},"strategy":{},"template":{"metadata":{"labels":{"app":"test"}},"spec":{"containers":[{"image":"httpd","name":"httpd","resources":{}}]}}}}[0m
+[90;3m   creationTimestamp: "2024-11-24T20:26:26Z"[0m
 [31m-  generation: 2[0m
 [32m+  generation: 3[0m
-[90m   labels:[0m
-[90m     app: test[0m
-[90m   name: test[0m
-[90m@@ -32,7 +32,7 @@[0m
-[90m         app: test[0m
-[90m     spec:[0m
-[90m       containers:[0m
+[90;3m   labels:[0m
+[90;3m     app: test[0m
+[90;3m   name: test[0m
+[90;3m@@ -32,7 +32,7 @@[0m
+[90;3m         app: test[0m
+[90;3m     spec:[0m
+[90;3m       containers:[0m
 [31m-      - image: httpd[0m
 [32m+      - image: httpd:latest[0m
-[90m         imagePullPolicy: Always[0m
-[90m         name: httpd[0m
-[90m         resources: {}[0m
+[90;3m         imagePullPolicy: Always[0m
+[90;3m         name: httpd[0m
+[90;3m         resources: {}[0m
 
 ================================================================================
 # contains only added lines
@@ -102,10 +102,10 @@ diff -u -N /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/LIVE-359469156/apps.
 
 --------------------------------------------------------------------------------
 
-[90mdiff -u -N /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/LIVE-359469156/apps.v1.Deployment.default.add /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/MERGED-1017119628/apps.v1.Deployment.default.add[0m
-[90m--- /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/LIVE-359469156/apps.v1.Deployment.default.add      2024-11-24 22:21:44[0m
-[90m+++ /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/MERGED-1017119628/apps.v1.Deployment.default.add   2024-11-24 22:21:44[0m
-[90m@@ -0,0 +1,41 @@[0m
+[90;3mdiff -u -N /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/LIVE-359469156/apps.v1.Deployment.default.add /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/MERGED-1017119628/apps.v1.Deployment.default.add[0m
+[90;3m--- /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/LIVE-359469156/apps.v1.Deployment.default.add      2024-11-24 22:21:44[0m
+[90;3m+++ /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/MERGED-1017119628/apps.v1.Deployment.default.add   2024-11-24 22:21:44[0m
+[90;3m@@ -0,0 +1,41 @@[0m
 [32m+apiVersion: apps/v1[0m
 [32m+kind: Deployment[0m
 [32m+metadata:[0m
@@ -177,24 +177,24 @@ diff -u -N /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/LIVE-480322945/apps.
 
 --------------------------------------------------------------------------------
 
-[90mdiff -u -N /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/LIVE-480322945/apps.v1.Deployment.default.test /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/MERGED-1809976568/apps.v1.Deployment.default.test[0m
-[90m--- /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/LIVE-480322945/apps.v1.Deployment.default.test     2024-11-24 21:28:39[0m
-[90m+++ /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/MERGED-1809976568/apps.v1.Deployment.default.test  2024-11-24 21:28:39[0m
-[90m@@ -6,7 +6,7 @@[0m
-[90m     kubectl.kubernetes.io/last-applied-configuration: |[0m
-[90m       {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"test"},"name":"test","namespace":"default"},"spec":{"replicas":3,"selector":{"matchLabels":{"app":"test"}},"strategy":{},"template":{"metadata":{"labels":{"app":"test"}},"spec":{"containers":[{"env":[{"name":"MY_ENV","value":"my_value"}],"image":"httpd","name":"httpd","resources":{}}]}}}}[0m
-[90m   creationTimestamp: "2024-11-24T20:26:26Z"[0m
+[90;3mdiff -u -N /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/LIVE-480322945/apps.v1.Deployment.default.test /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/MERGED-1809976568/apps.v1.Deployment.default.test[0m
+[90;3m--- /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/LIVE-480322945/apps.v1.Deployment.default.test     2024-11-24 21:28:39[0m
+[90;3m+++ /var/folders/rn/v1vhmlnx0h94rzcdk2rwqy_r0000gn/T/MERGED-1809976568/apps.v1.Deployment.default.test  2024-11-24 21:28:39[0m
+[90;3m@@ -6,7 +6,7 @@[0m
+[90;3m     kubectl.kubernetes.io/last-applied-configuration: |[0m
+[90;3m       {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"test"},"name":"test","namespace":"default"},"spec":{"replicas":3,"selector":{"matchLabels":{"app":"test"}},"strategy":{},"template":{"metadata":{"labels":{"app":"test"}},"spec":{"containers":[{"env":[{"name":"MY_ENV","value":"my_value"}],"image":"httpd","name":"httpd","resources":{}}]}}}}[0m
+[90;3m   creationTimestamp: "2024-11-24T20:26:26Z"[0m
 [31m-  generation: 1[0m
 [32m+  generation: 2[0m
-[90m   labels:[0m
-[90m     app: test[0m
-[90m   name: test[0m
-[90m@@ -34,7 +34,7 @@[0m
-[90m       containers:[0m
-[90m       - env:[0m
-[90m         - name: MY_ENV[0m
+[90;3m   labels:[0m
+[90;3m     app: test[0m
+[90;3m   name: test[0m
+[90;3m@@ -34,7 +34,7 @@[0m
+[90;3m       containers:[0m
+[90;3m       - env:[0m
+[90;3m         - name: MY_ENV[0m
 [31m-          value: my_value[0m
 [32m+          value: test[0m
-[90m         image: httpd[0m
-[90m         imagePullPolicy: Always[0m
-[90m         name: httpd[0m
+[90;3m         image: httpd[0m
+[90;3m         imagePullPolicy: Always[0m
+[90;3m         name: httpd[0m

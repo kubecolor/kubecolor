@@ -3,9 +3,10 @@ package printer
 import (
 	"bufio"
 	"fmt"
-	"github.com/kubecolor/kubecolor/config"
 	"io"
-	"regexp"
+	"strings"
+
+	"github.com/kubecolor/kubecolor/config"
 )
 
 type DiffPrinter struct {
