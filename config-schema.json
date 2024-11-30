@@ -208,10 +208,6 @@
     },
     "themeBase": {
       "properties": {
-        "added": {
-          "$ref": "#/$defs/color",
-          "description": "general color for when things are added in"
-        },
         "danger": {
           "$ref": "#/$defs/color",
           "description": "general color for when things are bad"
@@ -228,10 +224,6 @@
           "$ref": "#/$defs/color",
           "description": "general color for when things are focus"
         },
-        "removed": {
-          "$ref": "#/$defs/color",
-          "description": "general color for when things are removed"
-        },
         "secondary": {
           "$ref": "#/$defs/color",
           "description": "general color for when things are secondary focus"
@@ -239,10 +231,6 @@
         "success": {
           "$ref": "#/$defs/color",
           "description": "general color for when things are good"
-        },
-        "unchanged": {
-          "$ref": "#/$defs/color",
-          "description": "general color for when things are unchanged"
         },
         "warning": {
           "$ref": "#/$defs/color",
