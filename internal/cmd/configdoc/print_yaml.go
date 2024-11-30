@@ -16,8 +16,7 @@ type YAMLPrinter struct {
 
 func (p *YAMLPrinter) Print() error {
 	fmt.Println("theme:")
-	p.printCategory(p.categories[0], []string{"theme"})
-	return nil
+	return p.printCategory(p.categories[0], []string{"theme"})
 }
 
 func (p *YAMLPrinter) printCategory(category Category, path []string) error {
@@ -25,9 +24,9 @@ func (p *YAMLPrinter) printCategory(category Category, path []string) error {
 	for _, field := range category.Fields {
 		newPath := append(path, field.Name)
 		switch field.Type {
-		case "Color":
+		case "color.Color":
 			p.printField(tw, field, "color", newPath)
-		case "ColorSlice":
+		case "color.Slice":
 			p.printField(tw, field, "color[]", newPath)
 		default:
 			sub, ok := p.findCategory(field.Type)
