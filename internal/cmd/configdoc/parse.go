@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"go/ast"
 	"go/parser"
 	"go/token"
@@ -69,7 +70,7 @@ func visitGenDecl(decl *ast.GenDecl) (Category, bool) {
 			continue
 		}
 		name := field.Names[0].Name
-		typ, ok := field.Type.(*ast.Ident)
+		typeName, ok := getFieldName(field.Type)
 		if !ok {
 			continue
 		}
@@ -87,7 +88,7 @@ func visitGenDecl(decl *ast.GenDecl) (Category, bool) {
 
 		category.Fields = append(category.Fields, Field{
 			Name:    name,
-			Type:    typ.Name,
+			Type:    typeName,
 			Comment: strings.Join(comments, "\n"),
 
 			DefaultFrom:     tag.Get("defaultFrom"),
@@ -95,6 +96,21 @@ func visitGenDecl(decl *ast.GenDecl) (Category, bool) {
 		})
 	}
 	return category, true
+}
+
+func getFieldName(expr ast.Expr) (string, bool) {
+	switch fieldType := expr.(type) {
+	case *ast.Ident:
+		return fieldType.Name, true
+	case *ast.SelectorExpr:
+		xName, ok := getFieldName(fieldType.X)
+		if !ok {
+			return "", false
+		}
+		return fmt.Sprintf("%s.%s", xName, fieldType.Sel.Name), true
+	default:
+		return "", false
+	}
 }
 
 func trimComment(s string) string {

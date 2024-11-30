@@ -19,7 +19,9 @@ func (p *MarkdownPrinter) Print() error {
 	p.printColumns("Environment variable", "Type", "Description", "Dark theme")
 	p.printColumns("--------------------", "----", "-----------", "----------")
 
-	p.printCategory(p.categories[0], []string{"theme"})
+	if err := p.printCategory(p.categories[0], []string{"theme"}); err != nil {
+		return err
+	}
 
 	p.writer.Flush()
 	return nil
@@ -29,9 +31,9 @@ func (p *MarkdownPrinter) printCategory(category Category, path []string) error 
 	for i, field := range category.Fields {
 		newPath := append(path, field.Name)
 		switch field.Type {
-		case "Color":
+		case "color.Color":
 			p.printField(field, "color", newPath)
-		case "ColorSlice":
+		case "color.Slice":
 			p.printField(field, "color[]", newPath)
 		default:
 			sub, ok := p.findCategory(field.Type)
