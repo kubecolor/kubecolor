@@ -1,4 +1,4 @@
-FROM docker.io/library/golang:1.22.7 AS build
+FROM docker.io/library/golang:1.23.4 AS build
 
 WORKDIR /go/src/kubecolor
 COPY go.mod go.sum .
