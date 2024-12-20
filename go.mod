@@ -1,7 +1,6 @@
 module github.com/kubecolor/kubecolor
 
 go 1.22.7
-toolchain go1.23.4
 
 require (
 	github.com/MakeNowJust/heredoc v1.0.0
