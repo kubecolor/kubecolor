@@ -159,9 +159,10 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 				DryRunColor:   p.Theme.Apply.DryRun,
 				FallbackColor: p.Theme.Apply.Fallback,
 				VerbColor: map[string]color.Color{
-					"created":    p.Theme.Apply.Created,
-					"configured": p.Theme.Apply.Configured,
-					"unchanged":  p.Theme.Apply.Unchanged,
+					"created":            p.Theme.Apply.Created,
+					"configured":         p.Theme.Apply.Configured,
+					"unchanged":          p.Theme.Apply.Unchanged,
+					"serverside-applied": p.Theme.Apply.Serverside,
 				},
 			}
 

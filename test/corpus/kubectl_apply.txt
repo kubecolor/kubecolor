@@ -137,3 +137,19 @@ $ kubectl apply -f deploy.yaml -o json
         }
     }
 }
+
+================================================================================
+$ kubectl apply -f traefik.yml --server-side --force-conflicts
+================================================================================
+
+customresourcedefinition.apiextensions.k8s.io/gatewayclasses.gateway.networking.k8s.io serverside-applied
+customresourcedefinition.apiextensions.k8s.io/gateways.gateway.networking.k8s.io serverside-applied
+customresourcedefinition.apiextensions.k8s.io/grpcroutes.gateway.networking.k8s.io serverside-applied
+customresourcedefinition.apiextensions.k8s.io/httproutes.gateway.networking.k8s.io serverside-applied
+
+--------------------------------------------------------------------------------
+
+customresourcedefinition.apiextensions.k8s.io/gatewayclasses.gateway.networking.k8s.io [33mserverside-applied[0m
+customresourcedefinition.apiextensions.k8s.io/gateways.gateway.networking.k8s.io [33mserverside-applied[0m
+customresourcedefinition.apiextensions.k8s.io/grpcroutes.gateway.networking.k8s.io [33mserverside-applied[0m
+customresourcedefinition.apiextensions.k8s.io/httproutes.gateway.networking.k8s.io [33mserverside-applied[0m

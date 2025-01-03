@@ -410,6 +410,7 @@ type ThemeApply struct {
 	Created    color.Color `defaultFrom:"theme.base.success"` // used on "deployment.apps/foo created"
 	Configured color.Color `defaultFrom:"theme.base.warning"` // used on "deployment.apps/bar configured"
 	Unchanged  color.Color `defaultFrom:"theme.base.primary"` // used on "deployment.apps/quux unchanged"
+	Serverside color.Color `defaultFrom:"theme.base.warning"` // used on "deployment.apps/quux serverside-applied"
 
 	DryRun   color.Color `defaultFrom:"theme.base.secondary"` // used on "(dry run)" and "(server dry run)"
 	Fallback color.Color `defaultFrom:"theme.base.success"`   // used when outputs unknown format
