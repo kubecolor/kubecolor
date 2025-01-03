@@ -193,6 +193,10 @@
           "$ref": "#/$defs/color",
           "description": "used on \"deployment.apps/quux unchanged\""
         },
+        "serverside": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"deployment.apps/quux serverside-applied\""
+        },
         "dryRun": {
           "$ref": "#/$defs/color",
           "description": "used on \"(dry run)\" and \"(server dry run)\""
