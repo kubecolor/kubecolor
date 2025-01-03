@@ -5,6 +5,7 @@ import (
 	"cmp"
 	"errors"
 	"fmt"
+	"log/slog"
 	"os"
 	"os/exec"
 	"slices"
@@ -22,13 +23,13 @@ type InjectCompletionsOptions struct {
 func InjectKubecolorCompletions(rawArgs []string, cfg *Config, sci *kubectl.SubcommandInfo) error {
 	toComplete := rawArgs[len(rawArgs)-1]
 
-	// We can't feed kubecolor flags to kubectl, as then it would error.
+	// We can't feed kubecolor flags to kubectl, as then it sometimes errors.
 	// So we hack around it by using the args slice without the kubecolor flags.
 	// But then we must translate `kubectl __complete --plain`
 	// so it's sent to kubectl as `kubectl __complete -`
 	kubectlArgs := cfg.ArgsPassthrough
-	if len(kubectlArgs) == 1 && strings.HasPrefix(toComplete, "-") {
-		kubectlArgs = append(kubectlArgs, "-")
+	if toComplete != kubectlArgs[len(kubectlArgs)-1] {
+		kubectlArgs = append(kubectlArgs, "--")
 	}
 
 	s, err := runKubectlComplete(kubectlArgs, cfg)
@@ -47,11 +48,7 @@ func InjectKubecolorCompletions(rawArgs []string, cfg *Config, sci *kubectl.Subc
 	if directive != 0 {
 		output.Directive = directive
 	}
-
-	// We have to do additional filtering here because of our hack above
-	output.Args = slices.DeleteFunc(output.Args, func(arg CompleteArg) bool {
-		return !strings.HasPrefix(arg.Name, toComplete)
-	})
+	output.Args = filterCompleteResults(output.Args, toComplete)
 
 	slices.SortFunc(args, func(a, b CompleteArg) int {
 		return cmp.Compare(a.Name, b.Name)
@@ -69,6 +66,24 @@ func InjectKubecolorCompletions(rawArgs []string, cfg *Config, sci *kubectl.Subc
 	fmt.Printf(":%d\n", output.Directive)
 
 	return nil
+}
+
+func filterCompleteResults(args []CompleteArg, toComplete string) []CompleteArg {
+	// We have to do additional filtering here as when we get
+	// `__complete --plain` args and then run `__complete --` (because of our hack above)
+	// we only show results that starts with `--plain`
+	prefixFilter := toComplete
+
+	// Special case: when toComplete is a flag value, such as
+	// in `-n=` or `--namespace=`
+	_, after, hasEqualSign := strings.Cut(toComplete, "=")
+	if strings.HasPrefix(toComplete, "-") && hasEqualSign {
+		prefixFilter = after
+	}
+
+	return slices.DeleteFunc(args, func(arg CompleteArg) bool {
+		return !strings.HasPrefix(arg.Name, prefixFilter)
+	})
 }
 
 func GetFlagCompletions(flags FlagSet, toComplete string) ([]CompleteArg, CompleteDirective) {
@@ -155,5 +170,7 @@ func runKubectlComplete(rawArgs []string, cfg *Config) (string, error) {
 		return "", err
 	}
 
-	return stdout.String(), nil
+	output := stdout.String()
+	slog.Debug("Ran __complete command", "exe", cfg.Kubectl, "args", rawArgs, "output", output)
+	return output, nil
 }
