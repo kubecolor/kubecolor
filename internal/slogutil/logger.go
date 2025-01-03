@@ -3,10 +3,13 @@ package slogutil
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"log/slog"
 	"os"
+	"reflect"
+	"strings"
 	"unicode"
 
 	"github.com/kubecolor/kubecolor/config/color"
@@ -98,20 +101,51 @@ func (h *SlogHandler) Handle(_ context.Context, record slog.Record) error {
 		buf.WriteString(colorMessage.Render(record.Message))
 	}
 
+	prevWasMultiline := false
 	record.Attrs(func(attr slog.Attr) bool {
-		buf.WriteByte(' ')
+		if prevWasMultiline {
+			buf.WriteString("  ")
+		} else {
+			buf.WriteByte(' ')
+		}
 		switch attr.Value.Kind() {
 		case slog.KindDuration:
 			fmt.Fprintf(&buf, "%s=%s",
 				colorKey.Render(attr.Key),
 				colorValue.Render(duration.HumanDuration(attr.Value.Duration())))
+		case slog.KindAny:
+			value := attr.Value.Any()
+			_, isStringer := value.(fmt.Stringer)
+			if !isStringer && reflect.ValueOf(value).Kind() == reflect.Slice {
+				b, err := json.Marshal(value)
+				if err == nil {
+					fmt.Fprintf(&buf, "%s=%s", colorKey.Render(attr.Key), colorValue.Render(string(b)))
+					break
+				}
+			}
+			fallthrough
 		default:
 			s := attr.Value.String()
+			if strings.Contains(s, "\n") {
+				fmt.Fprintf(&buf, "\n  %s=\n", colorKey.Render(attr.Key))
+				for _, line := range strings.Split(strings.TrimSuffix(s, "\n"), "\n") {
+					fmt.Fprintf(&buf, "    │ %s\n", colorValue.Render(line))
+				}
+
+				prevWasMultiline = true
+				return true
+			}
+
 			if needsQuoting(s) {
 				s = fmt.Sprintf("%q", s)
 			}
-			fmt.Fprintf(&buf, "%s=%s", colorKey.Render(attr.Key), colorValue.Render(s))
+
+			fmt.Fprintf(&buf,
+				"%s=%s",
+				colorKey.Render(attr.Key),
+				colorValue.Render(s))
 		}
+		prevWasMultiline = false
 		return true
 	})
 
@@ -133,6 +167,8 @@ func needsQuoting(s string) bool {
 		switch r {
 		case ' ', '"', '\'':
 			return true
+		case '\n':
+			continue
 		}
 		if !unicode.IsPrint(r) {
 			return true
