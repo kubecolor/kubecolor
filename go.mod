@@ -8,13 +8,13 @@ require (
 	github.com/gookit/color v1.5.4
 	github.com/hexops/gotextdiff v1.0.3
 	github.com/invopop/jsonschema v0.13.0
-	github.com/mattn/go-colorable v0.1.13
+	github.com/mattn/go-colorable v0.1.14
 	github.com/mattn/go-isatty v0.0.20
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/spf13/viper v1.19.0
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e
 	gopkg.in/yaml.v3 v3.0.1
-	k8s.io/apimachinery v0.32.0
+	k8s.io/apimachinery v0.32.1
 )
 
 require (
@@ -35,7 +35,7 @@ require (
 	github.com/wk8/go-ordered-map/v2 v2.1.8 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/exp v0.0.0-20240404231335-c0f41cb1a7a0 // indirect
-	golang.org/x/sys v0.26.0 // indirect
+	golang.org/x/sys v0.29.0 // indirect
 	golang.org/x/text v0.19.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 )
