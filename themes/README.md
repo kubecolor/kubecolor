@@ -28,11 +28,11 @@ themes
 
 Requires that you have kubectl and kubecolor installed, as well as access to a Kubernetes cluster (e.g via Docker Desktop, Kind, K3s, Minikube).
 
-Apply the files found in [../test-cluster](../test-cluster), like so:
+Apply the files found in [../test/cluster](../test/cluster), like so:
 
 ```bash
 # run from the root of the project
-kubectl create -f ./test-cluster
+kubectl create -f ./test/cluster
 ```
 
 Type the `kubecolor` commands that can show how your theme changes from the default theme. Ex:
@@ -48,5 +48,5 @@ Then take a screenshot of your terminal.
 When you're done, you can delete the resources again:
 
 ```bash
-kubectl delete -f ./test-cluster
+kubectl delete -f ./test/cluster
 ```
