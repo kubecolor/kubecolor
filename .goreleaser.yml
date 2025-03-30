@@ -31,6 +31,7 @@ nfpms:
     vendor: kubecolor
     homepage: https://kubecolor.github.io/
     description: Colorize your kubectl output
+    maintainer: Kalle Fagerberg <applejag-packages.gigabyte962@passmail.net>
 
     formats:
       - rpm
@@ -45,12 +46,12 @@ nfpms:
       {{- .ConventionalExtension -}}
 
 archives:
-  - builds:
+  - ids:
       - kubecolor
-    format: tar.gz
+    formats: [tar.gz]
     format_overrides:
       - goos: windows
-        format: zip
+        formats: [zip]
 
 brews:
   - name: kubecolor
