@@ -9,50 +9,68 @@ before:
     - make testshort
 
 builds:
-- id: kubecolor
-  main: ./main.go
-  binary: kubecolor
-  env:
-    - CGO_ENABLED=0
-  ldflags:
-    - -s -w
-    - -X main.Version={{.Version}}
-  goos:
-    - windows
-    - darwin
-    - linux
-  goarch:
-    - arm64
-    - amd64
-    - ppc64le
+  - id: kubecolor
+    main: ./main.go
+    binary: kubecolor
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w
+      - -X main.Version={{.Version}}
+    goos:
+      - windows
+      - darwin
+      - linux
+    goarch:
+      - arm64
+      - amd64
+      - ppc64le
+
+nfpms:
+  - id: kubecolor
+    vendor: kubecolor
+    homepage: https://kubecolor.github.io/
+    description: Colorize your kubectl output
+
+    formats:
+      - rpm
+
+    dependencies:
+      - kubectl
+
+    file_name_template: >-
+      {{- trimsuffix .ConventionalFileName .ConventionalExtension -}}
+      {{- if and (eq .Arm "6") (eq .ConventionalExtension ".deb") }}6{{ end -}}
+      {{- if not (eq .Amd64 "v1")}}{{ .Amd64 }}{{ end -}}
+      {{- .ConventionalExtension -}}
 
 archives:
-- builds:
-  - kubecolor
-  format: tar.gz
-  format_overrides:
-    - goos: windows
-      format: zip
+  - builds:
+      - kubecolor
+    format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
 
 brews:
-- name: kubecolor
-  repository:
-    owner: kubecolor
-    name: homebrew-tap
-    token: "{{ .Env.GLOBAL_GITHUB_TOKEN }}"
-  homepage: "https://github.com/kubecolor/kubecolor"
-  description: "Colorize your kubectl output"
-  license: "MIT"
-  directory: Formula
-  install: |
-    bin.install "kubecolor"
+  - name: kubecolor
+    repository:
+      owner: kubecolor
+      name: homebrew-tap
+      token: "{{ .Env.GLOBAL_GITHUB_TOKEN }}"
+    homepage: "https://github.com/kubecolor/kubecolor"
+    description: "Colorize your kubectl output"
+    license: "MIT"
+    directory: Formula
+    install: |
+      bin.install "kubecolor"
 
 checksum:
-  name_template: 'checksums.txt'
+  name_template: "checksums.txt"
 
 changelog:
   sort: asc
   filters:
     exclude:
-    - '^docs:'
-    - '^test:'
+      - "^docs:"
+      - "^test:"
