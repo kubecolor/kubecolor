@@ -30,9 +30,9 @@ nfpms:
   - id: kubecolor
     vendor: kubecolor
     homepage: https://kubecolor.github.io/
-    description: Colorize your kubectl output
+    description: |
+      a kubectl wrapper used to add colors to your kubectl output
     maintainer: Kalle Fagerberg <applejag-packages.gigabyte962@passmail.net>
-
     formats:
       - rpm
 
@@ -44,6 +44,9 @@ nfpms:
       {{- if and (eq .Arm "6") (eq .ConventionalExtension ".deb") }}6{{ end -}}
       {{- if not (eq .Amd64 "v1")}}{{ .Amd64 }}{{ end -}}
       {{- .ConventionalExtension -}}
+
+    rpm:
+      summary: Colorize your kubectl output
 
 archives:
   - ids:
