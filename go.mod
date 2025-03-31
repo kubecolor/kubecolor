@@ -1,6 +1,7 @@
 module github.com/kubecolor/kubecolor
 
 go 1.23.6
+toolchain go1.24.1
 
 require (
 	github.com/MakeNowJust/heredoc v1.0.0
@@ -11,7 +12,7 @@ require (
 	github.com/mattn/go-colorable v0.1.14
 	github.com/mattn/go-isatty v0.0.20
 	github.com/mitchellh/mapstructure v1.5.0
-	github.com/spf13/viper v1.20.0
+	github.com/spf13/viper v1.20.1
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/apimachinery v0.32.3
