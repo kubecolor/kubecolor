@@ -1,0 +1,6 @@
+Origin: kubecolor
+Label: kubecolor
+Codename: stable
+Architectures: i386 amd64 armhf arm64 ppc64el
+Components: main
+Description: kubecolor - a kubectl wrapper used to add colors to your kubectl output

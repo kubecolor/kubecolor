@@ -23,7 +23,9 @@ builds:
       - linux
     goarch:
       - arm64
+      - arm
       - amd64
+      - "386"
       - ppc64le
 
 nfpms:
@@ -35,8 +37,9 @@ nfpms:
     maintainer: Kalle Fagerberg <applejag-packages.gigabyte962@passmail.net>
     formats:
       - rpm
+      - deb
 
-    dependencies:
+    recommends:
       - kubectl
 
     file_name_template: >-
