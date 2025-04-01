@@ -1,0 +1,9 @@
+# Sources for kubecolor
+Types: deb
+# TODO: change this
+URIs: http://localhost:8000
+Suites: stable
+Components: main
+Signed-By: /usr/share/keyrings/kubecolor-archive-keyring.gpg
+# To disable automatic updates, uncomment the next line
+#Enabled: no

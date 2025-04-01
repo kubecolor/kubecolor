@@ -4,7 +4,7 @@ import http.server
 import socketserver
 
 PORT = 8000
-DIRECTORY = "tmp"
+DIRECTORY = "dist/deb"
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):

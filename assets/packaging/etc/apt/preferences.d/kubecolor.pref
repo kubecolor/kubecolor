@@ -1,0 +1,9 @@
+# Never prefer packages from the kubecolor CLI source
+Package: *
+Pin: origin "localhost" # TODO: change this
+Pin-Priority: 1
+
+# Ensure that we always get kubecolor from the official repository
+Package: kubecolor
+Pin: origin "localhost" # TODO: change this
+Pin-Priority: 1000

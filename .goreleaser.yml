@@ -26,7 +26,6 @@ builds:
       - arm
       - amd64
       - "386"
-      - ppc64le
 
 nfpms:
   - id: kubecolor
@@ -42,14 +41,31 @@ nfpms:
     recommends:
       - kubectl
 
-    file_name_template: >-
-      {{- trimsuffix .ConventionalFileName .ConventionalExtension -}}
-      {{- if and (eq .Arm "6") (eq .ConventionalExtension ".deb") }}6{{ end -}}
-      {{- if not (eq .Amd64 "v1")}}{{ .Amd64 }}{{ end -}}
-      {{- .ConventionalExtension -}}
-
     rpm:
       summary: Colorize your kubectl output
+
+    contents:
+      - src: "assets/packaging/usr/share/bash-completion/completions/kubecolor"
+        dst: "/usr/share/bash-completion/completions/kubecolor"
+      - src: "assets/packaging/usr/share/fish/vendor_completions.d/kubecolor.fish"
+        dst: "/usr/share/fish/vendor_completions.d/kubecolor.fish"
+      - src: "assets/packaging/usr/share/zsh/site-functions/_kubecolor"
+        dst: "/usr/share/zsh/site-functions/_kubecolor"
+
+      # Only for .deb packages
+      # Makes it easier to track packages
+      # https://github.com/cli/cli/pull/6857/files
+      - src: "assets/packaging/etc/apt/sources.list.d/kubecolor.sources"
+        dst: "/etc/apt/sources.list.d/kubecolor.sources"
+        type: config
+        packager: deb
+      - src: "assets/packaging/etc/apt/preferences.d/kubecolor.pref"
+        dst: "/etc/apt/preferences.d/kubecolor.pref"
+        type: config
+        packager: deb
+      - src: "assets/packaging/usr/share/keyrings/kubecolor-archive-keyring.gpg"
+        dst: "/usr/share/keyrings/kubecolor-archive-keyring.gpg"
+        packager: deb
 
 archives:
   - ids:
