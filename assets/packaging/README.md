@@ -19,6 +19,7 @@ python3 -m http.server -d site
 Install instructions:
 
 ```bash
+sudo apt-get update
 sudo apt-get install apt-transport-https wget --yes
 wget -O /tmp/kubecolor.deb localhost:8000/packages/deb/pool/main/k/kubecolor/kubecolor_0.5.0~SNAPSHOT-c14790a_$(dpkg --print-architecture).deb
 sudo dpkg -i /tmp/kubecolor.deb
