@@ -1,0 +1,6 @@
+[kubecolor]
+name=packages for kubecolor
+baseurl=http://localhost:8000/packages/rpm
+enabled=1
+gpgcheck=1
+gpgkey=https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x62acb02733c915f1

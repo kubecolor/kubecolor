@@ -10,4 +10,13 @@ set -euo pipefail
 
 dir="$(dirname "$0")"
 
-"$dir/createrepo.sh" -v dist
+# Clear out the destination
+rm -rfv site/packages/rpm
+mkdir -pv site/packages/rpm
+
+# Create the repo metadata using "createrepo"
+"$dir/createrepo.sh" --verbose dist --outputdir site/packages/rpm
+
+# Copy over repo initialization file and rpm binaries
+cp -v "$dir/kubecolor.repo" site/packages/rpm
+cp -v dist/*.rpm site/packages/rpm

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # "reprepro" is the Debian packaging tool used to create deb/apt repositories
+# and sign it using GPG.
 
 set -euo pipefail
 
