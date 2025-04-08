@@ -19,10 +19,14 @@ python3 -m http.server -d site
 Install instructions:
 
 ```bash
+REPO_HOST=http://localhost:8000/packages
+#REPO_HOST=https://kubecolor.github.io/kubecolor-packages
+
 sudo apt-get update
 sudo apt-get install apt-transport-https wget --yes
-wget -O /tmp/kubecolor.deb localhost:8000/packages/deb/pool/main/k/kubecolor/kubecolor_0.5.0~SNAPSHOT-c14790a_$(dpkg --print-architecture).deb
+wget -O /tmp/kubecolor.deb https://kubecolor.github.io/kubecolor-packages/deb/pool/main/k/kubecolor/kubecolor_$(wget -q -O- https://kubecolor.github.io/kubecolor-packages/deb/version)_$(dpkg --print-architecture).deb
 sudo dpkg -i /tmp/kubecolor.deb
+sudo apt update
 ```
 
 The install instructions can be used in `docker.io/library/ubuntu` or
@@ -50,7 +54,7 @@ Install instructions:
 
 ```bash
 sudo dnf install dnf5-plugins
-sudo dnf config-manager addrepo --from-repofile http://localhost:8000/packages/rpm/kubecolor.repo
+sudo dnf config-manager addrepo --from-repofile https://localhost:8000/packages/rpm/kubecolor.repo
 sudo dnf install kubecolor
 ```
 
