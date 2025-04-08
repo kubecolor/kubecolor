@@ -9,50 +9,62 @@ before:
     - make testshort
 
 builds:
-- id: kubecolor
-  main: ./main.go
-  binary: kubecolor
-  env:
-    - CGO_ENABLED=0
-  ldflags:
-    - -s -w
-    - -X main.Version={{.Version}}
-  goos:
-    - windows
-    - darwin
-    - linux
-  goarch:
-    - arm64
-    - amd64
-    - ppc64le
+  - id: kubecolor
+    main: ./main.go
+    binary: kubecolor
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w
+      - -X main.Version={{.Version}}
+    goos:
+      - windows
+      - darwin
+      - linux
+    goarch:
+      - arm64
+      - amd64
+      - ppc64le
 
 archives:
-- builds:
-  - kubecolor
-  format: tar.gz
-  format_overrides:
-    - goos: windows
-      format: zip
+  - builds:
+      - kubecolor
+    format: tar.gz
+    format_overrides:
+      - goos: windows
+        format: zip
 
 brews:
-- name: kubecolor
-  repository:
-    owner: kubecolor
-    name: homebrew-tap
-    token: "{{ .Env.GLOBAL_GITHUB_TOKEN }}"
-  homepage: "https://github.com/kubecolor/kubecolor"
-  description: "Colorize your kubectl output"
-  license: "MIT"
-  directory: Formula
-  install: |
-    bin.install "kubecolor"
+  - name: kubecolor
+    repository:
+      owner: kubecolor
+      name: homebrew-tap
+      token: "{{ .Env.GLOBAL_GITHUB_TOKEN }}"
+    homepage: "https://github.com/kubecolor/kubecolor"
+    description: "Colorize your kubectl output"
+    license: "MIT"
+    directory: Formula
+    install: |
+      bin.install "kubecolor"
 
 checksum:
-  name_template: 'checksums.txt'
+  name_template: "checksums.txt"
 
 changelog:
   sort: asc
   filters:
     exclude:
-    - '^docs:'
-    - '^test:'
+      - "^docs:"
+      - "^test:"
+
+release:
+  # Our "release.yml" workflow triggers when a release is created,
+  # even as a draft, so that goreleaser can populate it later
+  # and finalize the release.
+  #
+  # This allows us to do some hotfixing of our release pipelines
+  # in case there were some bugs, as in the case of failure the
+  # GitHub release is never published and the Git tag is never pushed.
+  use_existing_draft: true
+
+  mode: keep-existing
