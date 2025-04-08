@@ -53,8 +53,8 @@ nfpms:
       - src: "assets/packaging/usr/share/zsh/site-functions/_kubecolor"
         dst: "/usr/share/zsh/site-functions/_kubecolor"
 
-      # Only for .deb packages
-      # Makes it easier to track packages
+      # (Only for .deb packages)
+      # Makes the .deb package self-install the apt repository
       # https://github.com/cli/cli/pull/6857/files
       - src: "assets/packaging/etc/apt/sources.list.d/kubecolor.sources"
         dst: "/etc/apt/sources.list.d/kubecolor.sources"
