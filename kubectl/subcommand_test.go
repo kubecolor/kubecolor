@@ -4,7 +4,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/google/go-cmp/cmp"
 	"github.com/kubecolor/kubecolor/testutil"
 )
 
@@ -96,10 +95,7 @@ func TestInspectSubcommandInfo(t *testing.T) {
 		t.Run(tc.args, func(t *testing.T) {
 			t.Parallel()
 			s := InspectSubcommandInfo(strings.Fields(tc.args), pluginHandler)
-
-			if diff := cmp.Diff(s, tc.expected); diff != "" {
-				t.Errorf(diff)
-			}
+			testutil.Equal(t, s, tc.expected)
 		})
 	}
 }
