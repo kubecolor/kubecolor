@@ -20,3 +20,6 @@ mkdir -pv site/packages/rpm
 # Copy over repo initialization file and rpm binaries
 cp -v "$dir/kubecolor.repo" site/packages/rpm
 cp -v dist/*.rpm site/packages/rpm
+
+# TODO: Move to separate file
+gpg --armor --detach-sign site/packages/rpm/repodata/repomd.xml

@@ -13,7 +13,7 @@ Host test server for `site/`:
 
 ```bash
 cd site
-python3 -m http.server
+python3 -m http.server -d site
 ```
 
 Install instructions:
@@ -40,12 +40,30 @@ Host test server for `site/`:
 
 ```bash
 cd site/
-python3 -m http.server
+python3 -m http.server -d site
 ```
 
 Install instructions:
 
+### DNF5/Fedora 41 and above
+
 ```bash
+sudo dnf install dnf5-plugins
 sudo dnf config-manager addrepo --from-repofile http://localhost:8000/packages/rpm/kubecolor.repo
 sudo dnf install kubecolor
+```
+
+### DNF4/Fedora 40 and below
+
+```bash
+sudo dnf install 'dnf-command(config-manager)'
+sudo dnf config-manager --addrepo http://localhost:8000/packages/rpm/kubecolor.repo
+sudo dnf install kubecolor
+```
+
+### openSUSE/SUSE Linux
+
+```bash
+sudo zypper addrepo http://localhost:8000/packages/rpm/kubecolor.repo
+sudo zypper install kubecolor
 ```

@@ -1,4 +1,5 @@
 dist/
+site/
 .DS_Store
 /kubecolor
 /*.exe
