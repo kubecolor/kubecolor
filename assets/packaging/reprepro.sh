@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# "reprepro" is the Debian packaging tool used to create deb/apt repositories
+
 set -euo pipefail
 
 reprepro_exec() {
