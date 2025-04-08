@@ -36,12 +36,4 @@ EOF
     echo >&2
 }
 
-for file in dist/*.deb; do
-    # The --confdir needs to contain the "distributions" file
-    # "+b" means "$PWD"
-    reprepro_exec \
-        --confdir="+b/assets/packaging" \
-        --outdir="+b/dist/deb" \
-        --dbdir="+b/dist/deb/db" \
-        includedeb stable "$file"
-done
+reprepro_exec "$@"
