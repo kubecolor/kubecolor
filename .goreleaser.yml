@@ -37,6 +37,7 @@ nfpms:
     formats:
       - rpm
       - deb
+    license: MIT
 
     recommends:
       - kubectl
