@@ -1,7 +1,6 @@
 # Sources for kubecolor
 Types: deb
-# TODO: change this
-URIs: http://localhost:8000
+URIs: https://kubecolor.github.io/packages/deb
 Suites: stable
 Components: main
 Signed-By: /usr/share/keyrings/kubecolor-archive-keyring.gpg
