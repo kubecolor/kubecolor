@@ -3,7 +3,7 @@ name: goreleaser
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   goreleaser:
@@ -28,10 +28,21 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GLOBAL_GITHUB_TOKEN: ${{ secrets.GLOBAL_GITHUB_TOKEN }}
           FORCE_COLOR: "true"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: artifacts
+          if-no-files-found: error
+          path: |
+            dist/*.zip
+            dist/*.tar.gz
+            dist/*.rpm
+            dist/*.deb
+            dist/metadata.json
+
   homebrew:
     name: Bump Homebrew formula
     # Skip this job in case of git pushes to prerelease tags
-    if: ${{ github.event_name != 'push' || !contains(github.ref, '-') }}
+    if: "!contains(github.ref, '-')"
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -56,3 +67,72 @@ jobs:
             Created by https://github.com/mislav/bump-homebrew-formula-action
         env:
           COMMITTER_TOKEN: ${{ secrets.GLOBAL_GITHUB_TOKEN }}
+
+  packaging:
+    name: Publish DEB & RPM packages
+    needs: goreleaser
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+      - name: Checkout documentation site
+        uses: actions/checkout@v4
+        with:
+          repository: kubecolor/packages
+          ref: gh-pages
+          path: packages
+          fetch-depth: 0
+          ssh-key: ${{ secrets.PACKAGES_DEPLOY_KEY }}
+      - name: Set up GPG
+        env:
+          PACKAGES_GPG_PUBKEY: ${{ secrets.PACKAGES_GPG_PUBKEY }}
+          PACKAGES_GPG_KEY: ${{ secrets.PACKAGES_GPG_KEY }}
+        run: |
+          base64 -d <<<"$PACKAGES_GPG_PUBKEY" | gpg --import --no-tty --batch --yes
+          base64 -d <<<"$PACKAGES_GPG_KEY" | gpg --import --no-tty --batch --yes
+
+      - name: Prepare release assets
+        run: |
+          shopt -s failglob
+          rm -rfv dist
+          mkdir -pv dist
+          mv -v artifacts/kubecolor_* dist/
+
+      - name: Sign RPMs
+        run: assets/packaging/rpmsign-all.sh
+
+      - name: Run createrepo-pkg.sh
+        run: assets/packaging/createrepo-pkg.sh
+
+      - name: Run reprepro-pkg.sh
+        run: assets/packaging/reprepro-pkg.sh
+
+      - name: Run version.sh
+        id: version
+        run: assets/packaging/version.sh
+
+      - name: Publish site
+        env:
+          DO_PUBLISH: ${{ !contains(github.ref, '-') }}
+          VERSION: ${{ steps.version.outputs.version }}
+          GIT_COMMITTER_NAME: kubecolor automation
+          GIT_AUTHOR_NAME: kubecolor automation
+          GIT_COMMITTER_EMAIL: noreply@github.com
+          GIT_AUTHOR_EMAIL: noreply@github.com
+        working-directory: ./packages
+        run: |
+          git add .
+          git commit -m "Add rpm and deb packages for $VERSION"
+          if [ "$DO_PUBLISH" = "true" ]; then
+            git push
+          else
+            git log --oneline @{upstream}..
+            git diff --name-status @{upstream}..
+          fi

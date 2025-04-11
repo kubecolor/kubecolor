@@ -9,22 +9,21 @@ goreleaser release --skip=publish --clean --snapshot
 assets/packaging/reprepro-pkg.sh
 ```
 
-Host test server for `site/`:
+Host test server for `packages/`:
 
 ```bash
-cd site
-python3 -m http.server -d site
+python3 -m http.server
 ```
 
-Install instructions:
+### Install instructions
 
 ```bash
 REPO_HOST=http://localhost:8000/packages
-#REPO_HOST=https://kubecolor.github.io/kubecolor-packages
+#REPO_HOST=https://kubecolor.github.io/packages
 
 sudo apt-get update
 sudo apt-get install apt-transport-https wget --yes
-wget -O /tmp/kubecolor.deb https://kubecolor.github.io/kubecolor-packages/deb/pool/main/k/kubecolor/kubecolor_$(wget -q -O- https://kubecolor.github.io/kubecolor-packages/deb/version)_$(dpkg --print-architecture).deb
+wget -O /tmp/kubecolor.deb $REPO_HOST/deb/pool/main/k/kubecolor/kubecolor_$(wget -q -O- $REPO_HOST/deb/version)_$(dpkg --print-architecture).deb
 sudo dpkg -i /tmp/kubecolor.deb
 sudo apt update
 ```
@@ -41,16 +40,15 @@ goreleaser release --skip=publish --clean --snapshot
 assets/packaging/createrepo-pkg.sh
 ```
 
-Host test server for `site/`:
+Host test server for `packages/`:
 
 ```bash
-cd site/
-python3 -m http.server -d site
+python3 -m http.server
 ```
 
-Install instructions:
+### Install instructions
 
-### DNF5/Fedora 41 and above
+#### DNF5/Fedora 41 and above
 
 ```bash
 sudo dnf install dnf5-plugins
@@ -58,7 +56,7 @@ sudo dnf config-manager addrepo --from-repofile https://localhost:8000/packages/
 sudo dnf install kubecolor
 ```
 
-### DNF4/Fedora 40 and below
+#### DNF4/Fedora 40 and below
 
 ```bash
 sudo dnf install 'dnf-command(config-manager)'
@@ -66,7 +64,7 @@ sudo dnf config-manager --addrepo http://localhost:8000/packages/rpm/kubecolor.r
 sudo dnf install kubecolor
 ```
 
-### openSUSE/SUSE Linux
+#### openSUSE/SUSE Linux
 
 ```bash
 sudo zypper addrepo http://localhost:8000/packages/rpm/kubecolor.repo

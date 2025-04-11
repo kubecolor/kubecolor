@@ -5,11 +5,25 @@
 
 set -euo pipefail
 
-mkdir -pv site/packages
-echo -n 'version: '; jq '.version' dist/metadata.json -r | tee site/packages/version
+: "${GITHUB_OUTPUT:=}"
+
+function set-output() {
+    local name="$1"
+    local value="$2"
+
+    echo "$name=$value"
+    if [[ -n "$GITHUB_OUTPUT" ]]; then
+        echo "$name=$value" >> "$GITHUB_OUTPUT"
+    fi
+}
+
+mkdir -pv packages
+VERSION="$(jq '.version' dist/metadata.json -r | tee packages/version)"
+set-output version "$VERSION"
 
 # Debian uses "~" as a delimiter between the version and the "suffix"
 # but still allows "-" in the suffix.
 # Example: "0.5.0-foo-bar" -> "0.5.0~foo-bar"
-mkdir -pv site/packages/deb
-echo -n 'deb version: '; jq '.version | sub("(?<x>[^-]*)-(?<y>.*)"; "\(.x)~\(.y)")' dist/metadata.json -r | tee site/packages/deb/version
+mkdir -pv packages/deb
+DEB_VERSION="$(jq '.version | sub("(?<x>[^-]*)-(?<y>.*)"; "\(.x)~\(.y)")' dist/metadata.json -r | tee packages/deb/version)"
+set-output deb-version "$DEB_VERSION"

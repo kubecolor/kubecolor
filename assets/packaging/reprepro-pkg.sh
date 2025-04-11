@@ -11,8 +11,8 @@ set -euo pipefail
 dir="$(dirname "$0")"
 
 # Clear out the destination
-rm -rfv site/packages/deb
-mkdir -pv site/packages/deb
+rm -rfv packages/deb
+mkdir -pv packages/deb
 
 # Add the deb binaries to the repository one by one
 for file in dist/*.deb; do
@@ -20,7 +20,7 @@ for file in dist/*.deb; do
     # "+b" means "$PWD"
     "$dir/reprepro.sh" \
         --confdir="+b/assets/packaging" \
-        --outdir="+b/site/packages/deb" \
-        --dbdir="+b/site/packages/deb/db" \
+        --outdir="+b/packages/deb" \
+        --dbdir="+b/packages/deb/db" \
         includedeb stable "$file"
 done
