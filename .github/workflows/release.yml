@@ -1,9 +1,25 @@
 name: goreleaser
 
 on:
-  push:
-    tags:
-      - "v*"
+  release:
+    # Only run when a release is created, but not when it has been published.
+    #
+    # Release process:
+    # 1. you create a draft release
+    # 2. this "release.yml" workflow gets triggered
+    # 3. goreleaser builds binaries and pushes them as release artifacts
+    # 4. goreleaser publishes the release (on GitHub, Homebrew, Docker, etc.)
+    #
+    # This allows us to have build errors on step 3. without us having to
+    # roll back a release or artificially bump the version just because of
+    # a CI/CD issue.
+    types: [created]
+
+permissions:
+  # Required to upload binaries to GitHub releases
+  contents: write
+  # Required to push Docker image to ghcr.io/kubecolor/kubecolor
+  packages: write
 
 jobs:
   goreleaser:
@@ -25,8 +41,7 @@ jobs:
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
         with:
-          distribution: goreleaser
-          version: latest
+          version: "~> v2"
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

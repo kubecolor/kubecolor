@@ -98,3 +98,15 @@ changelog:
     exclude:
       - "^docs:"
       - "^test:"
+
+release:
+  # Our "release.yml" workflow triggers when a release is created,
+  # even as a draft, so that goreleaser can populate it later
+  # and finalize the release.
+  #
+  # This allows us to do some hotfixing of our release pipelines
+  # in case there were some bugs, as in the case of failure the
+  # GitHub release is never published and the Git tag is never pushed.
+  use_existing_draft: true
+
+  mode: keep-existing
