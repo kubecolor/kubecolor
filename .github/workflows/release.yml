@@ -20,6 +20,10 @@ permissions:
   contents: write
   # Required to push Docker image to ghcr.io/kubecolor/kubecolor
   packages: write
+  # Required for signing (sigstore)
+  attestations: write
+  # Required for using GitHub IdP (when signing)
+  id-token: write
 
 jobs:
   goreleaser:
@@ -133,6 +137,12 @@ jobs:
 
       - name: Sign RPMs
         run: assets/packaging/rpmsign-all.sh
+
+      # Make sure to run rpmsign before doing attestations as rpmsign modifies the .rpm files
+      - name: Attest release artifacts
+        uses: actions/attest-build-provenance@c074443f1aee8d4aeeae555aebba3282517141b2 # v2.2.3
+        with:
+          subject-path: "dist/kubecolor_*"
 
       - name: Run createrepo-pkg.sh
         run: assets/packaging/createrepo-pkg.sh
