@@ -52,7 +52,7 @@ python3 -m http.server
 
 ```bash
 sudo dnf install dnf5-plugins
-sudo dnf config-manager addrepo --from-repofile https://localhost:8000/packages/rpm/kubecolor.repo
+sudo dnf config-manager addrepo --from-repofile http://localhost:8000/packages/rpm/kubecolor.repo
 sudo dnf install kubecolor
 ```
 
