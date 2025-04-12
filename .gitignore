@@ -1,7 +1,8 @@
-dist/
+/dist/
+/packages/
 .DS_Store
-kubecolor
-*.exe
+/kubecolor
+/*.exe
 
 coverage.txt
 cover.html

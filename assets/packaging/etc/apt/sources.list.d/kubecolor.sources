@@ -1,0 +1,8 @@
+# Sources for kubecolor
+Types: deb
+URIs: https://kubecolor.github.io/packages/deb
+Suites: stable
+Components: main
+Signed-By: /usr/share/keyrings/kubecolor-archive-keyring.gpg
+# To disable automatic updates, uncomment the next line
+#Enabled: no
