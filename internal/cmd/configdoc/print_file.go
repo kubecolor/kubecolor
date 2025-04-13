@@ -10,16 +10,16 @@ import (
 	"unicode/utf8"
 )
 
-type YAMLPrinter struct {
+type FilePrinter struct {
 	*Program
 }
 
-func (p *YAMLPrinter) Print() error {
+func (p *FilePrinter) Print() error {
 	fmt.Println("theme:")
 	return p.printCategory(p.categories[0], []string{"theme"})
 }
 
-func (p *YAMLPrinter) printCategory(category Category, path []string) error {
+func (p *FilePrinter) printCategory(category Category, path []string) error {
 	tw := tabwriter.NewWriter(os.Stdout, 0, 0, 1, ' ', 0)
 	for _, field := range category.Fields {
 		newPath := append(path, field.Name)
@@ -27,7 +27,7 @@ func (p *YAMLPrinter) printCategory(category Category, path []string) error {
 		case "color.Color":
 			p.printField(tw, field, "color", newPath)
 		case "color.Slice":
-			p.printField(tw, field, "color[]", newPath)
+			p.printField(tw, field, "color-list", newPath)
 		default:
 			sub, ok := p.findCategory(field.Type)
 			if !ok {
@@ -47,43 +47,50 @@ func (p *YAMLPrinter) printCategory(category Category, path []string) error {
 	return nil
 }
 
-func (p *YAMLPrinter) printField(w io.Writer, field Field, typeString string, path []string) error {
+func (p *FilePrinter) printField(w io.Writer, field Field, typeString string, path []string) error {
 	fallback := p.formatFallback(field)
 	desc := strings.ReplaceAll(field.Comment, "\n", " ")
-	if fallback != "" {
-		if desc != "" {
-			desc += " "
-		}
-		desc += fallback
-	}
-	if desc != "" {
-		desc = " " + desc
-	}
 
-	fmt.Fprintf(w, "%s%s: %s\t# (%s)%s\n",
-		strings.Repeat("  ", len(path)-1),
-		p.formatName(field),
-		p.viper.GetString(strings.Join(path, ".")),
-		typeString,
-		desc,
-	)
+	indent := strings.Repeat("  ", len(path)-1)
+
+	if desc != "" {
+		fmt.Fprintf(w, "%s# %s\n",
+			indent,
+			desc)
+	}
+	if fallback == "" {
+		fmt.Fprintf(w, "%s%s: !%s %s\n",
+			indent,
+			p.formatName(field),
+			typeString,
+			p.viper.GetString(strings.Join(path, ".")))
+	} else {
+		fmt.Fprintf(w, "%s%s: !%s\t# default = %s\n",
+			indent,
+			p.formatName(field),
+			typeString,
+			fallback)
+	}
+	fmt.Fprintln(w)
 
 	return nil
 }
 
-func (p *YAMLPrinter) formatFallback(field Field) string {
+func (p *FilePrinter) formatFallback(field Field) string {
 	if field.DefaultFrom != "" {
-		return fmt.Sprintf("(fallback to %s)", field.DefaultFrom)
+		return fmt.Sprintf("$%s", field.DefaultFrom)
 	}
 	if field.DefaultFromMany != "" {
 		split := strings.Split(field.DefaultFromMany, ",")
-
-		return fmt.Sprintf("(fallback to [%s])", strings.Join(split, " / "))
+		for i, v := range split {
+			split[i] = "$" + v
+		}
+		return fmt.Sprintf("[%s])", strings.Join(split, " / "))
 	}
 	return ""
 }
 
-func (p *YAMLPrinter) formatName(field Field) string {
+func (p *FilePrinter) formatName(field Field) string {
 	lower := camelCase(field.Name)
 
 	switch lower {

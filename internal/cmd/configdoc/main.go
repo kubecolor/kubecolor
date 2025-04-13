@@ -12,13 +12,16 @@ import (
 )
 
 var flags = struct {
-	file string
+	file    string
+	printer string
 }{
-	file: filepath.Join("config", "theme.go"),
+	file:    filepath.Join("config", "theme.go"),
+	printer: "all",
 }
 
 func init() {
 	flag.StringVar(&flags.file, "file", flags.file, "Path to theme.go file")
+	flag.StringVar(&flags.printer, "printer", flags.printer, "What to print. One of: all, file, env")
 }
 
 func main() {
@@ -55,14 +58,20 @@ func (p *Program) Run() error {
 }
 
 func (p *Program) Print() error {
-	md := MarkdownPrinter{Program: p}
-	if err := md.Print(); err != nil {
-		return fmt.Errorf("markdown: %w", err)
+	if flags.printer == "all" || flags.printer == "env" {
+		md := EnvPrinter{Program: p}
+		if err := md.Print(); err != nil {
+			return fmt.Errorf("markdown: %w", err)
+		}
 	}
-	fmt.Println()
-	yaml := YAMLPrinter{Program: p}
-	if err := yaml.Print(); err != nil {
-		return fmt.Errorf("yaml: %w", err)
+	if flags.printer == "all" {
+		fmt.Println()
+	}
+	if flags.printer == "all" || flags.printer == "file" {
+		yaml := FilePrinter{Program: p}
+		if err := yaml.Print(); err != nil {
+			return fmt.Errorf("yaml: %w", err)
+		}
 	}
 	return nil
 }
