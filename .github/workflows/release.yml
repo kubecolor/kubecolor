@@ -1,5 +1,9 @@
 name: release
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}
+  cancel-in-progress: true
+
 on:
   # Only run when triggered manually.
   #
