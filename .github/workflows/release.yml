@@ -56,10 +56,10 @@ jobs:
       - name: Fetch tags
         run: git fetch --force --tags
 
-      - name: Create temp tag
+      - name: Try to create tag
         env:
           TAG_NAME: ${{ inputs.tag-name }}
-        run: git tag "$TAG_NAME" -m "$TAG_NAME"
+        run: git tag "$TAG_NAME" -m "$TAG_NAME" || true
 
       - name: Set up Go
         uses: actions/setup-go@v5
