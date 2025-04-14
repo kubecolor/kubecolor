@@ -7,6 +7,7 @@ Build:
 ```bash
 goreleaser release --skip=publish --clean --snapshot
 assets/packaging/reprepro-pkg.sh
+assets/packaging/version.sh
 ```
 
 Host test server for `packages/`:
@@ -37,7 +38,9 @@ Build:
 
 ```bash
 goreleaser release --skip=publish --clean --snapshot
+assets/packaging/rpmsign-all.sh
 assets/packaging/createrepo-pkg.sh
+assets/packaging/rpm-repomd-sign.sh
 ```
 
 Host test server for `packages/`:
