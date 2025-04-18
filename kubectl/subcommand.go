@@ -5,14 +5,16 @@ import (
 )
 
 type SubcommandInfo struct {
-	Subcommand Subcommand
-	Output     Output // flag: -o, --output
-	NoHeader   bool   // flag: --no-header
-	Watch      bool   // flag: -w, --watch
-	Follow     bool   // flag: -f, --follow
-	Help       bool   // flag: -h, --help
-	Recursive  bool   // flag: --recursive
-	Client     bool   // flag: --client
+	Subcommand     Subcommand
+	SubcommandArgs []string // args after the subcommand
+	Output         Output   // flag: -o, --output
+	NoHeader       bool     // flag: --no-header
+	Watch          bool     // flag: -w, --watch
+	Follow         bool     // flag: -f, --follow
+	Help           bool     // flag: -h, --help
+	Recursive      bool     // flag: --recursive
+	Client         bool     // flag: --client
+	List           bool     // flag: --list
 }
 
 // Output is an enum of different "--output=..." types.
@@ -168,13 +170,30 @@ func InspectSubcommand(cmdArgs []string, pluginHandler PluginHandler) (Subcomman
 	}
 }
 
+func InspectSubcommandArgs(args []string, info *SubcommandInfo) {
+	i := 0
+	for i < len(args) {
+		if args[i] == "--" {
+			break
+		}
+
+		arg, _, skip := parseArgFlag(args[i:])
+		i += skip
+		if !strings.HasPrefix(arg, "-") && skip == 1 {
+			info.SubcommandArgs = append(info.SubcommandArgs, arg)
+		}
+	}
+}
+
 func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
-	for i := range args {
+	i := 0
+	for i < len(args) {
 		// Stop parsing flags after "--", such as in "kubectl exec my-pod -- bash"
 		if args[i] == "--" {
 			break
 		}
-		flag, value := parseArgFlag(args[i:])
+		flag, value, skip := parseArgFlag(args[i:])
+		i += skip
 		switch flag {
 		case "--output", "-o":
 			info.Output = ParseOutput(value)
@@ -190,39 +209,41 @@ func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 			info.Recursive = value != "false"
 		case "-h", "--help":
 			info.Help = value != "false"
+		case "--list":
+			info.List = value != "false"
 		}
 	}
 }
 
-func parseArgFlag(args []string) (flag, value string) {
+func parseArgFlag(args []string) (flag, value string, skip int) {
 	if len(args) == 0 {
-		return "", ""
+		return "", "", 0
 	}
 	arg := args[0]
 	if strings.HasPrefix(arg, "--") {
 		if flag, value, ok := strings.Cut(arg, "="); ok {
 			// --output=wide
-			return flag, value
+			return flag, value, 1
 		}
 		if len(args) > 1 {
 			// --output wide
-			return arg, args[1]
+			return arg, args[1], 2
 		}
 	} else if strings.HasPrefix(arg, "-") && len(arg) >= 2 {
 		if flag, value, ok := strings.Cut(arg, "="); ok {
 			// -o=wide
-			return flag, value
+			return flag, value, 1
 		}
 		if len(arg) > 2 {
 			// -owide
-			return arg[:2], arg[2:]
+			return arg[:2], arg[2:], 1
 		}
 		if len(arg) == 2 && len(args) > 1 {
 			// -o wide
-			return arg, args[1]
+			return arg, args[1], 2
 		}
 	}
-	return arg, ""
+	return arg, "", 1
 }
 
 func InspectSubcommandInfo(args []string, pluginHandler PluginHandler) *SubcommandInfo {
@@ -242,6 +263,7 @@ func InspectSubcommandInfo(args []string, pluginHandler PluginHandler) *Subcomma
 		}
 
 		ret.Subcommand = cmd
+		InspectSubcommandArgs(args[i+1:], ret)
 		return ret
 	}
 
