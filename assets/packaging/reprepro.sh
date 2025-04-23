@@ -32,8 +32,8 @@ EOF
     fi
 
     echo "# Running reprepro inside Docker" >&2
-    echo "# \$ $docker run --rm -it reprepro" "$@" >&2
-    $docker run --rm -it -v "$PWD":/opt/src -v "${GNUPGHOME:-"$HOME"/.gnupg}":/root/.gnupg -w /opt/src reprepro "$@"
+    echo "# \$ $docker run --rm reprepro" "$@" >&2
+    $docker run --rm -v "$PWD":/opt/src -v "${GNUPGHOME:-"$HOME"/.gnupg}":/root/.gnupg -w /opt/src reprepro "$@"
     echo >&2
 }
 

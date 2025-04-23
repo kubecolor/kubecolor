@@ -31,8 +31,8 @@ EOF
     fi
 
     echo "# Running rpmsign inside Docker" >&2
-    echo "# \$ $docker run --rm -it rpmsign" "$@" >&2
-    $docker run --rm -it -v "$PWD":/opt/src -v "${GNUPGHOME:-"$HOME"/.gnupg}":/root/.gnupg -w /opt/src rpmsign "$@"
+    echo "# \$ $docker run --rm rpmsign" "$@" >&2
+    $docker run --rm -v "$PWD":/opt/src -v "${GNUPGHOME:-"$HOME"/.gnupg}":/root/.gnupg -w /opt/src rpmsign "$@"
     echo >&2
 }
 

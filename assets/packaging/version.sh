@@ -17,6 +17,13 @@ function set-output() {
     fi
 }
 
+if [[ ! -f dist/metadata.json ]]; then
+    echo "Missing dist/metadata.json file"
+    exit 1
+fi
+
+echo "metadata.json=$(cat dist/metadata.json)"
+
 mkdir -pv packages
 VERSION="$(jq '.version' dist/metadata.json -r | tee packages/version)"
 set-output version "$VERSION"

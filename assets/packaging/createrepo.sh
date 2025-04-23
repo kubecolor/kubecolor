@@ -31,8 +31,8 @@ EOF
     fi
 
     echo "# Running createrepo inside Docker" >&2
-    echo "# \$ $docker run --rm -it createrepo" "$@" >&2
-    $docker run --rm -it -v "$PWD":/opt/src -w /opt/src createrepo "$@"
+    echo "# \$ $docker run --rm createrepo" "$@" >&2
+    $docker run --rm -v "$PWD":/opt/src -w /opt/src createrepo "$@"
     echo >&2
 }
 
