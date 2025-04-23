@@ -1,0 +1,34 @@
+# Config for https://github.com/actions/labeler
+
+go:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.go"
+          - "**/go.mod"
+          - "**/go.sum"
+          - "**/go.work"
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/go.mod"
+          - "**/go.sum"
+          - "Dockerfile"
+
+github_actions:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/*"
+          - ".github/dependabot.yml"
+          - ".github/labeler.yml"
+          - ".goreleaser.yml"
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+          - "docs/*"
+          - "config-schema.json"
+          - "internal/cmd/configdoc/*"
+          - "internal/cmd/configschema/*"
+          - "internal/cmd/imagegen/*"
