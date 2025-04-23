@@ -131,8 +131,8 @@ jobs:
           PACKAGES_GPG_PUBKEY: ${{ secrets.PACKAGES_GPG_PUBKEY }}
           PACKAGES_GPG_KEY: ${{ secrets.PACKAGES_GPG_KEY }}
         run: |
-          base64 -d <<<"$PACKAGES_GPG_PUBKEY" | gpg --import --no-tty --batch --yes
-          base64 -d <<<"$PACKAGES_GPG_KEY" | gpg --import --no-tty --batch --yes
+          gpg --import --no-tty --batch --yes <<<"$PACKAGES_GPG_PUBKEY"
+          gpg --import --no-tty --batch --yes <<<"$PACKAGES_GPG_KEY"
 
       - name: Prepare release assets
         run: |
