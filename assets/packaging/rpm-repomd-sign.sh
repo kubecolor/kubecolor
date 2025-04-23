@@ -4,4 +4,4 @@
 
 set -euo pipefail
 
-gpg --armor --detach-sign packages/rpm/repodata/repomd.xml
+gpg --yes --armor --detach-sign packages/rpm/repodata/repomd.xml
