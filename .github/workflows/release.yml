@@ -169,6 +169,8 @@ jobs:
         run: assets/packaging/version.sh
 
       - name: Upload assets to release
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           assets/packaging/gh-label-assets.sh dist/kubecolor_* \
             | xargs gh release upload "${{ inputs.tag-name }}" --clobber --
