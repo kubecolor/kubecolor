@@ -27,7 +27,7 @@ on:
         default: production
         type: environment
       dry-run:
-        description: When enabled, will only build and upload the assets to the release, but won't publish it
+        description: Dry-run. When enabled, will only build and upload the assets to the release, but won't publish it
         type: boolean
         default: false
 
@@ -139,7 +139,7 @@ jobs:
           shopt -s failglob
           rm -rfv dist
           mkdir -pv dist
-          mv -v artifacts/kubecolor_* dist/
+          mv -v artifacts/* dist/
 
       - name: Sign RPMs (only for production)
         if: inputs.environment == 'production'
