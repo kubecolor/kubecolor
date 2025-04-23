@@ -62,6 +62,10 @@ jobs:
 
       - name: Try to create tag
         env:
+          GIT_AUTHOR_EMAIL: noreply@github.com
+          GIT_AUTHOR_NAME: kubecolor automation
+          GIT_COMMITTER_EMAIL: noreply@github.com
+          GIT_COMMITTER_NAME: kubecolor automation
           TAG_NAME: ${{ inputs.tag-name }}
         run: git tag "$TAG_NAME" -m "$TAG_NAME" || true
 
@@ -172,11 +176,11 @@ jobs:
       - name: Publish site
         env:
           DO_PUBLISH: ${{ !contains(inputs.tag-name, '-') && !inputs.dry-run }}
-          TAG_NAME: ${{ inputs.tag-name }}
-          GIT_COMMITTER_NAME: kubecolor automation
+          GIT_AUTHOR_EMAIL: noreply@github.com
           GIT_AUTHOR_NAME: kubecolor automation
           GIT_COMMITTER_EMAIL: noreply@github.com
-          GIT_AUTHOR_EMAIL: noreply@github.com
+          GIT_COMMITTER_NAME: kubecolor automation
+          TAG_NAME: ${{ inputs.tag-name }}
         working-directory: ./packages
         run: |
           git add .
