@@ -174,6 +174,7 @@ func InspectSubcommandArgs(args []string, info *SubcommandInfo) {
 	i := 0
 	for i < len(args) {
 		if args[i] == "--" {
+			info.SubcommandArgs = append(info.SubcommandArgs, args[i+1:]...)
 			break
 		}
 
