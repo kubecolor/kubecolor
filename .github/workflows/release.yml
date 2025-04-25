@@ -171,8 +171,12 @@ jobs:
       - name: Upload assets to release
         env:
           GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ inputs.tag-name }}
         run: |
-          assets/packaging/gh-label-assets.sh dist/kubecolor_* \
+          pushd dist
+          sha256sum kubecolor_* > checksums.txt
+          popd
+          assets/packaging/gh-label-assets.sh dist/checksums.txt dist/kubecolor_* \
             | xargs gh release upload "${{ inputs.tag-name }}" --clobber --
 
       - name: Publish site
