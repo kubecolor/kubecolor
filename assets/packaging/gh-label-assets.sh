@@ -24,6 +24,7 @@ for asset in "$@"; do
   label="${label%.tar}"
   label="$(echo "$label" | tr '_' ' ')"
   case "$asset" in
+  *checksums.txt ) label="checksums (SHA 256)" ;;
   *.msi ) label="${label} installer" ;;
   *.deb ) label="${label} deb" ;;
   *.rpm ) label="${label} RPM" ;;
