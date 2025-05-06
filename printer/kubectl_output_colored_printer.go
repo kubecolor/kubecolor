@@ -246,6 +246,13 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 				},
 			}
 		}
+
+	case kubectl.Auth:
+		return &AuthPrinter{
+			Theme: p.Theme,
+			List:  p.SubcommandInfo.List,
+			Args:  p.SubcommandInfo.SubcommandArgs,
+		}
 	}
 
 	return &SingleColoredPrinter{Color: p.Theme.Default}

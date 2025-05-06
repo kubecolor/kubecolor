@@ -230,12 +230,16 @@ func findIndent(line string) int {
 //
 // Commonly found in "kubectl get" output
 func isAllUpper(s string) bool {
+	atLeastOneLetter := false
 	for _, r := range s {
-		if unicode.IsLetter(r) && !unicode.IsUpper(r) {
-			return false
+		if unicode.IsLetter(r) {
+			atLeastOneLetter = true
+			if !unicode.IsUpper(r) {
+				return false
+			}
 		}
 	}
-	return true
+	return atLeastOneLetter
 }
 
 // isOnlySymbols is used to identity header underline like this:
@@ -247,7 +251,7 @@ func isAllUpper(s string) bool {
 func isOnlySymbols(s string) bool {
 	anyPuncts := false
 	for _, r := range s {
-		if unicode.IsLetter(r) || unicode.IsNumber(r) {
+		if unicode.IsLetter(r) || unicode.IsNumber(r) || r == '[' || r == ']' {
 			return false
 		}
 		if unicode.IsPunct(r) {
