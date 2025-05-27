@@ -14,7 +14,7 @@ import (
 // klogLevelAndDateRegex is for parsing Kubernetes klog line: https://github.com/kubernetes/klog/blob/75663bb798999a49e3e4c0f2375ed5cca8164194/klog.go#L637-L650
 //
 //	Lmmdd hh:mm:ss.uuuuuu threadid file:line] msg...
-var klogLevelAndDateRegex = regexp.MustCompile(`^([IWEF])(\d{4} \d\d:\d\d:\d\d\.\d+)(\s*\d+\s*)([\w\._]+:\d+)\]`)
+var klogLevelAndDateRegex = regexp.MustCompile(`^([IWEF])(\d{4} \d\d:\d\d:\d\d\.\d+)(\s*\d+\s*)([\w\._-]+:\d+)\]`)
 
 // dateRegex is for parsing dates in various formats. E.g:
 //

@@ -167,3 +167,24 @@ ERRO server.distmemorystore.olric: Failed to acquire semaphore: context canceled
 [33mWARN[0m Recieved kill signal. Stopping... [96msignal[0m=[93mterminated[0m [36mtimeout[0m=10s
 [90;3mDEBU[0m server: Closing store before shutting down API server
 [31mERRO[0m server.distmemorystore.olric: Failed to acquire semaphore: context canceled
+
+================================================================================
+# minio operator logs
+$ kubectl logs minio-operator-664f49db9f-fpgnt
+================================================================================
+
+I0527 13:23:48.194176       1 controller.go:81] Starting MinIO Operator
+I0527 13:23:48.196398       1 main-controller.go:293] Setting up event handlers
+I0527 13:23:48.239000       1 main-controller.go:514] Using Kubernetes CSR Version: v1
+I0527 13:23:48.239078       1 main-controller.go:534] Waiting for STS API to start
+I0527 13:23:48.239245       1 main-controller.go:399] Starting STS API server
+I0527 13:23:48.239246       1 leaderelection.go:257] attempting to acquire leader lease minio/minio-operator-lock...
+
+--------------------------------------------------------------------------------
+
+[32mI[0m[90;3m0527 13:23:48.194176[0m       1 [90;3mcontroller.go:81[0m] Starting MinIO Operator
+[32mI[0m[90;3m0527 13:23:48.196398[0m       1 [90;3mmain-controller.go:293[0m] Setting up event handlers
+[32mI[0m[90;3m0527 13:23:48.239000[0m       1 [90;3mmain-controller.go:514[0m] Using Kubernetes CSR Version: v1
+[32mI[0m[90;3m0527 13:23:48.239078[0m       1 [90;3mmain-controller.go:534[0m] Waiting for STS API to start
+[32mI[0m[90;3m0527 13:23:48.239245[0m       1 [90;3mmain-controller.go:399[0m] Starting STS API server
+[32mI[0m[90;3m0527 13:23:48.239246[0m       1 [90;3mleaderelection.go:257[0m] attempting to acquire leader lease minio/minio-operator-lock...
