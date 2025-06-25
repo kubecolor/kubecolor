@@ -143,13 +143,17 @@ func colorSingleStatus(status string, theme *config.Theme) (string, bool) {
 
 		// some other status
 		"ContainerStatusUnknown",
+		"ContainerCannotRun",
 		"CrashLoopBackOff",
+		"DeadlineExceeded",
 		"ImagePullBackOff",
 		"Evicted",
 		"FailedScheduling",
 		"Error",
 		"ErrImagePull",
 		"OOMKilled",
+		"RunContainerError",
+		"StartError",
 		// PVC status
 		"Lost":
 		return theme.Status.Error.Render(status), true
