@@ -6,16 +6,23 @@ on:
       - main
   pull_request:
   schedule:
-    - cron: 0 8 * * 1  # 08:00 on mondays
+    - cron: 0 8 * * 1 # 08:00 on mondays
+
+permissions: {}
 
 jobs:
   govulncheck:
     runs-on: ubuntu-latest
     name: Run govulncheck
+    permissions:
+      contents: read
+      issues: write
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          persist-credentials: false
 
-      - uses: actions/setup-go@v6
+      - uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # 6.0.0
         with:
           go-version-file: go.mod
 
@@ -35,7 +42,7 @@ jobs:
         shell: bash
 
       - name: Create GitHub issue
-        uses: JasonEtco/create-an-issue@v2
+        uses: JasonEtco/create-an-issue@1b14a70e4d8dc185e5cc76d3bec9eab20257b2c5 # v2.9.2
         if: ${{ !cancelled() && steps.govulncheck.conclusion == 'failure' && github.event_name == 'schedule' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
