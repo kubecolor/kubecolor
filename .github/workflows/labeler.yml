@@ -1,5 +1,10 @@
 name: "Pull Request Labeler"
 on:
+  # Using "pull_request_target" is generally a security hole, but only
+  # if you also use "actions/checkout" in your job.
+  # Since we're not using "actions/checkout", then using "pull_request_target"
+  # is completely safe.
+  # zizmor: ignore[dangerous-triggers]
   - pull_request_target
 
 jobs:
@@ -9,4 +14,4 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/labeler@v6
+      - uses: actions/labeler@634933edcd8ababfe52f92936142cc22ac488b1b # v6.0.1
