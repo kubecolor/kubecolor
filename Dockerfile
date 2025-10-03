@@ -1,16 +1,19 @@
 FROM docker.io/library/golang:1.24.7 AS build
 
 WORKDIR /go/src/kubecolor
-COPY go.mod go.sum .
-RUN go mod download
+COPY go.mod go.sum ./
+RUN --mount=type=cache,target=/go/pkg/mod \
+    go mod download
 
 COPY . .
 ARG VERSION
-RUN CGO_ENABLED=0 go install -ldflags="-X main.Version=${VERSION}" .
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    CGO_ENABLED=0 go install -ldflags="-X main.Version=${VERSION}" .
 
 FROM gcr.io/distroless/static-debian11:nonroot
 COPY --from=build /go/bin/kubecolor /usr/local/bin/
-COPY --from=bitnami/kubectl /opt/bitnami/kubectl/bin/kubectl /usr/local/bin/
+COPY --from=registry.k8s.io/kubectl:v1.33.5 /bin/kubectl /usr/local/bin/
 ENTRYPOINT ["kubecolor"]
 
 LABEL org.opencontainers.image.source=https://github.com/kubecolor/kubecolor
