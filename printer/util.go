@@ -122,6 +122,7 @@ func colorSingleStatus(status string, theme *config.Theme) (string, bool) {
 		"ContainerGCFailed",
 		"ImageGCFailed",
 		"FailedNodeAllocatableEnforcement",
+		"FailedCreate",
 		"FailedCreatePodSandBox",
 		"FailedPodSandBoxStatus",
 		"FailedMountOnFilesystemMismatch",
@@ -135,6 +136,9 @@ func colorSingleStatus(status string, theme *config.Theme) (string, bool) {
 		// Config event reason list
 		"FailedValidation",
 		// Lifecycle hooks
+		"PreCreateHookError",
+		"PreStartHookError",
+		"PostStartHookError",
 		"FailedPostStartHook",
 		"FailedPreStopHook",
 		// Node status list
@@ -143,6 +147,8 @@ func colorSingleStatus(status string, theme *config.Theme) (string, bool) {
 
 		// some other status
 		"ContainerStatusUnknown",
+		"CreateContainerConfigError",
+		"CreateContainerError",
 		"ContainerCannotRun",
 		"CrashLoopBackOff",
 		"DeadlineExceeded",
