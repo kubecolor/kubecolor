@@ -31,4 +31,4 @@ jobs:
           go-version-file: go.mod
 
       - name: test
-        run: ./nonblockingtest/script.sh | go run ./nonblockingtest/
+        run: go run ./nonblockingtest/
