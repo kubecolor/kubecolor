@@ -6,10 +6,26 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
 )
 
 func main() {
-	reader := bufio.NewReader(os.Stdin)
+	cmd := exec.Command("go", "run", "./nonblockingtest/fakekubectl")
+	r, w, err := os.Pipe()
+	if err != nil {
+		panic(err)
+	}
+
+	cmd.Stdout = w
+
+	go func() {
+		if err := cmd.Run(); err != nil {
+			panic(err)
+		}
+		w.Close()
+	}()
+
+	reader := bufio.NewReader(r)
 
 	fmt.Println("start")
 	for {
