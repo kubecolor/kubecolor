@@ -1,6 +1,6 @@
 module github.com/kubecolor/kubecolor
 
-go 1.24.7
+go 1.25.3
 
 require (
 	github.com/MakeNowJust/heredoc v1.0.0
