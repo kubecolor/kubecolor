@@ -38,6 +38,7 @@ func (p *StderrPrinter) Print(r io.Reader, w io.Writer) {
 		logsPrinterReader.Reset(line)
 		logsPrinter.Print(logsPrinterReader, w)
 	}
+	_ = scanner.Err() // special case: ignore any "pipe closed" and similar errors
 }
 
 func (p *StderrPrinter) formatLine(line string) (string, bool) {

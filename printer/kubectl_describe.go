@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"log/slog"
 	"regexp"
 	"strings"
 
@@ -67,6 +68,9 @@ func (p *DescribePrinter) Print(r io.Reader, w io.Writer) {
 			}
 		}
 		fmt.Fprintf(w, "%s\n", line.Trailing)
+	}
+	if err := scanner.Err(); err != nil {
+		slog.Error("Failed to print describe output.", "error", err)
 	}
 
 	if p.tableBytes != nil {

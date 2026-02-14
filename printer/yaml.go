@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"log/slog"
 	"strconv"
 	"strings"
 
@@ -30,6 +31,9 @@ func (p *YAMLPrinter) Print(r io.Reader, w io.Writer) {
 	for scanner.Scan() {
 		line := scanner.Text()
 		p.printLineAsYAMLFormat(line, w)
+	}
+	if err := scanner.Err(); err != nil {
+		slog.Error("Failed to print YAML output.", "error", err)
 	}
 }
 

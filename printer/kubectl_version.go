@@ -6,9 +6,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log/slog"
 	"strings"
 
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/internal/bytesutil"
 	"gopkg.in/yaml.v3"
 )
 
@@ -23,6 +25,7 @@ type VersionPrinter struct {
 // Server Version: v1.27.5-gke.200
 func (p *VersionPrinter) Print(r io.Reader, w io.Writer) {
 	scanner := bufio.NewScanner(r)
+	scanner.Buffer(nil, bytesutil.MaxLineLength)
 	any := false
 	for scanner.Scan() {
 		line := scanner.Text()
@@ -36,6 +39,9 @@ func (p *VersionPrinter) Print(r io.Reader, w io.Writer) {
 			ColorDataValue(val, p.Theme).Render(val),
 		)
 		any = true
+	}
+	if err := scanner.Err(); err != nil {
+		slog.Error("Failed to print version output.", "error", err)
 	}
 
 	// Check if any got printed, so we don't print version after an error like

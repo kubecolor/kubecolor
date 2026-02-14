@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"log/slog"
 	"strings"
 
 	"github.com/kubecolor/kubecolor/config"
@@ -21,6 +22,9 @@ func (p *JSONPrinter) Print(r io.Reader, w io.Writer) {
 	for scanner.Scan() {
 		line := scanner.Text()
 		p.printLineAsJsonFormat(line, w)
+	}
+	if err := scanner.Err(); err != nil {
+		slog.Error("Failed to print JSON output.", "error", err)
 	}
 }
 
