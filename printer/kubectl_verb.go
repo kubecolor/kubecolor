@@ -71,6 +71,13 @@ func (p *VerbPrinter) Print(r io.Reader, w io.Writer) {
 }
 
 func (p *VerbPrinter) colorizeVerb(line string) (string, bool) {
+	type Match struct {
+		Before, Verb, After string
+		Color               color.Color
+	}
+	var anyMatch bool
+	var match Match
+
 	for verb, color := range p.VerbColor {
 		idx := strings.LastIndex(line, verb)
 		if idx == -1 || idx == 0 {
@@ -85,7 +92,14 @@ func (p *VerbPrinter) colorizeVerb(line string) (string, bool) {
 			continue
 		}
 
-		return fmt.Sprintf("%s%s%s", before, color.Render(verb), after), true
+		if !anyMatch || len(verb) > len(match.Verb) {
+			match = Match{Before: before, Verb: verb, After: after, Color: color}
+			anyMatch = true
+		}
+	}
+
+	if anyMatch {
+		return fmt.Sprintf("%s%s%s", match.Before, match.Color.Render(match.Verb), match.After), true
 	}
 
 	for verbPrefix, color := range p.PrefixVerbColor {
