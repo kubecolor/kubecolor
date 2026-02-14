@@ -2,6 +2,7 @@ package command
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"log/slog"
@@ -205,6 +206,12 @@ func execWithReaders(config *Config, args []string) (io.ReadCloser, io.ReadClose
 	}
 
 	if err := cmd.Start(); err != nil {
+		var execErr *exec.Error
+		if errors.As(err, &execErr) {
+			if strings.Contains(execErr.Err.Error(), "executable file not found") {
+				return nil, nil, fmt.Errorf("%w; kubectl must be installed to use kubecolor", err)
+			}
+		}
 		return nil, nil, err
 	}
 
