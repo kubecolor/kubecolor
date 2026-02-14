@@ -301,22 +301,27 @@ type Theme struct {
 	Table  ThemeTable  // used in table output, e.g "kubectl get" and parts of "kubectl describe"
 	Stderr ThemeStderr // used in kubectl's stderr output
 
-	Apply    ThemeApply    // used in "kubectl apply"
+	// Order here matters. The other groups below commonly refer to "theme.apply.dryrun"
+
+	Apply ThemeApply // used in "kubectl apply"
+
+	Annotate ThemeAnnotate // used in "kubectl annotate"
 	Create   ThemeCreate   // used in "kubectl create"
 	Delete   ThemeDelete   // used in "kubectl delete"
 	Describe ThemeDescribe // used in "kubectl describe"
+	Diff     ThemeDiff     // used in "kubectl diff"
 	Drain    ThemeDrain    // used in "kubectl drain"
 	Explain  ThemeExplain  // used in "kubectl explain"
 	Expose   ThemeExpose   // used in "kubectl expose"
+	Help     ThemeHelp     // used in "kubectl --help"
+	Label    ThemeLabel    // used in "kubectl label"
+	Logs     ThemeLogs     // used in "kubectl logs"
 	Options  ThemeOptions  // used in "kubectl options"
 	Patch    ThemePatch    // used in "kubectl patch"
 	Rollout  ThemeRollout  // used in "kubectl rollout"
 	Scale    ThemeScale    // used in "kubectl scale"
 	Uncordon ThemeUncordon // used in "kubectl uncordon"
 	Version  ThemeVersion  // used in "kubectl version"
-	Help     ThemeHelp     // used in "kubectl --help"
-	Logs     ThemeLogs     // used in "kubectl logs"
-	Diff     ThemeDiff     // used in "kubectl diff"
 }
 
 func (t *Theme) ComputeCache() {
@@ -497,6 +502,24 @@ type ThemeDiff struct {
 	Added     color.Color `defaultFrom:"theme.base.success"` // used on added lines
 	Removed   color.Color `defaultFrom:"theme.base.danger"`  // used on removed lines
 	Unchanged color.Color `defaultFrom:"theme.base.muted"`   // used on unchanged lines
+}
+
+// ThemeAnnotate holds colors for the "kubectl annotate" output.
+type ThemeAnnotate struct {
+	Annotated color.Color `defaultFrom:"theme.base.success"` // used for all messages, as "kubectl annotate" always prints "annotated"
+
+	DryRun   color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+	Fallback color.Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format
+}
+
+// ThemeLabel holds colors for the "kubectl label" output.
+type ThemeLabel struct {
+	Labeled    color.Color `defaultFrom:"theme.base.success"` // used when label was added
+	Unlabeled  color.Color `defaultFrom:"theme.base.warning"` // used when label was removed
+	NotLabeled color.Color `defaultFrom:"theme.base.muted"`   // used when label was already set
+
+	DryRun   color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+	Fallback color.Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format
 }
 
 // ThemeOptions holds colors for the "kubectl options" output.

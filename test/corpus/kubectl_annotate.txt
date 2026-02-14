@@ -1,0 +1,14 @@
+================================================================================
+# pod annotated
+$ kubectl annotate pod my-pod my-annotation=my-value
+================================================================================
+
+pod/my-pod annotated
+pod/my-pod annotated (dry run)
+pod/my-pod annotated (server dry run)
+
+--------------------------------------------------------------------------------
+
+pod/my-pod [32mannotated[0m
+pod/my-pod [32mannotated[0m [36m(dry run)[0m
+pod/my-pod [32mannotated[0m [36m(server dry run)[0m

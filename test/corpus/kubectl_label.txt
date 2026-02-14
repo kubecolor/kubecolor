@@ -1,0 +1,44 @@
+================================================================================
+# pod labeled
+$ kubectl label pod my-pod my-label=my-value
+================================================================================
+
+pod/my-pod labeled
+pod/my-pod labeled (dry run)
+pod/my-pod labeled (server dry run)
+
+--------------------------------------------------------------------------------
+
+pod/my-pod [32mlabeled[0m
+pod/my-pod [32mlabeled[0m [36m(dry run)[0m
+pod/my-pod [32mlabeled[0m [36m(server dry run)[0m
+
+================================================================================
+# pod already labeled
+$ kubectl label pod my-pod my-label=my-value
+================================================================================
+
+pod/my-pod not labeled
+pod/my-pod not labeled (dry run)
+pod/my-pod not labeled (server dry run)
+
+--------------------------------------------------------------------------------
+
+pod/my-pod [90;3mnot labeled[0m
+pod/my-pod [90;3mnot labeled[0m [36m(dry run)[0m
+pod/my-pod [90;3mnot labeled[0m [36m(server dry run)[0m
+
+================================================================================
+# pod unlabeled
+$ kubectl label pod my-pod my-label=my-value
+================================================================================
+
+pod/my-pod unlabeled
+pod/my-pod unlabeled (dry run)
+pod/my-pod unlabeled (server dry run)
+
+--------------------------------------------------------------------------------
+
+pod/my-pod [33munlabeled[0m
+pod/my-pod [33munlabeled[0m [36m(dry run)[0m
+pod/my-pod [33munlabeled[0m [36m(server dry run)[0m
