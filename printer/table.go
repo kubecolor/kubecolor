@@ -3,6 +3,7 @@ package printer
 import (
 	"fmt"
 	"io"
+	"log/slog"
 	"strings"
 
 	"github.com/kubecolor/kubecolor/config"
@@ -61,6 +62,9 @@ func (p *TablePrinter) Print(r io.Reader, w io.Writer) {
 
 		fmt.Fprintf(w, "%s", scanner.LeadingSpaces())
 		p.printLineAsTableFormat(w, cells, p.Theme.Table.Columns)
+	}
+	if err := scanner.Err(); err != nil {
+		slog.Error("Failed to print table output.", "error", err)
 	}
 }
 

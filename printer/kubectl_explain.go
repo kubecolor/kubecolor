@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"log/slog"
 	"strings"
 
 	"github.com/kubecolor/kubecolor/config"
@@ -42,6 +43,9 @@ func (p *ExplainPrinter) Print(r io.Reader, w io.Writer) {
 		fmt.Fprintf(w, "%s", line.Spacing)
 		p.printVal(w, string(line.Value))
 		fmt.Fprintf(w, "%s\n", line.Trailing)
+	}
+	if err := scanner.Err(); err != nil {
+		slog.Error("Failed to print explain output.", "error", err)
 	}
 }
 

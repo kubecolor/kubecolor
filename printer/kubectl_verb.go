@@ -4,9 +4,11 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"log/slog"
 	"strings"
 
 	"github.com/kubecolor/kubecolor/config/color"
+	"github.com/kubecolor/kubecolor/internal/bytesutil"
 )
 
 // VerbPrinter is used in change commands like "kubectl apply" output:
@@ -52,6 +54,7 @@ const (
 // Print implements [Printer.Print]
 func (p *VerbPrinter) Print(r io.Reader, w io.Writer) {
 	scanner := bufio.NewScanner(r)
+	scanner.Buffer(nil, bytesutil.MaxLineLength)
 	for scanner.Scan() {
 		line := scanner.Text()
 		if line == "" {
@@ -67,6 +70,9 @@ func (p *VerbPrinter) Print(r io.Reader, w io.Writer) {
 		}
 
 		fmt.Fprintln(w, colored)
+	}
+	if err := scanner.Err(); err != nil {
+		slog.Error("Failed to print verbs output.", "error", err)
 	}
 }
 
