@@ -76,8 +76,10 @@ type Scanner struct {
 }
 
 func NewScanner(reader io.Reader) *Scanner {
+	scanner := bufio.NewScanner(reader)
+	scanner.Buffer(nil, bytesutil.MaxLineLength)
 	return &Scanner{
-		lineScanner: bufio.NewScanner(reader),
+		lineScanner: scanner,
 		tokenBuffer: make([]Token, 0, 10),
 	}
 }

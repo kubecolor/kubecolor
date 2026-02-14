@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/internal/bytesutil"
 )
 
 // StderrPrinter is a used on stderr input.
@@ -20,6 +21,7 @@ var _ Printer = &StderrPrinter{}
 // Print implements [Printer.Print]
 func (p *StderrPrinter) Print(r io.Reader, w io.Writer) {
 	scanner := bufio.NewScanner(r)
+	scanner.Buffer(nil, bytesutil.MaxLineLength)
 
 	logsPrinter := LogsPrinter{
 		Theme: p.Theme,

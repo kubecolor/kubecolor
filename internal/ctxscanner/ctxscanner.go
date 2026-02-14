@@ -8,6 +8,8 @@ import (
 	"errors"
 	"fmt"
 	"io"
+
+	"github.com/kubecolor/kubecolor/internal/bytesutil"
 )
 
 // Scanner is a wrapper around [bufio.Scanner] that takes in a context.
@@ -20,8 +22,10 @@ type Scanner struct {
 }
 
 func New(r io.Reader) *Scanner {
+	scanner := bufio.NewScanner(r)
+	scanner.Buffer(nil, bytesutil.MaxLineLength)
 	return &Scanner{
-		buf: bufio.NewScanner(r),
+		buf: scanner,
 		ch:  make(chan string, 100),
 	}
 }

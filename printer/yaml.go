@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/kubecolor/kubecolor/config"
+	"github.com/kubecolor/kubecolor/internal/bytesutil"
 	"github.com/kubecolor/kubecolor/internal/stringutil"
 )
 
@@ -25,6 +26,7 @@ var _ Printer = &YAMLPrinter{}
 // Print implements [Printer.Print]
 func (p *YAMLPrinter) Print(r io.Reader, w io.Writer) {
 	scanner := bufio.NewScanner(r)
+	scanner.Buffer(nil, bytesutil.MaxLineLength)
 	for scanner.Scan() {
 		line := scanner.Text()
 		p.printLineAsYAMLFormat(line, w)

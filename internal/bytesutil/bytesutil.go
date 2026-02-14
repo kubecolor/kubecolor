@@ -7,6 +7,13 @@ import (
 	"unicode/utf8"
 )
 
+// MaxLineLength is the maximum size the line buffer will grow to.
+//
+// Value is based on the maximum file size in Secrets and ConfigMaps (1 MiB),
+// but base64-encoded which increases the size by ~33% (rounded up to 1.5MB)
+// [https://kubernetes.io/docs/concepts/configuration/secret/#restriction-data-size]
+const MaxLineLength = 1500000
+
 func IndexOfNonSpace(b []byte, spaceCharset string) int {
 	for i := 0; i < len(b); i++ {
 		if !strings.ContainsRune(spaceCharset, rune(b[i])) {
