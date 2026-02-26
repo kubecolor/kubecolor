@@ -3,6 +3,7 @@ package printer
 import (
 	"regexp"
 	"strings"
+	"time"
 	"unicode"
 
 	"github.com/kubecolor/kubecolor/config"
@@ -71,6 +72,41 @@ func TryColorDataValue(val string, theme *config.Theme) (color.Color, bool) {
 	}
 
 	return theme.Data.String, false
+}
+
+// ColorDuration returns the colored string for a duration value based on age.
+// Fresh durations (below freshThreshold) get the DurationFresh color,
+// otherwise the color is selected by age unit.
+func ColorDuration(column string, freshThreshold time.Duration, theme *config.Theme) (string, bool) {
+	age, ok := stringutil.ParseHumanDuration(column)
+	if !ok {
+		return column, false
+	}
+	if age < freshThreshold {
+		return theme.Data.DurationFresh.Render(column), true
+	}
+	// If the user set a flat duration color, use it (skip age-based coloring).
+	if !theme.Data.DurationFlat.IsZero() {
+		return theme.Data.DurationFlat.Render(column), true
+	}
+	return durationColorByAge(age, &theme.Data.DurationColors).Render(column), true
+}
+
+// durationColorByAge returns the appropriate color for a duration
+// based on simple time thresholds.
+func durationColorByAge(d time.Duration, colors *config.ThemeDataDurationColors) color.Color {
+	switch {
+	case d >= 365*24*time.Hour:
+		return colors.Years
+	case d >= 24*time.Hour:
+		return colors.Days
+	case d >= time.Hour:
+		return colors.Hours
+	case d >= time.Minute:
+		return colors.Minutes
+	default:
+		return colors.Seconds
+	}
 }
 
 // ColorStatus returns the color that should be used for a given status text.

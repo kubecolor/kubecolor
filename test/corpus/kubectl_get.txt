@@ -12,9 +12,9 @@ nginx-qdf9b   1/1     Running   0          6d6h
 --------------------------------------------------------------------------------
 
 [1mNAME          READY   STATUS    RESTARTS   AGE[0m
-[37mnginx-dnmv5[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
-[37mnginx-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
-[37mnginx-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
+[37mnginx-dnmv5[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [35m6d6h[0m
+[37mnginx-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [35m6d6h[0m
+[37mnginx-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [35m6d6h[0m
 
 ================================================================================
 # multiple headers
@@ -33,13 +33,13 @@ replicaset.apps/nginx-6799fc88d8   3         3         3       19d
 --------------------------------------------------------------------------------
 
 [1mNAME                         READY   STATUS    RESTARTS   AGE[0m
-[37mpod/nginx-8spn9[0m              [36m1/1[0m     [32mRunning[0m   [36m1[0m          [37m19d[0m
-[37mpod/nginx-dplns[0m              [36m1/1[0m     [32mRunning[0m   [36m1[0m          [37m19d[0m
-[37mpod/nginx-lpv5x[0m              [36m1/1[0m     [32mRunning[0m   [36m1[0m          [37m19d[0m
+[37mpod/nginx-8spn9[0m              [36m1/1[0m     [32mRunning[0m   [36m1[0m          [35m19d[0m
+[37mpod/nginx-dplns[0m              [36m1/1[0m     [32mRunning[0m   [36m1[0m          [35m19d[0m
+[37mpod/nginx-lpv5x[0m              [36m1/1[0m     [32mRunning[0m   [36m1[0m          [35m19d[0m
 
 [1mNAME                               DESIRED   CURRENT   READY   AGE[0m
-[37mreplicaset.apps/nginx[0m              [36m3[0m         [37m3[0m         [36m3[0m       [37m19d[0m
-[37mreplicaset.apps/nginx-6799fc88d8[0m   [36m3[0m         [37m3[0m         [36m3[0m       [37m19d[0m
+[37mreplicaset.apps/nginx[0m              [36m3[0m         [37m3[0m         [36m3[0m       [35m19d[0m
+[37mreplicaset.apps/nginx-6799fc88d8[0m   [36m3[0m         [37m3[0m         [36m3[0m       [35m19d[0m
 
 ================================================================================
 # without header, 1st line is not colored in header color but colored as a content of table
@@ -52,9 +52,9 @@ nginx-qdf9b   1/1     Running   0          6d6h
 
 --------------------------------------------------------------------------------
 
-[37mnginx-dnmv5[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
-[37mnginx-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
-[37mnginx-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
+[37mnginx-dnmv5[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [35m6d6h[0m
+[37mnginx-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [35m6d6h[0m
+[37mnginx-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [35m6d6h[0m
 
 ================================================================================
 # light theme
@@ -70,9 +70,9 @@ nginx-qdf9b   1/1     Running   0          6d6h
 --------------------------------------------------------------------------------
 
 [1mNAME          READY   STATUS    RESTARTS   AGE[0m
-[30mnginx-dnmv5[0m   [34m1/1[0m     [32mRunning[0m   [34m0[0m          [30m6d6h[0m
-[30mnginx-m8pbc[0m   [34m1/1[0m     [32mRunning[0m   [34m0[0m          [30m6d6h[0m
-[30mnginx-qdf9b[0m   [34m1/1[0m     [32mRunning[0m   [34m0[0m          [30m6d6h[0m
+[30mnginx-dnmv5[0m   [34m1/1[0m     [32mRunning[0m   [34m0[0m          [35m6d6h[0m
+[30mnginx-m8pbc[0m   [34m1/1[0m     [32mRunning[0m   [34m0[0m          [35m6d6h[0m
+[30mnginx-qdf9b[0m   [34m1/1[0m     [32mRunning[0m   [34m0[0m          [35m6d6h[0m
 
 ================================================================================
 # a table whose some parts are missing can be handled
@@ -143,7 +143,7 @@ worker003   Ready,SchedulingDisabled   worker          474d   v1.28.8
 --------------------------------------------------------------------------------
 
 [1mNAME        STATUS                     ROLES           AGE    VERSION[0m
-[37mworker003[0m   [36m[32mReady[0m[36m,[33mSchedulingDisabled[0m[0m   [37mworker[0m          [36m474d[0m   [37mv1.28.8[0m
+[37mworker003[0m   [36m[32mReady[0m[36m,[33mSchedulingDisabled[0m[0m   [37mworker[0m          [31m474d[0m   [37mv1.28.8[0m
 
 ================================================================================
 # output name

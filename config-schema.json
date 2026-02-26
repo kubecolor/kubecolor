@@ -304,7 +304,15 @@
         },
         "durationFresh": {
           "$ref": "#/$defs/color",
-          "description": "color used when the time value is under a certain delay"
+          "description": "color used when the duration is under the fresh threshold"
+        },
+        "durationFlat": {
+          "$ref": "#/$defs/color",
+          "description": "when set, used as a flat color for non-fresh durations in tables, overriding durationColors"
+        },
+        "durationColors": {
+          "$ref": "#/$defs/themeDataDurationColors",
+          "description": "age-based duration colors for non-fresh durations in tables (ignored when durationFlat is configured)"
         },
         "ratio": {
           "$ref": "#/$defs/themeDataRatio"
@@ -313,6 +321,33 @@
       "additionalProperties": false,
       "type": "object",
       "description": "ThemeData holds colors for when representing parsed data."
+    },
+    "themeDataDurationColors": {
+      "properties": {
+        "years": {
+          "$ref": "#/$defs/color",
+          "description": "used when the most significant unit is years, e.g \"1y2d\""
+        },
+        "days": {
+          "$ref": "#/$defs/color",
+          "description": "used when the most significant unit is days, e.g \"3d5h\""
+        },
+        "hours": {
+          "$ref": "#/$defs/color",
+          "description": "used when the most significant unit is hours, e.g \"5h30m\""
+        },
+        "minutes": {
+          "$ref": "#/$defs/color",
+          "description": "used when the most significant unit is minutes, e.g \"30m10s\""
+        },
+        "seconds": {
+          "$ref": "#/$defs/color",
+          "description": "used when the most significant unit is seconds, e.g \"45s\""
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeDataDurationColors maps duration time units to colors."
     },
     "themeDataRatio": {
       "properties": {
