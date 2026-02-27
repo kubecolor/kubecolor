@@ -70,7 +70,8 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("#2ee5ae:italic"),      // white-ish
 			},
 			Data: ThemeData{
-				String: color.MustParse("#2aabee"),
+				String:       color.MustParse("#2aabee"),
+				DurationFlat: color.MustParse("#feb927"),
 			},
 			Table: ThemeTable{
 				Header:  color.MustParse("white:bold"),
@@ -92,7 +93,8 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("#2ee5ae:italic"),
 			},
 			Data: ThemeData{
-				String: color.MustParse("#2aabee"),
+				String:       color.MustParse("#2aabee"),
+				DurationFlat: color.MustParse("#feb927"),
 			},
 			Table: ThemeTable{
 				Header:  color.MustParse("black:bold"),
@@ -115,7 +117,8 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("#2ee5ae"),
 			},
 			Data: ThemeData{
-				String: color.MustParse("#2aabee"),
+				String:       color.MustParse("#2aabee"),
+				DurationFlat: color.MustParse("#feb927"),
 			},
 			Table: ThemeTable{
 				Header:  color.MustParse("white:bold"),
@@ -137,7 +140,8 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("#2ee5ae:italic"),
 			},
 			Data: ThemeData{
-				String: color.MustParse("#2aabee"),
+				String:       color.MustParse("#2aabee"),
+				DurationFlat: color.MustParse("#feb927"),
 			},
 			Table: ThemeTable{
 				Header:  color.MustParse("black:bold"),
@@ -160,7 +164,8 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("#2ee5ae"),
 			},
 			Data: ThemeData{
-				String: color.MustParse("#2aabee"),
+				String:       color.MustParse("#2aabee"),
+				DurationFlat: color.MustParse("#feb927"),
 			},
 			Table: ThemeTable{
 				Header:  color.MustParse("white:bold"),
@@ -182,7 +187,8 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("#2ee5ae:italic"),
 			},
 			Data: ThemeData{
-				String: color.MustParse("#2aabee"),
+				String:       color.MustParse("#2aabee"),
+				DurationFlat: color.MustParse("#feb927"),
 			},
 			Table: ThemeTable{
 				Header:  color.MustParse("black:bold"),
