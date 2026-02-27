@@ -4,4 +4,4 @@ nginx-7c5ddbdf54-9d575   0/1     ContainerCreating   0                30s
 nginx-7c5ddbdf54-f6wft   1/1     Running             0                15m
 nginx-7c5ddbdf54-kx2dq   0/1     CrashLoopBackOff    36 (2m48s ago)   3h20m
 nginx-7c5ddbdf54-h6dnn   1/1     Terminating         0                45d
-nginx-7c5ddbdf54-vtsqw   1/1     Running             0                400d
+postgresql-0             1/1     Running             0                400d
