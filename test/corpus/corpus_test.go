@@ -21,6 +21,7 @@ func TestCorpus(t *testing.T) {
 		t.Fatalf("Glob did not match any files: %s", glob)
 	}
 
+	var anyError bool
 	for _, file := range files {
 		t.Run(file.Name, func(t *testing.T) {
 			if len(file.Tests) == 0 {
@@ -30,9 +31,18 @@ func TestCorpus(t *testing.T) {
 				t.Run(test.Name, func(t *testing.T) {
 					if err := testcorpus.ExecuteTest(test); err != nil {
 						t.Error(testcorpus.FormatTestError(test, err))
+						anyError = true
 					}
 				})
 			}
 		})
+	}
+
+	if anyError {
+		t.Logf("Corpuses are out of sync!\n" +
+			"You can automatically update the corpus texts by running:\n\n" +
+			"$ go run ./internal/cmd/testcorpus -update\n" +
+			"or\n" +
+			"$ make corpus-update\n\n")
 	}
 }
