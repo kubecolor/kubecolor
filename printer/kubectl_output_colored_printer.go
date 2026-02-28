@@ -146,7 +146,9 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 		kubectl.Patch,
 		kubectl.Rollout,
 		kubectl.Scale,
-		kubectl.Uncordon:
+		kubectl.Uncordon,
+		kubectl.Annotate,
+		kubectl.Label:
 		switch p.SubcommandInfo.Output {
 		case kubectl.OutputJSON:
 			return &JSONPrinter{Theme: p.Theme}
@@ -243,6 +245,26 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 				FallbackColor: p.Theme.Uncordon.Fallback,
 				VerbColor: map[string]color.Color{
 					"uncordoned": p.Theme.Uncordon.Uncordoned,
+				},
+			}
+
+		case kubectl.Annotate:
+			return &VerbPrinter{
+				DryRunColor:   p.Theme.Annotate.DryRun,
+				FallbackColor: p.Theme.Annotate.Fallback,
+				VerbColor: map[string]color.Color{
+					"annotated": p.Theme.Annotate.Annotated,
+				},
+			}
+
+		case kubectl.Label:
+			return &VerbPrinter{
+				DryRunColor:   p.Theme.Label.DryRun,
+				FallbackColor: p.Theme.Label.Fallback,
+				VerbColor: map[string]color.Color{
+					"unlabeled":   p.Theme.Label.Unlabeled,
+					"labeled":     p.Theme.Label.Labeled,
+					"not labeled": p.Theme.Label.NotLabeled,
 				},
 			}
 		}
