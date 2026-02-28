@@ -47,7 +47,9 @@ docs: $(patsubst %.txt,%.svg,$(wildcard docs/*.txt)) ## generate docs images
 .PHONY: docs
 
 # View available themes in charmbracelet/freeze: https://xyproto.github.io/splash/docs/index.html
-docs/%.svg: ./docs/%.txt Makefile ./docs/freeze-config.json ${GO_FILES}
-	go run ./internal/cmd/imagegen $<
+# NOTE: The light rule must come before the generic rule, as both patterns
+# match *-light.svg files and Make uses the first matching rule.
 docs/%-light.svg: ./docs/%-light.txt Makefile ./docs/freeze-config-light.json ${GO_FILES}
 	go run ./internal/cmd/imagegen -freeze-config=./docs/freeze-config-light.json -flag-color=blue $<
+docs/%.svg: ./docs/%.txt Makefile ./docs/freeze-config.json ${GO_FILES}
+	go run ./internal/cmd/imagegen $<

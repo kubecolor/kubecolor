@@ -118,9 +118,9 @@ nginx-qdf9b   1/1     Running   0          6d6h
 --------------------------------------------------------------------------------
 
 [1mNAME          READY   STATUS    RESTARTS   AGE[0m
-[37mnginx-dnmv5[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
-[37mnginx-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
-[37mnginx-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
+[37mnginx-dnmv5[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [35m6d6h[0m
+[37mnginx-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [35m6d6h[0m
+[37mnginx-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [35m6d6h[0m
 
 ================================================================================
 # kubectl get pod with crash loop
@@ -135,9 +135,9 @@ nginx-qdf9b   0/1     Running            0          6d6h
 --------------------------------------------------------------------------------
 
 [1mNAME          READY   STATUS             RESTARTS   AGE[0m
-[37mnginx-dnmv4[0m   [36m1/1[0m     [31mCrashLoopBackOff[0m   [36m0[0m          [37m6d6h[0m
-[37mnginx-m8pbc[0m   [36m1/1[0m     [32mRunning[0m            [36m0[0m          [37m6d6h[0m
-[37mnginx-qdf9b[0m   [33m0/1[0m     [32mRunning[0m            [36m0[0m          [37m6d6h[0m
+[37mnginx-dnmv4[0m   [36m1/1[0m     [31mCrashLoopBackOff[0m   [36m0[0m          [35m6d6h[0m
+[37mnginx-m8pbc[0m   [36m1/1[0m     [32mRunning[0m            [36m0[0m          [35m6d6h[0m
+[37mnginx-qdf9b[0m   [33m0/1[0m     [32mRunning[0m            [36m0[0m          [35m6d6h[0m
 
 ================================================================================
 # kubectl get pod with fresh objects
@@ -153,7 +153,7 @@ nginx-qdf9b   1/1     Running   0          4m59s
 --------------------------------------------------------------------------------
 
 [1mNAME          READY   STATUS    RESTARTS   AGE[0m
-[37mnginx-dnmv6[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
+[37mnginx-dnmv6[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [35m6d6h[0m
 [37mnginx-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m5m[0m
 [37mnginx-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [32m4m59s[0m
 
@@ -167,9 +167,9 @@ nginx-qdf9b   1/1     Running   0          6d6h
 
 --------------------------------------------------------------------------------
 
-[37mnginx-dnmv5[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
-[37mnginx-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
-[37mnginx-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m6d6h[0m
+[37mnginx-dnmv5[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [35m6d6h[0m
+[37mnginx-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [35m6d6h[0m
+[37mnginx-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [35m6d6h[0m
 
 ================================================================================
 $ kubectl get pod -o wide
@@ -183,9 +183,9 @@ nginx-6799fc88d8-qdf9b   1/1     Running   0          7d10h   172.18.0.3   minik
 --------------------------------------------------------------------------------
 
 [1mNAME                     READY   STATUS    RESTARTS   AGE     IP           NODE       NOMINATED NODE   READINESS GATES[0m
-[37mnginx-6799fc88d8-dnmv7[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m7d10h[0m   [36m172.18.0.5[0m   [37mminikube[0m   [36m<none>[0m           [37m<none>[0m
-[37mnginx-6799fc88d8-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m7d10h[0m   [36m172.18.0.4[0m   [37mminikube[0m   [36m<none>[0m           [37m<none>[0m
-[37mnginx-6799fc88d8-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m7d10h[0m   [36m172.18.0.3[0m   [37mminikube[0m   [36m<none>[0m           [37m<none>[0m
+[37mnginx-6799fc88d8-dnmv7[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [35m7d10h[0m   [36m172.18.0.5[0m   [37mminikube[0m   [36m<none>[0m           [37m<none>[0m
+[37mnginx-6799fc88d8-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [35m7d10h[0m   [36m172.18.0.4[0m   [37mminikube[0m   [36m<none>[0m           [37m<none>[0m
+[37mnginx-6799fc88d8-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [35m7d10h[0m   [36m172.18.0.3[0m   [37mminikube[0m   [36m<none>[0m           [37m<none>[0m
 
 ================================================================================
 $ kubectl get pod -o json
@@ -424,16 +424,16 @@ LAST SEEN   TYPE     REASON              OBJECT                       MESSAGE
 --------------------------------------------------------------------------------
 
 [1mLAST SEEN   TYPE     REASON              OBJECT                       MESSAGE[0m
-[37m13s[0m         [32mNormal[0m   [32mSuccessfulCreate[0m    [36mReplicaSet/nginx-76d6c9b8c[0m   [37mCreated pod: nginx-76d6c9b8c-fmshc[0m
-[37m13s[0m         [32mNormal[0m   [32mSuccessfulCreate[0m    [36mReplicaSet/nginx-76d6c9b8c[0m   [37mCreated pod: nginx-76d6c9b8c-bkmwp[0m
-[37m13s[0m         [32mNormal[0m   [33mScalingReplicaSet[0m   [36mDeployment/nginx[0m             [37mScaled up replica set nginx-76d6c9b8c to 2[0m
-[37m12s[0m         [32mNormal[0m   [32mScheduled[0m           [36mPod/nginx-76d6c9b8c-fmshc[0m    [37mSuccessfully assigned default/nginx-76d6c9b8c-fmshc to minikube[0m
-[37m12s[0m         [32mNormal[0m   [32mScheduled[0m           [36mPod/nginx-76d6c9b8c-bkmwp[0m    [37mSuccessfully assigned default/nginx-76d6c9b8c-bkmwp to minikube[0m
-[37m12s[0m         [32mNormal[0m   [33mPulling[0m             [36mPod/nginx-76d6c9b8c-bkmwp[0m    [37mPulling image "nginx"[0m
-[37m12s[0m         [32mNormal[0m   [33mPulling[0m             [36mPod/nginx-76d6c9b8c-fmshc[0m    [37mPulling image "nginx"[0m
-[37m11s[0m         [32mNormal[0m   [32mCreated[0m             [36mPod/nginx-76d6c9b8c-bkmwp[0m    [37mCreated container nginx[0m
-[37m11s[0m         [32mNormal[0m   [32mStarted[0m             [36mPod/nginx-76d6c9b8c-bkmwp[0m    [37mStarted container nginx[0m
-[37m11s[0m         [32mNormal[0m   [32mPulled[0m              [36mPod/nginx-76d6c9b8c-bkmwp[0m    [37mSuccessfully pulled image "nginx" in 1.421388084s[0m
-[37m10s[0m         [32mNormal[0m   [32mPulled[0m              [36mPod/nginx-76d6c9b8c-fmshc[0m    [37mSuccessfully pulled image "nginx" in 2.892136877s[0m
-[37m9s[0m          [32mNormal[0m   [32mCreated[0m             [36mPod/nginx-76d6c9b8c-fmshc[0m    [37mCreated container nginx[0m
-[37m9s[0m          [32mNormal[0m   [32mStarted[0m             [36mPod/nginx-76d6c9b8c-fmshc[0m    [37mStarted container nginx[0m
+[36m13s[0m         [32mNormal[0m   [32mSuccessfulCreate[0m    [36mReplicaSet/nginx-76d6c9b8c[0m   [37mCreated pod: nginx-76d6c9b8c-fmshc[0m
+[36m13s[0m         [32mNormal[0m   [32mSuccessfulCreate[0m    [36mReplicaSet/nginx-76d6c9b8c[0m   [37mCreated pod: nginx-76d6c9b8c-bkmwp[0m
+[36m13s[0m         [32mNormal[0m   [33mScalingReplicaSet[0m   [36mDeployment/nginx[0m             [37mScaled up replica set nginx-76d6c9b8c to 2[0m
+[36m12s[0m         [32mNormal[0m   [32mScheduled[0m           [36mPod/nginx-76d6c9b8c-fmshc[0m    [37mSuccessfully assigned default/nginx-76d6c9b8c-fmshc to minikube[0m
+[36m12s[0m         [32mNormal[0m   [32mScheduled[0m           [36mPod/nginx-76d6c9b8c-bkmwp[0m    [37mSuccessfully assigned default/nginx-76d6c9b8c-bkmwp to minikube[0m
+[36m12s[0m         [32mNormal[0m   [33mPulling[0m             [36mPod/nginx-76d6c9b8c-bkmwp[0m    [37mPulling image "nginx"[0m
+[36m12s[0m         [32mNormal[0m   [33mPulling[0m             [36mPod/nginx-76d6c9b8c-fmshc[0m    [37mPulling image "nginx"[0m
+[36m11s[0m         [32mNormal[0m   [32mCreated[0m             [36mPod/nginx-76d6c9b8c-bkmwp[0m    [37mCreated container nginx[0m
+[36m11s[0m         [32mNormal[0m   [32mStarted[0m             [36mPod/nginx-76d6c9b8c-bkmwp[0m    [37mStarted container nginx[0m
+[36m11s[0m         [32mNormal[0m   [32mPulled[0m              [36mPod/nginx-76d6c9b8c-bkmwp[0m    [37mSuccessfully pulled image "nginx" in 1.421388084s[0m
+[36m10s[0m         [32mNormal[0m   [32mPulled[0m              [36mPod/nginx-76d6c9b8c-fmshc[0m    [37mSuccessfully pulled image "nginx" in 2.892136877s[0m
+[36m9s[0m          [32mNormal[0m   [32mCreated[0m             [36mPod/nginx-76d6c9b8c-fmshc[0m    [37mCreated container nginx[0m
+[36m9s[0m          [32mNormal[0m   [32mStarted[0m             [36mPod/nginx-76d6c9b8c-fmshc[0m    [37mStarted container nginx[0m

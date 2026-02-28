@@ -70,7 +70,8 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("#2ee5ae:italic"),      // white-ish
 			},
 			Data: ThemeData{
-				String: color.MustParse("#2aabee"),
+				String:       color.MustParse("#2aabee"),
+				DurationFlat: color.MustParse("#feb927"),
 			},
 			Table: ThemeTable{
 				Header:  color.MustParse("white:bold"),
@@ -92,7 +93,8 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("#2ee5ae:italic"),
 			},
 			Data: ThemeData{
-				String: color.MustParse("#2aabee"),
+				String:       color.MustParse("#2aabee"),
+				DurationFlat: color.MustParse("#feb927"),
 			},
 			Table: ThemeTable{
 				Header:  color.MustParse("black:bold"),
@@ -115,7 +117,8 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("#2ee5ae"),
 			},
 			Data: ThemeData{
-				String: color.MustParse("#2aabee"),
+				String:       color.MustParse("#2aabee"),
+				DurationFlat: color.MustParse("#feb927"),
 			},
 			Table: ThemeTable{
 				Header:  color.MustParse("white:bold"),
@@ -137,7 +140,8 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("#2ee5ae:italic"),
 			},
 			Data: ThemeData{
-				String: color.MustParse("#2aabee"),
+				String:       color.MustParse("#2aabee"),
+				DurationFlat: color.MustParse("#feb927"),
 			},
 			Table: ThemeTable{
 				Header:  color.MustParse("black:bold"),
@@ -160,7 +164,8 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("#2ee5ae"),
 			},
 			Data: ThemeData{
-				String: color.MustParse("#2aabee"),
+				String:       color.MustParse("#2aabee"),
+				DurationFlat: color.MustParse("#feb927"),
 			},
 			Table: ThemeTable{
 				Header:  color.MustParse("white:bold"),
@@ -182,7 +187,8 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("#2ee5ae:italic"),
 			},
 			Data: ThemeData{
-				String: color.MustParse("#2aabee"),
+				String:       color.MustParse("#2aabee"),
+				DurationFlat: color.MustParse("#feb927"),
 			},
 			Table: ThemeTable{
 				Header:  color.MustParse("black:bold"),
@@ -352,18 +358,29 @@ type ThemeShell struct {
 // ThemeData holds colors for when representing parsed data.
 // Such as in YAML, JSON, and even some "kubectl describe" values
 type ThemeData struct {
-	Key    color.Slice `defaultFrom:"theme.base.key"`     // used for the key
-	String color.Color `defaultFrom:"theme.base.info"`    // used when value is a string
-	True   color.Color `defaultFrom:"theme.base.success"` // used when value is true
-	False  color.Color `defaultFrom:"theme.base.danger"`  // used when value is false
-	Number color.Color `defaultFrom:"theme.base.primary"` // used when the value is a number
-	Null   color.Color `defaultFrom:"theme.base.muted"`   // used when the value is null, nil, or none
-
+	Key           color.Slice `defaultFrom:"theme.base.key"`     // used for the key
+	String        color.Color `defaultFrom:"theme.base.info"`    // used when value is a string
+	True          color.Color `defaultFrom:"theme.base.success"` // used when value is true
+	False         color.Color `defaultFrom:"theme.base.danger"`  // used when value is false
+	Number        color.Color `defaultFrom:"theme.base.primary"` // used when the value is a number
+	Null          color.Color `defaultFrom:"theme.base.muted"`   // used when the value is null, nil, or none
 	Quantity      color.Color `defaultFrom:"theme.data.number"`  // used when the value is a quantity, e.g "100m" or "5Gi"
 	Duration      color.Color ``                                 // used when the value is a duration, e.g "12m" or "1d12h"
-	DurationFresh color.Color `defaultFrom:"theme.base.success"` // color used when the time value is under a certain delay
+	DurationFresh color.Color `defaultFrom:"theme.base.success"` // color used when the duration is under the fresh threshold
+	DurationFlat  color.Color ``                                 // when set, used as a flat color for non-fresh durations in tables, overriding durationColors
 
-	Ratio ThemeDataRatio
+	DurationColors ThemeDataDurationColors // age-based duration colors for non-fresh durations in tables (ignored when durationFlat is configured)
+	Ratio          ThemeDataRatio
+}
+
+// ThemeDataDurationColors maps duration time units to colors.
+// The entire duration string is colored based on its most significant unit.
+type ThemeDataDurationColors struct {
+	Years   color.Color `defaultFrom:"theme.base.danger"`    // used when the most significant unit is years, e.g "1y2d"
+	Days    color.Color `defaultFrom:"theme.base.primary"`   // used when the most significant unit is days, e.g "3d5h"
+	Hours   color.Color `defaultFrom:"theme.base.warning"`   // used when the most significant unit is hours, e.g "5h30m"
+	Minutes color.Color `defaultFrom:"theme.base.info"`      // used when the most significant unit is minutes, e.g "30m10s"
+	Seconds color.Color `defaultFrom:"theme.base.secondary"` // used when the most significant unit is seconds, e.g "45s"
 }
 
 type ThemeDataRatio struct {

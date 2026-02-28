@@ -78,12 +78,8 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 						}
 					}
 
-					// Object age when fresh then green
-					if age, ok := stringutil.ParseHumanDuration(column); ok {
-						if age < p.ObjFreshThreshold {
-							return p.Theme.Data.DurationFresh.Render(column)
-						}
-						return p.Theme.Data.Duration.Render(column)
+					if colored, ok := ColorDuration(column, p.ObjFreshThreshold, p.Theme); ok {
+						return colored
 					}
 
 					return column
