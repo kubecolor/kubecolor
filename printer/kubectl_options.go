@@ -3,6 +3,7 @@ package printer
 import (
 	"fmt"
 	"io"
+	"log/slog"
 	"slices"
 
 	"github.com/kubecolor/kubecolor/config"
@@ -43,5 +44,8 @@ func (p *OptionsPrinter) Print(r io.Reader, w io.Writer) {
 			line.Indent,
 			p.Theme.Data.String.Render(string(slices.Concat(line.Key, line.Spacing, line.Value))),
 			line.Trailing)
+	}
+	if err := scanner.Err(); err != nil {
+		slog.Error("Failed to print options output.", "error", err)
 	}
 }

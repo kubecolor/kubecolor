@@ -3,6 +3,7 @@ package printer
 import (
 	"bytes"
 	"io"
+	"log/slog"
 
 	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/config/color"
@@ -76,5 +77,8 @@ func (p *LogsPrinter) Print(r io.Reader, w io.Writer) {
 				lineBuffer.WriteString(token.Text)
 			}
 		}
+	}
+	if err := scanner.Err(); err != nil {
+		slog.Error("Failed to print log output.", "error", err)
 	}
 }

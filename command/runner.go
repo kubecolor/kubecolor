@@ -128,9 +128,6 @@ func Run(rawArgs []string, version string) error {
 	if err != nil {
 		return err
 	}
-	// in case of panic, at least let kubectl finish executing
-	defer stdoutReader.Close()
-	defer stderrReader.Close()
 
 	// make buffer to be used in defer recover()
 	errBuf := new(bytes.Buffer)
@@ -140,9 +137,9 @@ func Run(rawArgs []string, version string) error {
 
 	wg := &sync.WaitGroup{}
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	var closeErr error
+	wg.Go(func() {
+		defer func() { closeErr = stdoutReader.Close() }()
 		defer func() {
 			if r := recover(); r != nil {
 				slog.Error("Recovered from panic", "error", r)
@@ -152,18 +149,17 @@ func Run(rawArgs []string, version string) error {
 
 		// This can panic when kubecolor has bug, so recover in defer
 		printers.FullColoredPrinter.Print(stdoutReader, Stdout)
-	}()
+	})
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
+	wg.Go(func() {
+		defer stderrReader.Close()
 		// This will unlikely panic
 		printers.ErrorPrinter.Print(errBufReader, Stderr)
-	}()
+	})
 
 	wg.Wait()
 
-	return stdoutReader.Close()
+	return closeErr
 }
 
 func execWithoutColors(config *Config, args []string) error {

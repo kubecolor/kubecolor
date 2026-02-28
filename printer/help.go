@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"log/slog"
 	"regexp"
 	"slices"
 	"strings"
@@ -78,6 +79,9 @@ func (p *HelpPrinter) Print(r io.Reader, w io.Writer) {
 				p.Theme.Help.Text.Render(text),
 				line.Trailing)
 		}
+	}
+	if err := scanner.Err(); err != nil {
+		slog.Error("Failed to print help output.", "error", err)
 	}
 }
 
