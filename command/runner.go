@@ -93,11 +93,16 @@ func Run(rawArgs []string, version string) error {
 		cfg.ForceColor == ColorLevelNone,
 		// Conventional environment variable for disabling colors
 		os.Getenv("NO_COLOR") != "",
-		// Skip if stdout is not a tty UNLESS --force-colors is set
-		!isOutputTerminal() && cfg.ForceColor == ColorLevelUnset:
+		// Skip if stdout is not a tty UNLESS --force-colors or $FORCE_COLOR are set
+		!isOutputTerminal() && cfg.ForceColor == ColorLevelUnset && os.Getenv("FORCE_COLOR") == "":
 
-		// when we shan't colorize, just run command and return
-		return execWithoutColors(cfg, args)
+		if subcommandInfo.Subcommand == kubectl.Version {
+			// continue with custom printer, but without colors
+			color.ForceSetColorLevel(terminfo.ColorLevelNone)
+		} else {
+			// when we shan't colorize, just run command and return
+			return execWithoutColors(cfg, args)
+		}
 
 	case cfg.ForceColor == ColorLevelAuto || cfg.ForceColor == ColorLevelUnset:
 		// gookit/color defaults to 8-bit colors when FORCE_COLOR is set.
