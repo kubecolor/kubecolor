@@ -168,3 +168,18 @@ worker003
 
 [1mNAME[0m
 [37mworker003[0m
+
+================================================================================
+# CRD bool status
+$ kubectl get certificates
+================================================================================
+
+NAME          READY   SECRET        AGE
+my-cert       True    my-secret     30d
+bad-cert      False   bad-secret    5d
+
+--------------------------------------------------------------------------------
+
+[1mNAME          READY   SECRET        AGE[0m
+[37mmy-cert[0m       [32mTrue[0m    [37mmy-secret[0m     [36m30d[0m
+[37mbad-cert[0m      [31mFalse[0m   [37mbad-secret[0m    [36m5d[0m

@@ -66,6 +66,14 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 						return colored
 					}
 
+					// CRD bool status (e.g. READY column with True/False)
+					switch column {
+					case "True":
+						return p.Theme.Status.Success.Render(column)
+					case "False":
+						return p.Theme.Status.Error.Render(column)
+					}
+
 					// When Readiness is "n/m" then yellow
 					if left, right, ok := stringutil.ParseRatio(strings.TrimPrefix(column, "Init:")); ok {
 						switch {
