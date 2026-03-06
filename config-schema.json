@@ -114,6 +114,10 @@
           "$ref": "#/$defs/themeApply",
           "description": "used in \"kubectl apply\""
         },
+        "annotate": {
+          "$ref": "#/$defs/themeAnnotate",
+          "description": "used in \"kubectl annotate\""
+        },
         "create": {
           "$ref": "#/$defs/themeCreate",
           "description": "used in \"kubectl create\""
@@ -126,6 +130,10 @@
           "$ref": "#/$defs/themeDescribe",
           "description": "used in \"kubectl describe\""
         },
+        "diff": {
+          "$ref": "#/$defs/themeDiff",
+          "description": "used in \"kubectl diff\""
+        },
         "drain": {
           "$ref": "#/$defs/themeDrain",
           "description": "used in \"kubectl drain\""
@@ -137,6 +145,18 @@
         "expose": {
           "$ref": "#/$defs/themeExpose",
           "description": "used in \"kubectl expose\""
+        },
+        "help": {
+          "$ref": "#/$defs/themeHelp",
+          "description": "used in \"kubectl --help\""
+        },
+        "label": {
+          "$ref": "#/$defs/themeLabel",
+          "description": "used in \"kubectl label\""
+        },
+        "logs": {
+          "$ref": "#/$defs/themeLogs",
+          "description": "used in \"kubectl logs\""
         },
         "options": {
           "$ref": "#/$defs/themeOptions",
@@ -161,23 +181,30 @@
         "version": {
           "$ref": "#/$defs/themeVersion",
           "description": "used in \"kubectl version\""
-        },
-        "help": {
-          "$ref": "#/$defs/themeHelp",
-          "description": "used in \"kubectl --help\""
-        },
-        "logs": {
-          "$ref": "#/$defs/themeLogs",
-          "description": "used in \"kubectl logs\""
-        },
-        "diff": {
-          "$ref": "#/$defs/themeDiff",
-          "description": "used in \"kubectl diff\""
         }
       },
       "additionalProperties": false,
       "type": "object",
       "description": "Theme is the root theme config."
+    },
+    "themeAnnotate": {
+      "properties": {
+        "annotated": {
+          "$ref": "#/$defs/color",
+          "description": "used for all messages, as \"kubectl annotate\" always prints \"annotated\""
+        },
+        "dryRun": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"(dry run)\" and \"(server dry run)\""
+        },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when outputs unknown format"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeAnnotate holds colors for the \"kubectl annotate\" output."
     },
     "themeApply": {
       "properties": {
@@ -472,6 +499,33 @@
       "additionalProperties": false,
       "type": "object",
       "description": "ThemeHelp holds colors for the \"kubectl --help\" output."
+    },
+    "themeLabel": {
+      "properties": {
+        "labeled": {
+          "$ref": "#/$defs/color",
+          "description": "used when label was added"
+        },
+        "unlabeled": {
+          "$ref": "#/$defs/color",
+          "description": "used when label was removed"
+        },
+        "notLabeled": {
+          "$ref": "#/$defs/color",
+          "description": "used when label was already set"
+        },
+        "dryRun": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"(dry run)\" and \"(server dry run)\""
+        },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when outputs unknown format"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeLabel holds colors for the \"kubectl label\" output."
     },
     "themeLogs": {
       "properties": {

@@ -2,6 +2,7 @@ package command
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"log/slog"
@@ -92,11 +93,16 @@ func Run(rawArgs []string, version string) error {
 		cfg.ForceColor == ColorLevelNone,
 		// Conventional environment variable for disabling colors
 		os.Getenv("NO_COLOR") != "",
-		// Skip if stdout is not a tty UNLESS --force-colors is set
-		!isOutputTerminal() && cfg.ForceColor == ColorLevelUnset:
+		// Skip if stdout is not a tty UNLESS --force-colors or $FORCE_COLOR are set
+		!isOutputTerminal() && cfg.ForceColor == ColorLevelUnset && os.Getenv("FORCE_COLOR") == "":
 
-		// when we shan't colorize, just run command and return
-		return execWithoutColors(cfg, args)
+		if subcommandInfo.Subcommand == kubectl.Version {
+			// continue with custom printer, but without colors
+			color.ForceSetColorLevel(terminfo.ColorLevelNone)
+		} else {
+			// when we shan't colorize, just run command and return
+			return execWithoutColors(cfg, args)
+		}
 
 	case cfg.ForceColor == ColorLevelAuto || cfg.ForceColor == ColorLevelUnset:
 		// gookit/color defaults to 8-bit colors when FORCE_COLOR is set.
@@ -205,6 +211,12 @@ func execWithReaders(config *Config, args []string) (io.ReadCloser, io.ReadClose
 	}
 
 	if err := cmd.Start(); err != nil {
+		var execErr *exec.Error
+		if errors.As(err, &execErr) {
+			if strings.Contains(execErr.Err.Error(), "executable file not found") {
+				return nil, nil, fmt.Errorf("%w; kubectl must be installed to use kubecolor", err)
+			}
+		}
 		return nil, nil, err
 	}
 
