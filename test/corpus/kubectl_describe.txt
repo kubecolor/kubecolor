@@ -119,8 +119,8 @@ Events:              <none>
 [96mConditions[0m:
   [1mType             Status  LastHeartbeatTime                 LastTransitionTime                Reason                       Message[0m
   [1m----             ------  -----------------                 ------------------                ------                       -------[0m
-  [37mMemoryPressure[0m   [36mFalse[0m   [37mSun, 18 Oct 2020 12:00:54 +0900[0m   [36mWed, 14 Oct 2020 09:28:18 +0900[0m   [37mKubeletHasSufficientMemory[0m   [36mkubelet has sufficient memory available[0m
-  [37mDiskPressure[0m     [36mFalse[0m   [37mSun, 18 Oct 2020 12:00:54 +0900[0m   [36mWed, 14 Oct 2020 09:28:18 +0900[0m   [37mKubeletHasNoDiskPressure[0m     [36mkubelet has no disk pressure[0m
+  [37mMemoryPressure[0m   [31mFalse[0m   [37mSun, 18 Oct 2020 12:00:54 +0900[0m   [36mWed, 14 Oct 2020 09:28:18 +0900[0m   [37mKubeletHasSufficientMemory[0m   [36mkubelet has sufficient memory available[0m
+  [37mDiskPressure[0m     [31mFalse[0m   [37mSun, 18 Oct 2020 12:00:54 +0900[0m   [36mWed, 14 Oct 2020 09:28:18 +0900[0m   [37mKubeletHasNoDiskPressure[0m     [36mkubelet has no disk pressure[0m
 [96mAddresses[0m:
   [36mInternalIP[0m:  [93m172.17.0.3[0m
   [36mHostname[0m:    [93mminikube[0m

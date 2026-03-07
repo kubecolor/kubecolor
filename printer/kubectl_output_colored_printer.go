@@ -66,14 +66,6 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 						return colored
 					}
 
-					// CRD bool status (e.g. READY column with True/False)
-					switch column {
-					case "True":
-						return p.Theme.Status.Success.Render(column)
-					case "False":
-						return p.Theme.Status.Error.Render(column)
-					}
-
 					// When Readiness is "n/m" then yellow
 					if left, right, ok := stringutil.ParseRatio(strings.TrimPrefix(column, "Init:")); ok {
 						switch {
@@ -125,10 +117,10 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 		}
 
 	case kubectl.Version:
-		switch {
-		case p.SubcommandInfo.Output == kubectl.OutputJSON:
+		switch p.SubcommandInfo.Output {
+		case kubectl.OutputJSON:
 			return &VersionJSONInjectorPrinter{KubecolorVersion: p.KubecolorVersion, JsonPrinter: &JSONPrinter{Theme: p.Theme}}
-		case p.SubcommandInfo.Output == kubectl.OutputYAML:
+		case kubectl.OutputYAML:
 			return &VersionYAMLInjectorPrinter{KubecolorVersion: p.KubecolorVersion, YamlPrinter: &YAMLPrinter{Theme: p.Theme}}
 		default:
 			return &VersionPrinter{
