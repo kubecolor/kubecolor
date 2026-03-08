@@ -146,11 +146,11 @@ func printCommand(args []string, input string, env []EnvVar) string {
 	}
 
 	var p printer.Printer = &printer.KubectlOutputColoredPrinter{
-		SubcommandInfo:    subcommandInfo,
-		Recursive:         subcommandInfo.Recursive,
-		ObjFreshThreshold: cfg.ObjFreshThreshold,
-		Theme:             &cfg.Theme,
-		KubecolorVersion:  "dev",
+		SubcommandInfo:   subcommandInfo,
+		Recursive:        subcommandInfo.Recursive,
+		Duration:         &cfg.Duration,
+		Theme:            &cfg.Theme,
+		KubecolorVersion: "dev",
 	}
 
 	if value, ok := os.LookupEnv("INPUT_IS_STDERR"); ok {

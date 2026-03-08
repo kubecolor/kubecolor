@@ -179,7 +179,7 @@ ERRO server.distmemorystore.olric: Failed to acquire semaphore: context canceled
 
 [90;3mDEBU[0m server.distmemorystore.olric: Failed to find 172.23.109.6:3320 in the cluster: member not found
 [32mINFO[0m server.distmemorystore.olric: Routing table has been pushed by 172.23.157.8:3320
-[33mWARN[0m Recieved kill signal. Stopping... [96msignal[0m=[93mterminated[0m [36mtimeout[0m=10s
+[33mWARN[0m Recieved kill signal. Stopping... [96msignal[0m=[93mterminated[0m [36mtimeout[0m=[35m10s[0m
 [90;3mDEBU[0m server: Closing store before shutting down API server
 [31mERRO[0m server.distmemorystore.olric: Failed to acquire semaphore: context canceled
 

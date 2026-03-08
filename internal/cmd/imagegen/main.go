@@ -263,10 +263,10 @@ func runKubecolorCommand(cmd Command, env *EnvStore) (string, error) {
 
 	subcommandInfo := kubectl.InspectSubcommandInfo(cmd.Args, kubectl.NoopPluginHandler{})
 	p := &printer.KubectlOutputColoredPrinter{
-		SubcommandInfo:    subcommandInfo,
-		Recursive:         subcommandInfo.Recursive,
-		ObjFreshThreshold: cfg.ObjFreshThreshold,
-		Theme:             &cfg.Theme,
+		SubcommandInfo: subcommandInfo,
+		Recursive:      subcommandInfo.Recursive,
+		Duration:       &cfg.Duration,
+		Theme:          &cfg.Theme,
 	}
 	p.Print(strings.NewReader(cmd.Input), &buf)
 	return buf.String(), nil
