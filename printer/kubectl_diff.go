@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"log/slog"
 	"strings"
 
 	"github.com/kubecolor/kubecolor/config"
@@ -15,6 +16,7 @@ type DiffPrinter struct {
 
 func (p *DiffPrinter) Print(r io.Reader, w io.Writer) {
 	scanner := bufio.NewScanner(r)
+	scanner.Buffer(nil, bufio.MaxScanTokenSize)
 	for scanner.Scan() {
 		line := scanner.Text()
 		if line == "" {
@@ -24,6 +26,9 @@ func (p *DiffPrinter) Print(r io.Reader, w io.Writer) {
 		parsedLine := p.parseLine(line)
 
 		fmt.Fprintln(w, parsedLine)
+	}
+	if err := scanner.Err(); err != nil {
+		slog.Error("Failed to print diff output.", "error", err)
 	}
 }
 

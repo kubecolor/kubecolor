@@ -11,7 +11,6 @@ import (
 
 var (
 	spaceCharset = " \t"
-	doubleSpace  = []byte{' ', ' '}
 	tabBytes     = []byte{'\t'}
 )
 
@@ -110,8 +109,10 @@ type Scanner struct {
 }
 
 func NewScanner(reader io.Reader) *Scanner {
+	scanner := bufio.NewScanner(reader)
+	scanner.Buffer(nil, bytesutil.MaxLineLength)
 	return &Scanner{
-		lineScanner: bufio.NewScanner(reader),
+		lineScanner: scanner,
 	}
 }
 
