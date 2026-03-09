@@ -67,10 +67,42 @@ func TryColorDataValue(val string, theme *config.Theme) (color.Color, bool) {
 
 	// Duration: 15m10s
 	if _, ok := stringutil.ParseHumanDuration(val); ok {
-		return theme.Data.Duration, true
+		return theme.Data.Duration.Default, true
 	}
 
 	return theme.Data.String, false
+}
+
+// ColorDuration returns the colored string for a duration value based on age.
+// Thresholds are checked from highest to lowest; the first threshold
+// the age meets or exceeds determines the color. Ages below all thresholds
+// use the default duration color.
+func ColorDuration(column string, durationConfig *config.Duration, theme *config.Theme) (string, bool) {
+	d, ok := stringutil.ParseHumanDuration(column)
+	if !ok {
+		return column, false
+	}
+
+	colors := &theme.Data.Duration
+	var c color.Color
+	switch {
+	case durationConfig.Threshold6 > 0 && d >= durationConfig.Threshold6:
+		c = colors.Threshold6
+	case durationConfig.Threshold5 > 0 && d >= durationConfig.Threshold5:
+		c = colors.Threshold5
+	case durationConfig.Threshold4 > 0 && d >= durationConfig.Threshold4:
+		c = colors.Threshold4
+	case durationConfig.Threshold3 > 0 && d >= durationConfig.Threshold3:
+		c = colors.Threshold3
+	case durationConfig.Threshold2 > 0 && d >= durationConfig.Threshold2:
+		c = colors.Threshold2
+	case durationConfig.Threshold1 > 0 && d >= durationConfig.Threshold1:
+		c = colors.Threshold1
+	default:
+		c = colors.Default
+	}
+
+	return c.Render(column), true
 }
 
 // ColorStatus returns the color that should be used for a given status text.

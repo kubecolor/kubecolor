@@ -3,7 +3,6 @@ package printer
 import (
 	"io"
 	"strings"
-	"time"
 
 	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/config/color"
@@ -17,11 +16,11 @@ import (
 // If given subcommand is not supported by the printer,
 // it prints data using the theme's default command color.
 type KubectlOutputColoredPrinter struct {
-	SubcommandInfo    *kubectl.SubcommandInfo
-	Recursive         bool
-	ObjFreshThreshold time.Duration
-	Theme             *config.Theme
-	KubecolorVersion  string
+	SubcommandInfo   *kubectl.SubcommandInfo
+	Recursive        bool
+	Duration         *config.Duration
+	Theme            *config.Theme
+	KubecolorVersion string
 }
 
 // ensures it implements the interface
@@ -78,12 +77,8 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 						}
 					}
 
-					// Object age when fresh then green
-					if age, ok := stringutil.ParseHumanDuration(column); ok {
-						if age < p.ObjFreshThreshold {
-							return p.Theme.Data.DurationFresh.Render(column)
-						}
-						return p.Theme.Data.Duration.Render(column)
+					if colored, ok := ColorDuration(column, p.Duration, p.Theme); ok {
+						return colored
 					}
 
 					return column

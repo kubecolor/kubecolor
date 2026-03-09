@@ -39,11 +39,11 @@ type pagerPipe struct {
 var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, cfg *config.Config, version string) *Printers {
 	return &Printers{
 		FullColoredPrinter: &printer.KubectlOutputColoredPrinter{
-			SubcommandInfo:    subcommandInfo,
-			Recursive:         subcommandInfo.Recursive,
-			ObjFreshThreshold: cfg.ObjFreshThreshold,
-			Theme:             &cfg.Theme,
-			KubecolorVersion:  version,
+			SubcommandInfo:   subcommandInfo,
+			Recursive:        subcommandInfo.Recursive,
+			Duration:         &cfg.Duration,
+			Theme:            &cfg.Theme,
+			KubecolorVersion: version,
 		},
 		ErrorPrinter: &printer.StderrPrinter{
 			Theme: &cfg.Theme,

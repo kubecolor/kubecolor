@@ -70,7 +70,8 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("#2ee5ae:italic"),      // white-ish
 			},
 			Data: ThemeData{
-				String: color.MustParse("#2aabee"),
+				String:   color.MustParse("#2aabee"),
+				Duration: flatDuration(color.MustParse("#feb927")),
 			},
 			Table: ThemeTable{
 				Header:  color.MustParse("white:bold"),
@@ -92,7 +93,8 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("#2ee5ae:italic"),
 			},
 			Data: ThemeData{
-				String: color.MustParse("#2aabee"),
+				String:   color.MustParse("#2aabee"),
+				Duration: flatDuration(color.MustParse("#feb927")),
 			},
 			Table: ThemeTable{
 				Header:  color.MustParse("black:bold"),
@@ -115,7 +117,8 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("#2ee5ae"),
 			},
 			Data: ThemeData{
-				String: color.MustParse("#2aabee"),
+				String:   color.MustParse("#2aabee"),
+				Duration: flatDuration(color.MustParse("#feb927")),
 			},
 			Table: ThemeTable{
 				Header:  color.MustParse("white:bold"),
@@ -137,7 +140,8 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("#2ee5ae:italic"),
 			},
 			Data: ThemeData{
-				String: color.MustParse("#2aabee"),
+				String:   color.MustParse("#2aabee"),
+				Duration: flatDuration(color.MustParse("#feb927")),
 			},
 			Table: ThemeTable{
 				Header:  color.MustParse("black:bold"),
@@ -160,7 +164,8 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("#2ee5ae"),
 			},
 			Data: ThemeData{
-				String: color.MustParse("#2aabee"),
+				String:   color.MustParse("#2aabee"),
+				Duration: flatDuration(color.MustParse("#feb927")),
 			},
 			Table: ThemeTable{
 				Header:  color.MustParse("white:bold"),
@@ -182,7 +187,8 @@ func NewBaseTheme(preset Preset) *Theme {
 				Muted:     color.MustParse("#2ee5ae:italic"),
 			},
 			Data: ThemeData{
-				String: color.MustParse("#2aabee"),
+				String:   color.MustParse("#2aabee"),
+				Duration: flatDuration(color.MustParse("#feb927")),
 			},
 			Table: ThemeTable{
 				Header:  color.MustParse("black:bold"),
@@ -357,18 +363,37 @@ type ThemeShell struct {
 // ThemeData holds colors for when representing parsed data.
 // Such as in YAML, JSON, and even some "kubectl describe" values
 type ThemeData struct {
-	Key    color.Slice `defaultFrom:"theme.base.key"`     // used for the key
-	String color.Color `defaultFrom:"theme.base.info"`    // used when value is a string
-	True   color.Color `defaultFrom:"theme.base.success"` // used when value is true
-	False  color.Color `defaultFrom:"theme.base.danger"`  // used when value is false
-	Number color.Color `defaultFrom:"theme.base.primary"` // used when the value is a number
-	Null   color.Color `defaultFrom:"theme.base.muted"`   // used when the value is null, nil, or none
+	Key      color.Slice `defaultFrom:"theme.base.key"`     // used for the key
+	String   color.Color `defaultFrom:"theme.base.info"`    // used when value is a string
+	True     color.Color `defaultFrom:"theme.base.success"` // used when value is true
+	False    color.Color `defaultFrom:"theme.base.danger"`  // used when value is false
+	Number   color.Color `defaultFrom:"theme.base.primary"` // used when the value is a number
+	Null     color.Color `defaultFrom:"theme.base.muted"`   // used when the value is null, nil, or none
+	Quantity color.Color `defaultFrom:"theme.data.number"`  // used when the value is a quantity, e.g "100m" or "5Gi"
 
-	Quantity      color.Color `defaultFrom:"theme.data.number"`  // used when the value is a quantity, e.g "100m" or "5Gi"
-	Duration      color.Color ``                                 // used when the value is a duration, e.g "12m" or "1d12h"
-	DurationFresh color.Color `defaultFrom:"theme.base.success"` // color used when the time value is under a certain delay
+	Duration ThemeDataDuration // duration/age coloring in tables
+	Ratio    ThemeDataRatio
+}
 
-	Ratio ThemeDataRatio
+// ThemeDataDuration holds duration coloring config.
+// Ages below Threshold1 use [ThemeDataDuration.Default].
+// Ages at or above a threshold use that threshold's color.
+type ThemeDataDuration struct {
+	Default    color.Color `defaultFrom:"theme.base.primary"`
+	Threshold1 color.Color `defaultFrom:"theme.base.secondary"`
+	Threshold2 color.Color `defaultFrom:"theme.base.info"`
+	Threshold3 color.Color `defaultFrom:"theme.base.success"`
+	Threshold4 color.Color `defaultFrom:"theme.base.warning"`
+	Threshold5 color.Color `defaultFrom:"theme.base.danger"`
+	Threshold6 color.Color ``
+}
+
+func flatDuration(c color.Color) ThemeDataDuration {
+	return ThemeDataDuration{
+		Default:    c,
+		Threshold1: c, Threshold2: c, Threshold3: c,
+		Threshold4: c, Threshold5: c, Threshold6: c,
+	}
 }
 
 type ThemeDataRatio struct {

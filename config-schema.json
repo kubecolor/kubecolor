@@ -326,12 +326,8 @@
           "description": "used when the value is a quantity, e.g \"100m\" or \"5Gi\""
         },
         "duration": {
-          "$ref": "#/$defs/color",
-          "description": "used when the value is a duration, e.g \"12m\" or \"1d12h\""
-        },
-        "durationFresh": {
-          "$ref": "#/$defs/color",
-          "description": "color used when the time value is under a certain delay"
+          "$ref": "#/$defs/themeDataDuration",
+          "description": "duration/age coloring in tables"
         },
         "ratio": {
           "$ref": "#/$defs/themeDataRatio"
@@ -340,6 +336,34 @@
       "additionalProperties": false,
       "type": "object",
       "description": "ThemeData holds colors for when representing parsed data."
+    },
+    "themeDataDuration": {
+      "properties": {
+        "default": {
+          "$ref": "#/$defs/color"
+        },
+        "threshold1": {
+          "$ref": "#/$defs/color"
+        },
+        "threshold2": {
+          "$ref": "#/$defs/color"
+        },
+        "threshold3": {
+          "$ref": "#/$defs/color"
+        },
+        "threshold4": {
+          "$ref": "#/$defs/color"
+        },
+        "threshold5": {
+          "$ref": "#/$defs/color"
+        },
+        "threshold6": {
+          "$ref": "#/$defs/color"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeDataDuration holds duration coloring config."
     },
     "themeDataRatio": {
       "properties": {
@@ -783,9 +807,9 @@
         "oc"
       ]
     },
-    "objFreshThreshold": {
+    "duration": {
       "$ref": "#/$defs/duration",
-      "description": "Ages below this uses theme.data.durationfresh coloring"
+      "description": "Configurable duration thresholds for age-based coloring"
     },
     "preset": {
       "$ref": "#/$defs/preset",
