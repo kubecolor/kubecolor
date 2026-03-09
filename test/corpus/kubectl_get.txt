@@ -99,21 +99,21 @@ tokenreviews                                   authentication.k8s.io          fa
 --------------------------------------------------------------------------------
 
 [1mNAME                              SHORTNAMES   APIGROUP                       NAMESPACED   KIND[0m
-[37mbindings[0m                                                                      [36mtrue[0m         [37mBinding[0m
-[37mcomponentstatuses[0m                 [36mcs[0m                                          [36mfalse[0m        [37mComponentStatus[0m
-[37mpods[0m                              [36mpo[0m                                          [36mtrue[0m         [37mPod[0m
-[37mpodtemplates[0m                                                                  [36mtrue[0m         [37mPodTemplate[0m
-[37mreplicationcontrollers[0m            [36mrc[0m                                          [36mtrue[0m         [37mReplicationController[0m
-[37mresourcequotas[0m                    [36mquota[0m                                       [36mtrue[0m         [37mResourceQuota[0m
-[37msecrets[0m                                                                       [36mtrue[0m         [37mSecret[0m
-[37mserviceaccounts[0m                   [36msa[0m                                          [36mtrue[0m         [37mServiceAccount[0m
-[37mservices[0m                          [36msvc[0m                                         [36mtrue[0m         [37mService[0m
-[37mmutatingwebhookconfigurations[0m                  [37madmissionregistration.k8s.io[0m   [36mfalse[0m        [37mMutatingWebhookConfiguration[0m
-[37mcustomresourcedefinitions[0m         [36mcrd,crds[0m     [37mapiextensions.k8s.io[0m           [36mfalse[0m        [37mCustomResourceDefinition[0m
-[37mcontrollerrevisions[0m                            [37mapps[0m                           [36mtrue[0m         [37mControllerRevision[0m
-[37mdaemonsets[0m                        [36mds[0m           [37mapps[0m                           [36mtrue[0m         [37mDaemonSet[0m
-[37mstatefulsets[0m                      [36msts[0m          [37mapps[0m                           [36mtrue[0m         [37mStatefulSet[0m
-[37mtokenreviews[0m                                   [37mauthentication.k8s.io[0m          [36mfalse[0m        [37mTokenReview[0m
+[37mbindings[0m                                                                      [32mtrue[0m         [37mBinding[0m
+[37mcomponentstatuses[0m                 [36mcs[0m                                          [31mfalse[0m        [37mComponentStatus[0m
+[37mpods[0m                              [36mpo[0m                                          [32mtrue[0m         [37mPod[0m
+[37mpodtemplates[0m                                                                  [32mtrue[0m         [37mPodTemplate[0m
+[37mreplicationcontrollers[0m            [36mrc[0m                                          [32mtrue[0m         [37mReplicationController[0m
+[37mresourcequotas[0m                    [36mquota[0m                                       [32mtrue[0m         [37mResourceQuota[0m
+[37msecrets[0m                                                                       [32mtrue[0m         [37mSecret[0m
+[37mserviceaccounts[0m                   [36msa[0m                                          [32mtrue[0m         [37mServiceAccount[0m
+[37mservices[0m                          [36msvc[0m                                         [32mtrue[0m         [37mService[0m
+[37mmutatingwebhookconfigurations[0m                  [37madmissionregistration.k8s.io[0m   [31mfalse[0m        [37mMutatingWebhookConfiguration[0m
+[37mcustomresourcedefinitions[0m         [36mcrd,crds[0m     [37mapiextensions.k8s.io[0m           [31mfalse[0m        [37mCustomResourceDefinition[0m
+[37mcontrollerrevisions[0m                            [37mapps[0m                           [32mtrue[0m         [37mControllerRevision[0m
+[37mdaemonsets[0m                        [36mds[0m           [37mapps[0m                           [32mtrue[0m         [37mDaemonSet[0m
+[37mstatefulsets[0m                      [36msts[0m          [37mapps[0m                           [32mtrue[0m         [37mStatefulSet[0m
+[37mtokenreviews[0m                                   [37mauthentication.k8s.io[0m          [31mfalse[0m        [37mTokenReview[0m
 
 ================================================================================
 # a table whose some parts are missing can be handled
@@ -168,3 +168,18 @@ worker003
 
 [1mNAME[0m
 [37mworker003[0m
+
+================================================================================
+# CRD bool status
+$ kubectl get certificates
+================================================================================
+
+NAME          READY   SECRET        AGE
+my-cert       True    my-secret     30d
+bad-cert      False   bad-secret    5d
+
+--------------------------------------------------------------------------------
+
+[1mNAME          READY   SECRET        AGE[0m
+[37mmy-cert[0m       [32mTrue[0m    [37mmy-secret[0m     [36m30d[0m
+[37mbad-cert[0m      [31mFalse[0m   [37mbad-secret[0m    [36m5d[0m

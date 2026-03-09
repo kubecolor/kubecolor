@@ -183,9 +183,9 @@ nginx-6799fc88d8-qdf9b   1/1     Running   0          7d10h   172.18.0.3   minik
 --------------------------------------------------------------------------------
 
 [1mNAME                     READY   STATUS    RESTARTS   AGE     IP           NODE       NOMINATED NODE   READINESS GATES[0m
-[37mnginx-6799fc88d8-dnmv7[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m7d10h[0m   [36m172.18.0.5[0m   [37mminikube[0m   [36m<none>[0m           [37m<none>[0m
-[37mnginx-6799fc88d8-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m7d10h[0m   [36m172.18.0.4[0m   [37mminikube[0m   [36m<none>[0m           [37m<none>[0m
-[37mnginx-6799fc88d8-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m7d10h[0m   [36m172.18.0.3[0m   [37mminikube[0m   [36m<none>[0m           [37m<none>[0m
+[37mnginx-6799fc88d8-dnmv7[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m7d10h[0m   [36m172.18.0.5[0m   [37mminikube[0m   [90;3m<none>[0m           [90;3m<none>[0m
+[37mnginx-6799fc88d8-m8pbc[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m7d10h[0m   [36m172.18.0.4[0m   [37mminikube[0m   [90;3m<none>[0m           [90;3m<none>[0m
+[37mnginx-6799fc88d8-qdf9b[0m   [36m1/1[0m     [32mRunning[0m   [36m0[0m          [37m7d10h[0m   [36m172.18.0.3[0m   [37mminikube[0m   [90;3m<none>[0m           [90;3m<none>[0m
 
 ================================================================================
 $ kubectl get pod -o json

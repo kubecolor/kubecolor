@@ -117,10 +117,10 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 		}
 
 	case kubectl.Version:
-		switch {
-		case p.SubcommandInfo.Output == kubectl.OutputJSON:
+		switch p.SubcommandInfo.Output {
+		case kubectl.OutputJSON:
 			return &VersionJSONInjectorPrinter{KubecolorVersion: p.KubecolorVersion, JsonPrinter: &JSONPrinter{Theme: p.Theme}}
-		case p.SubcommandInfo.Output == kubectl.OutputYAML:
+		case kubectl.OutputYAML:
 			return &VersionYAMLInjectorPrinter{KubecolorVersion: p.KubecolorVersion, YamlPrinter: &YAMLPrinter{Theme: p.Theme}}
 		default:
 			return &VersionPrinter{

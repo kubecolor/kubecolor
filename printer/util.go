@@ -225,6 +225,14 @@ func colorSingleStatus(status string, theme *config.Theme) (string, bool) {
 		// PVC status
 		"Bound":
 		return theme.Status.Success.Render(status), true
+
+	// Also allow some data-related values, common in CRD statuses (e.g. READY column with True/False)
+	case "null", "<none>", "<unknown>", "<unset>", "<nil>", "<invalid>":
+		return theme.Data.Null.Render(status), true
+	case "true", "True", "TRUE":
+		return theme.Data.True.Render(status), true
+	case "false", "False", "FALSE":
+		return theme.Data.False.Render(status), true
 	}
 	return status, false
 }
