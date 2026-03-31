@@ -67,7 +67,7 @@ jobs:
           echo "Tagged $TAG_NAME"
 
       - name: Set up Go
-        uses: actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 # 6.3.0
+        uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # 6.4.0
         with:
           go-version-file: go.mod
           cache: false # prevent cache poisoning
@@ -116,7 +116,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up Go
-        uses: actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 # 6.3.0
+        uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # 6.4.0
         with:
           go-version-file: go.mod
           cache: false # prevent cache poisoning
@@ -227,7 +227,7 @@ jobs:
       contents: read
     needs: release
     steps:
-      - uses: mislav/bump-homebrew-formula-action@56a283fa15557e9abaa4bdb63b8212abc68e655c # v3.6
+      - uses: mislav/bump-homebrew-formula-action@ccf2332299a883f6af50a1d2d41e5df7904dd769 # v4.1
         with:
           formula-name: kubecolor
           formula-path: Formula/k/kubecolor.rb
