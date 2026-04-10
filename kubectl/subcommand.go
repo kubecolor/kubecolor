@@ -5,14 +5,15 @@ import (
 )
 
 type SubcommandInfo struct {
-	Subcommand Subcommand
-	Output     Output // flag: -o, --output
-	NoHeader   bool   // flag: --no-header
-	Watch      bool   // flag: -w, --watch
-	Follow     bool   // flag: -f, --follow
-	Help       bool   // flag: -h, --help
-	Recursive  bool   // flag: --recursive
-	Client     bool   // flag: --client
+	Subcommand      Subcommand
+	Output          Output // flag: -o, --output
+	NoHeader        bool   // flag: --no-header
+	Watch           bool   // flag: -w, --watch
+	Follow          bool   // flag: -f, --follow
+	Help            bool   // flag: -h, --help
+	Recursive       bool   // flag: --recursive
+	Client          bool   // flag: --client
+	EditLastApplied bool   // subcommand: apply edit-last-applied
 }
 
 // Output is an enum of different "--output=..." types.
@@ -242,6 +243,9 @@ func InspectSubcommandInfo(args []string, pluginHandler PluginHandler) *Subcomma
 		}
 
 		ret.Subcommand = cmd
+		if cmd == Apply && i+1 < len(args) && args[i+1] == "edit-last-applied" {
+			ret.EditLastApplied = true
+		}
 		return ret
 	}
 
@@ -282,6 +286,12 @@ func (sci *SubcommandInfo) SupportsColoring() bool {
 		Run,
 		Wait:
 		return sci.Help
+
+	case Apply:
+		if sci.EditLastApplied {
+			return sci.Help
+		}
+		return true
 
 	case KubectlPlugin,
 		Complete, CompleteNoDesc:
