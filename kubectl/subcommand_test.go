@@ -68,6 +68,7 @@ func TestInspectSubcommandInfo(t *testing.T) {
 		{"version -o yaml", &SubcommandInfo{Subcommand: Version, Output: OutputYAML}},
 
 		{"apply", &SubcommandInfo{Subcommand: Apply}},
+		{"apply edit-last-applied deployments.apps/whoami", &SubcommandInfo{Subcommand: Apply, EditLastApplied: true}},
 
 		{"rsh", &SubcommandInfo{Subcommand: Rsh}},
 
