@@ -14,6 +14,8 @@ type SubcommandInfo struct {
 	Recursive       bool   // flag: --recursive
 	Client          bool   // flag: --client
 	EditLastApplied bool   // subcommand: apply edit-last-applied
+	SetLastApplied  bool   // subcommand: apply set-last-applied
+	ViewLastApplied bool   // subcommand: apply view-last-applied
 }
 
 // Output is an enum of different "--output=..." types.
@@ -243,8 +245,15 @@ func InspectSubcommandInfo(args []string, pluginHandler PluginHandler) *Subcomma
 		}
 
 		ret.Subcommand = cmd
-		if cmd == Apply && i+1 < len(args) && args[i+1] == "edit-last-applied" {
-			ret.EditLastApplied = true
+		if cmd == Apply && i+1 < len(args) {
+			switch args[i+1] {
+			case "edit-last-applied":
+				ret.EditLastApplied = true
+			case "set-last-applied":
+				ret.SetLastApplied = true
+			case "view-last-applied":
+				ret.ViewLastApplied = true
+			}
 		}
 		return ret
 	}
@@ -290,6 +299,12 @@ func (sci *SubcommandInfo) SupportsColoring() bool {
 	case Apply:
 		if sci.EditLastApplied {
 			return sci.Help
+		}
+		if sci.ViewLastApplied {
+			return true
+		}
+		if sci.SetLastApplied {
+			return true
 		}
 		return true
 
