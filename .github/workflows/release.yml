@@ -218,29 +218,6 @@ jobs:
         run: |
           gh release edit "$INPUT_TAG_NAME" --draft=false
 
-  homebrew:
-    name: Bump Homebrew formula
-    # Skip this job in case of git pushes to prerelease tags
-    if: "!contains(inputs.tag-name, '-') && !inputs.dry-run"
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    needs: release
-    steps:
-      - uses: mislav/bump-homebrew-formula-action@ccf2332299a883f6af50a1d2d41e5df7904dd769 # v4.1
-        with:
-          formula-name: kubecolor
-          formula-path: Formula/k/kubecolor.rb
-          homebrew-tap: Homebrew/homebrew-core
-          base-branch: master
-          download-url: https://github.com/kubecolor/kubecolor/archive/refs/tags/${{ inputs.tag-name }}.tar.gz
-          commit-message: |
-            {{formulaName}} {{version}}
-
-            Created by https://github.com/mislav/bump-homebrew-formula-action
-        env:
-          COMMITTER_TOKEN: ${{ secrets.GLOBAL_GITHUB_TOKEN }}
-
   docker:
     runs-on: ubuntu-latest
     needs: release
