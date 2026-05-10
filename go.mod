@@ -9,7 +9,7 @@ require (
 	github.com/hexops/gotextdiff v1.0.3
 	github.com/invopop/jsonschema v0.13.0
 	github.com/mattn/go-colorable v0.1.14
-	github.com/mattn/go-isatty v0.0.21
+	github.com/mattn/go-isatty v0.0.22
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/spf13/viper v1.21.0
 	github.com/xo/terminfo v0.0.0-20220910002029-abceb7e1c41e
