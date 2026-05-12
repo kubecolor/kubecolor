@@ -68,6 +68,13 @@ func TestInspectSubcommandInfo(t *testing.T) {
 		{"version -o yaml", &SubcommandInfo{Subcommand: Version, Output: OutputYAML}},
 
 		{"apply", &SubcommandInfo{Subcommand: Apply}},
+		{"apply edit-last-applied deployments.apps/whoami", &SubcommandInfo{Subcommand: Apply, EditLastApplied: true}},
+		{"apply -f edit-last-applied", &SubcommandInfo{Subcommand: Apply, EditLastApplied: false, Follow: true}},
+		{"apply deployments.apps/whoami edit-last-applied", &SubcommandInfo{Subcommand: Apply, EditLastApplied: false}},
+		{"get edit-last-applied", &SubcommandInfo{Subcommand: Get, EditLastApplied: false}},
+		{"apply set-last-applied -f deploy.yaml", &SubcommandInfo{Subcommand: Apply, SetLastApplied: true, Follow: true}},
+		{"apply view-last-applied deployments.apps/whoami", &SubcommandInfo{Subcommand: Apply, ViewLastApplied: true}},
+		{"apply view-last-applied deployments.apps/whoami -o json", &SubcommandInfo{Subcommand: Apply, ViewLastApplied: true, Output: OutputJSON}},
 
 		{"rsh", &SubcommandInfo{Subcommand: Rsh}},
 
