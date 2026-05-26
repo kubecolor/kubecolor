@@ -71,6 +71,11 @@ func TestInspectSubcommandInfo(t *testing.T) {
 
 		{"rsh", &SubcommandInfo{Subcommand: Rsh}},
 
+		{"delete pod nginx", &SubcommandInfo{Subcommand: Delete}},
+		{"delete --interactive pod nginx", &SubcommandInfo{Subcommand: Delete, Interactive: true}},
+		{"delete -i pod nginx", &SubcommandInfo{Subcommand: Delete, Interactive: true}},
+		{"delete pod nginx --interactive", &SubcommandInfo{Subcommand: Delete, Interactive: true}},
+
 		{"testplugin", &SubcommandInfo{Subcommand: KubectlPlugin}},
 		{"testplugin with args", &SubcommandInfo{Subcommand: KubectlPlugin}},
 		{"my-plugin with multiple words", &SubcommandInfo{Subcommand: KubectlPlugin}},
