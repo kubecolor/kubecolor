@@ -5,14 +5,15 @@ import (
 )
 
 type SubcommandInfo struct {
-	Subcommand Subcommand
-	Output     Output // flag: -o, --output
-	NoHeader   bool   // flag: --no-header
-	Watch      bool   // flag: -w, --watch
-	Follow     bool   // flag: -f, --follow
-	Help       bool   // flag: -h, --help
-	Recursive  bool   // flag: --recursive
-	Client     bool   // flag: --client
+	Subcommand  Subcommand
+	Output      Output // flag: -o, --output
+	NoHeader    bool   // flag: --no-header
+	Watch       bool   // flag: -w, --watch
+	Follow      bool   // flag: -f, --follow
+	Help        bool   // flag: -h, --help
+	Recursive   bool   // flag: --recursive
+	Client      bool   // flag: --client
+	Interactive bool   // flag: --interactive, -i (e.g. kubectl delete --interactive)
 }
 
 // Output is an enum of different "--output=..." types.
@@ -190,6 +191,8 @@ func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 			info.Recursive = value != "false"
 		case "-h", "--help":
 			info.Help = value != "false"
+		case "--interactive", "-i":
+			info.Interactive = value != "false"
 		}
 	}
 }
@@ -282,6 +285,15 @@ func (sci *SubcommandInfo) SupportsColoring() bool {
 		Run,
 		Wait:
 		return sci.Help
+
+	case Delete:
+		// Interactive delete (e.g. "kubectl delete --interactive pod nginx")
+		// requires real-time terminal I/O for the confirmation prompt.
+		// Colorizing via pipes breaks the interactive output flow.
+		if sci.Interactive {
+			return false
+		}
+		return true
 
 	case KubectlPlugin,
 		Complete, CompleteNoDesc:
