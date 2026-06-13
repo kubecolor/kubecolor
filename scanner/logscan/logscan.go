@@ -628,10 +628,6 @@ func readJSONNumber(rest []byte) []byte {
 	var index int
 	var hasDot bool
 
-	if len(rest) == 0 {
-		return nil
-	}
-
 	r, size := utf8.DecodeRune(rest[index:])
 	if r == '-' {
 		index += size

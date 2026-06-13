@@ -381,6 +381,18 @@ func TestScanner_tokens(t *testing.T) {
 				{Kind: KindNewline, Text: "\n"},
 			},
 		},
+		{
+			name:  "json with uuid as value",
+			input: `{"id":"550e8400-e29b-41d4-a716-446655440000"}` + "\n",
+			want: []Token{
+				{Kind: KindParenthases, Text: "{"},
+				{Kind: KindKey, Text: `"id"`},
+				{Kind: KindUnknown, Text: ":"},
+				{Kind: KindValue, Text: `"550e8400-e29b-41d4-a716-446655440000"`},
+				{Kind: KindParenthases, Text: "}"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
 	}
 
 	for _, tc := range tests {
