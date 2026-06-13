@@ -48,13 +48,14 @@ func TryColorDataValue(val string, theme *config.Theme) (color.Color, bool) {
 		return theme.Data.False, true
 	}
 
-	// Ints: 123
-	if stringutil.IsOnlyDigits(val) {
+	// Ints: 123, -123
+	valWithoutSign := strings.TrimPrefix(val, "-")
+	if valWithoutSign != "" && stringutil.IsOnlyDigits(valWithoutSign) {
 		return theme.Data.Number, true
 	}
 
-	// Floats: 123.456
-	if left, right, ok := strings.Cut(val, "."); ok {
+	// Floats: 123.456, -123.456
+	if left, right, ok := strings.Cut(valWithoutSign, "."); ok {
 		if stringutil.IsOnlyDigits(left) && stringutil.IsOnlyDigits(right) {
 			return theme.Data.Number, true
 		}
