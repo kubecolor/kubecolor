@@ -405,7 +405,7 @@ type ThemeStderr struct {
 	Default color.Color `jsonschema_extras:"deprecated=true"` // *deprecated: this field is no longer used (since v0.4.0)*
 }
 
-// ThemeApply holds colors for the "kubectl apply" output.
+// ThemeDescribe holds colors for the "kubectl describe" output.
 type ThemeDescribe struct {
 	Key color.Slice `defaultFrom:"theme.base.key"` // used on keys. The multiple colors are cycled based on indentation.
 }
