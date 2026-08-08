@@ -203,3 +203,14 @@ I0527 13:23:48.239246       1 leaderelection.go:257] attempting to acquire leade
 [32mI[0m[90;3m0527 13:23:48.239078[0m       1 [90;3mmain-controller.go:534[0m] Waiting for STS API to start
 [32mI[0m[90;3m0527 13:23:48.239245[0m       1 [90;3mmain-controller.go:399[0m] Starting STS API server
 [32mI[0m[90;3m0527 13:23:48.239246[0m       1 [90;3mleaderelection.go:257[0m] attempting to acquire leader lease minio/minio-operator-lock...
+
+================================================================================
+# json with negative number
+$ kubectl logs kubecolor-negative-json-test
+================================================================================
+
+{"a":22,"b":-12,"c":-0.34}
+
+--------------------------------------------------------------------------------
+
+{[96m"a"[0m:[35m22[0m,[36m"b"[0m:[35m-12[0m,[96m"c"[0m:[35m-0.34[0m}
