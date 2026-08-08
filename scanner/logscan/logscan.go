@@ -169,6 +169,26 @@ func (s *Scanner) scan(rest []byte) int {
 		}
 	}
 
+	// Ruby-style key=>value pairing, e.g. as emitted by Elastic Logstash:
+	//   :source=>"message"
+	//   :raw=>"some string with spaces"
+	//   :exception=>#<LogStash::Json::ParserError: ...>
+	//   :port=>6080
+	//
+	// See https://github.com/kubecolor/kubecolor/issues/198
+	//
+	// We keep the leading colon in the key text (e.g. ":source") so the rendered
+	// output matches what the user sees in the raw log.
+	if len(word) > 1 && word[0] == ':' {
+		if arrowIdx := bytes.Index(word, []byte("=>")); arrowIdx > 0 {
+			key := word[:arrowIdx]            // e.g. ":source"
+			valueAndRest := rest[len(key)+2:] // skip the "=>"
+			s.pushToken(KindKey, string(key))
+			s.pushToken(KindUnknown, "=>")
+			return s.scanRubyValue(valueAndRest, len(key)+2)
+		}
+	}
+
 	if key, _, ok := bytes.Cut(word, []byte("=")); ok {
 		return s.scanKeyValue(key, rest[len(key)+1:]) // +1 to skip the "=" sign
 	}
@@ -332,6 +352,103 @@ func (s *Scanner) scanKeyValue(key, valueAndRest []byte) int {
 
 	s.pushToken(KindValue, string(word))
 	return len(key) + 1 + len(word)
+}
+
+// scanRubyValue parses the value part of a Ruby-style :key=>value pair.
+//
+// totalConsumed is the number of bytes already consumed from the line for the
+// key + "=>" sequence, which is added to the return value so the caller can
+// know the full length of the token sequence it should skip.
+//
+// It handles:
+//   - quoted strings: :source=>"some string with spaces"
+//   - Ruby's #<...> inspect output (single-line): :exception=>#<Foo::Bar: baz>
+//   - parenthesised values: :opts=(foo bar)
+//   - bracketed values: :tags=[a, b]
+//   - JSON objects/arrays: :payload={"a":1}
+//   - dates: :ts=>2024-08-03T12:38:44.049832713Z
+//   - plain scalars: :port=>6080
+//
+// Multiline #<...> values (where the closing > is on a later line) are not
+// supported because the scanner operates line-by-line. The unclosed portion
+// is treated as a single word instead.
+//
+// See https://github.com/kubecolor/kubecolor/issues/198
+func (s *Scanner) scanRubyValue(valueAndRest []byte, totalConsumed int) int {
+	if len(valueAndRest) == 0 {
+		return totalConsumed
+	}
+
+	firstRune, _ := utf8.DecodeRune(valueAndRest)
+
+	switch firstRune {
+	case '"', '\'', '`':
+		if quoted := readQuoted(valueAndRest); len(quoted) != 0 {
+			s.pushToken(KindValue, string(quoted))
+			return totalConsumed + len(quoted)
+		}
+
+	case '(':
+		if group := readParenthases(valueAndRest, '(', ')'); len(group) != 0 {
+			s.pushToken(KindValue, string(group))
+			return totalConsumed + len(group)
+		}
+
+	case '[':
+		if group := readParenthases(valueAndRest, '[', ']'); len(group) != 0 {
+			s.pushToken(KindValue, string(group))
+			return totalConsumed + len(group)
+		}
+
+	case '{':
+		if written := s.scanJSON(valueAndRest); written > 0 {
+			return totalConsumed + written
+		}
+
+	case '#':
+		// Ruby's #<Type ...> inspect output. Try to balance < and > so we can
+		// capture values that contain spaces, colons, etc. on a single line.
+		//
+		// Example from the issue:
+		//   :exception=>#<LogStash::Json::ParserError: Unrecognized token 'I1125': ...>
+		//
+		// Multiline values where the closing > is on a following line cannot be
+		// captured by this line-based scanner; the unclosed prefix is treated
+		// as a single word below.
+		if len(valueAndRest) >= 2 && valueAndRest[1] == '<' {
+			depth := 0
+			index := 0
+			for index < len(valueAndRest) {
+				r, size := utf8.DecodeRune(valueAndRest[index:])
+				if r == utf8.RuneError {
+					break
+				}
+				index += size
+				switch r {
+				case '<':
+					depth++
+				case '>':
+					depth--
+					if depth == 0 {
+						s.pushToken(KindValue, string(valueAndRest[:index]))
+						return totalConsumed + index
+					}
+				}
+			}
+			// Unclosed on this line — fall through to readWord below.
+		}
+	}
+
+	word := readWord(valueAndRest)
+
+	// Treat the value as a date if the whole word looks like one.
+	if dateMatch := dateRegex.Find(word); dateMatch != nil && len(dateMatch) == len(word) {
+		s.pushToken(KindDate, string(word))
+		return totalConsumed + len(word)
+	}
+
+	s.pushToken(KindValue, string(word))
+	return totalConsumed + len(word)
 }
 
 func (s *Scanner) scanJSON(rest []byte) int {

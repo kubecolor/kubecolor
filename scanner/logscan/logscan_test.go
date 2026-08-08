@@ -538,3 +538,98 @@ func TestReadLetters(t *testing.T) {
 		})
 	}
 }
+
+func TestScanner_rubyStyleKeyValue(t *testing.T) {
+	// https://github.com/kubecolor/kubecolor/issues/198
+	tests := []struct {
+		name  string
+		input string
+		want  []Token
+	}{
+		{
+			name:  "ruby :key=>\"quoted string\"",
+			input: ":source=>\"message\"\n",
+			want: []Token{
+				{Kind: KindKey, Text: ":source"},
+				{Kind: KindUnknown, Text: "=>"},
+				{Kind: KindValue, Text: "\"message\""},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "ruby :key=>\"quoted string with spaces\"",
+			input: ":raw=>\"hello world foo\"\n",
+			want: []Token{
+				{Kind: KindKey, Text: ":raw"},
+				{Kind: KindUnknown, Text: "=>"},
+				{Kind: KindValue, Text: "\"hello world foo\""},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "ruby :key=>plain scalar",
+			input: ":port=>6080\n",
+			want: []Token{
+				{Kind: KindKey, Text: ":port"},
+				{Kind: KindUnknown, Text: "=>"},
+				{Kind: KindValue, Text: "6080"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "ruby :key=>#<Type ...> inspect",
+			input: ":exception=>#<Foo::Bar: baz>\n",
+			want: []Token{
+				{Kind: KindKey, Text: ":exception"},
+				{Kind: KindUnknown, Text: "=>"},
+				{Kind: KindValue, Text: "#<Foo::Bar: baz>"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "ruby :key=>#<A<B>> nested angles",
+			input: ":x=>#<A<B>>\n",
+			want: []Token{
+				{Kind: KindKey, Text: ":x"},
+				{Kind: KindUnknown, Text: "=>"},
+				{Kind: KindValue, Text: "#<A<B>>"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "ruby and logfmt mixed on one line",
+			input: ":source=>\"message\" key=value\n",
+			want: []Token{
+				{Kind: KindKey, Text: ":source"},
+				{Kind: KindUnknown, Text: "=>"},
+				{Kind: KindValue, Text: "\"message\""},
+				{Kind: KindUnknown, Text: " "},
+				{Kind: KindKey, Text: "key"},
+				{Kind: KindUnknown, Text: "="},
+				{Kind: KindValue, Text: "value"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "ruby :key=>date",
+			input: ":ts=>2024-08-03T12:38:44.049832713Z\n",
+			want: []Token{
+				{Kind: KindKey, Text: ":ts"},
+				{Kind: KindUnknown, Text: "=>"},
+				{Kind: KindDate, Text: "2024-08-03T12:38:44.049832713Z"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			scanner := NewScanner(strings.NewReader(tc.input))
+			var gotTokens []Token
+			for scanner.Scan() {
+				gotTokens = append(gotTokens, scanner.Token())
+			}
+			testutil.MustEqual(t, tc.want, gotTokens)
+		})
+	}
+}
