@@ -409,7 +409,7 @@ func TestReadParenthases(t *testing.T) {
 		},
 		{
 			name:  "single",
-			input: "(hello world)",
+			input: "(hello world) foo bar",
 			want:  "(hello world)",
 		},
 		{
@@ -419,7 +419,7 @@ func TestReadParenthases(t *testing.T) {
 		},
 		{
 			name:  "nested",
-			input: "(hello (another one here) world)",
+			input: "(hello (another one here) world) foo bar",
 			want:  "(hello (another one here) world)",
 		},
 		{
@@ -540,89 +540,89 @@ func TestReadLetters(t *testing.T) {
 }
 
 func TestScanner_rubyStyleKeyValue(t *testing.T) {
-    // https://github.com/kubecolor/kubecolor/issues/198
-    tests := []struct {
-        name  string
-        input string
-        want  []Token
-    }{
-        {
-            name:  "ruby :key=>\"quoted string\"",
-            input: ":source=>\"message\"\n",
-            want: []Token{
-                {Kind: KindKey, Text: ":source"},
-                {Kind: KindUnknown, Text: "=>"},
-                {Kind: KindValue, Text: "\"message\""},
-                {Kind: KindNewline, Text: "\n"},
-            },
-        },
-        {
-            name:  "ruby :key=>\"quoted string with spaces\"",
-            input: ":raw=>\"hello world foo\"\n",
-            want: []Token{
-                {Kind: KindKey, Text: ":raw"},
-                {Kind: KindUnknown, Text: "=>"},
-                {Kind: KindValue, Text: "\"hello world foo\""},
-                {Kind: KindNewline, Text: "\n"},
-            },
-        },
-        {
-            name:  "ruby :key=>#<Object description>",
-            input: ":exception=>#<LogStash::Error: something went wrong>\n",
-            want: []Token{
-                {Kind: KindKey, Text: ":exception"},
-                {Kind: KindUnknown, Text: "=>"},
-                {Kind: KindValue, Text: "#<LogStash::Error: something went wrong>"},
-                {Kind: KindNewline, Text: "\n"},
-            },
-        },
-        {
-            name:  "ruby :key=>#<Object with nested angle brackets>",
-            input: ":obj=>#<Foo::Bar<inner> description>\n",
-            want: []Token{
-                {Kind: KindKey, Text: ":obj"},
-                {Kind: KindUnknown, Text: "=>"},
-                {Kind: KindValue, Text: "#<Foo::Bar<inner> description>"},
-                {Kind: KindNewline, Text: "\n"},
-            },
-        },
-        {
-            name:  "ruby :key=>bare_value",
-            input: ":count=>42\n",
-            want: []Token{
-                {Kind: KindKey, Text: ":count"},
-                {Kind: KindUnknown, Text: "=>"},
-                {Kind: KindValue, Text: "42"},
-                {Kind: KindNewline, Text: "\n"},
-            },
-        },
-        {
-            name:  "multiple ruby key-value pairs in braces",
-            input: "{:source=>\"message\", :count=>42}\n",
-            want: []Token{
-                {Kind: KindParenthases, Text: "{"},
-                {Kind: KindKey, Text: ":source"},
-                {Kind: KindUnknown, Text: "=>"},
-                {Kind: KindValue, Text: "\"message\""},
-                {Kind: KindUnknown, Text: ","},
-                {Kind: KindUnknown, Text: " "},
-                {Kind: KindKey, Text: ":count"},
-                {Kind: KindUnknown, Text: "=>"},
-                {Kind: KindValue, Text: "42"},
-				{Kind: KindUnknown, Text: "}"}, 
-                {Kind: KindNewline, Text: "\n"},
-            },
-        },
-    }
+	// https://github.com/kubecolor/kubecolor/issues/198
+	tests := []struct {
+		name  string
+		input string
+		want  []Token
+	}{
+		{
+			name:  "ruby :key=>\"quoted string\"",
+			input: ":source=>\"message\"\n",
+			want: []Token{
+				{Kind: KindKey, Text: ":source"},
+				{Kind: KindUnknown, Text: "=>"},
+				{Kind: KindValue, Text: "\"message\""},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "ruby :key=>\"quoted string with spaces\"",
+			input: ":raw=>\"hello world foo\"\n",
+			want: []Token{
+				{Kind: KindKey, Text: ":raw"},
+				{Kind: KindUnknown, Text: "=>"},
+				{Kind: KindValue, Text: "\"hello world foo\""},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "ruby :key=>#<Object description>",
+			input: ":exception=>#<LogStash::Error: something went wrong>\n",
+			want: []Token{
+				{Kind: KindKey, Text: ":exception"},
+				{Kind: KindUnknown, Text: "=>"},
+				{Kind: KindValue, Text: "#<LogStash::Error: something went wrong>"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "ruby :key=>#<Object with nested angle brackets>",
+			input: ":obj=>#<Foo::Bar<inner> description>\n",
+			want: []Token{
+				{Kind: KindKey, Text: ":obj"},
+				{Kind: KindUnknown, Text: "=>"},
+				{Kind: KindValue, Text: "#<Foo::Bar<inner> description>"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "ruby :key=>bare_value",
+			input: ":count=>42\n",
+			want: []Token{
+				{Kind: KindKey, Text: ":count"},
+				{Kind: KindUnknown, Text: "=>"},
+				{Kind: KindValue, Text: "42"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "multiple ruby key-value pairs in braces",
+			input: "{:source=>\"message\", :count=>42}\n",
+			want: []Token{
+				{Kind: KindParenthases, Text: "{"},
+				{Kind: KindKey, Text: ":source"},
+				{Kind: KindUnknown, Text: "=>"},
+				{Kind: KindValue, Text: "\"message\""},
+				{Kind: KindUnknown, Text: ","},
+				{Kind: KindUnknown, Text: " "},
+				{Kind: KindKey, Text: ":count"},
+				{Kind: KindUnknown, Text: "=>"},
+				{Kind: KindValue, Text: "42"},
+				{Kind: KindUnknown, Text: "}"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+	}
 
-    for _, tc := range tests {
-        t.Run(tc.name, func(t *testing.T) {
-            scanner := NewScanner(strings.NewReader(tc.input))
-            var got []Token
-            for scanner.Scan() {
-                got = append(got, scanner.Token())
-            }
-            testutil.MustEqual(t, tc.want, got)
-        })
-    }
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			scanner := NewScanner(strings.NewReader(tc.input))
+			var got []Token
+			for scanner.Scan() {
+				got = append(got, scanner.Token())
+			}
+			testutil.MustEqual(t, tc.want, got)
+		})
+	}
 }

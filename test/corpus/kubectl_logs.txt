@@ -203,3 +203,42 @@ I0527 13:23:48.239246       1 leaderelection.go:257] attempting to acquire leade
 [32mI[0m[90;3m0527 13:23:48.239078[0m       1 [90;3mmain-controller.go:534[0m] Waiting for STS API to start
 [32mI[0m[90;3m0527 13:23:48.239245[0m       1 [90;3mmain-controller.go:399[0m] Starting STS API server
 [32mI[0m[90;3m0527 13:23:48.239246[0m       1 [90;3mleaderelection.go:257[0m] attempting to acquire leader lease minio/minio-operator-lock...
+
+================================================================================
+# logfmt log level
+$ kubectl logs my-pod
+================================================================================
+
+INCLUDE THIS SEVERITY: INFO
+time=2024-08-03T22:00:34Z level=info caller=foobar.go msg="hello world" IGNORE THIS SEVERITY: INFO
+
+--------------------------------------------------------------------------------
+
+INCLUDE THIS SEVERITY: [32mINFO[0m
+[96mtime[0m=[90;3m2024-08-03T22:00:34Z[0m [36mlevel[0m=[32minfo[0m [96mcaller[0m=[90;3mfoobar.go[0m [36mmsg[0m=[93m"hello world"[0m IGNORE THIS SEVERITY: INFO
+
+================================================================================
+# elastic logstash logs
+$ kubectl logs logstash-0
+================================================================================
+
+[2024-11-25T13:33:20,699][WARN ][logstash.filters.json    ][main][d16325d0d973815cf2e35f24e2ea7bca55046807a800be1c03b42a83bc003d91] Error parsing json {:source=>"message", :raw=>"I1125 13:33:16.099355       1 request.go:700] Waited for 1.199045485s due to client-side throttling, not priority and fairness, request: GET:https://10.32.0.1:443/apis/traefik.io/v1alpha1/namespaces/dev-deviceident/ingressroutes?limit=500&resourceVersion=0", :exception=>#<LogStash::Json::ParserError: Unrecognized token 'I1125': was expecting (JSON String, Number, Array, Object or token 'null', 'true' or 'false')
+
+--------------------------------------------------------------------------------
+
+[[90;3m2024-11-25T13:33:20,699[0m][[33mWARN[0m ][logstash.filters.json    ][main][d16325d0d973815cf2e35f24e2ea7bca55046807a800be1c03b42a83bc003d91] Error parsing json {[96m:source[0m=>[93m"message"[0m, [36m:raw[0m=>[93m"I1125 13:33:16.099355       1 request.go:700] Waited for 1.199045485s due to client-side throttling, not priority and fairness, request: GET:https://10.32.0.1:443/apis/traefik.io/v1alpha1/namespaces/dev-deviceident/ingressroutes?limit=500&resourceVersion=0"[0m, [96m:exception[0m=>[93m#<LogStash::Json::ParserError: Unrecognized token 'I1125': was expecting (JSON String, Number, Array, Object or token 'null', 'true' or 'false')[0m
+
+================================================================================
+# ruby inspected values
+$ kubectl logs some-ruby-app
+================================================================================
+
+some object: #<Object:0x130e9ea0>, and an error: #<StandardError: #<Object:0x130e9de0>>
+ruby formatted: :mykey=>#<Object:0x130e9ea0>
+logfmt formatted: mykey=#<Object:0x130e9ea0>
+
+--------------------------------------------------------------------------------
+
+some object: [93m#<Object:0x130e9ea0>[0m, and an [31merror[0m: [93m#<StandardError: #<Object:0x130e9de0>>[0m
+ruby formatted: [96m:mykey[0m=>[93m#<Object:0x130e9ea0>[0m
+logfmt formatted: [96mmykey[0m=[93m#<Object:0x130e9ea0>[0m
