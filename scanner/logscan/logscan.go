@@ -449,7 +449,7 @@ func (s *Scanner) scanJSON(rest []byte) int {
 		}
 		return s.pushToken(KindValue, string(quoted))
 
-	case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.':
+	case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-':
 		number := readJSONNumber(rest)
 		return s.pushToken(KindValue, string(number))
 
@@ -727,6 +727,12 @@ func readLetters(rest []byte) []byte {
 func readJSONNumber(rest []byte) []byte {
 	var index int
 	var hasDot bool
+
+	r, size := utf8.DecodeRune(rest[index:])
+	if r == '-' {
+		index += size
+	}
+
 	for {
 		r, size := utf8.DecodeRune(rest[index:])
 		if r == utf8.RuneError {

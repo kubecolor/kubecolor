@@ -339,6 +339,60 @@ func TestScanner_tokens(t *testing.T) {
 				{Kind: KindNewline, Text: "\n"},
 			},
 		},
+		{
+			name:  "json negative number",
+			input: `{"count":-123}` + "\n",
+			want: []Token{
+				{Kind: KindParenthases, Text: "{"},
+				{Kind: KindKey, Text: `"count"`},
+				{Kind: KindUnknown, Text: ":"},
+				{Kind: KindValue, Text: "-123"},
+				{Kind: KindParenthases, Text: "}"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "json negative decimal",
+			input: `{"temp":-12.5}` + "\n",
+			want: []Token{
+				{Kind: KindParenthases, Text: "{"},
+				{Kind: KindKey, Text: `"temp"`},
+				{Kind: KindUnknown, Text: ":"},
+				{Kind: KindValue, Text: "-12.5"},
+				{Kind: KindParenthases, Text: "}"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "json array with negative numbers",
+			input: `{"values":[-1,-2.5,3]}` + "\n",
+			want: []Token{
+				{Kind: KindParenthases, Text: "{"},
+				{Kind: KindKey, Text: `"values"`},
+				{Kind: KindUnknown, Text: ":"},
+				{Kind: KindParenthases, Text: "["},
+				{Kind: KindValue, Text: "-1"},
+				{Kind: KindUnknown, Text: ","},
+				{Kind: KindValue, Text: "-2.5"},
+				{Kind: KindUnknown, Text: ","},
+				{Kind: KindValue, Text: "3"},
+				{Kind: KindParenthases, Text: "]"},
+				{Kind: KindParenthases, Text: "}"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
+		{
+			name:  "json with uuid as value",
+			input: `{"id":"550e8400-e29b-41d4-a716-446655440000"}` + "\n",
+			want: []Token{
+				{Kind: KindParenthases, Text: "{"},
+				{Kind: KindKey, Text: `"id"`},
+				{Kind: KindUnknown, Text: ":"},
+				{Kind: KindValue, Text: `"550e8400-e29b-41d4-a716-446655440000"`},
+				{Kind: KindParenthases, Text: "}"},
+				{Kind: KindNewline, Text: "\n"},
+			},
+		},
 	}
 
 	for _, tc := range tests {
