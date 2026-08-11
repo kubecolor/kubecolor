@@ -80,7 +80,7 @@ Use "kubectl options" for a list of global command-line options (applies to all 
 
 [37mkubectl controls the Kubernetes cluster manager.[0m
 
- [37mFind more information at: [36mhttps://kubernetes.io/docs/reference/kubectl/[0m[0m
+ [37mFind more information at: [36mhttps://kubernetes.io/docs/reference/kubectl/[0m[37m[0m
 
 [1mBasic Commands (Beginner):[0m
   [37mcreate          Create a resource from a file or from stdin[0m
