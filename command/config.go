@@ -116,19 +116,6 @@ func ResolveConfigViper(inputArgs []string, v *viper.Viper) (*Config, error) {
 		}
 	}
 
-	// Interactive kubectl commands (e.g. `kubectl delete -i pod nginx` or
-	// `kubectl delete --interactive pod nginx`) read from stdin and write
-	// prompts to stdout/stderr. Because kubecolor captures and colorizes
-	// those streams, the prompt ordering becomes corrupted (see issue #201).
-	// As a near-term workaround, imply kubecolor plain mode whenever the
-	// user requests an interactive session, while forwarding the kubectl
-	// arguments unchanged. This holds even when the user passes
-	// --force-colors, since honoring forced color here would re-enter
-	// stdout/stderr capture and recreate the prompt-ordering bug.
-	if hasInteractiveFlag(inputArgs) {
-		cfg.ForceColor = ColorLevelNone
-	}
-
 	newCfg, err := config.Unmarshal(v)
 	if err != nil {
 		return nil, err
@@ -138,32 +125,7 @@ func ResolveConfigViper(inputArgs []string, v *viper.Viper) (*Config, error) {
 	return cfg, nil
 }
 
-// hasInteractiveFlag reports whether the user supplied kubectl's interactive
-// flag (`-i` or `--interactive`). Explicit boolean forms are respected, the
-// last occurrence wins, and parsing stops at the `--` argument separator.
-func hasInteractiveFlag(args []string) bool {
-	enabled := false
-	for _, arg := range args {
-		switch {
-		case arg == "--":
-			return enabled
-		case arg == "-i", arg == "--interactive":
-			enabled = true
-		case strings.HasPrefix(arg, "-i="), strings.HasPrefix(arg, "--interactive="):
-			_, value, _ := strings.Cut(arg, "=")
-			parsed, ok, err := parseBool(value)
-			if err != nil || !ok {
-				// Unknown value: kubectl would reject it, but treat it as
-				// interactive to be on the safe side.
-				return true
-			}
-			enabled = parsed
-		}
-	}
-	return enabled
-}
-
-func parseBool(value string) (result bool, ok bool, err error) {
+func parseBool(value string) (result, ok bool, err error) {
 	switch strings.ToLower(value) {
 	case "":
 		return false, false, nil
@@ -176,7 +138,7 @@ func parseBool(value string) (result bool, ok bool, err error) {
 	}
 }
 
-func parseBoolEnv(env string) (result bool, ok bool, err error) {
+func parseBoolEnv(env string) (result, ok bool, err error) {
 	result, ok, err = parseBool(os.Getenv(env))
 	if err != nil {
 		return false, false, fmt.Errorf("parse env %s: %w", env, err)
