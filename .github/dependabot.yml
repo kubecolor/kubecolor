@@ -8,7 +8,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      all:
+      github-actions:
         patterns:
           - "*"
     cooldown:
@@ -18,9 +18,5 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    groups:
-      all:
-        patterns:
-          - "*"
     cooldown:
       default-days: 7

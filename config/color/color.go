@@ -4,7 +4,6 @@ import (
 	"cmp"
 	"encoding"
 	"fmt"
-	"regexp"
 	"strings"
 
 	"github.com/gookit/color"
@@ -65,8 +64,6 @@ func (c Color) Render(s string) string {
 	return color.RenderString(c.cachedCode, s)
 }
 
-var afterResetRegex = regexp.MustCompile("\033\\[0m[^\033]")
-
 func (c Color) renderInject(s string) string {
 	if strings.HasPrefix(s, "\033[") &&
 		strings.HasSuffix(s, "\033[0m") &&
@@ -74,11 +71,7 @@ func (c Color) renderInject(s string) string {
 		// If full string is colored, then doesn't matter if we add colors
 		return s
 	}
-	updated := afterResetRegex.ReplaceAllStringFunc(s, func(orig string) string {
-		lastByte := orig[len(orig)-1]
-		return fmt.Sprintf("\033[0m\033[%sm%c", c.cachedCode, lastByte)
-	})
-	return color.RenderString(c.cachedCode, updated)
+	return color.RenderString(c.cachedCode, s)
 }
 
 // Sprint returns the stringified args (concatenated right after each other)
