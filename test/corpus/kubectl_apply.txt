@@ -19,6 +19,72 @@ deployment.apps/foo [35munchanged[0m [36m(server dry run)[0m
 [32mdeployment.apps/foo bar[0m
 
 ================================================================================
+$ kubectl apply edit-last-applied --help
+================================================================================
+
+Edit the latest last-applied-configuration annotations of resources from the default editor.
+
+Examples:
+  # Edit the last-applied-configuration annotations by type/name in YAML
+  kubectl apply edit-last-applied deployment/nginx
+
+Usage:
+  kubectl apply edit-last-applied (RESOURCE/NAME | -f FILENAME) [options]
+
+--------------------------------------------------------------------------------
+
+[37mEdit the latest last-applied-configuration annotations of resources from the default editor.[0m
+
+[1mExamples:[0m
+  [90;3m# Edit the last-applied-configuration annotations by type/name in YAML[0m
+  [32mkubectl[0m [37mapply[0m [37medit-last-applied[0m [37mdeployment/nginx[0m
+
+[1mUsage:[0m
+  [32mkubectl[0m [37mapply[0m [37medit-last-applied[0m [37m(RESOURCE/NAME[0m | [32m-f[0m [37mFILENAME)[0m [37m[options][0m
+
+================================================================================
+$ kubectl apply view-last-applied pod nginx
+================================================================================
+
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+  namespace: default
+spec:
+  containers:
+    # ...
+
+--------------------------------------------------------------------------------
+
+[96mapiVersion[0m: [93mv1[0m
+[96mkind[0m: [93mPod[0m
+[96mmetadata[0m:
+  [36mlabels[0m:
+    [96mapp[0m: [93mnginx[0m
+  [36mname[0m: [93mnginx[0m
+  [36mnamespace[0m: [93mdefault[0m
+[96mspec[0m:
+  [36mcontainers[0m:
+    [93m# ...[0m
+
+================================================================================
+$ kubectl apply set-last-applied pod nginx -f nginx.yaml
+================================================================================
+
+pod/nginx configured
+pod/nginx configured (server dry run)
+set-last-applied nginx: no changes required.
+
+--------------------------------------------------------------------------------
+
+pod/nginx [33mconfigured[0m
+pod/nginx [33mconfigured[0m [36m(server dry run)[0m
+[90;3mset-last-applied[0m nginx: [35mno changes required.[0m
+
+================================================================================
 $ kubectl apply -f deploy.yaml -o yaml
 ================================================================================
 
