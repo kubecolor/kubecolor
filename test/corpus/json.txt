@@ -7,6 +7,7 @@ $ kubectl get pod -o json
     "apiVersion": "v1",
     "kind": "Pod",
     "num": 598,
+    "numNeg": -598,
     "bool": true,
     "null": null
 }
@@ -17,6 +18,7 @@ $ kubectl get pod -o json
     "[36mapiVersion[0m": "[93mv1[0m",
     "[36mkind[0m": "[93mPod[0m",
     "[36mnum[0m": [35m598[0m,
+    "[36mnumNeg[0m": [35m-598[0m,
     "[36mbool[0m": [32mtrue[0m,
     "[36mnull[0m": [90;3mnull[0m
 }

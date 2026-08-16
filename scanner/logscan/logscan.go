@@ -167,10 +167,18 @@ func (s *Scanner) scan(rest []byte) int {
 		if written := s.scanJSON(rest); written > 0 {
 			return written
 		}
+	case '#':
+		if written := s.scanRubyObject(rest); written > 0 {
+			return written
+		}
 	}
 
-	if key, _, ok := bytes.Cut(word, []byte("=")); ok {
-		return s.scanKeyValue(key, rest[len(key)+1:]) // +1 to skip the "=" sign
+	if written := s.scanRubyKeyValue(word, rest); written > 0 {
+		return written
+	}
+
+	if written := s.scanKeyValue(word, rest); written > 0 {
+		return written
 	}
 
 	// Kubernetes "klog" style source mapping, e.g "dynamic_source.go:290]"
@@ -281,57 +289,139 @@ func (s *Scanner) scanParenthases(group []byte) {
 	s.pushToken(KindParenthases, string(group[len(group)-1:]))
 }
 
-func (s *Scanner) scanKeyValue(key, valueAndRest []byte) int {
-	s.pushToken(KindKey, string(key))
-	s.pushToken(KindUnknown, "=")
+func (s *Scanner) scanKeyValue(word, wordAndRest []byte) int {
+	key, _, ok := bytes.Cut(word, []byte("="))
+	if !ok {
+		return 0
+	}
 
-	word := readWord(valueAndRest)
+	valueAndRest := wordAndRest[len(key)+1:] // +1 to skip the "=" sign
+	writtenKey := s.pushToken(KindKey, string(key))
+	writtenKey += s.pushToken(KindUnknown, "=")
 
-	firstRune, _ := utf8.DecodeRune(word)
+	valueWord := readWord(valueAndRest)
+
+	firstRune, _ := utf8.DecodeRune(valueWord)
 	switch firstRune {
 	case '(':
-		if group := readParenthases(valueAndRest, '(', ')'); len(group) != 0 && len(group) >= len(word) {
-			s.pushToken(KindValue, string(group))
-			return len(key) + 1 + len(group)
+		if group := readParenthases(valueAndRest, '(', ')'); len(group) != 0 && len(group) >= len(valueWord) {
+			return writtenKey + s.pushToken(KindValue, string(group))
 		}
 	case '[':
-		if group := readParenthases(valueAndRest, '[', ']'); len(group) != 0 && len(group) >= len(word) {
-			s.pushToken(KindValue, string(group))
-			return len(key) + 1 + len(group)
+		if group := readParenthases(valueAndRest, '[', ']'); len(group) != 0 && len(group) >= len(valueWord) {
+			return writtenKey + s.pushToken(KindValue, string(group))
 		}
 	case '"', '\'', '`':
-		if quoted := readQuoted(valueAndRest); len(quoted) != 0 && len(quoted) >= len(word) {
-			s.pushToken(KindValue, string(quoted))
-			return len(key) + 1 + len(quoted)
+		if quoted := readQuoted(valueAndRest); len(quoted) != 0 && len(quoted) >= len(valueWord) {
+			return writtenKey + s.pushToken(KindValue, string(quoted))
 		}
 
 	case '{':
-		if written := s.scanJSON(valueAndRest); written > 0 {
-			return len(key) + 1 + written
+		if writtenJSON := s.scanJSON(valueAndRest); writtenJSON > 0 {
+			return writtenKey + writtenJSON
+		}
+
+	case '#':
+		if writtenRuby := s.scanRubyObject(valueAndRest); writtenRuby > 0 {
+			return writtenKey + writtenRuby
 		}
 	}
 
-	if dateMatch := dateRegex.Find(word); dateMatch != nil {
-		s.pushToken(KindDate, string(word))
-		return len(key) + 1 + len(word)
+	if dateMatch := dateRegex.Find(valueWord); dateMatch != nil {
+		return writtenKey + s.pushToken(KindDate, string(valueWord))
 	}
 
 	switch string(key) {
 	case "level", "lvl", "severity", "l", "s":
-		severityKind := severityKindFromName(string(word))
+		severityKind := severityKindFromName(string(valueWord))
 		if severityKind != KindUnknown {
 			s.hasFoundSeverity = true
-			s.pushToken(severityKind, string(word))
-			return len(key) + 1 + len(word)
+			return writtenKey + s.pushToken(severityKind, string(valueWord))
 		}
 
 	case "caller", "source":
-		s.pushToken(KindSourceRef, string(word))
-		return len(key) + 1 + len(word)
+		return writtenKey + s.pushToken(KindSourceRef, string(valueWord))
 	}
 
-	s.pushToken(KindValue, string(word))
-	return len(key) + 1 + len(word)
+	return writtenKey + s.pushToken(KindValue, string(valueWord))
+}
+
+// scanRubyKeyValue parses Ruby-style key-value logs.
+//
+// Example:
+//
+//	:key=>value
+//	:key=>"value"
+//	:key=>#<foo bar>
+//	:key=>#<foo<nested> bar>
+func (s *Scanner) scanRubyKeyValue(word, wordAndRest []byte) int {
+	if len(word) == 0 || word[0] != ':' {
+		return 0
+	}
+	// :key=>value
+	// ^^^^
+	key, _, ok := bytes.Cut(word, []byte("=>"))
+	if !ok {
+		return 0
+	}
+	// :key=>value
+	//       ^^^^^
+	rest := wordAndRest[len(key)+2:]
+
+	written := s.pushToken(KindKey, string(key))
+	written += s.pushToken(KindUnknown, "=>")
+	return written + s.scanRubyValue(rest)
+}
+
+// scanRubyValue parses the value part of a Ruby-style :key=>value pair.
+//
+// Example:
+//
+//	foobar
+//	"foo bar"
+//	#<foo bar>
+//	#<foo <nested> bar>
+func (s *Scanner) scanRubyValue(rest []byte) int {
+	if len(rest) == 0 {
+		return 0
+	}
+
+	firstRune, _ := utf8.DecodeRune(rest)
+	switch firstRune {
+	case ' ', '\t':
+		return 0
+	case '"', '\'', '`':
+		if quoted := readQuoted(rest); len(quoted) != 0 {
+			return s.pushToken(KindValue, string(quoted))
+		}
+	}
+
+	if written := s.scanRubyObject(rest); written > 0 {
+		return written
+	}
+
+	word := readWord(rest)
+	return s.pushToken(KindValue, string(word))
+}
+
+// scanRubyObject parses a formatted Ruby object.
+//
+// Example:
+//
+//	#<foo bar>
+//	#<foo <nested> bar>
+func (s *Scanner) scanRubyObject(rest []byte) int {
+	if !bytes.HasPrefix(rest, []byte("#<")) {
+		return 0
+	}
+	grouped := readParenthases(rest[1:], '<', '>')
+	if len(grouped) == 0 {
+		// may be missing closing '>', where the #<...> may span multiple lines.
+		// But just treat rest of this line as rest of value.
+		return s.pushToken(KindValue, string(rest))
+	}
+	object := rest[:len(grouped)+1] // +1 to include the '#'
+	return s.pushToken(KindValue, string(object))
 }
 
 func (s *Scanner) scanJSON(rest []byte) int {
@@ -359,7 +449,7 @@ func (s *Scanner) scanJSON(rest []byte) int {
 		}
 		return s.pushToken(KindValue, string(quoted))
 
-	case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.':
+	case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-':
 		number := readJSONNumber(rest)
 		return s.pushToken(KindValue, string(number))
 
@@ -519,8 +609,18 @@ func readJSONKeyValue(b []byte) (key, delimiter, rest []byte) {
 	return key, delimiter, rest
 }
 
+// readParenthases finds the matching ending parenthases group, while
+// still allowing for nested parentheses groups.
+//
+// Example:
+//
+//	IN:  "(foo) bar"
+//	OUT: "(foo)"
+//
+//	IN:  "(foo (moo) doo) bar"
+//	OUT: "(foo (moo) doo)"
 func readParenthases(lineBuffer []byte, open, close rune) []byte {
-	var openCount int = -1 // start at -1 because the first symbol is the open
+	openCount := -1 // start at -1 because the first symbol is the open
 	var index int
 	for {
 		nextRune, size := utf8.DecodeRune(lineBuffer[index:])
@@ -627,6 +727,12 @@ func readLetters(rest []byte) []byte {
 func readJSONNumber(rest []byte) []byte {
 	var index int
 	var hasDot bool
+
+	r, size := utf8.DecodeRune(rest[index:])
+	if r == '-' {
+		index += size
+	}
+
 	for {
 		r, size := utf8.DecodeRune(rest[index:])
 		if r == utf8.RuneError {
