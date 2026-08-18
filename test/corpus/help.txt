@@ -352,7 +352,7 @@ Use "kubectl options" for a list of global command-line options (applies to all 
 	[37mWhen using the default or custom-column output format, don't print headers (default print headers).[0m
 
     [36m-o, --output[0m=[93m''[0m:
-	[37mOutput format. One of: (json, yaml, name, go-template, go-template-file, template, templatefile, jsonpath, jsonpath-as-json, jsonpath-file, custom-columns, custom-columns-file, wide). See custom columns [[36mhttps://kubernetes.io/docs/reference/kubectl/#custom-column[0m[37m], golang template [[36mhttp://golang.org/pkg/text/template/#pkg-overvie[0m[37m] and jsonpath template [[36mhttps://kubernetes.io/docs/reference/kubectl/jsonpath[0m[37m].[0m
+	[37mOutput format. One of: (json, yaml, name, go-template, go-template-file, template, templatefile, jsonpath, jsonpath-as-json, jsonpath-file, custom-columns, custom-columns-file, wide). See custom columns [[36mhttps://kubernetes.io/docs/reference/kubectl/#custom-columns[0m[37m], golang template [[36mhttp://golang.org/pkg/text/template/#pkg-overview[0m[37m] and jsonpath template [[36mhttps://kubernetes.io/docs/reference/kubectl/jsonpath/[0m[37m].[0m
 
     [36m--output-watch-events[0m=[31mfalse[0m:
 	[37mOutput watch event objects when --watch or --watch-only is used. Existing objects are output as initial ADDED events.[0m
@@ -385,7 +385,7 @@ Use "kubectl options" for a list of global command-line options (applies to all 
 	[37mIf specified, gets the subresource of the requested object. Must be one of [status scale]. This flag is beta and may change in the future.[0m
 
     [36m--template[0m=[93m''[0m:
-	[37mTemplate string or path to template file to use when -o=go-template, -o=go-template-file. The template format is golang templates [[36mhttp://golang.org/pkg/text/template/#pkg-overvie[0m[37m].[0m
+	[37mTemplate string or path to template file to use when -o=go-template, -o=go-template-file. The template format is golang templates [[36mhttp://golang.org/pkg/text/template/#pkg-overview[0m[37m].[0m
 
     [36m-w, --watch[0m=[31mfalse[0m:
 	[37mAfter listing/getting the requested object, watch for changes.[0m

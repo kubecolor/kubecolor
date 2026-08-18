@@ -153,7 +153,7 @@ func (p *HelpPrinter) printCommandLine(w io.Writer, line string) bool {
 func (p *HelpPrinter) colorizeUrls(s string) string {
 	return urlRegex.ReplaceAllStringFunc(s, func(url string) string {
 		if url[0] == '[' {
-			return fmt.Sprintf("[%s]", p.Theme.Help.Url.Render(url[1:len(url)-2]))
+			return fmt.Sprintf("[%s]", p.Theme.Help.Url.Render(url[1:len(url)-1]))
 		}
 		return p.Theme.Help.Url.Render(url)
 	})
