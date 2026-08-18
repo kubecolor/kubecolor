@@ -387,7 +387,7 @@
       },
       "additionalProperties": false,
       "type": "object",
-      "description": "ThemeApply holds colors for the \"kubectl apply\" output."
+      "description": "ThemeDescribe holds colors for the \"kubectl describe\" output."
     },
     "themeDiff": {
       "properties": {
