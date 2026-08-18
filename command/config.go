@@ -125,7 +125,7 @@ func ResolveConfigViper(inputArgs []string, v *viper.Viper) (*Config, error) {
 	return cfg, nil
 }
 
-func parseBool(value string) (result bool, ok bool, err error) {
+func parseBool(value string) (result, ok bool, err error) {
 	switch strings.ToLower(value) {
 	case "":
 		return false, false, nil
@@ -138,7 +138,7 @@ func parseBool(value string) (result bool, ok bool, err error) {
 	}
 }
 
-func parseBoolEnv(env string) (result bool, ok bool, err error) {
+func parseBoolEnv(env string) (result, ok bool, err error) {
 	result, ok, err = parseBool(os.Getenv(env))
 	if err != nil {
 		return false, false, fmt.Errorf("parse env %s: %w", env, err)
