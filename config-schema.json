@@ -49,6 +49,16 @@
         "5h"
       ]
     },
+    "durationSlice": {
+      "type": "string",
+      "title": "Multiple durations",
+      "description": "Allows multiple time durations, separated by slash. Supports human-friendly units such as 5m, 2h, 1d, 7d, 1y.",
+      "examples": [
+        "5m",
+        "5m/2h/1d",
+        "5m/1h/1d/7d"
+      ]
+    },
     "paging": {
       "type": "string",
       "enum": [
@@ -327,11 +337,11 @@
         },
         "duration": {
           "$ref": "#/$defs/color",
-          "description": "used when the value is a duration, e.g \"12m\" or \"1d12h\""
+          "description": "used when the value is a duration, e.g \"12m\" or \"1d12h\", and for ages older than every objFreshThreshold"
         },
         "durationFresh": {
-          "$ref": "#/$defs/color",
-          "description": "color used when the time value is under a certain delay"
+          "$ref": "#/$defs/colorSlice",
+          "description": "colors used for ages under each objFreshThreshold, paired by position"
         },
         "ratio": {
           "$ref": "#/$defs/themeDataRatio"
@@ -784,8 +794,8 @@
       ]
     },
     "objFreshThreshold": {
-      "$ref": "#/$defs/duration",
-      "description": "Ages below this uses theme.data.durationfresh coloring"
+      "$ref": "#/$defs/durationSlice",
+      "description": "Age thresholds, which must be listed in ascending order. Each colors ages below it using theme.data.durationFresh\n(paired by position); ages older than every threshold use theme.data.duration. Thresholds are matched smallest-first,\nso a value listed out of order is shadowed by an earlier, larger one."
     },
     "preset": {
       "$ref": "#/$defs/preset",

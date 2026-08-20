@@ -3,7 +3,6 @@ package command
 import (
 	"os"
 	"testing"
-	"time"
 
 	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/config/testconfig"
@@ -23,7 +22,7 @@ func Test_ResolveConfig(t *testing.T) {
 			expectedConf: &Config{
 				Config: &config.Config{
 					Kubectl:           "kubectl",
-					ObjFreshThreshold: time.Duration(0),
+					ObjFreshThreshold: nil,
 					Paging:            config.PagingDefault,
 					Theme:             *testconfig.DarkTheme,
 					Preset:            config.PresetDark,
@@ -38,7 +37,7 @@ func Test_ResolveConfig(t *testing.T) {
 			expectedConf: &Config{
 				Config: &config.Config{
 					Kubectl:           "kubectl",
-					ObjFreshThreshold: time.Duration(0),
+					ObjFreshThreshold: nil,
 					Paging:            config.PagingDefault,
 					Theme:             *testconfig.LightTheme,
 					Preset:            config.PresetLight,
@@ -54,7 +53,7 @@ func Test_ResolveConfig(t *testing.T) {
 			expectedConf: &Config{
 				Config: &config.Config{
 					Kubectl:           "kubectl.1.19",
-					ObjFreshThreshold: time.Duration(0),
+					ObjFreshThreshold: nil,
 					Paging:            config.PagingDefault,
 					Theme:             *testconfig.DarkTheme,
 					Preset:            config.PresetDark,
@@ -70,7 +69,7 @@ func Test_ResolveConfig(t *testing.T) {
 			expectedConf: &Config{
 				Config: &config.Config{
 					Kubectl:           "kubectl",
-					ObjFreshThreshold: time.Minute,
+					ObjFreshThreshold: config.MustParseDurationSlice("1m"),
 					Paging:            config.PagingDefault,
 					Theme:             *testconfig.DarkTheme,
 					Preset:            config.PresetDark,

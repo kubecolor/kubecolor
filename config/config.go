@@ -8,7 +8,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/kubecolor/kubecolor/internal/slogutil"
 	"github.com/mitchellh/mapstructure"
@@ -19,13 +18,18 @@ import (
 const PresetKey = "preset"
 
 type Config struct {
-	Debug             bool          `jsonschema:"-"`
-	Kubectl           string        `jsonschema:"default=kubectl,example=kubectl1.19,example=oc"` // Which kubectl executable to use
-	ObjFreshThreshold time.Duration // Ages below this uses theme.data.durationfresh coloring
-	Preset            Preset        // Color theme preset
-	Theme             Theme         //
-	Pager             string        `jsonschema:"example=less -RF,less --RAW-CONTROL-CHARS --quit-if-one-screen,example=more"` // Command to use as pager
-	Paging            Paging        `jsonschema:"default=never"`                                                               // Whether to enable paging: "auto" or "never"
+	Debug   bool   `jsonschema:"-"`
+	Kubectl string `jsonschema:"default=kubectl,example=kubectl1.19,example=oc"` // Which kubectl executable to use
+
+	// Age thresholds, which must be listed in ascending order. Each colors ages below it using theme.data.durationFresh
+	// (paired by position); ages older than every threshold use theme.data.duration. Thresholds are matched smallest-first,
+	// so a value listed out of order is shadowed by an earlier, larger one.
+	ObjFreshThreshold DurationSlice `jsonschema:"example=5m,example=5m/2h/1d"`
+
+	Preset Preset // Color theme preset
+	Theme  Theme
+	Pager  string `jsonschema:"example=less -RF,less --RAW-CONTROL-CHARS --quit-if-one-screen,example=more"` // Command to use as pager
+	Paging Paging `jsonschema:"default=never"`                                                               // Whether to enable paging: "auto" or "never"
 }
 
 func NewViper() *viper.Viper {
