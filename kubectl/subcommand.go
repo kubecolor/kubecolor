@@ -13,6 +13,7 @@ type SubcommandInfo struct {
 	Help            bool   // flag: -h, --help
 	Recursive       bool   // flag: --recursive
 	Client          bool   // flag: --client
+	Interactive     bool   // flag: -i, --interactive
 	EditLastApplied bool   // subcommand: apply edit-last-applied
 	SetLastApplied  bool   // subcommand: apply set-last-applied
 	ViewLastApplied bool   // subcommand: apply view-last-applied
@@ -191,6 +192,8 @@ func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 			info.Follow = true
 		case "--recursive":
 			info.Recursive = value != "false"
+		case "-i", "--interactive":
+			info.Interactive = true
 		case "-h", "--help":
 			info.Help = value != "false"
 		}
@@ -266,7 +269,7 @@ func InspectSubcommandInfo(args []string, pluginHandler PluginHandler) *Subcomma
 }
 
 func (sci *SubcommandInfo) SupportsPager() bool {
-	if sci.Help {
+	if sci.Help || sci.Interactive {
 		return false
 	}
 	switch sci.Subcommand {
@@ -285,6 +288,9 @@ func (sci *SubcommandInfo) SupportsPager() bool {
 }
 
 func (sci *SubcommandInfo) SupportsColoring() bool {
+	if sci.Interactive {
+		return false
+	}
 	switch sci.Subcommand {
 	case Attach,
 		Debug,

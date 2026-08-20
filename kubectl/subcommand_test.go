@@ -91,6 +91,9 @@ func TestInspectSubcommandInfo(t *testing.T) {
 
 		{"", &SubcommandInfo{Subcommand: Unknown, Help: true}},
 		{"--only-some-flag", &SubcommandInfo{Subcommand: Unknown, Help: true}},
+
+		{"delete --interactive", &SubcommandInfo{Subcommand: Delete, Interactive: true}},
+		{"delete -i", &SubcommandInfo{Subcommand: Delete, Interactive: true}},
 	}
 
 	pluginHandler := TestPluginHandler{LookupMap: map[string]string{

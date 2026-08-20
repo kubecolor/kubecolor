@@ -1,12 +1,9 @@
 name: govulncheck
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
   schedule:
     - cron: 0 8 * * 1 # 08:00 on mondays
+  workflow_dispatch: # allow for triggering manually
 
 permissions: {}
 
