@@ -3,6 +3,7 @@ package printer
 import (
 	"regexp"
 	"strings"
+	"time"
 	"unicode"
 
 	"github.com/kubecolor/kubecolor/config"
@@ -72,6 +73,41 @@ func TryColorDataValue(val string, theme *config.Theme) (color.Color, bool) {
 	}
 
 	return theme.Data.String, false
+}
+
+// ColorDuration returns the color for an object's age, given the ordered
+// (ascending) fresh thresholds. The age uses the fresh color of the smallest
+// threshold it is still below, paired by position:
+//
+//   - age < thresholds[i] -> theme.data.durationFresh[i]
+//   - if that color index does not exist, or the age is older than every
+//     threshold, it falls back to theme.data.duration.
+//
+// When no thresholds are configured, every age uses theme.data.duration (unset
+// by default), reproducing kubecolor's default of no age coloring and letting
+// table column cycling apply. When thresholds ARE configured but the resolved
+// fallback color is unset, the first table column color is used instead, so the
+// age column reads as a normal column rather than the arbitrary cycled color for
+// its own column index.
+func ColorDuration(age time.Duration, thresholds config.DurationSlice, theme *config.Theme) color.Color {
+	if len(thresholds) == 0 {
+		return theme.Data.Duration
+	}
+	for i, threshold := range thresholds {
+		if age < threshold {
+			if i < len(theme.Data.DurationFresh) {
+				return theme.Data.DurationFresh[i]
+			}
+			break
+		}
+	}
+	if !theme.Data.Duration.IsNoop() {
+		return theme.Data.Duration
+	}
+	if len(theme.Table.Columns) > 0 {
+		return theme.Table.Columns[0]
+	}
+	return theme.Data.Duration
 }
 
 // ColorStatus returns the color that should be used for a given status text.

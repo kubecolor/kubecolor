@@ -364,9 +364,9 @@ type ThemeData struct {
 	Number color.Color `defaultFrom:"theme.base.primary"` // used when the value is a number
 	Null   color.Color `defaultFrom:"theme.base.muted"`   // used when the value is null, nil, or none
 
-	Quantity      color.Color `defaultFrom:"theme.data.number"`  // used when the value is a quantity, e.g "100m" or "5Gi"
-	Duration      color.Color ``                                 // used when the value is a duration, e.g "12m" or "1d12h"
-	DurationFresh color.Color `defaultFrom:"theme.base.success"` // color used when the time value is under a certain delay
+	Quantity      color.Color `defaultFrom:"theme.data.number"`                                           // used when the value is a quantity, e.g "100m" or "5Gi"
+	Duration      color.Color ``                                                                          // used when the value is a duration, e.g "12m" or "1d12h", and for ages older than every objFreshThreshold
+	DurationFresh color.Slice `defaultFromMany:"theme.base.success,theme.base.warning,theme.base.danger"` // colors used for ages under each objFreshThreshold, paired by position
 
 	Ratio ThemeDataRatio
 }

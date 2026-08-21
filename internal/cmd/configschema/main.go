@@ -113,6 +113,17 @@ func main() {
 		},
 	}
 
+	s.Definitions["durationSlice"] = &jsonschema.Schema{
+		Type:        "string",
+		Title:       "Multiple durations",
+		Description: "Allows multiple time durations, separated by slash, listed from shortest to longest. Supports human-friendly units such as 5m, 2h, 1d, 7d, 1y.",
+		Examples: []any{
+			"5m",
+			"5m/2h/1d",
+			"5m/1h/1d/7d",
+		},
+	}
+
 	b, err := json.MarshalIndent(s, "", "  ")
 	if err != nil {
 		log.Fatal(err)
@@ -145,7 +156,7 @@ func castToAnySlice[E any](s []E) []any {
 // types to Schema IDs.
 func Lookup(t reflect.Type) jsonschema.ID {
 	switch t.Name() {
-	case "Color", "Slice", "Preset", "Paging", "Duration":
+	case "Color", "Slice", "Preset", "Paging", "Duration", "DurationSlice":
 		return jsonschema.ID("#/$defs/" + Namer(t.Name()))
 	default:
 		return ""

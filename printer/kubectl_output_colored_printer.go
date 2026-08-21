@@ -3,7 +3,6 @@ package printer
 import (
 	"io"
 	"strings"
-	"time"
 
 	"github.com/kubecolor/kubecolor/config"
 	"github.com/kubecolor/kubecolor/config/color"
@@ -19,7 +18,7 @@ import (
 type KubectlOutputColoredPrinter struct {
 	SubcommandInfo    *kubectl.SubcommandInfo
 	Recursive         bool
-	ObjFreshThreshold time.Duration
+	ObjFreshThreshold config.DurationSlice
 	Theme             *config.Theme
 	KubecolorVersion  string
 }
@@ -56,6 +55,10 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 			kubectl.OutputWide,
 			kubectl.OutputCustomColumns,
 			kubectl.OutputCustomColumnsFile:
+			// Age-based coloring only applies to "kubectl get". Other table
+			// subcommands (e.g. "kubectl events") have age-ish columns like
+			// "43s (x150 over 21h)" that would color inconsistently.
+			colorAge := p.SubcommandInfo.Subcommand == kubectl.Get
 			return NewTablePrinter(
 				withHeader,
 				p.Theme,
@@ -78,12 +81,11 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 						}
 					}
 
-					// Object age when fresh then green
-					if age, ok := stringutil.ParseHumanDuration(column); ok {
-						if age < p.ObjFreshThreshold {
-							return p.Theme.Data.DurationFresh.Render(column)
+					// Object age: color by which fresh threshold it falls under
+					if colorAge {
+						if age, ok := stringutil.ParseHumanDuration(column); ok {
+							return ColorDuration(age, p.ObjFreshThreshold, p.Theme).Render(column)
 						}
-						return p.Theme.Data.Duration.Render(column)
 					}
 
 					return column
