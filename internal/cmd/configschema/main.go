@@ -116,7 +116,7 @@ func main() {
 	s.Definitions["durationSlice"] = &jsonschema.Schema{
 		Type:        "string",
 		Title:       "Multiple durations",
-		Description: "Allows multiple time durations, separated by slash. Supports human-friendly units such as 5m, 2h, 1d, 7d, 1y.",
+		Description: "Allows multiple time durations, separated by slash, listed from shortest to longest. Supports human-friendly units such as 5m, 2h, 1d, 7d, 1y.",
 		Examples: []any{
 			"5m",
 			"5m/2h/1d",

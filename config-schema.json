@@ -52,7 +52,7 @@
     "durationSlice": {
       "type": "string",
       "title": "Multiple durations",
-      "description": "Allows multiple time durations, separated by slash. Supports human-friendly units such as 5m, 2h, 1d, 7d, 1y.",
+      "description": "Allows multiple time durations, separated by slash, listed from shortest to longest. Supports human-friendly units such as 5m, 2h, 1d, 7d, 1y.",
       "examples": [
         "5m",
         "5m/2h/1d",
