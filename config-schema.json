@@ -234,6 +234,10 @@
           "$ref": "#/$defs/color",
           "description": "used on \"deployment.apps/quux serverside-applied\""
         },
+        "setLastApplied": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"set-last-applied nginx: no changes required.\""
+        },
         "dryRun": {
           "$ref": "#/$defs/color",
           "description": "used on \"(dry run)\" and \"(server dry run)\""

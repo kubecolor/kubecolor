@@ -159,6 +159,33 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 		}
 		switch p.SubcommandInfo.Subcommand {
 		case kubectl.Apply:
+			switch {
+			case p.SubcommandInfo.EditLastApplied:
+				// if running "kubectl apply edit-last-applied --help"
+				// then our "HelpPrinter" branch above should've caught that
+				panic("coloring not supported")
+			case p.SubcommandInfo.ViewLastApplied:
+				switch p.SubcommandInfo.Output {
+				case kubectl.OutputJSON:
+					return &JSONPrinter{Theme: p.Theme}
+				default:
+					return &YAMLPrinter{Theme: p.Theme}
+				}
+
+			case p.SubcommandInfo.SetLastApplied:
+				return &VerbPrinter{
+					DryRunColor:   p.Theme.Apply.DryRun,
+					FallbackColor: p.Theme.Apply.Fallback,
+					VerbColor: map[string]color.Color{
+						"configured":           p.Theme.Apply.Configured,
+						"no changes required.": p.Theme.Apply.Unchanged,
+					},
+					PrefixVerbColor: map[string]color.Color{
+						"set-last-applied": p.Theme.Apply.SetLastApplied,
+					},
+				}
+			}
+
 			return &VerbPrinter{
 				DryRunColor:   p.Theme.Apply.DryRun,
 				FallbackColor: p.Theme.Apply.Fallback,

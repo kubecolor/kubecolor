@@ -105,7 +105,7 @@ func (p *VerbPrinter) colorizeVerb(line string) (string, bool) {
 	}
 
 	if anyMatch {
-		return fmt.Sprintf("%s%s%s", match.Before, match.Color.Render(match.Verb), match.After), true
+		line = fmt.Sprintf("%s%s%s", match.Before, match.Color.Render(match.Verb), match.After)
 	}
 
 	for verbPrefix, color := range p.PrefixVerbColor {
@@ -122,7 +122,7 @@ func (p *VerbPrinter) colorizeVerb(line string) (string, bool) {
 		return color.Render(verbPrefix) + after, true
 	}
 
-	return line, false
+	return line, anyMatch
 }
 
 func (p *VerbPrinter) colorizeDryRun(line string) string {
