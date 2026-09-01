@@ -2,16 +2,41 @@ package config
 
 import (
 	"fmt"
+	"log/slog"
 	"reflect"
 	"strings"
 
 	"github.com/kubecolor/kubecolor/config/color"
 	"github.com/kubecolor/kubecolor/internal/stringutil"
+	"github.com/muesli/termenv"
 	"github.com/spf13/viper"
 )
 
+var autoPresets = map[Preset]struct {
+	dark  Preset
+	light Preset
+}{
+	PresetAuto:     {dark: PresetDark, light: PresetLight},
+	PresetDeutAuto: {dark: PresetDeutDark, light: PresetDeutLight},
+	PresetProtAuto: {dark: PresetProtDark, light: PresetProtLight},
+	PresetTritAuto: {dark: PresetTritDark, light: PresetTritLight},
+}
+
 // NewBaseTheme returns the base color schema depending on the dark/light setting
 func NewBaseTheme(preset Preset) *Theme {
+	// Handle auto themes first
+	if pair, ok := autoPresets[preset]; ok {
+		output := termenv.DefaultOutput()
+		slog.Debug("Terminal", "profile", output.Profile.Name(), "background", output.BackgroundColor())
+		if output.HasDarkBackground() {
+			preset = pair.dark
+			slog.Debug("Automatic dark theme detected", "preset", preset)
+		} else {
+			preset = pair.light
+			slog.Debug("Automatic light theme detected", "preset", preset)
+		}
+	}
+
 	switch preset {
 	case PresetDark:
 		return &Theme{

@@ -14,6 +14,12 @@ const (
 	// "Zero value", i.e empty theme selected
 	PresetNone Preset = ""
 
+	// Auto-detection themes
+	PresetAuto     Preset = "auto"
+	PresetDeutAuto Preset = "deuteranopia"
+	PresetProtAuto Preset = "protanopia"
+	PresetTritAuto Preset = "tritanopia"
+
 	// Default themes
 	PresetDark  Preset = "dark"
 	PresetLight Preset = "light"
@@ -36,13 +42,19 @@ const (
 )
 
 var (
-	PresetDefault = PresetDark
+	PresetDefault = PresetAuto
 
 	// AllPresets is used in parsing and places like the
 	// internal/cmd/configschema package to show all available options.
 	AllPresets = []Preset{
 		// "Zero value", i.e empty theme selected
 		PresetNone,
+
+		// Auto-detection themes
+		PresetAuto,
+		PresetProtAuto,
+		PresetDeutAuto,
+		PresetTritAuto,
 
 		// Default themes
 		PresetDark,
