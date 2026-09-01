@@ -110,7 +110,6 @@ func ApplyThemePreset(v *viper.Viper) error {
 	if err != nil {
 		return fmt.Errorf("parse preset: %w", err)
 	}
-	slog.Debug("Applying theme", "preset", preset)
 	theme := NewBaseTheme(preset)
 	applyViperDefaults(theme, v)
 	return nil
