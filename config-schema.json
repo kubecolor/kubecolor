@@ -73,12 +73,16 @@
       "type": "string",
       "enum": [
         "none",
+        "auto",
         "dark",
         "light",
+        "protanopia",
         "protanopia-dark",
         "protanopia-light",
+        "deuteranopia",
         "deuteranopia-dark",
         "deuteranopia-light",
+        "tritanopia",
         "tritanopia-dark",
         "tritanopia-light",
         "pre-0.3.0-dark",
@@ -88,7 +92,7 @@
       ],
       "title": "Color theme preset",
       "description": "Preset is a set of defaults for the color theme.",
-      "default": "dark"
+      "default": "auto"
     },
     "theme": {
       "properties": {

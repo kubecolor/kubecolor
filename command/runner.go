@@ -17,6 +17,7 @@ import (
 	"github.com/kubecolor/kubecolor/printer"
 	"github.com/mattn/go-colorable"
 	"github.com/mattn/go-isatty"
+	"github.com/muesli/termenv"
 	"github.com/xo/terminfo"
 )
 
@@ -52,7 +53,7 @@ var getPrinters = func(subcommandInfo *kubectl.SubcommandInfo, cfg *config.Confi
 }
 
 func Run(rawArgs []string, version string) error {
-	cfg, err := ResolveConfig(rawArgs)
+	cfg, err := ResolveConfig(rawArgs, termenv.DefaultOutput())
 	if err != nil {
 		return fmt.Errorf("resolve config: %w", err)
 	}

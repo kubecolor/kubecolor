@@ -15,14 +15,18 @@ const (
 	PresetNone Preset = ""
 
 	// Default themes
+	PresetAuto  Preset = "auto"
 	PresetDark  Preset = "dark"
 	PresetLight Preset = "light"
 
 	// Color blind focused themes
+	PresetProtAuto  Preset = "protanopia"
 	PresetProtDark  Preset = "protanopia-dark"
 	PresetProtLight Preset = "protanopia-light"
+	PresetDeutAuto  Preset = "deuteranopia"
 	PresetDeutDark  Preset = "deuteranopia-dark"
 	PresetDeutLight Preset = "deuteranopia-light"
+	PresetTritAuto  Preset = "tritanopia"
 	PresetTritDark  Preset = "tritanopia-dark"
 	PresetTritLight Preset = "tritanopia-light"
 
@@ -36,7 +40,7 @@ const (
 )
 
 var (
-	PresetDefault = PresetDark
+	PresetDefault = PresetAuto
 
 	// AllPresets is used in parsing and places like the
 	// internal/cmd/configschema package to show all available options.
@@ -45,14 +49,18 @@ var (
 		PresetNone,
 
 		// Default themes
+		PresetAuto,
 		PresetDark,
 		PresetLight,
 
 		// Color blind focused themes
+		PresetProtAuto,
 		PresetProtDark,
 		PresetProtLight,
+		PresetDeutAuto,
 		PresetDeutDark,
 		PresetDeutLight,
+		PresetTritAuto,
 		PresetTritDark,
 		PresetTritLight,
 

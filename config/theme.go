@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"log/slog"
 	"reflect"
 	"strings"
 
@@ -9,6 +10,40 @@ import (
 	"github.com/kubecolor/kubecolor/internal/stringutil"
 	"github.com/spf13/viper"
 )
+
+var autoPresets = map[Preset]struct {
+	dark  Preset
+	light Preset
+}{
+	PresetAuto:     {dark: PresetDark, light: PresetLight},
+	PresetDeutAuto: {dark: PresetDeutDark, light: PresetDeutLight},
+	PresetProtAuto: {dark: PresetProtDark, light: PresetProtLight},
+	PresetTritAuto: {dark: PresetTritDark, light: PresetTritLight},
+}
+
+// TermInfo is set of methods for reading terminal information.
+//
+// Designed to be compatible with [github.com/muesli/termenv.Output]
+type TermInfo interface {
+	HasDarkBackground() bool
+}
+
+// ResolveAutoThemePreset switches theme preset depending on terminal info,
+// for example changing "auto" to "dark" or "light" theme preset
+func ResolveAutoThemePreset(preset Preset, term TermInfo) Preset {
+	if pair, ok := autoPresets[preset]; ok {
+		if term == nil || term.HasDarkBackground() {
+			slog.Debug("Applying automatic dark theme", "preset", preset, "newPreset", pair.dark)
+			preset = pair.dark
+		} else {
+			slog.Debug("Applying automatic light theme", "preset", preset, "newPreset", pair.light)
+			preset = pair.light
+		}
+	} else {
+		slog.Debug("Applying theme", "preset", preset)
+	}
+	return preset
+}
 
 // NewBaseTheme returns the base color schema depending on the dark/light setting
 func NewBaseTheme(preset Preset) *Theme {

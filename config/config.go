@@ -89,8 +89,8 @@ func LoadViper() (*viper.Viper, error) {
 	return v, nil
 }
 
-func Unmarshal(v *viper.Viper) (*Config, error) {
-	if err := ApplyThemePreset(v); err != nil {
+func Unmarshal(v *viper.Viper, term TermInfo) (*Config, error) {
+	if err := ApplyThemePreset(v, term); err != nil {
 		return nil, err
 	}
 
@@ -105,12 +105,12 @@ func Unmarshal(v *viper.Viper) (*Config, error) {
 	return cfg, nil
 }
 
-func ApplyThemePreset(v *viper.Viper) error {
+func ApplyThemePreset(v *viper.Viper, term TermInfo) error {
 	preset, err := ParsePreset(v.GetString(PresetKey))
 	if err != nil {
 		return fmt.Errorf("parse preset: %w", err)
 	}
-	slog.Debug("Applying theme", "preset", preset)
+	preset = ResolveAutoThemePreset(preset, term)
 	theme := NewBaseTheme(preset)
 	applyViperDefaults(theme, v)
 	return nil

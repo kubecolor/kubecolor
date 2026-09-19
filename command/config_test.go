@@ -15,6 +15,7 @@ func Test_ResolveConfig(t *testing.T) {
 		args         []string
 		env          map[string]string
 		expectedConf *Config
+		term         config.TermInfo
 	}{
 		{
 			name: "no config",
@@ -25,7 +26,7 @@ func Test_ResolveConfig(t *testing.T) {
 					ObjFreshThreshold: nil,
 					Paging:            config.PagingDefault,
 					Theme:             *testconfig.DarkTheme,
-					Preset:            config.PresetDark,
+					Preset:            config.PresetAuto,
 				},
 				ArgsPassthrough: []string{"get", "pods"},
 				ForceColor:      ColorLevelUnset,
@@ -56,7 +57,7 @@ func Test_ResolveConfig(t *testing.T) {
 					ObjFreshThreshold: nil,
 					Paging:            config.PagingDefault,
 					Theme:             *testconfig.DarkTheme,
-					Preset:            config.PresetDark,
+					Preset:            config.PresetAuto,
 				},
 				ForceColor:      ColorLevelNone,
 				ArgsPassthrough: []string{"get", "pods"},
@@ -72,7 +73,7 @@ func Test_ResolveConfig(t *testing.T) {
 					ObjFreshThreshold: config.MustParseDurationSlice("1m"),
 					Paging:            config.PagingDefault,
 					Theme:             *testconfig.DarkTheme,
-					Preset:            config.PresetDark,
+					Preset:            config.PresetAuto,
 				},
 				ForceColor:      ColorLevelUnset,
 				ArgsPassthrough: []string{"get", "pods"},
@@ -102,7 +103,7 @@ func Test_ResolveConfig(t *testing.T) {
 					Kubectl: "kubectl",
 					Paging:  config.PagingDefault,
 					Theme:   *testconfig.DarkTheme,
-					Preset:  config.PresetDark,
+					Preset:  config.PresetAuto,
 				},
 				ForceColor:      ColorLevelAuto,
 				ArgsPassthrough: []string{"get", "pods"},
@@ -117,7 +118,7 @@ func Test_ResolveConfig(t *testing.T) {
 					Kubectl: "kubectl",
 					Paging:  config.PagingDefault,
 					Theme:   *testconfig.DarkTheme,
-					Preset:  config.PresetDark,
+					Preset:  config.PresetAuto,
 				},
 				ForceColor:      ColorLevelTrueColor,
 				ArgsPassthrough: []string{"get", "pods"},
@@ -136,7 +137,7 @@ func Test_ResolveConfig(t *testing.T) {
 					Pager:   "most",
 					Paging:  config.PagingAuto,
 					Theme:   *testconfig.DarkTheme,
-					Preset:  config.PresetDark,
+					Preset:  config.PresetAuto,
 				},
 				ArgsPassthrough: []string{"get", "pods"},
 			},
@@ -152,27 +153,60 @@ func Test_ResolveConfig(t *testing.T) {
 					Kubectl: "kubectl",
 					Paging:  config.PagingNever,
 					Theme:   *testconfig.DarkTheme,
-					Preset:  config.PresetDark,
+					Preset:  config.PresetAuto,
+				},
+				ArgsPassthrough: []string{"get", "pods"},
+			},
+		},
+		{
+			name: "Auto dark theme",
+			args: []string{"get", "pods"},
+			env: map[string]string{
+				"KUBECOLOR_PRESET": string(config.PresetAuto),
+			},
+			term: testconfig.DarkTerm,
+			expectedConf: &Config{
+				Config: &config.Config{
+					Kubectl: "kubectl",
+					Paging:  config.PagingNever,
+					Theme:   *testconfig.DarkTheme,
+					Preset:  config.PresetAuto,
+				},
+				ArgsPassthrough: []string{"get", "pods"},
+			},
+		},
+		{
+			name: "Auto light theme",
+			args: []string{"get", "pods"},
+			env: map[string]string{
+				"KUBECOLOR_PRESET": string(config.PresetAuto),
+			},
+			term: testconfig.LightTerm,
+			expectedConf: &Config{
+				Config: &config.Config{
+					Kubectl: "kubectl",
+					Paging:  config.PagingNever,
+					Theme:   *testconfig.LightTheme,
+					Preset:  config.PresetAuto,
 				},
 				ArgsPassthrough: []string{"get", "pods"},
 			},
 		},
 	}
-	for _, tt := range tests {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
 			os.Clearenv()
-			for k, v := range tt.env {
+			for k, v := range test.env {
 				testutil.Setenv(t, k, v)
 			}
 
-			conf, err := ResolveConfig(tt.args)
+			conf, err := ResolveConfig(test.args, test.term)
 			testutil.MustNoError(t, err)
 
 			// Don't test flags field
-			tt.expectedConf.Flags = conf.Flags
+			test.expectedConf.Flags = conf.Flags
 
-			testutil.MustEqual(t, tt.expectedConf, conf)
+			testutil.MustEqual(t, test.expectedConf, conf)
 		})
 	}
 }

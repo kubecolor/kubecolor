@@ -133,7 +133,7 @@ func printCommand(args []string, input string, env []EnvVar) string {
 	}
 
 	v := config.NewViper()
-	cfg, err := command.ResolveConfigViper(args, v)
+	cfg, err := command.ResolveConfigViper(args, v, nil)
 	if err != nil {
 		return fmt.Sprintf("config error: %s", err)
 	}

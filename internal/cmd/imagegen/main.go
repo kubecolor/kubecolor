@@ -255,7 +255,7 @@ func runKubecolorCommand(cmd Command, env *EnvStore) (string, error) {
 	}
 
 	v := config.NewViper()
-	cfg, err := command.ResolveConfigViper(cmd.Args, v)
+	cfg, err := command.ResolveConfigViper(cmd.Args, v, nil)
 	if err != nil {
 		return "", err
 	}
