@@ -21,15 +21,15 @@ type Config struct {
 	Flags           FlagSet
 }
 
-func ResolveConfig(inputArgs []string) (*Config, error) {
+func ResolveConfig(inputArgs []string, term config.TermInfo) (*Config, error) {
 	v, err := config.LoadViper()
 	if err != nil {
 		return nil, err
 	}
-	return ResolveConfigViper(inputArgs, v)
+	return ResolveConfigViper(inputArgs, v, term)
 }
 
-func ResolveConfigViper(inputArgs []string, v *viper.Viper) (*Config, error) {
+func ResolveConfigViper(inputArgs []string, v *viper.Viper, term config.TermInfo) (*Config, error) {
 	cfg := &Config{}
 
 	if lightThemeEnv, ok, err := parseBoolEnv("KUBECOLOR_LIGHT_BACKGROUND"); err != nil {
@@ -116,7 +116,7 @@ func ResolveConfigViper(inputArgs []string, v *viper.Viper) (*Config, error) {
 		}
 	}
 
-	newCfg, err := config.Unmarshal(v)
+	newCfg, err := config.Unmarshal(v, term)
 	if err != nil {
 		return nil, err
 	}

@@ -12,7 +12,7 @@ func TestEnvVars_preset(t *testing.T) {
 	testutil.Setenv(t, "KUBECOLOR_PRESET", "light")
 
 	v := NewViper()
-	cfg, err := Unmarshal(v)
+	cfg, err := Unmarshal(v, nil)
 	testutil.MustNoError(t, err)
 
 	testutil.Equal(t, PresetLight, cfg.Preset, "Read from cfg.Preset")
@@ -24,7 +24,7 @@ func TestEnvVars_theme(t *testing.T) {
 	testutil.Setenv(t, "KUBECOLOR_THEME_TABLE_HEADER", "red")
 
 	v := NewViper()
-	cfg, err := Unmarshal(v)
+	cfg, err := Unmarshal(v, nil)
 	testutil.MustNoError(t, err)
 
 	testutil.Equal(t, "red", cfg.Theme.Table.Header.Source, "Read from cfg.Theme.Table.Header")
@@ -36,27 +36,27 @@ func TestEnvVars_pager(t *testing.T) {
 	os.Clearenv()
 
 	testutil.Setenv(t, "PAGER", "more")
-	cfg, err := Unmarshal(v)
+	cfg, err := Unmarshal(v, nil)
 	testutil.MustNoError(t, err)
 	testutil.Equal(t, "", cfg.Pager)
 
 	v = NewViper() // this time with more as default pager
-	cfg, err = Unmarshal(v)
+	cfg, err = Unmarshal(v, nil)
 	testutil.MustNoError(t, err)
 	testutil.Equal(t, "more", cfg.Pager)
 
 	testutil.Setenv(t, "KUBECOLOR_PAGER", "more2")
-	cfg, err = Unmarshal(v)
+	cfg, err = Unmarshal(v, nil)
 	testutil.MustNoError(t, err)
 	testutil.Equal(t, "more2", cfg.Pager)
 
 	testutil.Setenv(t, "KUBECOLOR_PAGING", string(PagingNever))
-	cfg, err = Unmarshal(v)
+	cfg, err = Unmarshal(v, nil)
 	testutil.MustNoError(t, err)
 	testutil.Equal(t, PagingNever, cfg.Paging)
 
 	testutil.Setenv(t, "KUBECOLOR_PAGING", string(PagingAuto))
-	cfg, err = Unmarshal(v)
+	cfg, err = Unmarshal(v, nil)
 	testutil.MustNoError(t, err)
 	testutil.Equal(t, PagingAuto, cfg.Paging)
 }

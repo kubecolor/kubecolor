@@ -41,7 +41,7 @@ type Program struct {
 
 func (p *Program) Run() error {
 	v := config.NewViper()
-	if err := config.ApplyThemePreset(v); err != nil {
+	if err := config.ApplyThemePreset(v, nil); err != nil {
 		return err
 	}
 	p.viper = v
