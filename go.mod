@@ -15,7 +15,7 @@ require (
 	github.com/spf13/viper v1.21.0
 	github.com/xo/terminfo v1.0.0
 	gopkg.in/yaml.v3 v3.0.1
-	k8s.io/apimachinery v0.36.4
+	k8s.io/apimachinery v0.37.0
 )
 
 require (
@@ -38,5 +38,4 @@ require (
 	golang.org/x/exp v0.0.0-20240404231335-c0f41cb1a7a0 // indirect
 	golang.org/x/sys v0.47.0 // indirect
 	golang.org/x/text v0.40.0 // indirect
-	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 )
