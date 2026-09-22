@@ -13,7 +13,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0
 	github.com/muesli/termenv v0.16.0
 	github.com/spf13/viper v1.21.0
-	github.com/xo/terminfo v1.0.0
+	github.com/xo/terminfo v1.2.0
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/apimachinery v0.37.0
 )
@@ -35,7 +35,6 @@ require (
 	github.com/subosito/gotenv v1.6.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	go.yaml.in/yaml/v4 v4.0.0-rc.6 // indirect
-	golang.org/x/exp v0.0.0-20240404231335-c0f41cb1a7a0 // indirect
 	golang.org/x/sys v0.47.0 // indirect
 	golang.org/x/text v0.40.0 // indirect
 )
