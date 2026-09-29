@@ -178,26 +178,49 @@ func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 		if args[i] == "--" {
 			break
 		}
-		flag, value := parseArgFlag(args[i:])
-		switch flag {
-		case "--output", "-o":
-			info.Output = ParseOutput(value)
-		case "--client":
-			info.Client = value != "false"
-		case "--no-headers":
-			info.NoHeader = true
-		case "-w", "--watch", "--watch-only":
-			info.Watch = true
-		case "-f", "--follow":
-			info.Follow = true
-		case "--recursive":
-			info.Recursive = value != "false"
-		case "-i", "--interactive":
-			info.Interactive = true
-		case "-h", "--help":
-			info.Help = value != "false"
+		for _, arg := range expandShortBooleanFlags(args[i]) {
+			flagArgs := []string{arg}
+			if i+1 < len(args) {
+				flagArgs = append(flagArgs, args[i+1])
+			}
+			flag, value := parseArgFlag(flagArgs)
+			switch flag {
+			case "--output", "-o":
+				info.Output = ParseOutput(value)
+			case "--client":
+				info.Client = value != "false"
+			case "--no-headers":
+				info.NoHeader = true
+			case "-w", "--watch", "--watch-only":
+				info.Watch = true
+			case "-f", "--follow":
+				info.Follow = true
+			case "--recursive":
+				info.Recursive = value != "false"
+			case "-i", "--interactive":
+				info.Interactive = true
+			case "-h", "--help":
+				info.Help = value != "false"
+			}
 		}
 	}
+}
+
+// expandShortBooleanFlags leaves the first value-taking or unknown shorthand
+// and its remaining payload intact for parseArgFlag. In particular, -f is not
+// universally boolean: it means a filename for get/apply, but follow for logs.
+func expandShortBooleanFlags(arg string) []string {
+	var flags []string
+	for len(arg) > 2 && arg[0] == '-' && arg[2] != '=' {
+		switch arg[1] {
+		case 'A', 'w':
+			flags = append(flags, arg[:2])
+			arg = "-" + arg[2:]
+		default:
+			return append(flags, arg)
+		}
+	}
+	return append(flags, arg)
 }
 
 func parseArgFlag(args []string) (flag, value string) {
