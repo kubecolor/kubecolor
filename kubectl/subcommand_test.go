@@ -110,6 +110,41 @@ func TestInspectSubcommandInfo(t *testing.T) {
 	}
 }
 
+func TestInspectSubcommandInfoBundledWatch(t *testing.T) {
+	tests := []struct {
+		args   string
+		watch  bool
+		output Output
+	}{
+		{args: "get pods -Aw", watch: true},
+		{args: "get pods -wA", watch: true},
+		{args: "get pods -A -w", watch: true},
+		{args: "get pods -Awojson", watch: true, output: OutputJSON},
+		{args: "get pods -Aowide", output: OutputWide},
+		{args: "get pods -Awo json", watch: true, output: OutputJSON},
+		{args: "get pods -Ao=wide", output: OutputWide},
+		{args: "get pods -nwork"},
+		{args: "get pods -Anwork"},
+		{args: "get pods -n work"},
+		{args: "get pods -lapp=web"},
+		{args: "get pods -Alapp=web"},
+		{args: "get pods -l app=web"},
+		{args: "get pods -fwatch.yaml"},
+		{args: "get pods -Afwatch.yaml"},
+		{args: "get pods -- -Aw"},
+		{args: "get pods -Aw -- -ojson", watch: true},
+	}
+	for _, tc := range tests {
+		t.Run(tc.args, func(t *testing.T) {
+			info := InspectSubcommandInfo(strings.Fields(tc.args), TestPluginHandler{})
+			testutil.Equal(t, Get, info.Subcommand)
+			testutil.Equal(t, tc.watch, info.Watch)
+			testutil.Equal(t, tc.output, info.Output)
+			testutil.Equal(t, !tc.watch, info.SupportsPager())
+		})
+	}
+}
+
 func TestParseArgFlag(t *testing.T) {
 	tests := []struct {
 		name      string
