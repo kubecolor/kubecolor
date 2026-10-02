@@ -231,15 +231,72 @@ func parseArgFlag(args []string) (flag, value string) {
 	return arg, ""
 }
 
+// globalFlagsWithValue contains kubectl's global flags (see "kubectl options")
+// that take a value.
+var globalFlagsWithValue = map[string]struct{}{
+	"--as":                    {},
+	"--as-group":              {},
+	"--as-uid":                {},
+	"--cache-dir":             {},
+	"--certificate-authority": {},
+	"--client-certificate":    {},
+	"--client-key":            {},
+	"--cluster":               {},
+	"--context":               {},
+	"--kubeconfig":            {},
+	"--kuberc":                {},
+	"--log-backtrace-at":      {},
+	"--log-dir":               {},
+	"--log-file":              {},
+	"--log-file-max-size":     {},
+	"--log-flush-frequency":   {},
+	"--namespace":             {},
+	"-n":                      {},
+	"--password":              {},
+	"--profile":               {},
+	"--profile-output":        {},
+	"--request-timeout":       {},
+	"--server":                {},
+	"-s":                      {},
+	"--stderrthreshold":       {},
+	"--tls-server-name":       {},
+	"--token":                 {},
+	"--user":                  {},
+	"--username":              {},
+	"--v":                     {},
+	"-v":                      {},
+	"--vmodule":               {},
+}
+
+// isGlobalFlagWithSeparateValue reports whether arg is a global flag whose
+// value is passed as the next argument, e.g "-n" in "-n my-namespace", but
+// not "-n=my-namespace" or "-nmy-namespace".
+func isGlobalFlagWithSeparateValue(arg string) bool {
+	_, ok := globalFlagsWithValue[arg]
+	return ok
+}
+
 func InspectSubcommandInfo(args []string, pluginHandler PluginHandler) *SubcommandInfo {
 	ret := &SubcommandInfo{}
 
 	CollectCommandlineOptions(args, ret)
 
+	skipNext := false
 	for i, arg := range args {
 		// Stop parsing args after "--", such as in "kubectl exec my-pod -- bash"
 		if arg == "--" {
 			break
+		}
+
+		// Skip the value of a global flag, such as "config" in
+		// "kubectl -n config get pods", so it is not mistaken for the subcommand
+		if skipNext {
+			skipNext = false
+			continue
+		}
+		if isGlobalFlagWithSeparateValue(arg) {
+			skipNext = true
+			continue
 		}
 
 		cmd, ok := InspectSubcommand(args[i:], pluginHandler)

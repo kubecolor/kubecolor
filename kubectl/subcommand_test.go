@@ -94,6 +94,19 @@ func TestInspectSubcommandInfo(t *testing.T) {
 
 		{"delete --interactive", &SubcommandInfo{Subcommand: Delete, Interactive: true}},
 		{"delete -i", &SubcommandInfo{Subcommand: Delete, Interactive: true}},
+
+		// global flags with values before the subcommand must not have their
+		// value mistaken for the subcommand
+		{"-n config get pod", &SubcommandInfo{Subcommand: Get}},
+		{"--namespace config get pod", &SubcommandInfo{Subcommand: Get}},
+		{"--namespace=config get pod", &SubcommandInfo{Subcommand: Get}},
+		{"-nconfig get pod", &SubcommandInfo{Subcommand: Get}},
+		{"--context logs get pod", &SubcommandInfo{Subcommand: Get}},
+		{"--kubeconfig apply describe pod", &SubcommandInfo{Subcommand: Describe}},
+		{"-s top --user exec get pod -o wide", &SubcommandInfo{Subcommand: Get, Output: OutputWide}},
+		{"-v 6 --insecure-skip-tls-verify get pod", &SubcommandInfo{Subcommand: Get}},
+		{"-n get", &SubcommandInfo{Subcommand: Unknown, Help: true}},
+		{"--context testplugin get pod", &SubcommandInfo{Subcommand: Get}},
 	}
 
 	pluginHandler := TestPluginHandler{LookupMap: map[string]string{
