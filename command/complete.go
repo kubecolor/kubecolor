@@ -3,7 +3,6 @@ package command
 import (
 	"bytes"
 	"cmp"
-	"errors"
 	"fmt"
 	"log/slog"
 	"os"
@@ -163,11 +162,7 @@ func runKubectlComplete(rawArgs []string, cfg *Config) (string, error) {
 
 	if err := cmd.Run(); err != nil {
 		os.Stdout.Write(stdout.Bytes())
-		var execErr *exec.ExitError
-		if errors.As(err, &execErr) {
-			return "", &KubectlError{ExitCode: execErr.ExitCode()}
-		}
-		return "", err
+		return "", wrapExitError(err)
 	}
 
 	output := stdout.String()
