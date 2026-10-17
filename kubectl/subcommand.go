@@ -231,49 +231,48 @@ func parseArgFlag(args []string) (flag, value string) {
 	return arg, ""
 }
 
-// globalFlagsWithValue contains kubectl's global flags (see "kubectl options")
-// that take a value.
-var globalFlagsWithValue = map[string]struct{}{
-	"--as":                    {},
-	"--as-group":              {},
-	"--as-uid":                {},
-	"--cache-dir":             {},
-	"--certificate-authority": {},
-	"--client-certificate":    {},
-	"--client-key":            {},
-	"--cluster":               {},
-	"--context":               {},
-	"--kubeconfig":            {},
-	"--kuberc":                {},
-	"--log-backtrace-at":      {},
-	"--log-dir":               {},
-	"--log-file":              {},
-	"--log-file-max-size":     {},
-	"--log-flush-frequency":   {},
-	"--namespace":             {},
-	"-n":                      {},
-	"--password":              {},
-	"--profile":               {},
-	"--profile-output":        {},
-	"--request-timeout":       {},
-	"--server":                {},
-	"-s":                      {},
-	"--stderrthreshold":       {},
-	"--tls-server-name":       {},
-	"--token":                 {},
-	"--user":                  {},
-	"--username":              {},
-	"--v":                     {},
-	"-v":                      {},
-	"--vmodule":               {},
-}
-
 // isGlobalFlagWithSeparateValue reports whether arg is a global flag whose
 // value is passed as the next argument, e.g "-n" in "-n my-namespace", but
 // not "-n=my-namespace" or "-nmy-namespace".
 func isGlobalFlagWithSeparateValue(arg string) bool {
-	_, ok := globalFlagsWithValue[arg]
-	return ok
+	switch arg {
+	case
+		"--as",
+		"--as-group",
+		"--as-uid",
+		"--cache-dir",
+		"--certificate-authority",
+		"--client-certificate",
+		"--client-key",
+		"--cluster",
+		"--context",
+		"--kubeconfig",
+		"--kuberc",
+		"--log-backtrace-at",
+		"--log-dir",
+		"--log-file",
+		"--log-file-max-size",
+		"--log-flush-frequency",
+		"--namespace",
+		"-n",
+		"--password",
+		"--profile",
+		"--profile-output",
+		"--request-timeout",
+		"--server",
+		"-s",
+		"--stderrthreshold",
+		"--tls-server-name",
+		"--token",
+		"--user",
+		"--username",
+		"--v",
+		"-v",
+		"--vmodule":
+		return true
+	default:
+		return false
+	}
 }
 
 func InspectSubcommandInfo(args []string, pluginHandler PluginHandler) *SubcommandInfo {
