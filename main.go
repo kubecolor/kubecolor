@@ -22,8 +22,7 @@ func init() {
 func main() {
 	err := command.Run(os.Args[1:], getVersion())
 	if err != nil {
-		var ke *command.KubectlError
-		if errors.As(err, &ke) {
+		if ke, ok := errors.AsType[*command.KubectlError](err); ok {
 			os.Exit(ke.ExitCode)
 		}
 		slog.Error(err.Error())
