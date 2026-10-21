@@ -1,7 +1,11 @@
 package kubectl
 
 import (
+	"iter"
 	"strings"
+
+	"github.com/kubecolor/kubecolor/internal/iterutil"
+	"github.com/kubecolor/kubecolor/internal/stringutil"
 )
 
 type SubcommandInfo struct {
@@ -173,12 +177,16 @@ func InspectSubcommand(cmdArgs []string, pluginHandler PluginHandler) (Subcomman
 }
 
 func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
-	for i := range args {
+	for pair := range iterutil.WindowedPair(expandShortBooleanFlags(args)) {
 		// Stop parsing flags after "--", such as in "kubectl exec my-pod -- bash"
-		if args[i] == "--" {
+		if pair.Curr == "--" {
 			break
 		}
-		flag, value := parseArgFlag(args[i:])
+		flagArgs := []string{pair.Curr}
+		if pair.HasNext {
+			flagArgs = append(flagArgs, pair.Next)
+		}
+		flag, value := parseArgFlag(flagArgs)
 		switch flag {
 		case "--output", "-o":
 			info.Output = ParseOutput(value)
@@ -196,6 +204,47 @@ func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 			info.Interactive = true
 		case "-h", "--help":
 			info.Help = value != "false"
+		}
+	}
+}
+
+// expandShortBooleanFlags expands "-Aw" into "-A" & "-w"
+func expandShortBooleanFlags(args []string) iter.Seq[string] {
+	return func(yield func(string) bool) {
+		for _, arg := range args {
+			// if "-Aw"
+			// not "--..."
+			if len(arg) > 2 && arg[0] == '-' && arg[1] != '-' {
+				for pair := range iterutil.WindowedPair2(stringutil.Runes2(arg[1:])) {
+					if !isCommonShortBooleanFlag(pair.Curr1) {
+						// "-Aowide" -> "-A" + "-owide"
+						// non-boolean flags (like "-o") can have their value inline,
+						// so don't split up further
+						if !yield("-" + arg[1+pair.Curr0:]) { // +1 because we do arg[1:] above
+							return
+						}
+						break
+					}
+
+					if pair.HasNext && pair.Next1 == '=' {
+						// "-Aw=true" -> "-A" + "-w=true"
+						if !yield("-" + arg[1+pair.Curr0:]) { // +1 because we do arg[1:] above
+							return
+						}
+						break
+					}
+
+					if !yield("-" + string(pair.Curr1)) {
+						return
+					}
+				}
+				continue
+			}
+
+			// just a normal arg
+			if !yield(arg) {
+				return
+			}
 		}
 	}
 }
@@ -231,10 +280,10 @@ func parseArgFlag(args []string) (flag, value string) {
 	return arg, ""
 }
 
-// isGlobalFlagWithSeparateValue reports whether arg is a global flag whose
+// isCommonFlagWithSeparateValue reports whether arg is a flag whose
 // value is passed as the next argument, e.g "-n" in "-n my-namespace", but
 // not "-n=my-namespace" or "-nmy-namespace".
-func isGlobalFlagWithSeparateValue(arg string) bool {
+func isCommonFlagWithSeparateValue(arg string) bool {
 	switch arg {
 	case
 		"--as",
@@ -275,6 +324,23 @@ func isGlobalFlagWithSeparateValue(arg string) bool {
 	}
 }
 
+// isCommonShortBooleanFlag reports whether arg is a boolean short flag
+// where we know there's no associated value, and can therefore split up
+// short-hand flags, like "-AwR" -> "-A" + "-w" + "-R"
+func isCommonShortBooleanFlag(flag rune) bool {
+	switch flag {
+	case
+		'A', // kubectl get --all-namespaces
+		'i', // kubectl delete --interactive
+		'p', // kubectl logs --previous
+		'R', // kubectl apply --recursive
+		'w': // kubectl get --watch
+		return true
+	default:
+		return false
+	}
+}
+
 func InspectSubcommandInfo(args []string, pluginHandler PluginHandler) *SubcommandInfo {
 	ret := &SubcommandInfo{}
 
@@ -293,7 +359,7 @@ func InspectSubcommandInfo(args []string, pluginHandler PluginHandler) *Subcomma
 			skipNext = false
 			continue
 		}
-		if isGlobalFlagWithSeparateValue(arg) {
+		if isCommonFlagWithSeparateValue(arg) {
 			skipNext = true
 			continue
 		}

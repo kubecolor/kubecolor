@@ -1,6 +1,7 @@
 package kubectl
 
 import (
+	"slices"
 	"strings"
 	"testing"
 
@@ -119,6 +120,88 @@ func TestInspectSubcommandInfo(t *testing.T) {
 			t.Parallel()
 			s := InspectSubcommandInfo(strings.Fields(tc.args), pluginHandler)
 			testutil.Equal(t, s, tc.expected)
+		})
+	}
+}
+
+func TestInspectSubcommandInfoBundledWatch(t *testing.T) {
+	tests := []struct {
+		args   string
+		watch  bool
+		output Output
+	}{
+		{args: "get pods -Aw", watch: true},
+		{args: "get pods -wA", watch: true},
+		{args: "get pods -A -w", watch: true},
+		{args: "get pods -Awojson", watch: true, output: OutputJSON},
+		{args: "get pods -Aowide", output: OutputWide},
+		{args: "get pods -Awo json", watch: true, output: OutputJSON},
+		{args: "get pods -Ao=wide", output: OutputWide},
+		{args: "get pods -nwork"},
+		{args: "get pods -Anwork"},
+		{args: "get pods -n work"},
+		{args: "get pods -lapp=web"},
+		{args: "get pods -Alapp=web"},
+		{args: "get pods -l app=web"},
+		{args: "get pods -fwatch.yaml"},
+		{args: "get pods -Afwatch.yaml"},
+		{args: "get pods -- -Aw"},
+		{args: "get pods -Aw -- -ojson", watch: true},
+	}
+	for _, tc := range tests {
+		t.Run(tc.args, func(t *testing.T) {
+			info := InspectSubcommandInfo(strings.Fields(tc.args), TestPluginHandler{})
+			testutil.Equal(t, Get, info.Subcommand)
+			testutil.Equal(t, tc.watch, info.Watch)
+			testutil.Equal(t, tc.output, info.Output)
+			testutil.Equal(t, !tc.watch, info.SupportsPager())
+		})
+	}
+}
+
+func TestExpandShortBooleanFlags(t *testing.T) {
+	tests := []struct {
+		name string
+		args []string
+		want []string
+	}{
+		{name: "nil", args: nil, want: nil},
+		{
+			name: "nothing expanded",
+			args: []string{"get", "-w"},
+			want: []string{"get", "-w"},
+		},
+		{
+			name: "expand flags",
+			args: []string{"get", "-Aw"},
+			want: []string{"get", "-A", "-w"},
+		},
+		{
+			name: "expand with equal",
+			args: []string{"get", "-Aw=true"},
+			want: []string{"get", "-A", "-w=true"},
+		},
+		{
+			name: "non-boolean flag",
+			args: []string{"get", "-owide"},
+			want: []string{"get", "-owide"},
+		},
+		{
+			name: "expand but dont expand non-boolean flag",
+			args: []string{"get", "-Aowide"},
+			want: []string{"get", "-A", "-owide"},
+		},
+		{
+			name: "non-boolean with equal",
+			args: []string{"get", "-Ao=wide"},
+			want: []string{"get", "-A", "-o=wide"},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			got := slices.Collect(expandShortBooleanFlags(test.args))
+			testutil.Equal(t, test.want, got)
 		})
 	}
 }
