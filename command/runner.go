@@ -180,8 +180,11 @@ func execWithoutColors(config *Config, args []string) error {
 	cmd.Stderr = Stderr
 
 	// when should not colorize, just run command and return
-	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("%w", &KubectlError{ExitCode: cmd.ProcessState.ExitCode()})
+	if err := cmd.Start(); err != nil {
+		return withInstallHint(err)
+	}
+	if err := cmd.Wait(); err != nil {
+		return wrapExitError(err)
 	}
 
 	return nil
@@ -208,16 +211,17 @@ func execWithReaders(config *Config, args []string) (io.ReadCloser, io.ReadClose
 	}
 
 	if err := cmd.Start(); err != nil {
-		var execErr *exec.Error
-		if errors.As(err, &execErr) {
-			if strings.Contains(execErr.Err.Error(), "executable file not found") {
-				return nil, nil, fmt.Errorf("%w; kubectl must be installed to use kubecolor", err)
-			}
-		}
-		return nil, nil, err
+		return nil, nil, withInstallHint(err)
 	}
 
 	return &cmdWaitReadCloser{cmd: cmd, stdout: cmdOut}, cmdErr, nil
+}
+
+func withInstallHint(err error) error {
+	if errors.Is(err, exec.ErrNotFound) {
+		return fmt.Errorf("%w; kubectl must be installed to use kubecolor", err)
+	}
+	return err
 }
 
 func getStdinOverrideReader(stdinOverride string) (io.ReadCloser, error) {
@@ -259,7 +263,7 @@ func (r *cmdWaitReadCloser) Close() error {
 	}
 	if err := r.cmd.Wait(); err != nil {
 		r.lastErr = err
-		return &KubectlError{ExitCode: r.cmd.ProcessState.ExitCode()}
+		return wrapExitError(err)
 	}
 	r.closed = true
 	return nil
