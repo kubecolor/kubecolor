@@ -503,7 +503,7 @@
         },
         "flagDesc": {
           "$ref": "#/$defs/color",
-          "description": "Flag descripion under \"Options:\" heading"
+          "description": "Flag description under \"Options:\" heading"
         },
         "url": {
           "$ref": "#/$defs/color",

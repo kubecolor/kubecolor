@@ -56,7 +56,7 @@ alias oc="env KUBECTL_COMMAND=oc kubecolor"
 ## Features
 
 - Does not tamper with the output. It only adds colors to the `kubectl` output.
-- Dynamic TTY detection to send plaintext when called programatically
+- Dynamic TTY detection to send plaintext when called programmatically
 - Supports autocompletion
 - [Custom color themes](https://kubecolor.github.io/customizing/themes/)
 
@@ -75,7 +75,7 @@ Always welcome. There are multiple ways to contribute:
 - Starring the repository and spreading the word ❤️
 
 - Creating issues of [bug reports](https://github.com/kubecolor/kubecolor/issues/new?template=bug.yml)
-  or [feature requets](https://github.com/kubecolor/kubecolor/issues/new?template=feature.yml)
+  or [feature requests](https://github.com/kubecolor/kubecolor/issues/new?template=feature.yml)
 
 - Updating documentation, either in this repo or in the [documentation repo (kubecolor.github.io)](https://github.com/kubecolor/kubecolor.github.io)
 
