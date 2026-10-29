@@ -1,6 +1,6 @@
 GO_FILES=$(wildcard *.go */*.go */*/*.go */*/*/*.go)
 
-# Can be overriden by for example: make test GO_TEST_CMD='gotestsum --'
+# Can be overridden by for example: make test GO_TEST_CMD='gotestsum --'
 GO_TEST_CMD=$(if $(shell command -v gotestsum),gotestsum --,go test)
 
 help: ## Print usage

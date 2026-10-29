@@ -67,7 +67,7 @@ func ParseColorLevel(s string) (ColorLevel, bool, error) {
 	case "":
 		return ColorLevelUnset, false, nil
 
-	// Backward compatiblity, as the --force-colors flag was previously a bool flag
+	// Backward compatibility, as the --force-colors flag was previously a bool flag
 	case "true":
 		return ColorLevelAuto, true, nil
 	case "false":

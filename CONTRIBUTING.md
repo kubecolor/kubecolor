@@ -25,7 +25,7 @@ Hell, maybe even use <https://whatthecommit.com>:
 alias whatthecommit='git commit -m "$(curl -sSf https://whatthecommit.com/index.txt)"'
 ```
 
-Preferably not nonsence messages though.
+Preferably not nonsense messages though.
 
 ## Generating files
 

@@ -572,7 +572,7 @@ type ThemeVersion struct {
 type ThemeHelp struct {
 	Header   color.Color `defaultFrom:"theme.table.header"`   // e.g "Examples:" or "Options:"
 	Flag     color.Color `defaultFrom:"theme.base.secondary"` // e.g "--kubeconfig"
-	FlagDesc color.Color `defaultFrom:"theme.base.info"`      // Flag descripion under "Options:" heading
+	FlagDesc color.Color `defaultFrom:"theme.base.info"`      // Flag description under "Options:" heading
 	Url      color.Color `defaultFrom:"theme.base.secondary"` // e.g `[https://example.com]`
 	Text     color.Color `defaultFrom:"theme.base.info"`      // Fallback text color
 }
