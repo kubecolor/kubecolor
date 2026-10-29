@@ -1,6 +1,7 @@
 package stringutil
 
 import (
+	"iter"
 	"strconv"
 	"strings"
 	"time"
@@ -157,4 +158,16 @@ func Truncate(s string, maxLen int) string {
 		return s[:maxLen]
 	}
 	return s
+}
+
+// Runes2 returns a [iter.Seq2] that's just doing normal iteration over the
+// UTF-8 runes, and their offsets into the string.
+func Runes2(s string) iter.Seq2[int, rune] {
+	return func(yield func(int, rune) bool) {
+		for n, r := range s {
+			if !yield(n, r) {
+				return
+			}
+		}
+	}
 }
