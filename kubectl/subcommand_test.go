@@ -34,6 +34,11 @@ func TestInspectSubcommandInfo(t *testing.T) {
 		{"get pod --output=json", &SubcommandInfo{Subcommand: Get, Output: OutputJSON}},
 		{"get pod --output yaml", &SubcommandInfo{Subcommand: Get, Output: OutputYAML}},
 		{"get pod --output=yaml", &SubcommandInfo{Subcommand: Get, Output: OutputYAML}},
+		{"get pod -o JSON", &SubcommandInfo{Subcommand: Get, Output: OutputJSON}},
+		{"get pod --output=Json", &SubcommandInfo{Subcommand: Get, Output: OutputJSON}},
+		{"get pod -oYAML", &SubcommandInfo{Subcommand: Get, Output: OutputYAML}},
+		{"get pod --output Yaml", &SubcommandInfo{Subcommand: Get, Output: OutputYAML}},
+		{"get pod -o WIDE", &SubcommandInfo{Subcommand: Get, Output: OutputOther}},
 		{"get pod --output wide", &SubcommandInfo{Subcommand: Get, Output: OutputWide}},
 		{"get pod --output=wide", &SubcommandInfo{Subcommand: Get, Output: OutputWide}},
 

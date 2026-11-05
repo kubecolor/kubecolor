@@ -44,14 +44,18 @@ func ParseOutput(value string) Output {
 	switch output {
 	case "wide":
 		return OutputWide
-	case "json":
-		return OutputJSON
-	case "yaml":
-		return OutputYAML
 	case "custom-columns":
 		return OutputCustomColumns
 	case "custom-columns-file":
 		return OutputCustomColumnsFile
+	}
+	// kubectl lowercases the value before matching "json" and "yaml"
+	// (but not the other formats), so "-o JSON" and "-o Yaml" also work
+	switch strings.ToLower(output) {
+	case "json":
+		return OutputJSON
+	case "yaml":
+		return OutputYAML
 	default:
 		return OutputOther
 	}
