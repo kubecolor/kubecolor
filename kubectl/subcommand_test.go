@@ -40,6 +40,13 @@ func TestInspectSubcommandInfo(t *testing.T) {
 		{"get pod --no-headers", &SubcommandInfo{Subcommand: Get, NoHeader: true}},
 		{"get pod -w", &SubcommandInfo{Subcommand: Get, Watch: true}},
 		{"get pod --watch", &SubcommandInfo{Subcommand: Get, Watch: true}},
+		{"get pod --no-headers=false", &SubcommandInfo{Subcommand: Get}},
+		{"get pod --watch=false", &SubcommandInfo{Subcommand: Get}},
+		{"get pod -w=false", &SubcommandInfo{Subcommand: Get}},
+		{"get pod --watch-only=false", &SubcommandInfo{Subcommand: Get}},
+		{"logs pod-aaa --follow=false", &SubcommandInfo{Subcommand: Logs}},
+		{"logs pod-aaa -f=false", &SubcommandInfo{Subcommand: Logs}},
+		{"delete pod pod-aaa --interactive=false", &SubcommandInfo{Subcommand: Delete}},
 		{"get pod -h", &SubcommandInfo{Subcommand: Get, Help: true}},
 		{"get pod --help", &SubcommandInfo{Subcommand: Get, Help: true}},
 
