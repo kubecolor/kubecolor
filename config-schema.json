@@ -132,6 +132,10 @@
           "$ref": "#/$defs/themeAnnotate",
           "description": "used in \"kubectl annotate\""
         },
+        "cordon": {
+          "$ref": "#/$defs/themeCordon",
+          "description": "used in \"kubectl cordon\""
+        },
         "create": {
           "$ref": "#/$defs/themeCreate",
           "description": "used in \"kubectl create\""
@@ -293,6 +297,25 @@
       "additionalProperties": false,
       "type": "object",
       "description": "ThemeBase contains base colors that other theme fields can default to, just to make overriding themes easier."
+    },
+    "themeCordon": {
+      "properties": {
+        "cordoned": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"node/my-worker-node-01 cordoned\""
+        },
+        "dryRun": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"(dry run)\" and \"(server dry run)\""
+        },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when outputs unknown format"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeCordon holds colors for the \"kubectl cordon\" output."
     },
     "themeCreate": {
       "properties": {
