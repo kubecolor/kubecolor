@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"log/slog"
-	"strconv"
 	"strings"
 
 	"github.com/kubecolor/kubecolor/config"
@@ -72,21 +71,25 @@ func (p *YAMLPrinter) printLineAsYAMLFormat(line string, w io.Writer) {
 		return
 	}
 
+	if item, ok := strings.CutPrefix(trimmedLine, "- "); ok {
+		// - |
+		//   multiline string
+		if header, num, ok := p.colorizeBlockScalarHeader(item); ok {
+			fmt.Fprintf(w, "%s- %s\n", indent, header)
+			p.startBlockScalar(indentLen, num)
+			return
+		}
+	}
+
 	if key, val, ok := strings.Cut(trimmedLine, ": "); ok {
 		// key: |
 		//   multiline string
-
-		if prefix, after, ok := stringutil.CutPrefixAny(val, "|-", "|+", "|", ">-", ">+", ">"); ok {
-			if after == "" {
-				fmt.Fprintf(w, "%s%s: %s\n", indent, p.colorizeYAMLKey(key, indentLen, 2), prefix)
-				p.nextLineSetsIndent = true
-				return
-			}
-			if num, err := strconv.Atoi(after); err == nil {
-				fmt.Fprintf(w, "%s%s: %s%s\n", indent, p.colorizeYAMLKey(key, indentLen, 2), prefix, p.colorizeYAMLValue(after))
-				p.multilineStringIndent = indentLen + num
-				return
-			}
+		if header, num, ok := p.colorizeBlockScalarHeader(val); ok {
+			fmt.Fprintf(w, "%s%s: %s\n", indent, p.colorizeYAMLKey(key, indentLen, 2), header)
+			// the indentation indicator is relative to the key, which
+			// comes after any leading "- " sequence indicators
+			p.startBlockScalar(indentLen+countLeadingSequenceIndicators(key)*2, num)
+			return
 		}
 
 		if quote, afterQuote, ok := stringutil.CutPrefixAny(val, "\"", "'"); ok && !strings.HasSuffix(afterQuote, quote) {
@@ -110,6 +113,57 @@ func (p *YAMLPrinter) printLineAsYAMLFormat(line string, w io.Writer) {
 	}
 
 	fmt.Fprintf(w, "%s%s\n", indent, p.colorizeYAMLValue(trimmedLine))
+}
+
+// colorizeBlockScalarHeader parses a block scalar header, such as "|", ">-",
+// "|2", ">+4" or "|2-". The indentation and chomping indicators may come in
+// either order. It returns the colorized header and the indentation
+// indicator, which is 0 when omitted.
+func (p *YAMLPrinter) colorizeBlockScalarHeader(s string) (header string, indent int, ok bool) {
+	if s == "" || (s[0] != '|' && s[0] != '>') {
+		return "", 0, false
+	}
+	isChomp := func(s string) bool { return s != "" && (s[0] == '-' || s[0] == '+') }
+	isIndent := func(s string) bool { return s != "" && s[0] >= '1' && s[0] <= '9' }
+
+	before, rest := s[:1], s[1:]
+	if isChomp(rest) {
+		before, rest = s[:2], rest[1:]
+	}
+	var num, after string
+	if isIndent(rest) {
+		num, rest = rest[:1], rest[1:]
+		if len(before) == 1 && isChomp(rest) {
+			after, rest = rest[:1], rest[1:]
+		}
+	}
+	if rest != "" {
+		return "", 0, false
+	}
+	if num == "" {
+		return before, 0, true
+	}
+	return before + p.colorizeYAMLValue(num) + after, int(num[0] - '0'), true
+}
+
+func (p *YAMLPrinter) startBlockScalar(parentIndent, indentIndicator int) {
+	if indentIndicator == 0 {
+		p.nextLineSetsIndent = true
+		return
+	}
+	p.multilineStringIndent = parentIndent + indentIndicator
+}
+
+func countLeadingSequenceIndicators(key string) int {
+	var n int
+	for {
+		after, ok := strings.CutPrefix(key, "- ")
+		if !ok {
+			return n
+		}
+		key = after
+		n++
+	}
 }
 
 func (p *YAMLPrinter) colorizeYAMLKey(key string, indentCnt, basicWidth int) string {
