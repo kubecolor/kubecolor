@@ -254,6 +254,31 @@ moreData: |
   [93m  roomba: {}[0m
 
 ================================================================================
+# multiline string with blank lines
+$ kubectl get configmap test -o yaml
+================================================================================
+
+data:
+  app.ini: |
+    [server]
+    port: 8080
+
+    [database]
+    host: localhost
+kind: ConfigMap
+
+--------------------------------------------------------------------------------
+
+[96mdata[0m:
+  [36mapp.ini[0m: |
+    [93m[server][0m
+    [93mport: 8080[0m
+
+    [93m[database][0m
+    [93mhost: localhost[0m
+[96mkind[0m: [93mConfigMap[0m
+
+================================================================================
 # multiline string with indent indicator
 $ kubectl get pod -o yaml
 ================================================================================
