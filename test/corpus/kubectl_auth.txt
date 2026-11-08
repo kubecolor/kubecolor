@@ -87,6 +87,32 @@ status:
     [96musername[0m: [93mkalle[0m
 
 ================================================================================
+$ kubectl auth whoami -o json
+================================================================================
+
+{
+  "apiVersion": "authentication.k8s.io/v1",
+  "kind": "SelfSubjectReview",
+  "status": {
+    "userInfo": {
+      "username": "kalle"
+    }
+  }
+}
+
+--------------------------------------------------------------------------------
+
+{
+  "[96mapiVersion[0m": "[93mauthentication.k8s.io/v1[0m",
+  "[96mkind[0m": "[93mSelfSubjectReview[0m",
+  "[96mstatus[0m": {
+    "[36muserInfo[0m": {
+      "[36musername[0m": "[93mkalle[0m"
+    }
+  }
+}
+
+================================================================================
 $ kubectl auth reconcile -f clusterrolebinding.yaml
 ================================================================================
 
