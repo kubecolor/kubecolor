@@ -306,6 +306,111 @@ crazy: >+4
   [36mfoo[0m: [93mbar[0m
 
 ================================================================================
+# multiline string in sequence items
+$ kubectl get pod -o yaml
+================================================================================
+
+spec:
+  containers:
+  - command:
+    - sh
+    - -c
+    - |
+      echo "starting"
+      exec app --port: 8080
+    name: app
+
+--------------------------------------------------------------------------------
+
+[96mspec[0m:
+  [36mcontainers[0m:
+  - [96mcommand[0m:
+    - [93msh[0m
+    - [93m-c[0m
+    - |
+      [93mecho "starting"[0m
+      [93mexec app --port: 8080[0m
+    [96mname[0m: [93mapp[0m
+
+================================================================================
+# multiline string with indent and chomping indicators
+$ kubectl get pod -o yaml
+================================================================================
+
+spec:
+  a: |2-
+      lead: x
+    foo
+  l:
+  - |2-
+      lead: y
+    bar
+  - k: |2-
+        z: 1
+      q
+    other: 1
+  b: 1
+
+--------------------------------------------------------------------------------
+
+[96mspec[0m:
+  [36ma[0m: |[35m2[0m-
+    [93m  lead: x[0m
+    [93mfoo[0m
+  [36ml[0m:
+  - |[35m2[0m-
+    [93m  lead: y[0m
+    [93mbar[0m
+  - [96mk[0m: |[35m2[0m-
+      [93m  z: 1[0m
+      [93mq[0m
+    [96mother[0m: [35m1[0m
+  [36mb[0m: [35m1[0m
+
+================================================================================
+# multiline string in sequence items with blank lines
+$ kubectl get pod -o yaml
+================================================================================
+
+spec:
+  containers:
+  - command:
+    - sh
+    - -c
+    - |
+      echo "starting"
+
+      exec app --port: 8080
+    args:
+    - |2-
+        lead: y
+
+      bar: 1
+    name: app
+  notAHeader: |2x
+  b: 1
+
+--------------------------------------------------------------------------------
+
+[96mspec[0m:
+  [36mcontainers[0m:
+  - [96mcommand[0m:
+    - [93msh[0m
+    - [93m-c[0m
+    - |
+      [93mecho "starting"[0m
+
+      [93mexec app --port: 8080[0m
+    [96margs[0m:
+    - |[35m2[0m-
+      [93m  lead: y[0m
+
+      [93mbar: 1[0m
+    [96mname[0m: [93mapp[0m
+  [36mnotAHeader[0m: [93m|2x[0m
+  [36mb[0m: [35m1[0m
+
+================================================================================
 # uppercase output format
 $ kubectl get pod -o YAML
 ================================================================================
