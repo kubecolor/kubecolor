@@ -197,15 +197,15 @@ func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 		case "--client":
 			info.Client = value != "false"
 		case "--no-headers":
-			info.NoHeader = true
+			info.NoHeader = value != "false"
 		case "-w", "--watch", "--watch-only":
-			info.Watch = true
+			info.Watch = value != "false"
 		case "-f", "--follow":
-			info.Follow = true
+			info.Follow = value != "false"
 		case "--recursive":
 			info.Recursive = value != "false"
 		case "-i", "--interactive":
-			info.Interactive = true
+			info.Interactive = value != "false"
 		case "-h", "--help":
 			info.Help = value != "false"
 		}
