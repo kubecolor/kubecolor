@@ -1,0 +1,107 @@
+================================================================================
+$ kubectl auth can-i get pods
+================================================================================
+
+yes
+
+--------------------------------------------------------------------------------
+
+[32myes[0m
+
+================================================================================
+$ kubectl auth can-i delete secrets
+================================================================================
+
+no
+
+--------------------------------------------------------------------------------
+
+[31mno[0m
+
+================================================================================
+$ kubectl auth can-i --list
+================================================================================
+
+Resources                                       Non-Resource URLs   Resource Names   Verbs
+*.*                                             []                  []               [*]
+selfsubjectreviews.authentication.k8s.io        []                  []               [create]
+
+--------------------------------------------------------------------------------
+
+[1mResources                                       Non-Resource URLs   Resource Names   Verbs[0m
+[1m*.*                                             []                  []               [*][0m
+[37mselfsubjectreviews.authentication.k8s.io[0m        [36m[][0m                  [37m[][0m               [36m[create][0m
+
+================================================================================
+$ kubectl auth can-i --list --no-headers
+================================================================================
+
+*.*                                             []             []    [*]
+selfsubjectreviews.authentication.k8s.io        []             []    [create]
+
+--------------------------------------------------------------------------------
+
+[1m*.*                                             []             []    [*][0m
+[37mselfsubjectreviews.authentication.k8s.io[0m        [36m[][0m             [37m[][0m    [36m[create][0m
+
+================================================================================
+$ kubectl auth whoami
+================================================================================
+
+ATTRIBUTE   VALUE
+Username    kalle
+Groups      [Everyone DEP_Platform SVC_Kubernetes_clusteradmin system:authenticated]
+
+--------------------------------------------------------------------------------
+
+[1mATTRIBUTE   VALUE[0m
+[37mUsername[0m    [36mkalle[0m
+[37mGroups[0m      [36m[Everyone DEP_Platform SVC_Kubernetes_clusteradmin system:authenticated][0m
+
+================================================================================
+$ kubectl auth whoami -o yaml
+================================================================================
+
+apiVersion: authentication.k8s.io/v1
+kind: SelfSubjectReview
+metadata:
+  creationTimestamp: "2024-03-25T15:38:47Z"
+status:
+  userInfo:
+    groups:
+    - Everyone
+    - DEP_Platform
+    username: kalle
+
+--------------------------------------------------------------------------------
+
+[96mapiVersion[0m: [93mauthentication.k8s.io/v1[0m
+[96mkind[0m: [93mSelfSubjectReview[0m
+[96mmetadata[0m:
+  [36mcreationTimestamp[0m: "[93m2024-03-25T15:38:47Z[0m"
+[96mstatus[0m:
+  [36muserInfo[0m:
+    [96mgroups[0m:
+    - [93mEveryone[0m
+    - [93mDEP_Platform[0m
+    [96musername[0m: [93mkalle[0m
+
+================================================================================
+$ kubectl auth reconcile -f clusterrolebinding.yaml
+================================================================================
+
+clusterrolebinding.rbac.authorization.k8s.io/oidc-cluster-admin reconciled
+
+--------------------------------------------------------------------------------
+
+clusterrolebinding.rbac.authorization.k8s.io/oidc-cluster-admin [32mreconciled[0m
+
+================================================================================
+$ kubectl auth reconcile -f clusterrolebinding.yaml --dry-run=client
+================================================================================
+
+clusterrolebinding.rbac.authorization.k8s.io/oidc-cluster-admin reconciled (dry run)
+
+--------------------------------------------------------------------------------
+
+clusterrolebinding.rbac.authorization.k8s.io/oidc-cluster-admin [32mreconciled[0m [36m(dry run)[0m

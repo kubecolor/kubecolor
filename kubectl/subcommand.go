@@ -18,9 +18,13 @@ type SubcommandInfo struct {
 	Recursive       bool   // flag: --recursive
 	Client          bool   // flag: --client
 	Interactive     bool   // flag: -i, --interactive
+	List            bool   // flag: --list
 	EditLastApplied bool   // subcommand: apply edit-last-applied
 	SetLastApplied  bool   // subcommand: apply set-last-applied
 	ViewLastApplied bool   // subcommand: apply view-last-applied
+	AuthCanI        bool   // subcommand: auth can-i
+	AuthWhoami      bool   // subcommand: auth whoami
+	AuthReconcile   bool   // subcommand: auth reconcile
 }
 
 // Output is an enum of different "--output=..." types.
@@ -206,6 +210,8 @@ func CollectCommandlineOptions(args []string, info *SubcommandInfo) {
 			info.Recursive = value != "false"
 		case "-i", "--interactive":
 			info.Interactive = true
+		case "--list":
+			info.List = true
 		case "-h", "--help":
 			info.Help = value != "false"
 		}
@@ -382,6 +388,16 @@ func InspectSubcommandInfo(args []string, pluginHandler PluginHandler) *Subcomma
 				ret.SetLastApplied = true
 			case "view-last-applied":
 				ret.ViewLastApplied = true
+			}
+		}
+		if cmd == Auth && i+1 < len(args) {
+			switch args[i+1] {
+			case "can-i":
+				ret.AuthCanI = true
+			case "whoami":
+				ret.AuthWhoami = true
+			case "reconcile":
+				ret.AuthReconcile = true
 			}
 		}
 		return ret

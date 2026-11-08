@@ -139,6 +139,37 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 	case kubectl.Diff:
 		return &DiffPrinter{Theme: p.Theme}
 
+	case kubectl.Auth:
+		switch p.SubcommandInfo.Output {
+		case kubectl.OutputJSON:
+			return &JSONPrinter{Theme: p.Theme}
+		case kubectl.OutputYAML:
+			return &YAMLPrinter{Theme: p.Theme}
+		}
+		switch {
+		case p.SubcommandInfo.AuthCanI:
+			if p.SubcommandInfo.List {
+				return NewTablePrinter(withHeader, p.Theme, nil)
+			}
+			return &CanIPrinter{
+				AllowedColor:  p.Theme.Auth.CanIAllowed,
+				DeniedColor:   p.Theme.Auth.CanIDenied,
+				FallbackColor: p.Theme.Auth.Fallback,
+			}
+
+		case p.SubcommandInfo.AuthWhoami:
+			return NewTablePrinter(withHeader, p.Theme, nil)
+
+		case p.SubcommandInfo.AuthReconcile:
+			return &VerbPrinter{
+				DryRunColor:   p.Theme.Auth.DryRun,
+				FallbackColor: p.Theme.Auth.Fallback,
+				VerbColor: map[string]color.Color{
+					"reconciled": p.Theme.Auth.Reconciled,
+				},
+			}
+		}
+
 	case
 		kubectl.Apply,
 		kubectl.Create,

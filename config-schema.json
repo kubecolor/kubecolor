@@ -132,6 +132,10 @@
           "$ref": "#/$defs/themeAnnotate",
           "description": "used in \"kubectl annotate\""
         },
+        "auth": {
+          "$ref": "#/$defs/themeAuth",
+          "description": "used in \"kubectl auth\""
+        },
         "create": {
           "$ref": "#/$defs/themeCreate",
           "description": "used in \"kubectl create\""
@@ -254,6 +258,33 @@
       "additionalProperties": false,
       "type": "object",
       "description": "ThemeApply holds colors for the \"kubectl apply\" output."
+    },
+    "themeAuth": {
+      "properties": {
+        "canIAllowed": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"yes\" in \"kubectl auth can-i\""
+        },
+        "canIDenied": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"no\" in \"kubectl auth can-i\""
+        },
+        "reconciled": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"clusterrolebinding.rbac.authorization.k8s.io/foo reconciled\""
+        },
+        "dryRun": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"(dry run)\" and \"(server dry run)\""
+        },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when outputs unknown format"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeAuth holds colors for the \"kubectl auth\" output."
     },
     "themeBase": {
       "properties": {
