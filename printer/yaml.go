@@ -42,6 +42,15 @@ func (p *YAMLPrinter) printLineAsYAMLFormat(line string, w io.Writer) {
 	indent := line[:indentLen]
 	trimmedLine := line[indentLen:]
 
+	if p.nextLineSetsIndent || p.multilineStringIndent > 0 {
+		// blank lines inside a block scalar are part of the string,
+		// and are commonly written without any indentation
+		if trimmedLine == "" {
+			fmt.Fprintf(w, "%s\n", line)
+			return
+		}
+	}
+
 	if p.nextLineSetsIndent {
 		p.multilineStringIndent = indentLen
 		p.nextLineSetsIndent = false
