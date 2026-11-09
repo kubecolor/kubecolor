@@ -154,6 +154,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 
 	case
 		kubectl.Apply,
+		kubectl.Cordon,
 		kubectl.Create,
 		kubectl.Delete,
 		kubectl.Drain,
@@ -278,6 +279,15 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 				},
 				PrefixVerbColor: map[string]color.Color{
 					"evicting pod": p.Theme.Drain.EvictingPod,
+				},
+			}
+
+		case kubectl.Cordon:
+			return &VerbPrinter{
+				DryRunColor:   p.Theme.Cordon.DryRun,
+				FallbackColor: p.Theme.Cordon.Fallback,
+				VerbColor: map[string]color.Color{
+					"cordoned": p.Theme.Cordon.Cordoned,
 				},
 			}
 

@@ -341,6 +341,7 @@ type Theme struct {
 	Apply ThemeApply // used in "kubectl apply"
 
 	Annotate ThemeAnnotate // used in "kubectl annotate"
+	Cordon   ThemeCordon   // used in "kubectl cordon"
 	Create   ThemeCreate   // used in "kubectl create"
 	Delete   ThemeDelete   // used in "kubectl delete"
 	Describe ThemeDescribe // used in "kubectl describe"
@@ -503,6 +504,14 @@ type ThemeRollout struct {
 // ThemePatch holds colors for the "kubectl patch" output.
 type ThemePatch struct {
 	Patched color.Color `defaultFrom:"theme.base.warning"` // used on "deployment.apps/foo patched"
+
+	DryRun   color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+	Fallback color.Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format
+}
+
+// ThemeCordon holds colors for the "kubectl cordon" output.
+type ThemeCordon struct {
+	Cordoned color.Color `defaultFrom:"theme.base.primary"` // used on "node/my-worker-node-01 cordoned"
 
 	DryRun   color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
 	Fallback color.Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format

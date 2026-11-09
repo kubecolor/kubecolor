@@ -1,0 +1,17 @@
+================================================================================
+$ kubectl cordon my-worker-node-01
+================================================================================
+
+node/my-worker-node-01 cordoned
+node/my-worker-node-01 cordoned (dry run)
+node/my-worker-node-01 cordoned (server dry run)
+node/my-worker-node-01 already cordoned
+node/my-worker-node-01 unknown
+
+--------------------------------------------------------------------------------
+
+node/my-worker-node-01 [35mcordoned[0m
+node/my-worker-node-01 [35mcordoned[0m [36m(dry run)[0m
+node/my-worker-node-01 [35mcordoned[0m [36m(server dry run)[0m
+node/my-worker-node-01 already [35mcordoned[0m
+[33mnode/my-worker-node-01 unknown[0m
