@@ -356,3 +356,52 @@ Events:                      <none>
 [96mTolerations[0m:                 node.kubernetes.io/not-ready:NoExecute op=[93mExists for 300s[0m
                              node.kubernetes.io/unreachable:NoExecute op=[93mExists for 300s[0m
 [96mEvents[0m:                      [90;3m<none>[0m
+
+================================================================================
+# kubectl describe with restarted init container
+$ kubectl describe pod
+================================================================================
+
+Name:             my-app-7d4b9c8f6d-x2k9p
+Namespace:        default
+Status:           Pending
+Init Containers:
+  wait-for-db:
+    Image:          busybox:1.36
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       Error
+      Exit Code:    1
+    Ready:          False
+    Restart Count:  4
+Containers:
+  app:
+    Image:          nginx:1.27
+    State:          Waiting
+      Reason:       PodInitializing
+    Ready:          False
+    Restart Count:  0
+
+--------------------------------------------------------------------------------
+
+[96mName[0m:             [93mmy-app-7d4b9c8f6d-x2k9p[0m
+[96mNamespace[0m:        [93mdefault[0m
+[96mStatus[0m:           [33mPending[0m
+[96mInit Containers[0m:
+  [36mwait-for-db[0m:
+    [96mImage[0m:          [93mbusybox:1.36[0m
+    [96mState[0m:          [93mWaiting[0m
+      [36mReason[0m:       [31mCrashLoopBackOff[0m
+    [96mLast State[0m:     [33mTerminated[0m
+      [36mReason[0m:       [31mError[0m
+      [36mExit Code[0m:    [35m1[0m
+    [96mReady[0m:          [31mFalse[0m
+    [96mRestart Count[0m:  [35m4[0m
+[96mContainers[0m:
+  [36mapp[0m:
+    [96mImage[0m:          [93mnginx:1.27[0m
+    [96mState[0m:          [93mWaiting[0m
+      [36mReason[0m:       [33mPodInitializing[0m
+    [96mReady[0m:          [31mFalse[0m
+    [96mRestart Count[0m:  [35m0[0m
