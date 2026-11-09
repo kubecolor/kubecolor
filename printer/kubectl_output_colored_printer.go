@@ -40,8 +40,21 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 	}
 
 	switch p.SubcommandInfo.Subcommand {
-	case kubectl.Top, kubectl.APIResources:
+	case kubectl.Top:
 		return NewTablePrinter(withHeader, p.Theme, nil)
+
+	case kubectl.APIResources:
+		switch p.SubcommandInfo.Output {
+		case kubectl.OutputJSON:
+			return &JSONPrinter{Theme: p.Theme}
+		case kubectl.OutputYAML:
+			return &YAMLPrinter{Theme: p.Theme}
+		case kubectl.OutputOther:
+			// "kubectl api-resources -o name" prints no header
+			return NewTablePrinter(false, p.Theme, nil)
+		default:
+			return NewTablePrinter(withHeader, p.Theme, nil)
+		}
 
 	case kubectl.APIVersions:
 		return NewTablePrinter(false, p.Theme, nil) // api-versions always doesn't have header
