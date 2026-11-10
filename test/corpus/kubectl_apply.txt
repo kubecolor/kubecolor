@@ -19,6 +19,23 @@ deployment.apps/foo [35munchanged[0m [36m(server dry run)[0m
 [32mdeployment.apps/foo bar[0m
 
 ================================================================================
+# resources removed by --prune are printed as "pruned"
+$ kubectl apply -f manifests/ --prune -l app=foo
+================================================================================
+
+deployment.apps/foo unchanged
+deployment.apps/bar pruned
+service/bar pruned (dry run)
+service/bar pruned (server dry run)
+
+--------------------------------------------------------------------------------
+
+deployment.apps/foo [35munchanged[0m
+deployment.apps/bar [31mpruned[0m
+service/bar [31mpruned[0m [36m(dry run)[0m
+service/bar [31mpruned[0m [36m(server dry run)[0m
+
+================================================================================
 $ kubectl apply edit-last-applied --help
 ================================================================================
 
