@@ -356,6 +356,7 @@ type Theme struct {
 	Patch    ThemePatch    // used in "kubectl patch"
 	Rollout  ThemeRollout  // used in "kubectl rollout"
 	Scale    ThemeScale    // used in "kubectl scale"
+	Taint    ThemeTaint    // used in "kubectl taint"
 	Uncordon ThemeUncordon // used in "kubectl uncordon"
 	Version  ThemeVersion  // used in "kubectl version"
 }
@@ -512,6 +513,16 @@ type ThemePatch struct {
 // ThemeCordon holds colors for the "kubectl cordon" output.
 type ThemeCordon struct {
 	Cordoned color.Color `defaultFrom:"theme.base.primary"` // used on "node/my-worker-node-01 cordoned"
+
+	DryRun   color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+	Fallback color.Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format
+}
+
+// ThemeTaint holds colors for the "kubectl taint" output.
+type ThemeTaint struct {
+	Tainted   color.Color `defaultFrom:"theme.base.primary"`   // used on "node/my-worker-node-01 tainted"
+	Untainted color.Color `defaultFrom:"theme.base.secondary"` // used on "node/my-worker-node-01 untainted"
+	Modified  color.Color `defaultFrom:"theme.base.warning"`   // used on "node/my-worker-node-01 modified"
 
 	DryRun   color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
 	Fallback color.Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format

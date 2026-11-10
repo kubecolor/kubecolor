@@ -162,6 +162,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 		kubectl.Patch,
 		kubectl.Rollout,
 		kubectl.Scale,
+		kubectl.Taint,
 		kubectl.Uncordon,
 		kubectl.Annotate,
 		kubectl.Label:
@@ -288,6 +289,17 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 				FallbackColor: p.Theme.Cordon.Fallback,
 				VerbColor: map[string]color.Color{
 					"cordoned": p.Theme.Cordon.Cordoned,
+				},
+			}
+
+		case kubectl.Taint:
+			return &VerbPrinter{
+				DryRunColor:   p.Theme.Taint.DryRun,
+				FallbackColor: p.Theme.Taint.Fallback,
+				VerbColor: map[string]color.Color{
+					"tainted":   p.Theme.Taint.Tainted,
+					"untainted": p.Theme.Taint.Untainted,
+					"modified":  p.Theme.Taint.Modified,
 				},
 			}
 

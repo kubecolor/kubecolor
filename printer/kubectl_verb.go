@@ -26,6 +26,7 @@ import (
 // - kubectl drain
 // - kubectl expose
 // - kubectl patch
+// - kubectl taint
 // - kubectl uncordon
 type VerbPrinter struct {
 	// VerbColor is used for verbs at the end of the line (followed by optional "dry-run"), e.g:
