@@ -257,6 +257,9 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 			}
 
 		case kubectl.Rollout:
+			if p.SubcommandInfo.RolloutHistory {
+				return &RolloutHistoryPrinter{Theme: p.Theme}
+			}
 			return &VerbPrinter{
 				DryRunColor:   p.Theme.Rollout.DryRun,
 				FallbackColor: p.Theme.Rollout.Fallback,
