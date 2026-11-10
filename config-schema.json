@@ -246,6 +246,10 @@
           "$ref": "#/$defs/color",
           "description": "used on \"deployment.apps/quux serverside-applied\""
         },
+        "pruned": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"deployment.apps/quux pruned\""
+        },
         "setLastApplied": {
           "$ref": "#/$defs/color",
           "description": "used on \"set-last-applied nginx: no changes required.\""

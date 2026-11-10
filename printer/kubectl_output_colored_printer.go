@@ -209,6 +209,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 					"configured":         p.Theme.Apply.Configured,
 					"unchanged":          p.Theme.Apply.Unchanged,
 					"serverside-applied": p.Theme.Apply.Serverside,
+					"pruned":             p.Theme.Apply.Pruned,
 				},
 			}
 

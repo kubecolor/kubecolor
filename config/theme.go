@@ -453,6 +453,7 @@ type ThemeApply struct {
 	Configured     color.Color `defaultFrom:"theme.base.warning"` // used on "deployment.apps/bar configured"
 	Unchanged      color.Color `defaultFrom:"theme.base.primary"` // used on "deployment.apps/quux unchanged"
 	Serverside     color.Color `defaultFrom:"theme.base.warning"` // used on "deployment.apps/quux serverside-applied"
+	Pruned         color.Color `defaultFrom:"theme.base.danger"`  // used on "deployment.apps/quux pruned"
 	SetLastApplied color.Color `defaultFrom:"theme.base.muted"`   // used on "set-last-applied nginx: no changes required."
 
 	DryRun   color.Color `defaultFrom:"theme.base.secondary"` // used on "(dry run)" and "(server dry run)"
