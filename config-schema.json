@@ -192,6 +192,10 @@
           "$ref": "#/$defs/themeScale",
           "description": "used in \"kubectl scale\""
         },
+        "taint": {
+          "$ref": "#/$defs/themeTaint",
+          "description": "used in \"kubectl taint\""
+        },
         "uncordon": {
           "$ref": "#/$defs/themeUncordon",
           "description": "used in \"kubectl uncordon\""
@@ -782,6 +786,33 @@
       "additionalProperties": false,
       "type": "object",
       "description": "ThemeTable holds colors for table output"
+    },
+    "themeTaint": {
+      "properties": {
+        "tainted": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"node/my-worker-node-01 tainted\""
+        },
+        "untainted": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"node/my-worker-node-01 untainted\""
+        },
+        "modified": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"node/my-worker-node-01 modified\""
+        },
+        "dryRun": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"(dry run)\" and \"(server dry run)\""
+        },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when outputs unknown format"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeTaint holds colors for the \"kubectl taint\" output."
     },
     "themeUncordon": {
       "properties": {
