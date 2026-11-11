@@ -40,7 +40,7 @@ func (p *LogsPrinter) Print(r io.Reader, w io.Writer) {
 		case logscan.KindValue:
 			lineBuffer.WriteString(ColorDataValue(token.Text, p.Theme).Render(token.Text))
 		case logscan.KindQuote:
-			lineBuffer.WriteString(p.Theme.Data.String.Render(token.Text))
+			lineBuffer.WriteString(p.Theme.Logs.QuotedString.Render(token.Text))
 
 		case logscan.KindDate:
 			lineBuffer.WriteString(p.Theme.Logs.Date.Render(token.Text))
