@@ -69,7 +69,7 @@ func (p *RolloutHistoryPrinter) Print(r io.Reader, w io.Writer) {
 				withRevision = revision != ""
 				fmt.Fprint(w, p.Theme.Table.Header.Render(name))
 				if withRevision {
-					fmt.Fprint(w, rolloutHistoryRevisionSep, ColorDataValue(revision, p.Theme).Render(revision))
+					fmt.Fprint(w, rolloutHistoryRevisionSep, p.Theme.Data.Number.Render(revision))
 				} else if trailing := line[len(name):]; trailing != "" {
 					fmt.Fprint(w, trailing)
 				}
