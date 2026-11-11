@@ -33,7 +33,7 @@ type RolloutHistoryPrinter struct {
 // ensures it implements the interface
 var _ Printer = &RolloutHistoryPrinter{}
 
-const rolloutHistoryRevisionSep = " with revision #"
+const rolloutHistoryRevisionOperation = "with revision #"
 
 // Print implements [Printer.Print]
 func (p *RolloutHistoryPrinter) Print(r io.Reader, w io.Writer) {
@@ -69,7 +69,7 @@ func (p *RolloutHistoryPrinter) Print(r io.Reader, w io.Writer) {
 				withRevision = revision != ""
 				fmt.Fprint(w, p.Theme.Table.Header.Render(name))
 				if withRevision {
-					fmt.Fprint(w, rolloutHistoryRevisionSep, p.Theme.Data.Number.Render(revision))
+					fmt.Fprint(w, " ", rolloutHistoryRevisionOperation, p.Theme.Data.Number.Render(revision))
 				} else if trailing := line[len(name):]; trailing != "" {
 					fmt.Fprint(w, trailing)
 				}
@@ -98,12 +98,20 @@ func (p *RolloutHistoryPrinter) describePrinter() *DescribePrinter {
 }
 
 // parseRolloutHistoryResource parses the first line of a resource in
-// "kubectl rollout history", such as "deployment.apps/nginx " or
+// "kubectl rollout history". kubectl prints it as the resource name
+// followed by a space and the operation, which is empty unless
+// "--revision" is set, such as "deployment.apps/nginx " or
 // "deployment.apps/nginx with revision #2".
 func parseRolloutHistoryResource(line string) (name, revision string, ok bool) {
-	name, revision, _ = strings.Cut(line, rolloutHistoryRevisionSep)
-	name = strings.TrimRight(name, " ")
-	if name == "" || strings.ContainsAny(name, " \t") || !strings.Contains(name, "/") {
+	name, operation, _ := strings.Cut(line, " ")
+	if name == "" || strings.Contains(name, "\t") || !strings.Contains(name, "/") {
+		return "", "", false
+	}
+	if operation == "" {
+		return name, "", true
+	}
+	revision, ok = strings.CutPrefix(operation, rolloutHistoryRevisionOperation)
+	if !ok {
 		return "", "", false
 	}
 	return name, revision, true
