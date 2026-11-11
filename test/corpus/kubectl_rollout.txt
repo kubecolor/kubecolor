@@ -109,32 +109,32 @@ $ kubectl rollout history deploy nginx --revision=2
 
 deployment.apps/nginx with revision #2
 Pod Template:
-  Labels:       app=nginx
-                pod-template-hash=6d5b8c9f7
+  Labels:  app=nginx
+           pod-template-hash=6d5b8c9f7
   Containers:
    nginx:
-    Image:        nginx:1.27
-    Port:         80/TCP
-    Host Port:    0/TCP
-    Environment:  <none>
-    Mounts:       <none>
-  Volumes:        <none>
-  Node-Selectors: <none>
-  Tolerations:    <none>
+    Image:         nginx:1.27
+    Port:          80/TCP
+    Host Port:     0/TCP
+    Environment:   <none>
+    Mounts:        <none>
+  Volumes:         <none>
+  Node-Selectors:  <none>
+  Tolerations:     <none>
 
 --------------------------------------------------------------------------------
 
 [1mdeployment.apps/nginx[0m with revision #[35m2[0m
 [96mPod Template[0m:
-  [36mLabels[0m:       app=[93mnginx[0m
-                pod-template-hash=[93m6d5b8c9f7[0m
+  [36mLabels[0m:  app=[93mnginx[0m
+           pod-template-hash=[93m6d5b8c9f7[0m
   [36mContainers[0m:
    [36mnginx[0m:
-    [96mImage[0m:        [93mnginx:1.27[0m
-    [96mPort[0m:         [93m80/TCP[0m
-    [96mHost Port[0m:    [93m0/TCP[0m
-    [96mEnvironment[0m:  [90;3m<none>[0m
-    [96mMounts[0m:       [90;3m<none>[0m
-  [36mVolumes[0m:        [90;3m<none>[0m
-  [36mNode-Selectors: <none>[0m
-  [36mTolerations[0m:    [90;3m<none>[0m
+    [96mImage[0m:         [93mnginx:1.27[0m
+    [96mPort[0m:          [93m80/TCP[0m
+    [96mHost Port[0m:     [93m0/TCP[0m
+    [96mEnvironment[0m:   [90;3m<none>[0m
+    [96mMounts[0m:        [90;3m<none>[0m
+  [36mVolumes[0m:         [90;3m<none>[0m
+  [36mNode-Selectors[0m:  [90;3m<none>[0m
+  [36mTolerations[0m:     [90;3m<none>[0m
