@@ -551,13 +551,22 @@ type ThemeAnnotate struct {
 
 // ThemeAuth holds colors for the "kubectl auth" output.
 type ThemeAuth struct {
-	CanIAllowed color.Color `defaultFrom:"theme.base.success"` // used on "yes" in "kubectl auth can-i"
-	CanIDenied  color.Color `defaultFrom:"theme.base.danger"`  // used on "no" in "kubectl auth can-i"
+	CanI      ThemeAuthCanI
+	Reconcile ThemeAuthReconcile
+}
 
-	Reconciled color.Color `defaultFrom:"theme.base.success"` // used on "clusterrolebinding.rbac.authorization.k8s.io/foo reconciled"
-
-	DryRun   color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+// ThemeAuthCanI holds colors for the "kubectl auth can-i" output.
+type ThemeAuthCanI struct {
+	Allowed  color.Color `defaultFrom:"theme.base.success"` // used on "yes" in "kubectl auth can-i"
+	Denied   color.Color `defaultFrom:"theme.base.danger"`  // used on "no" in "kubectl auth can-i"
 	Fallback color.Color `defaultFrom:"theme.base.success"` // used when outputs unknown format
+}
+
+// ThemeAuthReconcile holds colors for the "kubectl auth reconcile" output.
+type ThemeAuthReconcile struct {
+	Reconciled color.Color `defaultFrom:"theme.base.success"` // used on "clusterrolebinding.rbac.authorization.k8s.io/foo reconciled"
+	DryRun     color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+	Fallback   color.Color `defaultFrom:"theme.base.success"` // used when outputs unknown format
 }
 
 // ThemeLabel holds colors for the "kubectl label" output.

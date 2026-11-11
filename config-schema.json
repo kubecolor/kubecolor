@@ -261,14 +261,38 @@
     },
     "themeAuth": {
       "properties": {
-        "canIAllowed": {
+        "canI": {
+          "$ref": "#/$defs/themeAuthCanI"
+        },
+        "reconcile": {
+          "$ref": "#/$defs/themeAuthReconcile"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeAuth holds colors for the \"kubectl auth\" output."
+    },
+    "themeAuthCanI": {
+      "properties": {
+        "allowed": {
           "$ref": "#/$defs/color",
           "description": "used on \"yes\" in \"kubectl auth can-i\""
         },
-        "canIDenied": {
+        "denied": {
           "$ref": "#/$defs/color",
           "description": "used on \"no\" in \"kubectl auth can-i\""
         },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when outputs unknown format"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeAuthCanI holds colors for the \"kubectl auth can-i\" output."
+    },
+    "themeAuthReconcile": {
+      "properties": {
         "reconciled": {
           "$ref": "#/$defs/color",
           "description": "used on \"clusterrolebinding.rbac.authorization.k8s.io/foo reconciled\""
@@ -284,7 +308,7 @@
       },
       "additionalProperties": false,
       "type": "object",
-      "description": "ThemeAuth holds colors for the \"kubectl auth\" output."
+      "description": "ThemeAuthReconcile holds colors for the \"kubectl auth reconcile\" output."
     },
     "themeBase": {
       "properties": {

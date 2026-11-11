@@ -152,9 +152,9 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 				return NewTablePrinter(withHeader, p.Theme, nil)
 			}
 			return &CanIPrinter{
-				AllowedColor:  p.Theme.Auth.CanIAllowed,
-				DeniedColor:   p.Theme.Auth.CanIDenied,
-				FallbackColor: p.Theme.Auth.Fallback,
+				AllowedColor:  p.Theme.Auth.CanI.Allowed,
+				DeniedColor:   p.Theme.Auth.CanI.Denied,
+				FallbackColor: p.Theme.Auth.CanI.Fallback,
 			}
 
 		case p.SubcommandInfo.AuthWhoami:
@@ -162,12 +162,16 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 
 		case p.SubcommandInfo.AuthReconcile:
 			return &VerbPrinter{
-				DryRunColor:   p.Theme.Auth.DryRun,
-				FallbackColor: p.Theme.Auth.Fallback,
+				DryRunColor:   p.Theme.Auth.Reconcile.DryRun,
+				FallbackColor: p.Theme.Auth.Reconcile.Fallback,
 				VerbColor: map[string]color.Color{
-					"reconciled": p.Theme.Auth.Reconciled,
+					"reconciled": p.Theme.Auth.Reconcile.Reconciled,
 				},
 			}
+
+		default:
+			// bare "kubectl auth" (or unknown sub-subcommand) prints help text
+			return &HelpPrinter{Theme: p.Theme}
 		}
 
 	case
