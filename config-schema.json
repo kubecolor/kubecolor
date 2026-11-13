@@ -184,6 +184,10 @@
           "$ref": "#/$defs/themePatch",
           "description": "used in \"kubectl patch\""
         },
+        "replace": {
+          "$ref": "#/$defs/themeReplace",
+          "description": "used in \"kubectl replace\""
+        },
         "rollout": {
           "$ref": "#/$defs/themeRollout",
           "description": "used in \"kubectl rollout\""
@@ -659,6 +663,29 @@
       "additionalProperties": false,
       "type": "object",
       "description": "ThemePatch holds colors for the \"kubectl patch\" output."
+    },
+    "themeReplace": {
+      "properties": {
+        "replaced": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"deployment.apps/foo replaced\""
+        },
+        "deleted": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"deployment.apps \"foo\" deleted\" (with --force)"
+        },
+        "dryRun": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"(dry run)\" and \"(server dry run)\""
+        },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when outputs unknown format"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeReplace holds colors for the \"kubectl replace\" output."
     },
     "themeRollout": {
       "properties": {

@@ -1,0 +1,27 @@
+================================================================================
+$ kubectl replace -f deployment.yaml
+================================================================================
+
+deployment.apps/nginx replaced
+deployment.apps/nginx replaced (dry run)
+deployment.apps/nginx replaced (server dry run)
+deployment.apps/nginx unknown
+
+--------------------------------------------------------------------------------
+
+deployment.apps/nginx [35mreplaced[0m
+deployment.apps/nginx [35mreplaced[0m [36m(dry run)[0m
+deployment.apps/nginx [35mreplaced[0m [36m(server dry run)[0m
+[33mdeployment.apps/nginx unknown[0m
+
+================================================================================
+$ kubectl replace --force -f deployment.yaml
+================================================================================
+
+deployment.apps "nginx" deleted
+deployment.apps/nginx replaced
+
+--------------------------------------------------------------------------------
+
+deployment.apps "nginx" [31mdeleted[0m
+deployment.apps/nginx [35mreplaced[0m
