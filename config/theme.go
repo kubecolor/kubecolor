@@ -342,6 +342,7 @@ type Theme struct {
 
 	Annotate ThemeAnnotate // used in "kubectl annotate"
 	Auth     ThemeAuth     // used in "kubectl auth"
+	Cordon   ThemeCordon   // used in "kubectl cordon"
 	Create   ThemeCreate   // used in "kubectl create"
 	Delete   ThemeDelete   // used in "kubectl delete"
 	Describe ThemeDescribe // used in "kubectl describe"
@@ -356,6 +357,7 @@ type Theme struct {
 	Patch    ThemePatch    // used in "kubectl patch"
 	Rollout  ThemeRollout  // used in "kubectl rollout"
 	Scale    ThemeScale    // used in "kubectl scale"
+	Taint    ThemeTaint    // used in "kubectl taint"
 	Uncordon ThemeUncordon // used in "kubectl uncordon"
 	Version  ThemeVersion  // used in "kubectl version"
 }
@@ -452,6 +454,7 @@ type ThemeApply struct {
 	Configured     color.Color `defaultFrom:"theme.base.warning"` // used on "deployment.apps/bar configured"
 	Unchanged      color.Color `defaultFrom:"theme.base.primary"` // used on "deployment.apps/quux unchanged"
 	Serverside     color.Color `defaultFrom:"theme.base.warning"` // used on "deployment.apps/quux serverside-applied"
+	Pruned         color.Color `defaultFrom:"theme.base.danger"`  // used on "deployment.apps/quux pruned"
 	SetLastApplied color.Color `defaultFrom:"theme.base.muted"`   // used on "set-last-applied nginx: no changes required."
 
 	DryRun   color.Color `defaultFrom:"theme.base.secondary"` // used on "(dry run)" and "(server dry run)"
@@ -504,6 +507,24 @@ type ThemeRollout struct {
 // ThemePatch holds colors for the "kubectl patch" output.
 type ThemePatch struct {
 	Patched color.Color `defaultFrom:"theme.base.warning"` // used on "deployment.apps/foo patched"
+
+	DryRun   color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+	Fallback color.Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format
+}
+
+// ThemeCordon holds colors for the "kubectl cordon" output.
+type ThemeCordon struct {
+	Cordoned color.Color `defaultFrom:"theme.base.primary"` // used on "node/my-worker-node-01 cordoned"
+
+	DryRun   color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+	Fallback color.Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format
+}
+
+// ThemeTaint holds colors for the "kubectl taint" output.
+type ThemeTaint struct {
+	Tainted   color.Color `defaultFrom:"theme.base.primary"`   // used on "node/my-worker-node-01 tainted"
+	Untainted color.Color `defaultFrom:"theme.base.secondary"` // used on "node/my-worker-node-01 untainted"
+	Modified  color.Color `defaultFrom:"theme.base.warning"`   // used on "node/my-worker-node-01 modified"
 
 	DryRun   color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
 	Fallback color.Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format

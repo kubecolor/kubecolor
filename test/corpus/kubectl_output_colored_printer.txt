@@ -107,6 +107,54 @@ tokenreviews                                   authentication.k8s.io          fa
 [37mtokenreviews[0m                                   [37mauthentication.k8s.io[0m          [36mfalse[0m        [37mTokenReview[0m
 
 ================================================================================
+$ kubectl api-resources -o name
+================================================================================
+
+bindings
+componentstatuses
+pods
+deployments.apps
+customresourcedefinitions.apiextensions.k8s.io
+
+--------------------------------------------------------------------------------
+
+[37mbindings[0m
+[37mcomponentstatuses[0m
+[37mpods[0m
+[37mdeployments.apps[0m
+[37mcustomresourcedefinitions.apiextensions.k8s.io[0m
+
+================================================================================
+$ kubectl api-resources -o json
+================================================================================
+
+{
+    "kind": "APIResourceList",
+    "groupVersion": "v1",
+    "resources": [
+        {
+            "name": "pods",
+            "namespaced": true,
+            "kind": "Pod"
+        }
+    ]
+}
+
+--------------------------------------------------------------------------------
+
+{
+    "[36mkind[0m": "[93mAPIResourceList[0m",
+    "[36mgroupVersion[0m": "[93mv1[0m",
+    "[36mresources[0m": [
+        {
+            "[36mname[0m": "[93mpods[0m",
+            "[36mnamespaced[0m": [32mtrue[0m,
+            "[36mkind[0m": "[93mPod[0m"
+        }
+    ]
+}
+
+================================================================================
 $ kubectl get pod
 ================================================================================
 

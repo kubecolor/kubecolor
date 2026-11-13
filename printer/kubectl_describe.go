@@ -94,7 +94,7 @@ func (p *DescribePrinter) colorize(path describe.Path, value string) string {
 var describePathsToColor = []*regexp.Regexp{
 	regexp.MustCompile(`^Status$`),
 	regexp.MustCompile(`^(Init )?Containers/[^/]*/State(/Reason)?$`),
-	regexp.MustCompile(`^Containers/[^/]*/Last State(/Reason)?$`),
+	regexp.MustCompile(`^(Init )?Containers/[^/]*/Last State(/Reason)?$`),
 }
 
 func (p *DescribePrinter) colorizeStatus(value, pathStr string) (string, bool) {

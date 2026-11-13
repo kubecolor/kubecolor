@@ -136,6 +136,10 @@
           "$ref": "#/$defs/themeAuth",
           "description": "used in \"kubectl auth\""
         },
+        "cordon": {
+          "$ref": "#/$defs/themeCordon",
+          "description": "used in \"kubectl cordon\""
+        },
         "create": {
           "$ref": "#/$defs/themeCreate",
           "description": "used in \"kubectl create\""
@@ -192,6 +196,10 @@
           "$ref": "#/$defs/themeScale",
           "description": "used in \"kubectl scale\""
         },
+        "taint": {
+          "$ref": "#/$defs/themeTaint",
+          "description": "used in \"kubectl taint\""
+        },
         "uncordon": {
           "$ref": "#/$defs/themeUncordon",
           "description": "used in \"kubectl uncordon\""
@@ -241,6 +249,10 @@
         "serverside": {
           "$ref": "#/$defs/color",
           "description": "used on \"deployment.apps/quux serverside-applied\""
+        },
+        "pruned": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"deployment.apps/quux pruned\""
         },
         "setLastApplied": {
           "$ref": "#/$defs/color",
@@ -348,6 +360,25 @@
       "additionalProperties": false,
       "type": "object",
       "description": "ThemeBase contains base colors that other theme fields can default to, just to make overriding themes easier."
+    },
+    "themeCordon": {
+      "properties": {
+        "cordoned": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"node/my-worker-node-01 cordoned\""
+        },
+        "dryRun": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"(dry run)\" and \"(server dry run)\""
+        },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when outputs unknown format"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeCordon holds colors for the \"kubectl cordon\" output."
     },
     "themeCreate": {
       "properties": {
@@ -814,6 +845,33 @@
       "additionalProperties": false,
       "type": "object",
       "description": "ThemeTable holds colors for table output"
+    },
+    "themeTaint": {
+      "properties": {
+        "tainted": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"node/my-worker-node-01 tainted\""
+        },
+        "untainted": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"node/my-worker-node-01 untainted\""
+        },
+        "modified": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"node/my-worker-node-01 modified\""
+        },
+        "dryRun": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"(dry run)\" and \"(server dry run)\""
+        },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when outputs unknown format"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeTaint holds colors for the \"kubectl taint\" output."
     },
     "themeUncordon": {
       "properties": {

@@ -1,0 +1,39 @@
+================================================================================
+$ kubectl taint nodes my-worker-node-01 dedicated=special-user:NoSchedule
+================================================================================
+
+node/my-worker-node-01 tainted
+node/my-worker-node-01 tainted (dry run)
+node/my-worker-node-01 tainted (server dry run)
+node/my-worker-node-01 unknown
+
+--------------------------------------------------------------------------------
+
+node/my-worker-node-01 [35mtainted[0m
+node/my-worker-node-01 [35mtainted[0m [36m(dry run)[0m
+node/my-worker-node-01 [35mtainted[0m [36m(server dry run)[0m
+[33mnode/my-worker-node-01 unknown[0m
+
+================================================================================
+$ kubectl taint nodes my-worker-node-01 dedicated:NoSchedule-
+================================================================================
+
+node/my-worker-node-01 untainted
+node/my-worker-node-01 untainted (dry run)
+
+--------------------------------------------------------------------------------
+
+node/my-worker-node-01 [36muntainted[0m
+node/my-worker-node-01 [36muntainted[0m [36m(dry run)[0m
+
+================================================================================
+$ kubectl taint nodes my-worker-node-01 dedicated=other-user:NoSchedule --overwrite
+================================================================================
+
+node/my-worker-node-01 modified
+node/my-worker-node-01 modified (dry run)
+
+--------------------------------------------------------------------------------
+
+node/my-worker-node-01 [33mmodified[0m
+node/my-worker-node-01 [33mmodified[0m [36m(dry run)[0m

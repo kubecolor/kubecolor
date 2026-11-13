@@ -40,8 +40,21 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 	}
 
 	switch p.SubcommandInfo.Subcommand {
-	case kubectl.Top, kubectl.APIResources:
+	case kubectl.Top:
 		return NewTablePrinter(withHeader, p.Theme, nil)
+
+	case kubectl.APIResources:
+		switch p.SubcommandInfo.Output {
+		case kubectl.OutputJSON:
+			return &JSONPrinter{Theme: p.Theme}
+		case kubectl.OutputYAML:
+			return &YAMLPrinter{Theme: p.Theme}
+		case kubectl.OutputOther:
+			// "kubectl api-resources -o name" prints no header
+			return NewTablePrinter(false, p.Theme, nil)
+		default:
+			return NewTablePrinter(withHeader, p.Theme, nil)
+		}
 
 	case kubectl.APIVersions:
 		return NewTablePrinter(false, p.Theme, nil) // api-versions always doesn't have header
@@ -176,6 +189,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 
 	case
 		kubectl.Apply,
+		kubectl.Cordon,
 		kubectl.Create,
 		kubectl.Delete,
 		kubectl.Drain,
@@ -183,6 +197,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 		kubectl.Patch,
 		kubectl.Rollout,
 		kubectl.Scale,
+		kubectl.Taint,
 		kubectl.Uncordon,
 		kubectl.Annotate,
 		kubectl.Label:
@@ -229,6 +244,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 					"configured":         p.Theme.Apply.Configured,
 					"unchanged":          p.Theme.Apply.Unchanged,
 					"serverside-applied": p.Theme.Apply.Serverside,
+					"pruned":             p.Theme.Apply.Pruned,
 				},
 			}
 
@@ -300,6 +316,26 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 				},
 				PrefixVerbColor: map[string]color.Color{
 					"evicting pod": p.Theme.Drain.EvictingPod,
+				},
+			}
+
+		case kubectl.Cordon:
+			return &VerbPrinter{
+				DryRunColor:   p.Theme.Cordon.DryRun,
+				FallbackColor: p.Theme.Cordon.Fallback,
+				VerbColor: map[string]color.Color{
+					"cordoned": p.Theme.Cordon.Cordoned,
+				},
+			}
+
+		case kubectl.Taint:
+			return &VerbPrinter{
+				DryRunColor:   p.Theme.Taint.DryRun,
+				FallbackColor: p.Theme.Taint.Fallback,
+				VerbColor: map[string]color.Color{
+					"tainted":   p.Theme.Taint.Tainted,
+					"untainted": p.Theme.Taint.Untainted,
+					"modified":  p.Theme.Taint.Modified,
 				},
 			}
 
