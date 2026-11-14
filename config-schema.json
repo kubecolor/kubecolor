@@ -192,6 +192,10 @@
           "$ref": "#/$defs/themeScale",
           "description": "used in \"kubectl scale\""
         },
+        "set": {
+          "$ref": "#/$defs/themeSet",
+          "description": "used in \"kubectl set\""
+        },
         "taint": {
           "$ref": "#/$defs/themeTaint",
           "description": "used in \"kubectl taint\""
@@ -709,6 +713,25 @@
       "additionalProperties": false,
       "type": "object",
       "description": "ThemeScale holds colors for the \"kubectl scale\" output."
+    },
+    "themeSet": {
+      "properties": {
+        "updated": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"deployment.apps/foo image updated\", \"env updated\", etc"
+        },
+        "dryRun": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"(dry run)\" and \"(server dry run)\""
+        },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when outputs unknown format, e.g \"kubectl set env --list\""
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeSet holds colors for the \"kubectl set\" output."
     },
     "themeShell": {
       "properties": {

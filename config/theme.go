@@ -356,6 +356,7 @@ type Theme struct {
 	Patch    ThemePatch    // used in "kubectl patch"
 	Rollout  ThemeRollout  // used in "kubectl rollout"
 	Scale    ThemeScale    // used in "kubectl scale"
+	Set      ThemeSet      // used in "kubectl set"
 	Taint    ThemeTaint    // used in "kubectl taint"
 	Uncordon ThemeUncordon // used in "kubectl uncordon"
 	Version  ThemeVersion  // used in "kubectl version"
@@ -490,6 +491,14 @@ type ThemeScale struct {
 
 	DryRun   color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
 	Fallback color.Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format
+}
+
+// ThemeSet holds colors for the "kubectl set" output.
+type ThemeSet struct {
+	Updated color.Color `defaultFrom:"theme.base.warning"` // used on "deployment.apps/foo image updated", "env updated", etc
+
+	DryRun   color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+	Fallback color.Color `defaultFrom:"theme.default"`      // used when outputs unknown format, e.g "kubectl set env --list"
 }
 
 // ThemeRollout holds colors for the "kubectl rollout" output.
