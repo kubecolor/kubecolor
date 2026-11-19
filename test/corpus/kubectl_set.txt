@@ -8,9 +8,9 @@ deployment.apps/nginx image updated (server dry run)
 
 --------------------------------------------------------------------------------
 
-deployment.apps/nginx [33mimage updated[0m
-deployment.apps/nginx [33mimage updated[0m [36m(dry run)[0m
-deployment.apps/nginx [33mimage updated[0m [36m(server dry run)[0m
+deployment.apps/nginx image [33mupdated[0m
+deployment.apps/nginx image [33mupdated[0m [36m(dry run)[0m
+deployment.apps/nginx image [33mupdated[0m [36m(server dry run)[0m
 
 ================================================================================
 $ kubectl set env deployment/nginx STORAGE_DIR=/local
@@ -21,8 +21,8 @@ deployment.apps/nginx env updated (dry run)
 
 --------------------------------------------------------------------------------
 
-deployment.apps/nginx [33menv updated[0m
-deployment.apps/nginx [33menv updated[0m [36m(dry run)[0m
+deployment.apps/nginx env [33mupdated[0m
+deployment.apps/nginx env [33mupdated[0m [36m(dry run)[0m
 
 ================================================================================
 $ kubectl set env deployment/nginx --list
@@ -44,7 +44,7 @@ deployment.apps/nginx resource requirements updated
 
 --------------------------------------------------------------------------------
 
-deployment.apps/nginx [33mresource requirements updated[0m
+deployment.apps/nginx resource requirements [33mupdated[0m
 
 ================================================================================
 $ kubectl set selector service/nginx app=nginx
@@ -54,7 +54,7 @@ service/nginx selector updated
 
 --------------------------------------------------------------------------------
 
-service/nginx [33mselector updated[0m
+service/nginx selector [33mupdated[0m
 
 ================================================================================
 $ kubectl set serviceaccount deployment/nginx nginx-sa
@@ -64,7 +64,7 @@ deployment.apps/nginx serviceaccount updated
 
 --------------------------------------------------------------------------------
 
-deployment.apps/nginx [33mserviceaccount updated[0m
+deployment.apps/nginx serviceaccount [33mupdated[0m
 
 ================================================================================
 $ kubectl set subject rolebinding/admin --user=user1
@@ -74,4 +74,4 @@ rolebinding.rbac.authorization.k8s.io/admin subjects updated
 
 --------------------------------------------------------------------------------
 
-rolebinding.rbac.authorization.k8s.io/admin [33msubjects updated[0m
+rolebinding.rbac.authorization.k8s.io/admin subjects [33mupdated[0m
