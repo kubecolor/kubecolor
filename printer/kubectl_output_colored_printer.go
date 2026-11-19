@@ -195,8 +195,10 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 		kubectl.Drain,
 		kubectl.Expose,
 		kubectl.Patch,
+		kubectl.Replace,
 		kubectl.Rollout,
 		kubectl.Scale,
+		kubectl.Set,
 		kubectl.Taint,
 		kubectl.Uncordon,
 		kubectl.Annotate,
@@ -284,6 +286,16 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 				},
 			}
 
+		case kubectl.Replace:
+			return &VerbPrinter{
+				DryRunColor:   p.Theme.Replace.DryRun,
+				FallbackColor: p.Theme.Replace.Fallback,
+				VerbColor: map[string]color.Color{
+					"replaced": p.Theme.Replace.Replaced,
+					"deleted":  p.Theme.Replace.Deleted,
+				},
+			}
+
 		case kubectl.Scale:
 			return &VerbPrinter{
 				DryRunColor:   p.Theme.Scale.DryRun,
@@ -293,7 +305,19 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 				},
 			}
 
+		case kubectl.Set:
+			return &VerbPrinter{
+				DryRunColor:   p.Theme.Set.DryRun,
+				FallbackColor: p.Theme.Set.Fallback,
+				VerbColor: map[string]color.Color{
+					"updated": p.Theme.Set.Updated,
+				},
+			}
+
 		case kubectl.Rollout:
+			if p.SubcommandInfo.RolloutHistory {
+				return &RolloutHistoryPrinter{Theme: p.Theme}
+			}
 			return &VerbPrinter{
 				DryRunColor:   p.Theme.Rollout.DryRun,
 				FallbackColor: p.Theme.Rollout.Fallback,

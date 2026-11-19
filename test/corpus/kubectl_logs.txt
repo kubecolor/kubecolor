@@ -253,3 +253,21 @@ logfmt formatted: mykey=#<Object:0x130e9ea0>
 some object: [93m#<Object:0x130e9ea0>[0m, and an [31merror[0m: [93m#<StandardError: #<Object:0x130e9de0>>[0m
 ruby formatted: [96m:mykey[0m=>[93m#<Object:0x130e9ea0>[0m
 logfmt formatted: [96mmykey[0m=[93m#<Object:0x130e9ea0>[0m
+
+================================================================================
+# custom standalone quoted string color
+KUBECOLOR_PRESET="dark"
+KUBECOLOR_THEME_DATA_STRING="green"
+KUBECOLOR_THEME_LOGS_QUOTEDSTRING="red"
+$ kubectl logs nginx
+================================================================================
+
+"hello world" key="value"
+'hello world' key='value'
+`hello world` key=`value`
+
+--------------------------------------------------------------------------------
+
+[31m"hello world"[0m [96mkey[0m=[32m"value"[0m
+[31m'hello world'[0m [96mkey[0m=[32m'value'[0m
+[31m`hello world`[0m [96mkey[0m=[32m`value`[0m

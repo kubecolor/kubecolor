@@ -355,8 +355,10 @@ type Theme struct {
 	Logs     ThemeLogs     // used in "kubectl logs"
 	Options  ThemeOptions  // used in "kubectl options"
 	Patch    ThemePatch    // used in "kubectl patch"
+	Replace  ThemeReplace  // used in "kubectl replace"
 	Rollout  ThemeRollout  // used in "kubectl rollout"
 	Scale    ThemeScale    // used in "kubectl scale"
+	Set      ThemeSet      // used in "kubectl set"
 	Taint    ThemeTaint    // used in "kubectl taint"
 	Uncordon ThemeUncordon // used in "kubectl uncordon"
 	Version  ThemeVersion  // used in "kubectl version"
@@ -488,6 +490,23 @@ type ThemeExpose struct {
 // ThemeScale holds colors for the "kubectl scale" output.
 type ThemeScale struct {
 	Scaled color.Color `defaultFrom:"theme.base.warning"` // used on "deployment.apps/foo scaled"
+
+	DryRun   color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+	Fallback color.Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format
+}
+
+// ThemeSet holds colors for the "kubectl set" output.
+type ThemeSet struct {
+	Updated color.Color `defaultFrom:"theme.base.warning"` // used on "deployment.apps/foo image updated", "env updated", etc
+
+	DryRun   color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+	Fallback color.Color `defaultFrom:"theme.default"`      // used when outputs unknown format, e.g "kubectl set env --list"
+}
+
+// ThemeReplace holds colors for the "kubectl replace" output.
+type ThemeReplace struct {
+	Replaced color.Color `defaultFrom:"theme.base.primary"`   // used on "deployment.apps/foo replaced"
+	Deleted  color.Color `defaultFrom:"theme.delete.deleted"` // used on "deployment.apps "foo" deleted" (with --force)
 
 	DryRun   color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
 	Fallback color.Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format

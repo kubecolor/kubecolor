@@ -25,6 +25,7 @@ type SubcommandInfo struct {
 	AuthCanI        bool   // subcommand: auth can-i
 	AuthWhoami      bool   // subcommand: auth whoami
 	AuthReconcile   bool   // subcommand: auth reconcile
+	RolloutHistory  bool   // subcommand: rollout history
 }
 
 // Output is an enum of different "--output=..." types.
@@ -400,6 +401,9 @@ func InspectSubcommandInfo(args []string, pluginHandler PluginHandler) *Subcomma
 				ret.AuthReconcile = true
 			}
 		}
+		if cmd == Rollout && i+1 < len(args) && args[i+1] == "history" {
+			ret.RolloutHistory = true
+		}
 		return ret
 	}
 
@@ -435,6 +439,7 @@ func (sci *SubcommandInfo) SupportsColoring() bool {
 	}
 	switch sci.Subcommand {
 	case Attach,
+		Completion,
 		Debug,
 		Edit,
 		Exec,
