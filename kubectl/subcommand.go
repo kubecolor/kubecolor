@@ -419,6 +419,7 @@ func (sci *SubcommandInfo) SupportsColoring() bool {
 	}
 	switch sci.Subcommand {
 	case Attach,
+		Completion,
 		Debug,
 		Edit,
 		Exec,

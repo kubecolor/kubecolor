@@ -310,3 +310,21 @@ func (t TestPluginHandler) Lookup(filename string) (string, bool) {
 	path, found := t.LookupMap[filename]
 	return path, found
 }
+
+func TestSupportsColoringCompletion(t *testing.T) {
+	tests := []struct {
+		args     string
+		expected bool
+	}{
+		{args: "completion zsh", expected: false},
+		{args: "completion bash", expected: false},
+		{args: "completion --help", expected: true},
+		{args: "get pods", expected: true},
+	}
+	for _, tc := range tests {
+		t.Run(tc.args, func(t *testing.T) {
+			info := InspectSubcommandInfo(strings.Fields(tc.args), TestPluginHandler{})
+			testutil.Equal(t, tc.expected, info.SupportsColoring())
+		})
+	}
+}
