@@ -419,8 +419,6 @@ func (sci *SubcommandInfo) SupportsColoring() bool {
 	}
 	switch sci.Subcommand {
 	case Attach,
-		// The completion script is sourced by the shell, and color codes in it
-		// break it ("bad pattern: ^[[32m#compdef" in zsh).
 		Completion,
 		Debug,
 		Edit,
