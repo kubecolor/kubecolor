@@ -89,6 +89,10 @@ func TestInspectSubcommandInfo(t *testing.T) {
 		{"apply view-last-applied deployments.apps/whoami", &SubcommandInfo{Subcommand: Apply, ViewLastApplied: true}},
 		{"apply view-last-applied deployments.apps/whoami -o json", &SubcommandInfo{Subcommand: Apply, ViewLastApplied: true, Output: OutputJSON}},
 
+		{"rollout history deployment/nginx", &SubcommandInfo{Subcommand: Rollout, RolloutHistory: true}},
+		{"rollout history deployment/nginx --revision=2", &SubcommandInfo{Subcommand: Rollout, RolloutHistory: true}},
+		{"rollout restart deployment/history", &SubcommandInfo{Subcommand: Rollout}},
+
 		{"rsh", &SubcommandInfo{Subcommand: Rsh}},
 
 		{"testplugin", &SubcommandInfo{Subcommand: KubectlPlugin}},
@@ -309,4 +313,22 @@ var _ PluginHandler = TestPluginHandler{}
 func (t TestPluginHandler) Lookup(filename string) (string, bool) {
 	path, found := t.LookupMap[filename]
 	return path, found
+}
+
+func TestSupportsColoringCompletion(t *testing.T) {
+	tests := []struct {
+		args     string
+		expected bool
+	}{
+		{args: "completion zsh", expected: false},
+		{args: "completion bash", expected: false},
+		{args: "completion --help", expected: true},
+		{args: "get pods", expected: true},
+	}
+	for _, tc := range tests {
+		t.Run(tc.args, func(t *testing.T) {
+			info := InspectSubcommandInfo(strings.Fields(tc.args), TestPluginHandler{})
+			testutil.Equal(t, tc.expected, info.SupportsColoring())
+		})
+	}
 }

@@ -354,6 +354,7 @@ type Theme struct {
 	Logs     ThemeLogs     // used in "kubectl logs"
 	Options  ThemeOptions  // used in "kubectl options"
 	Patch    ThemePatch    // used in "kubectl patch"
+	Replace  ThemeReplace  // used in "kubectl replace"
 	Rollout  ThemeRollout  // used in "kubectl rollout"
 	Scale    ThemeScale    // used in "kubectl scale"
 	Set      ThemeSet      // used in "kubectl set"
@@ -499,6 +500,15 @@ type ThemeSet struct {
 
 	DryRun   color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
 	Fallback color.Color `defaultFrom:"theme.default"`      // used when outputs unknown format, e.g "kubectl set env --list"
+}
+
+// ThemeReplace holds colors for the "kubectl replace" output.
+type ThemeReplace struct {
+	Replaced color.Color `defaultFrom:"theme.base.primary"`   // used on "deployment.apps/foo replaced"
+	Deleted  color.Color `defaultFrom:"theme.delete.deleted"` // used on "deployment.apps "foo" deleted" (with --force)
+
+	DryRun   color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+	Fallback color.Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format
 }
 
 // ThemeRollout holds colors for the "kubectl rollout" output.

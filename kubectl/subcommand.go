@@ -21,6 +21,7 @@ type SubcommandInfo struct {
 	EditLastApplied bool   // subcommand: apply edit-last-applied
 	SetLastApplied  bool   // subcommand: apply set-last-applied
 	ViewLastApplied bool   // subcommand: apply view-last-applied
+	RolloutHistory  bool   // subcommand: rollout history
 }
 
 // Output is an enum of different "--output=..." types.
@@ -384,6 +385,9 @@ func InspectSubcommandInfo(args []string, pluginHandler PluginHandler) *Subcomma
 				ret.ViewLastApplied = true
 			}
 		}
+		if cmd == Rollout && i+1 < len(args) && args[i+1] == "history" {
+			ret.RolloutHistory = true
+		}
 		return ret
 	}
 
@@ -419,6 +423,7 @@ func (sci *SubcommandInfo) SupportsColoring() bool {
 	}
 	switch sci.Subcommand {
 	case Attach,
+		Completion,
 		Debug,
 		Edit,
 		Exec,
