@@ -89,6 +89,16 @@ func TestInspectSubcommandInfo(t *testing.T) {
 		{"apply view-last-applied deployments.apps/whoami", &SubcommandInfo{Subcommand: Apply, ViewLastApplied: true}},
 		{"apply view-last-applied deployments.apps/whoami -o json", &SubcommandInfo{Subcommand: Apply, ViewLastApplied: true, Output: OutputJSON}},
 
+		{"auth can-i get pods", &SubcommandInfo{Subcommand: Auth, AuthCanI: true}},
+		{"auth can-i --list", &SubcommandInfo{Subcommand: Auth, AuthCanI: true, List: true}},
+		{"auth can-i --list --no-headers", &SubcommandInfo{Subcommand: Auth, AuthCanI: true, List: true, NoHeader: true}},
+		{"auth whoami", &SubcommandInfo{Subcommand: Auth, AuthWhoami: true}},
+		{"auth whoami -o json", &SubcommandInfo{Subcommand: Auth, AuthWhoami: true, Output: OutputJSON}},
+		{"auth whoami -o yaml", &SubcommandInfo{Subcommand: Auth, AuthWhoami: true, Output: OutputYAML}},
+		{"auth reconcile -f role.yaml", &SubcommandInfo{Subcommand: Auth, AuthReconcile: true, Follow: true}},
+		{"auth reconcile -f role.yaml --dry-run=client", &SubcommandInfo{Subcommand: Auth, AuthReconcile: true, Follow: true}},
+		{"auth", &SubcommandInfo{Subcommand: Auth}},
+
 		{"rollout history deployment/nginx", &SubcommandInfo{Subcommand: Rollout, RolloutHistory: true}},
 		{"rollout history deployment/nginx --revision=2", &SubcommandInfo{Subcommand: Rollout, RolloutHistory: true}},
 		{"rollout restart deployment/history", &SubcommandInfo{Subcommand: Rollout}},

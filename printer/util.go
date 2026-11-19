@@ -289,6 +289,9 @@ func isAllUpper(s string) bool {
 		if unicode.IsLetter(r) && !unicode.IsUpper(r) {
 			return false
 		}
+		if isNonHeaderSymbol(r) {
+			return false
+		}
 	}
 	return true
 }
@@ -302,7 +305,7 @@ func isAllUpper(s string) bool {
 func isOnlySymbols(s string) bool {
 	anyPuncts := false
 	for _, r := range s {
-		if unicode.IsLetter(r) || unicode.IsNumber(r) {
+		if unicode.IsLetter(r) || unicode.IsNumber(r) || isNonHeaderSymbol(r) {
 			return false
 		}
 		if unicode.IsPunct(r) {
@@ -310,4 +313,17 @@ func isOnlySymbols(s string) bool {
 		}
 	}
 	return anyPuncts
+}
+
+// isNonHeaderSymbol reports symbols that only appear in data rows, never in
+// headers or header underlines. For example the "kubectl auth can-i --list"
+// wildcard row:
+//
+//	*.*  []  []  [*]
+func isNonHeaderSymbol(r rune) bool {
+	switch r {
+	case '[', ']', '*':
+		return true
+	}
+	return false
 }
