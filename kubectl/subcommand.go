@@ -21,6 +21,7 @@ type SubcommandInfo struct {
 	EditLastApplied bool   // subcommand: apply edit-last-applied
 	SetLastApplied  bool   // subcommand: apply set-last-applied
 	ViewLastApplied bool   // subcommand: apply view-last-applied
+	RolloutHistory  bool   // subcommand: rollout history
 }
 
 // Output is an enum of different "--output=..." types.
@@ -383,6 +384,9 @@ func InspectSubcommandInfo(args []string, pluginHandler PluginHandler) *Subcomma
 			case "view-last-applied":
 				ret.ViewLastApplied = true
 			}
+		}
+		if cmd == Rollout && i+1 < len(args) && args[i+1] == "history" {
+			ret.RolloutHistory = true
 		}
 		return ret
 	}

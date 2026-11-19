@@ -89,6 +89,10 @@ func TestInspectSubcommandInfo(t *testing.T) {
 		{"apply view-last-applied deployments.apps/whoami", &SubcommandInfo{Subcommand: Apply, ViewLastApplied: true}},
 		{"apply view-last-applied deployments.apps/whoami -o json", &SubcommandInfo{Subcommand: Apply, ViewLastApplied: true, Output: OutputJSON}},
 
+		{"rollout history deployment/nginx", &SubcommandInfo{Subcommand: Rollout, RolloutHistory: true}},
+		{"rollout history deployment/nginx --revision=2", &SubcommandInfo{Subcommand: Rollout, RolloutHistory: true}},
+		{"rollout restart deployment/history", &SubcommandInfo{Subcommand: Rollout}},
+
 		{"rsh", &SubcommandInfo{Subcommand: Rsh}},
 
 		{"testplugin", &SubcommandInfo{Subcommand: KubectlPlugin}},
