@@ -26,6 +26,7 @@ import (
 // - kubectl drain
 // - kubectl expose
 // - kubectl patch
+// - kubectl replace
 // - kubectl taint
 // - kubectl uncordon
 type VerbPrinter struct {

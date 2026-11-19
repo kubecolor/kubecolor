@@ -160,6 +160,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 		kubectl.Drain,
 		kubectl.Expose,
 		kubectl.Patch,
+		kubectl.Replace,
 		kubectl.Rollout,
 		kubectl.Scale,
 		kubectl.Taint,
@@ -246,6 +247,16 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 				FallbackColor: p.Theme.Patch.Fallback,
 				VerbColor: map[string]color.Color{
 					"patched": p.Theme.Patch.Patched,
+				},
+			}
+
+		case kubectl.Replace:
+			return &VerbPrinter{
+				DryRunColor:   p.Theme.Replace.DryRun,
+				FallbackColor: p.Theme.Replace.Fallback,
+				VerbColor: map[string]color.Color{
+					"replaced": p.Theme.Replace.Replaced,
+					"deleted":  p.Theme.Replace.Deleted,
 				},
 			}
 
