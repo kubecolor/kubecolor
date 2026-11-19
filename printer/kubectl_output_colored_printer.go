@@ -264,13 +264,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 				DryRunColor:   p.Theme.Set.DryRun,
 				FallbackColor: p.Theme.Set.Fallback,
 				VerbColor: map[string]color.Color{
-					// one per "kubectl set" subcommand
-					"image updated":                 p.Theme.Set.Updated,
-					"env updated":                   p.Theme.Set.Updated,
-					"resource requirements updated": p.Theme.Set.Updated,
-					"selector updated":              p.Theme.Set.Updated,
-					"serviceaccount updated":        p.Theme.Set.Updated,
-					"subjects updated":              p.Theme.Set.Updated,
+					"updated": p.Theme.Set.Updated,
 				},
 			}
 
