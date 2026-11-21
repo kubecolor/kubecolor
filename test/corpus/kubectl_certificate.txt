@@ -1,0 +1,21 @@
+================================================================================
+$ kubectl certificate approve csr-8g4kp
+================================================================================
+
+certificatesigningrequest.certificates.k8s.io/csr-8g4kp approved
+certificatesigningrequest.certificates.k8s.io/csr-8g4kp unknown
+
+--------------------------------------------------------------------------------
+
+certificatesigningrequest.certificates.k8s.io/csr-8g4kp [32mapproved[0m
+[32mcertificatesigningrequest.certificates.k8s.io/csr-8g4kp unknown[0m
+
+================================================================================
+$ kubectl certificate deny csr-8g4kp
+================================================================================
+
+certificatesigningrequest.certificates.k8s.io/csr-8g4kp denied
+
+--------------------------------------------------------------------------------
+
+certificatesigningrequest.certificates.k8s.io/csr-8g4kp [31mdenied[0m

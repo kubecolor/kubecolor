@@ -190,6 +190,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 	case
 		kubectl.Apply,
 		kubectl.Autoscale,
+		kubectl.Certificate,
 		kubectl.Cordon,
 		kubectl.Create,
 		kubectl.Delete,
@@ -257,6 +258,15 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 				FallbackColor: p.Theme.Autoscale.Fallback,
 				VerbColor: map[string]color.Color{
 					"autoscaled": p.Theme.Autoscale.Autoscaled,
+				},
+			}
+
+		case kubectl.Certificate:
+			return &VerbPrinter{
+				FallbackColor: p.Theme.Certificate.Fallback,
+				VerbColor: map[string]color.Color{
+					"approved": p.Theme.Certificate.Approved,
+					"denied":   p.Theme.Certificate.Denied,
 				},
 			}
 

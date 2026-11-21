@@ -21,6 +21,7 @@ import (
 // But it is also used to colorize commands like:
 //
 // - kubectl autoscale
+// - kubectl certificate
 // - kubectl cordon
 // - kubectl create
 // - kubectl delete
