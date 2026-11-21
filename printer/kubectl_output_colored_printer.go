@@ -189,6 +189,7 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 
 	case
 		kubectl.Apply,
+		kubectl.Autoscale,
 		kubectl.Cordon,
 		kubectl.Create,
 		kubectl.Delete,
@@ -247,6 +248,15 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 					"unchanged":          p.Theme.Apply.Unchanged,
 					"serverside-applied": p.Theme.Apply.Serverside,
 					"pruned":             p.Theme.Apply.Pruned,
+				},
+			}
+
+		case kubectl.Autoscale:
+			return &VerbPrinter{
+				DryRunColor:   p.Theme.Autoscale.DryRun,
+				FallbackColor: p.Theme.Autoscale.Fallback,
+				VerbColor: map[string]color.Color{
+					"autoscaled": p.Theme.Autoscale.Autoscaled,
 				},
 			}
 

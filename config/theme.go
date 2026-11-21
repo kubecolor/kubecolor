@@ -340,28 +340,29 @@ type Theme struct {
 
 	Apply ThemeApply // used in "kubectl apply"
 
-	Annotate ThemeAnnotate // used in "kubectl annotate"
-	Auth     ThemeAuth     // used in "kubectl auth"
-	Cordon   ThemeCordon   // used in "kubectl cordon"
-	Create   ThemeCreate   // used in "kubectl create"
-	Delete   ThemeDelete   // used in "kubectl delete"
-	Describe ThemeDescribe // used in "kubectl describe"
-	Diff     ThemeDiff     // used in "kubectl diff"
-	Drain    ThemeDrain    // used in "kubectl drain"
-	Explain  ThemeExplain  // used in "kubectl explain"
-	Expose   ThemeExpose   // used in "kubectl expose"
-	Help     ThemeHelp     // used in "kubectl --help"
-	Label    ThemeLabel    // used in "kubectl label"
-	Logs     ThemeLogs     // used in "kubectl logs"
-	Options  ThemeOptions  // used in "kubectl options"
-	Patch    ThemePatch    // used in "kubectl patch"
-	Replace  ThemeReplace  // used in "kubectl replace"
-	Rollout  ThemeRollout  // used in "kubectl rollout"
-	Scale    ThemeScale    // used in "kubectl scale"
-	Set      ThemeSet      // used in "kubectl set"
-	Taint    ThemeTaint    // used in "kubectl taint"
-	Uncordon ThemeUncordon // used in "kubectl uncordon"
-	Version  ThemeVersion  // used in "kubectl version"
+	Annotate  ThemeAnnotate  // used in "kubectl annotate"
+	Auth      ThemeAuth      // used in "kubectl auth"
+	Autoscale ThemeAutoscale // used in "kubectl autoscale"
+	Cordon    ThemeCordon    // used in "kubectl cordon"
+	Create    ThemeCreate    // used in "kubectl create"
+	Delete    ThemeDelete    // used in "kubectl delete"
+	Describe  ThemeDescribe  // used in "kubectl describe"
+	Diff      ThemeDiff      // used in "kubectl diff"
+	Drain     ThemeDrain     // used in "kubectl drain"
+	Explain   ThemeExplain   // used in "kubectl explain"
+	Expose    ThemeExpose    // used in "kubectl expose"
+	Help      ThemeHelp      // used in "kubectl --help"
+	Label     ThemeLabel     // used in "kubectl label"
+	Logs      ThemeLogs      // used in "kubectl logs"
+	Options   ThemeOptions   // used in "kubectl options"
+	Patch     ThemePatch     // used in "kubectl patch"
+	Replace   ThemeReplace   // used in "kubectl replace"
+	Rollout   ThemeRollout   // used in "kubectl rollout"
+	Scale     ThemeScale     // used in "kubectl scale"
+	Set       ThemeSet       // used in "kubectl set"
+	Taint     ThemeTaint     // used in "kubectl taint"
+	Uncordon  ThemeUncordon  // used in "kubectl uncordon"
+	Version   ThemeVersion   // used in "kubectl version"
 }
 
 func (t *Theme) ComputeCache() {
@@ -529,6 +530,14 @@ type ThemePatch struct {
 
 	DryRun   color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
 	Fallback color.Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format
+}
+
+// ThemeAutoscale holds colors for the "kubectl autoscale" output.
+type ThemeAutoscale struct {
+	Autoscaled color.Color `defaultFrom:"theme.base.primary"` // used on "horizontalpodautoscaler.autoscaling/foo autoscaled"
+
+	DryRun   color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
+	Fallback color.Color `defaultFrom:"theme.default"`      // used when outputs unknown format
 }
 
 // ThemeCordon holds colors for the "kubectl cordon" output.

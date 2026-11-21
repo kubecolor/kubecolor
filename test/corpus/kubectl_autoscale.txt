@@ -1,0 +1,15 @@
+================================================================================
+$ kubectl autoscale deployment/nginx --min=2 --max=5 --cpu-percent=80
+================================================================================
+
+horizontalpodautoscaler.autoscaling/nginx autoscaled
+horizontalpodautoscaler.autoscaling/nginx autoscaled (dry run)
+horizontalpodautoscaler.autoscaling/nginx autoscaled (server dry run)
+horizontalpodautoscaler.autoscaling/nginx unknown
+
+--------------------------------------------------------------------------------
+
+horizontalpodautoscaler.autoscaling/nginx [35mautoscaled[0m
+horizontalpodautoscaler.autoscaling/nginx [35mautoscaled[0m [36m(dry run)[0m
+horizontalpodautoscaler.autoscaling/nginx [35mautoscaled[0m [36m(server dry run)[0m
+[32mhorizontalpodautoscaler.autoscaling/nginx unknown[0m
