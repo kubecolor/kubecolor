@@ -764,6 +764,10 @@
           "$ref": "#/$defs/color",
           "description": "used on \"deployment.apps/foo restarted\""
         },
+        "rolledOut": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"successfully rolled out\" and \"rolling update complete\" in \"kubectl rollout status\""
+        },
         "dryRun": {
           "$ref": "#/$defs/color",
           "description": "used on \"(dry run)\" and \"(server dry run)\""

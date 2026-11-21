@@ -518,6 +518,7 @@ type ThemeRollout struct {
 	Paused     color.Color `defaultFrom:"theme.base.primary"`   // used on "deployment.apps/foo paused"
 	Resumed    color.Color `defaultFrom:"theme.base.secondary"` // used on "deployment.apps/foo resumed"
 	Restarted  color.Color `defaultFrom:"theme.base.warning"`   // used on "deployment.apps/foo restarted"
+	RolledOut  color.Color `defaultFrom:"theme.base.success"`   // used on "successfully rolled out" and "rolling update complete" in "kubectl rollout status"
 
 	DryRun   color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
 	Fallback color.Color `defaultFrom:"theme.base.warning"` // used when outputs unknown format

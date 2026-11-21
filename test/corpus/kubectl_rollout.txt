@@ -138,3 +138,51 @@ Pod Template:
   [36mVolumes[0m:         [90;3m<none>[0m
   [36mNode-Selectors[0m:  [90;3m<none>[0m
   [36mTolerations[0m:     [90;3m<none>[0m
+
+================================================================================
+$ kubectl rollout status deploy nginx
+================================================================================
+
+Waiting for deployment spec update to be observed...
+Waiting for deployment "nginx" rollout to finish: 1 out of 3 new replicas have been updated...
+Waiting for deployment "nginx" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "nginx" rollout to finish: 2 of 3 updated replicas are available...
+deployment "nginx" successfully rolled out
+
+--------------------------------------------------------------------------------
+
+[33mWaiting for deployment spec update to be observed...[0m
+[33mWaiting for deployment "nginx" rollout to finish: 1 out of 3 new replicas have been updated...[0m
+[33mWaiting for deployment "nginx" rollout to finish: 1 old replicas are pending termination...[0m
+[33mWaiting for deployment "nginx" rollout to finish: 2 of 3 updated replicas are available...[0m
+deployment "nginx" [32msuccessfully rolled out[0m
+
+================================================================================
+$ kubectl rollout status daemonset fluentd
+================================================================================
+
+Waiting for daemon set "fluentd" rollout to finish: 1 of 2 updated pods are available...
+daemon set "fluentd" successfully rolled out
+
+--------------------------------------------------------------------------------
+
+[33mWaiting for daemon set "fluentd" rollout to finish: 1 of 2 updated pods are available...[0m
+daemon set "fluentd" [32msuccessfully rolled out[0m
+
+================================================================================
+$ kubectl rollout status statefulset web
+================================================================================
+
+Waiting for 1 pods to be ready...
+waiting for statefulset rolling update to complete 2 pods at revision web-6c9b8b7d4f...
+statefulset rolling update complete 3 pods at revision web-6c9b8b7d4f...
+Waiting for partitioned roll out to finish: 1 out of 2 new pods have been updated...
+partitioned roll out complete: 2 new pods have been updated...
+
+--------------------------------------------------------------------------------
+
+[33mWaiting for 1 pods to be ready...[0m
+[33mwaiting for statefulset rolling update to complete 2 pods at revision web-6c9b8b7d4f...[0m
+statefulset [32mrolling update complete[0m 3 pods at revision web-6c9b8b7d4f...
+[33mWaiting for partitioned roll out to finish: 1 out of 2 new pods have been updated...[0m
+partitioned [32mroll out complete[0m: 2 new pods have been updated...
