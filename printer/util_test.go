@@ -156,3 +156,32 @@ func Test_findIndent(t *testing.T) {
 		})
 	}
 }
+
+func Test_isAllUpper(t *testing.T) {
+	tests := []struct {
+		line     string
+		expected bool
+	}{
+		{"NAME", true},
+		{"NAME   READY   STATUS   RESTARTS   AGE", true},
+		{"  NAMESPACE   NAME", true},
+		{"NAME   CPU(cores)", false},
+		{"nginx-dnmv5   1/1   Running", false},
+		{"Name", false},
+		{"*.*   []   []   [*]", false},
+		// no letters at all, so these are data rows and not headers
+		{"", false},
+		{"3", false},
+		{"3   10", false},
+		{"1/1   0", false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.line, func(t *testing.T) {
+			t.Parallel()
+			got := isAllUpper(tt.line)
+			if got != tt.expected {
+				t.Errorf("fail: got: %v, expected: %v", got, tt.expected)
+			}
+		})
+	}
+}

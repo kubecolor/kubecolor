@@ -283,17 +283,25 @@ func findIndent(line string) int {
 //
 //	NAME  READY  STATUS  RESTARTS  AGE
 //
-// Commonly found in "kubectl get" output
+// Commonly found in "kubectl get" output.
+//
+// A line without any letters is not a header, as it can be a data row where
+// every value is a number, such as "3   10" from
+// "kubectl get -o custom-columns=A:.x,B:.y".
 func isAllUpper(s string) bool {
+	anyLetters := false
 	for _, r := range s {
-		if unicode.IsLetter(r) && !unicode.IsUpper(r) {
-			return false
+		if unicode.IsLetter(r) {
+			if !unicode.IsUpper(r) {
+				return false
+			}
+			anyLetters = true
 		}
 		if isNonHeaderSymbol(r) {
 			return false
 		}
 	}
-	return true
+	return anyLetters
 }
 
 // isOnlySymbols is used to identity header underline like this:
