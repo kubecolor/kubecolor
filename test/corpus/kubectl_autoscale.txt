@@ -9,7 +9,7 @@ horizontalpodautoscaler.autoscaling/nginx unknown
 
 --------------------------------------------------------------------------------
 
-horizontalpodautoscaler.autoscaling/nginx [35mautoscaled[0m
-horizontalpodautoscaler.autoscaling/nginx [35mautoscaled[0m [36m(dry run)[0m
-horizontalpodautoscaler.autoscaling/nginx [35mautoscaled[0m [36m(server dry run)[0m
+horizontalpodautoscaler.autoscaling/nginx [33mautoscaled[0m
+horizontalpodautoscaler.autoscaling/nginx [33mautoscaled[0m [36m(dry run)[0m
+horizontalpodautoscaler.autoscaling/nginx [33mautoscaled[0m [36m(server dry run)[0m
 [32mhorizontalpodautoscaler.autoscaling/nginx unknown[0m

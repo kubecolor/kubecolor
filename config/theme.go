@@ -535,7 +535,7 @@ type ThemePatch struct {
 
 // ThemeAutoscale holds colors for the "kubectl autoscale" output.
 type ThemeAutoscale struct {
-	Autoscaled color.Color `defaultFrom:"theme.base.primary"` // used on "horizontalpodautoscaler.autoscaling/foo autoscaled"
+	Autoscaled color.Color `defaultFrom:"theme.base.warning"` // used on "horizontalpodautoscaler.autoscaling/foo autoscaled"
 
 	DryRun   color.Color `defaultFrom:"theme.apply.dryrun"` // used on "(dry run)" and "(server dry run)"
 	Fallback color.Color `defaultFrom:"theme.default"`      // used when outputs unknown format
