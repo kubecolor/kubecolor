@@ -326,6 +326,10 @@ func (p *KubectlOutputColoredPrinter) getPrinter() Printer {
 					"paused":      p.Theme.Rollout.Paused,
 					"resumed":     p.Theme.Rollout.Resumed,
 					"restarted":   p.Theme.Rollout.Restarted,
+					// "kubectl rollout status" finished messages
+					"successfully rolled out": p.Theme.Rollout.RolledOut,
+					"roll out complete":       p.Theme.Rollout.RolledOut,
+					"rolling update complete": p.Theme.Rollout.RolledOut,
 				},
 			}
 
