@@ -136,6 +136,14 @@
           "$ref": "#/$defs/themeAuth",
           "description": "used in \"kubectl auth\""
         },
+        "autoscale": {
+          "$ref": "#/$defs/themeAutoscale",
+          "description": "used in \"kubectl autoscale\""
+        },
+        "certificate": {
+          "$ref": "#/$defs/themeCertificate",
+          "description": "used in \"kubectl certificate\""
+        },
         "cordon": {
           "$ref": "#/$defs/themeCordon",
           "description": "used in \"kubectl cordon\""
@@ -330,6 +338,25 @@
       "type": "object",
       "description": "ThemeAuthReconcile holds colors for the \"kubectl auth reconcile\" output."
     },
+    "themeAutoscale": {
+      "properties": {
+        "autoscaled": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"horizontalpodautoscaler.autoscaling/foo autoscaled\""
+        },
+        "dryRun": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"(dry run)\" and \"(server dry run)\""
+        },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when outputs unknown format"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeAutoscale holds colors for the \"kubectl autoscale\" output."
+    },
     "themeBase": {
       "properties": {
         "danger": {
@@ -368,6 +395,25 @@
       "additionalProperties": false,
       "type": "object",
       "description": "ThemeBase contains base colors that other theme fields can default to, just to make overriding themes easier."
+    },
+    "themeCertificate": {
+      "properties": {
+        "approved": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"certificatesigningrequest.certificates.k8s.io/foo approved\""
+        },
+        "denied": {
+          "$ref": "#/$defs/color",
+          "description": "used on \"certificatesigningrequest.certificates.k8s.io/foo denied\""
+        },
+        "fallback": {
+          "$ref": "#/$defs/color",
+          "description": "used when outputs unknown format"
+        }
+      },
+      "additionalProperties": false,
+      "type": "object",
+      "description": "ThemeCertificate holds colors for the \"kubectl certificate\" output."
     },
     "themeCordon": {
       "properties": {
