@@ -61,7 +61,7 @@ func Run(rawArgs []string, version string) error {
 
 	// Expand kuberc aliases only to find out what kubectl will run.
 	// The original args are still the ones passed to kubectl.
-	inspectArgs := kubectl.ExpandKubercAlias(args, kubectl.LoadKuberc(args))
+	inspectArgs := kubectl.LoadKuberc(args).ExpandAlias(args)
 	subcommandInfo := kubectl.InspectSubcommandInfo(inspectArgs, kubectl.DefaultPluginHandler{})
 
 	slog.Debug("Parsed command", "subcommand", subcommandInfo.Subcommand,

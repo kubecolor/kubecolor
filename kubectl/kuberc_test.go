@@ -38,8 +38,8 @@ aliases:
 `
 
 func TestExpandKubercAlias(t *testing.T) {
-	kuberc := &Kuberc{}
-	if err := yaml.Unmarshal([]byte(testKuberc), kuberc); err != nil {
+	var kuberc Kuberc
+	if err := yaml.Unmarshal([]byte(testKuberc), &kuberc); err != nil {
 		t.Fatal(err)
 	}
 
@@ -63,7 +63,7 @@ func TestExpandKubercAlias(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.args, func(t *testing.T) {
-			got := strings.Join(ExpandKubercAlias(strings.Fields(tc.args), kuberc), " ")
+			got := strings.Join(kuberc.ExpandAlias(strings.Fields(tc.args)), " ")
 			if got != tc.want {
 				t.Errorf("got %q, want %q", got, tc.want)
 			}
@@ -72,8 +72,8 @@ func TestExpandKubercAlias(t *testing.T) {
 }
 
 func TestExpandKubercAlias_SubcommandInfo(t *testing.T) {
-	kuberc := &Kuberc{}
-	if err := yaml.Unmarshal([]byte(testKuberc), kuberc); err != nil {
+	var kuberc Kuberc
+	if err := yaml.Unmarshal([]byte(testKuberc), &kuberc); err != nil {
 		t.Fatal(err)
 	}
 
@@ -90,7 +90,7 @@ func TestExpandKubercAlias_SubcommandInfo(t *testing.T) {
 
 	for _, tc := range tests {
 		t.Run(tc.args, func(t *testing.T) {
-			args := ExpandKubercAlias(strings.Fields(tc.args), kuberc)
+			args := kuberc.ExpandAlias(strings.Fields(tc.args))
 			got := InspectSubcommandInfo(args, NoopPluginHandler{})
 			if diff := cmp.Diff(tc.expected, got); diff != "" {
 				t.Errorf("(-want +got):\n%s", diff)
@@ -111,36 +111,36 @@ func TestLoadKuberc(t *testing.T) {
 
 	t.Run("flag", func(t *testing.T) {
 		t.Setenv("KUBERC", "")
-		if k := LoadKuberc([]string{"--kuberc", path, "g"}); k == nil || len(k.Aliases) == 0 {
+		if k := LoadKuberc([]string{"--kuberc", path, "g"}); len(k.Aliases) == 0 {
 			t.Errorf("--kuberc %s: no aliases loaded", path)
 		}
-		if k := LoadKuberc([]string{"--kuberc=" + path, "g"}); k == nil || len(k.Aliases) == 0 {
+		if k := LoadKuberc([]string{"--kuberc=" + path, "g"}); len(k.Aliases) == 0 {
 			t.Errorf("--kuberc=%s: no aliases loaded", path)
 		}
 	})
 
 	t.Run("env", func(t *testing.T) {
 		t.Setenv("KUBERC", path)
-		if k := LoadKuberc([]string{"g"}); k == nil || len(k.Aliases) == 0 {
+		if k := LoadKuberc([]string{"g"}); len(k.Aliases) == 0 {
 			t.Error("KUBERC: no aliases loaded")
 		}
 	})
 
 	t.Run("disabled", func(t *testing.T) {
 		t.Setenv("KUBERC", "off")
-		if k := LoadKuberc([]string{"g"}); k != nil {
+		if k := LoadKuberc([]string{"g"}); len(k.Aliases) != 0 {
 			t.Error("KUBERC=off: kuberc was loaded")
 		}
 		t.Setenv("KUBERC", path)
 		t.Setenv("KUBECTL_KUBERC", "false")
-		if k := LoadKuberc([]string{"g"}); k != nil {
+		if k := LoadKuberc([]string{"g"}); len(k.Aliases) != 0 {
 			t.Error("KUBECTL_KUBERC=false: kuberc was loaded")
 		}
 	})
 
 	t.Run("default", func(t *testing.T) {
 		t.Setenv("KUBERC", "")
-		if k := LoadKuberc([]string{"g"}); k != nil {
+		if k := LoadKuberc([]string{"g"}); len(k.Aliases) != 0 {
 			t.Error("no ~/.kube/kuberc: kuberc was loaded")
 		}
 		if err := os.MkdirAll(filepath.Join(dir, ".kube"), 0o700); err != nil {
@@ -149,14 +149,14 @@ func TestLoadKuberc(t *testing.T) {
 		if err := os.WriteFile(filepath.Join(dir, ".kube", "kuberc"), []byte(testKuberc), 0o600); err != nil {
 			t.Fatal(err)
 		}
-		if k := LoadKuberc([]string{"g"}); k == nil || len(k.Aliases) == 0 {
+		if k := LoadKuberc([]string{"g"}); len(k.Aliases) == 0 {
 			t.Error("~/.kube/kuberc: no aliases loaded")
 		}
 	})
 
 	t.Run("missing", func(t *testing.T) {
 		t.Setenv("KUBERC", filepath.Join(dir, "does-not-exist"))
-		if k := LoadKuberc([]string{"g"}); k != nil {
+		if k := LoadKuberc([]string{"g"}); len(k.Aliases) != 0 {
 			t.Error("missing file: kuberc was loaded")
 		}
 	})
